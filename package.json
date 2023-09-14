@@ -1,0 +1,53 @@
+{
+  "name": "dovetail-v2",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "prepare": "husky install",
+    "postbuild": "turbo run typings",
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "eslint \"**/*.{tsx,ts}\" --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "commit": "git cz",
+    "version": "conventional-changelog -i CHANGELOG.md -s -a -p @favoloso/emoji && git add CHANGELOG.md",
+    "bump": "conventional-recommended-bump -p @favoloso/emoji"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,md}": [
+      "prettier --write",
+      "eslint"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-syntax-flow": "^7.14.5",
+    "@babel/plugin-transform-react-jsx": "^7.14.9",
+    "@commitlint/cli": "^16.0.0",
+    "@commitlint/config-conventional": "^16.0.0",
+    "@commitlint/cz-commitlint": "^16.0.0",
+    "@favoloso/conventional-changelog-emoji": "^0.10.0",
+    "@types/ejs": "^3.1.1",
+    "commitizen": "^4.0.4",
+    "conventional-changelog-cli": "^2.0.31",
+    "conventional-recommended-bump": "^6.1.0",
+    "eslint": "^8.25.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
+    "husky": "^6.0.0",
+    "inquirer": "^8.0.0",
+    "lint-staged": "^13.0.3",
+    "prettier": "^3.0.1",
+    "turbo": "^1.6.3",
+    "typescript": "^4.6.3"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  }
+}

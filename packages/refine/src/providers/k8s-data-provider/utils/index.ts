@@ -1,0 +1,1 @@
+export { mapOperator } from "./mapOperator";
