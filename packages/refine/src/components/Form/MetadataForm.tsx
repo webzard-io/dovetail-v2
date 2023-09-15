@@ -4,7 +4,7 @@ import { KeyValueListWidget } from './KeyValueListWidget';
 import { NameInputWidget, rfc1123LabelRules } from './NameInputWidget';
 import { NamespaceSelectWidget, namespaceRules } from './NamespaceSelectWidget';
 
-export function MetadataWidget() {
+export function MetadataForm() {
   const kit = useUIKit();
 
   return (

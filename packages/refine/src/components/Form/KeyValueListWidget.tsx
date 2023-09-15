@@ -5,34 +5,40 @@ import type { FormWidgetProps } from './widget';
 type Item = {
   key: string;
   value: string;
-}
+};
 
 type KeyValueInputProps = React.PropsWithChildren<{
   item: Item;
   onChange?: (item: Item) => void;
-}>
+}>;
 
 function KeyValueInput(props: KeyValueInputProps) {
   const { children, item } = props;
   const kit = useUIKit();
 
-  const onKeyChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const key = event.target.value;
+  const onKeyChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const key = event.target.value;
 
-    props.onChange?.({
-      ...item,
-      key,
-    });
-  }, [item, props.onChange]);
-  const onValueChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(event);
-    const value = event.target.value;
+      props.onChange?.({
+        ...item,
+        key,
+      });
+    },
+    [item, props]
+  );
+  const onValueChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      console.log(event);
+      const value = event.target.value;
 
-    props.onChange?.({
-      ...item,
-      value,
-    });
-  }, [item, props.onChange]);
+      props.onChange?.({
+        ...item,
+        value,
+      });
+    },
+    [item, props]
+  );
 
   return (
     <kit.space>
@@ -43,7 +49,9 @@ function KeyValueInput(props: KeyValueInputProps) {
   );
 }
 
-export type KeyValueListWidgetProps = FormWidgetProps<Record<string, string>>;
+export type KeyValueListWidgetProps = FormWidgetProps<Record<string, string>> & {
+  disabled?: boolean;
+};
 
 export function KeyValueListWidget(props: KeyValueListWidgetProps) {
   const kit = useUIKit();
@@ -52,25 +60,34 @@ export function KeyValueListWidget(props: KeyValueListWidgetProps) {
   const items: Item[] = useMemo(() => {
     return Object.entries(value || {}).map(([key, value]) => ({
       key,
-      value
+      value,
     }));
   }, [value]);
 
-  const onChange = useCallback((newItems: { key: string; value: string; }[]) => {
-    const newValue = newItems.reduce((result, item) => {
-      result[item.key] = item.value;
+  const onChange = useCallback(
+    (newItems: { key: string; value: string }[]) => {
+      const newValue = newItems.reduce(
+        (result, item) => {
+          result[item.key] = item.value;
 
-      return result;
-    }, {} as Record<string, string>);
+          return result;
+        },
+        {} as Record<string, string>
+      );
 
-    props.onChange?.(newValue);
-  }, [props.onChange]);
-  const onRemove = useCallback((index: number) => {
-    const result = [...items];
+      props.onChange?.(newValue);
+    },
+    [props]
+  );
+  const onRemove = useCallback(
+    (index: number) => {
+      const result = [...items];
 
-    result.splice(index, 1);
-    onChange(result);
-  }, [onChange, items]);
+      result.splice(index, 1);
+      onChange(result);
+    },
+    [onChange, items]
+  );
   const onAdd = useCallback(() => {
     onChange([...items, { key: '', value: '' }]);
   }, [onChange, items]);
@@ -82,7 +99,7 @@ export function KeyValueListWidget(props: KeyValueListWidgetProps) {
           <KeyValueInput
             key={index}
             item={item}
-            onChange={(newItem) => {
+            onChange={newItem => {
               console.log(newItem);
               const temp = [...items];
 
@@ -90,17 +107,19 @@ export function KeyValueListWidget(props: KeyValueListWidgetProps) {
               onChange(temp);
             }}
           >
-            <kit.button onClick={() => { onRemove(index); }} danger>
+            <kit.button
+              onClick={() => {
+                onRemove(index);
+              }}
+              danger
+            >
               Remove
             </kit.button>
           </KeyValueInput>
         );
       })}
       <kit.form.Item>
-        <kit.button
-          type="primary"
-          onClick={onAdd}
-        >
+        <kit.button type="primary" onClick={onAdd}>
           Add
         </kit.button>
       </kit.form.Item>
