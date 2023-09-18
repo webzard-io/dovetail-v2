@@ -1,13 +1,7 @@
 import { ErrorComponent, GitHubBanner, Refine } from "@refinedev/core";
-import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
-import routerBindings, {
-  DocumentTitleHandler,
-  NavigateToResource,
-  UnsavedChangesNotifier,
-} from "@refinedev/react-router-v6";
 import { useTranslation } from "react-i18next";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { dataProvider } from "./providers/k8s-data-provider";
 import { GlobalStore } from "./providers/k8s-data-provider/global-store";
@@ -42,83 +36,69 @@ function App() {
 
   return (
     <BrowserRouter>
-      <RefineKbarProvider>
-        <Refine
-          dataProvider={{
-            default: dataProvider(globalStore),
-          }}
-          liveProvider={liveProvider(globalStore)}
-          routerProvider={routerProvider}
-          options={{
-            syncWithLocation: true,
-            warnWhenUnsavedChanges: true,
-            liveMode: "auto",
-          }}
-          resources={[
-            {
-              name: "deployments",
-              meta: {
-                resourceBasePath: "/apis/apps/v1",
-                kind: "Deployment",
-              },
-              list: "/deployments",
-              show: "/deployments/show/:id",
-              create: "/deployments/create",
-              edit: "/deployments/edit/:id",
+      <Refine
+        dataProvider={{
+          default: dataProvider(globalStore),
+        }}
+        routerProvider={routerProvider}
+        liveProvider={liveProvider(globalStore)}
+        options={{
+          warnWhenUnsavedChanges: true,
+          liveMode: "auto",
+        }}
+        resources={[
+          {
+            name: "deployments",
+            meta: {
+              resourceBasePath: "/apis/apps/v1",
+              kind: "Deployment",
             },
-            {
-              name: "configmaps",
-              meta: {
-                resourceBasePath: "/api/v1",
-                kind: "ConfigMap",
-              },
-              list: "/configmaps",
-              show: "/configmaps/show/:id",
-              create: "/configmaps/create",
-              edit: "/configmaps/edit",
+            list: "/deployments",
+            show: "/deployments/show/:id",
+            create: "/deployments/create",
+            edit: "/deployments/edit/:id",
+          },
+          {
+            name: "configmaps",
+            meta: {
+              resourceBasePath: "/api/v1",
+              kind: "ConfigMap",
             },
-          ]}
-        >
-          <Routes>
-            <Route
-              element={
-                <Layout>
-                  <Outlet />
-                </Layout>
-              }
-            >
-              <Route
-                index
-                element={<NavigateToResource resource="deployments" />}
-              />
-
-              <Route path="deployments">
-                <Route index element={<DeploymentList />} />
-                <Route
-                  path="create"
-                  element={<DeploymentCreate />}
-                />
-              </Route>
-
-              <Route path="configmaps">
-                <Route index element={<ConfigmapList />} />
-                <Route
-                  path="create"
-                  element={<ConfigmapForm />}
-                />
-                <Route
-                  path="edit"
-                  element={<ConfigmapForm />}
-                />
-              </Route>
+            list: "/configmaps",
+            show: "/configmaps/show/:id",
+            create: "/configmaps/create",
+            edit: "/configmaps/edit",
+          },
+        ]}
+      >
+        <Layout>
+          <Switch>
+            <Route path="/deployments" exact>
+              <DeploymentList />
             </Route>
-          </Routes>
-          <RefineKbar />
-          <UnsavedChangesNotifier />
-          <DocumentTitleHandler />
-        </Refine>
-      </RefineKbarProvider>
-    </BrowserRouter>
+            <Route
+              path="/deployments/create"
+            >
+              <DeploymentCreate />
+            </Route>
+
+            <Route path="/configmaps" exact>
+              <ConfigmapList />
+            </Route>
+            <Route
+              path="/configmaps/create"
+            >
+              <ConfigmapForm />
+            </Route>
+            <Route
+              path="/configmaps/edit"
+            >
+              <ConfigmapForm />
+            </Route>
+          </Switch>
+        </Layout>
+      </Refine>
+    </BrowserRouter >
   );
 }
 
