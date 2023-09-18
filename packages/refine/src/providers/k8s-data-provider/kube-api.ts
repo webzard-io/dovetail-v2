@@ -564,12 +564,6 @@ export class KubeSdk {
     for (const spec of validSpecs) {
       spec.metadata = spec.metadata || {};
       spec.metadata.annotations = spec.metadata.annotations || {};
-      delete spec.metadata.annotations[
-        "kubectl.kubernetes.io/last-applied-configuration"
-      ];
-      spec.metadata.annotations[
-        "kubectl.kubernetes.io/last-applied-configuration"
-      ] = JSON.stringify(spec);
 
       let exist = true;
       try {
@@ -594,9 +588,6 @@ export class KubeSdk {
         }
         changed.push(response as Unstructured);
       } catch (error) {
-        delete spec.metadata.annotations[
-          "kubectl.kubernetes.io/last-applied-configuration"
-        ];
         throw error;
       }
     }

@@ -12,10 +12,15 @@ import { Layout } from "./components/Layout";
 import { dataProvider } from "./providers/k8s-data-provider";
 import { GlobalStore } from "./providers/k8s-data-provider/global-store";
 import { liveProvider } from "./providers/k8s-live-provider";
+import { routerProvider } from './providers/router-provider';
 import {
   DeploymentCreate,
   DeploymentList,
 } from "./pages/deployments";
+import {
+  ConfigmapForm,
+  ConfigmapList,
+} from './pages/configmap';
 
 import "./App.css";
 import 'antd/dist/antd.css';
@@ -43,7 +48,7 @@ function App() {
             default: dataProvider(globalStore),
           }}
           liveProvider={liveProvider(globalStore)}
-          routerProvider={routerBindings}
+          routerProvider={routerProvider}
           options={{
             syncWithLocation: true,
             warnWhenUnsavedChanges: true,
@@ -60,6 +65,17 @@ function App() {
               show: "/deployments/show/:id",
               create: "/deployments/create",
               edit: "/deployments/edit/:id",
+            },
+            {
+              name: "configmaps",
+              meta: {
+                resourceBasePath: "/api/v1",
+                kind: "ConfigMap",
+              },
+              list: "/configmaps",
+              show: "/configmaps/show/:id",
+              create: "/configmaps/create",
+              edit: "/configmaps/edit",
             },
           ]}
         >
@@ -81,6 +97,18 @@ function App() {
                 <Route
                   path="create"
                   element={<DeploymentCreate />}
+                />
+              </Route>
+
+              <Route path="configmaps">
+                <Route index element={<ConfigmapList />} />
+                <Route
+                  path="create"
+                  element={<ConfigmapForm />}
+                />
+                <Route
+                  path="edit"
+                  element={<ConfigmapForm />}
                 />
               </Route>
             </Route>

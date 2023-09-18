@@ -23,7 +23,7 @@ function KeyValueInput(props: KeyValueInputProps) {
       key,
     });
   }, [item, props.onChange]);
-  const onValueChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const onValueChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
     console.log(event);
     const value = event.target.value;
 
@@ -36,7 +36,7 @@ function KeyValueInput(props: KeyValueInputProps) {
   return (
     <kit.space>
       <kit.input value={item.key} onChange={onKeyChange} />
-      <kit.input value={item.value} onChange={onValueChange} />
+      <kit.textArea value={item.value} onChange={onValueChange} />
       {children}
     </kit.space>
   )
@@ -68,7 +68,10 @@ export function KeyValueListWidget(props: KeyValueListWidgetProps) {
     props.onChange?.(newValue);
   }, [props.onChange]);
   const onRemove = useCallback((index: number) => {
-    onChange([...items].splice(index, 1));
+    const result = [...items];
+
+    result.splice(index, 1)
+    onChange(result);
   }, []);
   const onAdd = useCallback(() => {
     onChange([...items, { key: '', value: '' }]);

@@ -1,10 +1,12 @@
 import { useUIKit, AntdInputProps } from '@cloudtower/eagle';
+import { useResource } from '@refinedev/core';
 
 export function NameInputWidget(props: AntdInputProps) {
   const kit = useUIKit();
+  const { action } = useResource();
 
   return (
-    <kit.input {...props} />
+    <kit.input {...props} disabled={action === 'edit'} />
   );
 }
 

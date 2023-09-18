@@ -1,5 +1,5 @@
 import { useUIKit } from '@cloudtower/eagle';
-import { useList } from '@refinedev/core';
+import { useList, useResource } from '@refinedev/core';
 
 type NamespaceSelectProps = {
   value?: string;
@@ -9,6 +9,7 @@ type NamespaceSelectProps = {
 
 export function NamespaceSelectWidget(props: NamespaceSelectProps) {
   const kit = useUIKit();
+  const { action } = useResource();
   const { data } = useList({
     resource: 'namespaces',
     meta: {
@@ -18,7 +19,7 @@ export function NamespaceSelectWidget(props: NamespaceSelectProps) {
   });
 
   return (
-    <kit.select input={props}>
+    <kit.select input={props} disabled={action === 'edit'}>
       {
         data?.data.map(namespace => (
           <kit.option
