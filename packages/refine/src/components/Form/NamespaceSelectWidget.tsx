@@ -1,5 +1,6 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useList, useResource } from '@refinedev/core';
+import React from 'react';
 import type { FormWidgetProps } from './widget';
 
 type NamespaceSelectProps = FormWidgetProps<string | string[]>;
@@ -10,8 +11,8 @@ export function NamespaceSelectWidget(props: NamespaceSelectProps) {
   const { data } = useList({
     resource: 'namespaces',
     meta: {
-      resourceBasePath: "/api/v1",
-      kind: "Namespace",
+      resourceBasePath: '/api/v1',
+      kind: 'Namespace',
     },
   });
 
@@ -26,7 +27,7 @@ export function NamespaceSelectWidget(props: NamespaceSelectProps) {
         ))
       }
     </kit.select>
-  )
+  );
 }
 
 export const namespaceRules = [{

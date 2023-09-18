@@ -1,7 +1,8 @@
 import { useUIKit } from '@cloudtower/eagle';
+import React from 'react';
+import { KeyValueListWidget } from './KeyValueListWidget';
 import { NameInputWidget, rfc1123LabelRules } from './NameInputWidget';
 import { NamespaceSelectWidget, namespaceRules } from './NamespaceSelectWidget';
-import { KeyValueListWidget } from './KeyValueListWidget';
 
 export function MetadataWidget() {
   const kit = useUIKit();
@@ -10,7 +11,7 @@ export function MetadataWidget() {
     <>
       <kit.form.Item
         label="Name"
-        name={["metadata", "name"]}
+        name={['metadata', 'name']}
         rules={rfc1123LabelRules}
       >
         <NameInputWidget />
@@ -29,5 +30,5 @@ export function MetadataWidget() {
         <KeyValueListWidget />
       </kit.form.Item>
     </>
-  )
+  );
 }

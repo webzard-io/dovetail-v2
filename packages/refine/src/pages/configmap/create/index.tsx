@@ -1,12 +1,12 @@
-import React from "react";
-import useEagleForm from '../../../hooks/useEagleForm';
-import { FormProps } from 'antd/lib/form';
 import { useUIKit } from '@cloudtower/eagle';
-import { MetadataWidget } from '../../../components/Form/MetadataForm';
+import { FormProps } from 'antd/lib/form';
+import React from 'react';
 import { KeyValueListWidget } from '../../../components/Form/KeyValueListWidget';
+import { MetadataWidget } from '../../../components/Form/MetadataForm';
+import useEagleForm from '../../../hooks/useEagleForm';
 
 export const ConfigmapForm: React.FC<FormProps> = () => {
-  const { formProps, saveButtonProps, queryResult } = useEagleForm();
+  const { formProps, saveButtonProps } = useEagleForm();
   const kit = useUIKit();
 
   return (
