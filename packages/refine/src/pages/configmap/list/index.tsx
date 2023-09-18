@@ -1,20 +1,19 @@
-import { IResourceComponentsProps, useGo, useResource } from "@refinedev/core";
-import { HeadlessListInferencer } from "@refinedev/inferencer/headless";
-import { useCallback } from 'react';
 import { useUIKit } from '@cloudtower/eagle';
-import { useList, HttpError } from "@refinedev/core";
-import { Unstructured } from '../../../providers/k8s-data-provider/kube-api';
+import { IResourceComponentsProps, useGo } from '@refinedev/core';
+import { useList, HttpError } from '@refinedev/core';
+import { useCallback } from 'react';
+import React from 'react';
 import { CreateButton } from '../../../components/CreateButton';
+import { Unstructured } from '../../../providers/k8s-data-provider/kube-api';
 
 export const ConfigmapList: React.FC<IResourceComponentsProps> = () => {
   const kit = useUIKit();
-  const { resource } = useResource();
   const go = useGo();
-  const { data, isLoading, isError } = useList<Unstructured, HttpError>({});
+  const { data, isLoading } = useList<Unstructured, HttpError>({});
 
   const onClick = useCallback((record: Unstructured) => {
     go({
-      to: `/configmaps/edit`,
+      to: '/configmaps/edit',
       query: {
         id: `${record.metadata.namespace}/${record.metadata.name}`,
       }
@@ -42,7 +41,7 @@ export const ConfigmapList: React.FC<IResourceComponentsProps> = () => {
                 <>
                   <kit.button onClick={()=> onClick(record)}>Edit</kit.button>
                 </>
-              )
+              );
             }
           }
         ]}

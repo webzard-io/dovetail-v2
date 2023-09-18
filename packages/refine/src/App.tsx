@@ -1,39 +1,31 @@
-import { ErrorComponent, GitHubBanner, Refine } from "@refinedev/core";
+import { Refine } from '@refinedev/core';
 
-import { useTranslation } from "react-i18next";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Layout } from "./components/Layout";
-import { dataProvider } from "./providers/k8s-data-provider";
-import { GlobalStore } from "./providers/k8s-data-provider/global-store";
-import { liveProvider } from "./providers/k8s-live-provider";
-import { routerProvider } from './providers/router-provider';
-import {
-  DeploymentCreate,
-  DeploymentList,
-} from "./pages/deployments";
+import React from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Layout } from './components/Layout';
 import {
   ConfigmapForm,
   ConfigmapList,
 } from './pages/configmap';
+import {
+  DeploymentCreate,
+  DeploymentList,
+} from './pages/deployments';
+import { dataProvider } from './providers/k8s-data-provider';
+import { GlobalStore } from './providers/k8s-data-provider/global-store';
+import { liveProvider } from './providers/k8s-live-provider';
+import { routerProvider } from './providers/router-provider';
 
-import "./App.css";
+import './App.css';
 import 'antd/dist/antd.css';
 import '@cloudtower/eagle/dist/style.css';
 
 const globalStore = new GlobalStore({
-  apiUrl: "/api/k8s",
+  apiUrl: '/api/k8s',
   watchApiUrl: 'api/sks-ws/k8s'
 });
 
 function App() {
-  const { t, i18n } = useTranslation();
-
-  const i18nProvider = {
-    translate: (key: string, params: object) => t(key, params),
-    changeLocale: (lang: string) => i18n.changeLanguage(lang),
-    getLocale: () => i18n.language,
-  };
-
   return (
     <BrowserRouter>
       <Refine
@@ -44,30 +36,30 @@ function App() {
         liveProvider={liveProvider(globalStore)}
         options={{
           warnWhenUnsavedChanges: true,
-          liveMode: "auto",
+          liveMode: 'auto',
         }}
         resources={[
           {
-            name: "deployments",
+            name: 'deployments',
             meta: {
-              resourceBasePath: "/apis/apps/v1",
-              kind: "Deployment",
+              resourceBasePath: '/apis/apps/v1',
+              kind: 'Deployment',
             },
-            list: "/deployments",
-            show: "/deployments/show/:id",
-            create: "/deployments/create",
-            edit: "/deployments/edit/:id",
+            list: '/deployments',
+            show: '/deployments/show/:id',
+            create: '/deployments/create',
+            edit: '/deployments/edit/:id',
           },
           {
-            name: "configmaps",
+            name: 'configmaps',
             meta: {
-              resourceBasePath: "/api/v1",
-              kind: "ConfigMap",
+              resourceBasePath: '/api/v1',
+              kind: 'ConfigMap',
             },
-            list: "/configmaps",
-            show: "/configmaps/show/:id",
-            create: "/configmaps/create",
-            edit: "/configmaps/edit",
+            list: '/configmaps',
+            show: '/configmaps/show/:id',
+            create: '/configmaps/create',
+            edit: '/configmaps/edit',
           },
         ]}
       >
