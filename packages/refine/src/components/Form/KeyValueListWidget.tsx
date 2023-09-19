@@ -40,7 +40,7 @@ function KeyValueInput(props: KeyValueInputProps) {
       <kit.textArea value={item.value} onChange={onValueChange} />
       {children}
     </kit.space>
-  )
+  );
 }
 
 export type KeyValueListWidgetProps = FormWidgetProps<Record<string, string>>;
@@ -54,7 +54,7 @@ export function KeyValueListWidget(props: KeyValueListWidgetProps) {
       key,
       value
     }));
-  }, [value])
+  }, [value]);
 
   const onChange = useCallback((newItems: { key: string; value: string; }[]) => {
     const newValue = newItems.reduce((result, item) => {
@@ -68,28 +68,29 @@ export function KeyValueListWidget(props: KeyValueListWidgetProps) {
   const onRemove = useCallback((index: number) => {
     const result = [...items];
 
-    result.splice(index, 1)
+    result.splice(index, 1);
     onChange(result);
-  }, []);
+  }, [onChange, items]);
   const onAdd = useCallback(() => {
     onChange([...items, { key: '', value: '' }]);
-  }, [onChange]);
+  }, [onChange, items]);
 
   return (
     <>
       {items.map((item, index) => {
         return (
           <KeyValueInput
+            key={index}
             item={item}
             onChange={(newItem) => {
               console.log(newItem);
               const temp = [...items];
 
-              temp.splice(index, 1, newItem)
+              temp.splice(index, 1, newItem);
               onChange(temp);
             }}
           >
-            <kit.button onClick={() => { onRemove(index) }} danger>
+            <kit.button onClick={() => { onRemove(index); }} danger>
               Remove
             </kit.button>
           </KeyValueInput>
@@ -104,5 +105,5 @@ export function KeyValueListWidget(props: KeyValueListWidgetProps) {
         </kit.button>
       </kit.form.Item>
     </>
-  )
+  );
 }
