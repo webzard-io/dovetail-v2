@@ -1,11 +1,8 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useList, useResource } from '@refinedev/core';
+import type { FormWidgetProps } from './widget';
 
-type NamespaceSelectProps = {
-  value?: string;
-  onChange?: (value: string | string[]) => void;
-  [props: string]: unknown;
-}
+type NamespaceSelectProps = FormWidgetProps<string | string[]>;
 
 export function NamespaceSelectWidget(props: NamespaceSelectProps) {
   const kit = useUIKit();

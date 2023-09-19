@@ -1,5 +1,6 @@
 import { useUIKit } from '@cloudtower/eagle';
 import React, { useCallback, useMemo } from 'react';
+import type { FormWidgetProps } from './widget';
 
 type Item = {
   key: string;
@@ -42,10 +43,7 @@ function KeyValueInput(props: KeyValueInputProps) {
   )
 }
 
-export type KeyValueListWidgetProps = {
-  value?: Record<string, string>;
-  onChange?: (value: Record<string, string>) => void;
-}
+export type KeyValueListWidgetProps = FormWidgetProps<Record<string, string>>;
 
 export function KeyValueListWidget(props: KeyValueListWidgetProps) {
   const kit = useUIKit();

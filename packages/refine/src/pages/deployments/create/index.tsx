@@ -2,7 +2,7 @@ import React from "react";
 import useEagleForm from '../../../hooks/useEagleForm';
 import { FormProps } from 'antd/lib/form';
 import { useUIKit } from '@cloudtower/eagle';
-import { MetadataWidget } from '../../../components/Form/MetadataWidget';
+import { MetadataWidget } from '../../../components/Form/MetadataForm';
 
 export const DeploymentCreate: React.FC<FormProps> = () => {
   const { formProps, saveButtonProps, queryResult } = useEagleForm();
