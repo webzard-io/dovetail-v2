@@ -1,5 +1,6 @@
 import { useUIKit, AntdInputProps } from '@cloudtower/eagle';
 import { useResource } from '@refinedev/core';
+import React from 'react';
 
 export function NameInputWidget(props: AntdInputProps) {
   const kit = useUIKit();
@@ -17,7 +18,7 @@ export const dnsSubDomainRules = [
   },
   {
     pattern: /^[a-z0-9]([-.a-z0-9]*[a-z0-9])?$/,
-    message: `名称只能包含小写字母、数字，以及 '-' 和 '.'，且必须以字母或数字开头和结束`
+    message: '名称只能包含小写字母、数字，以及 \'-\' 和 \'.\'，且必须以字母或数字开头和结束'
   },
   {
     max: 253,
@@ -32,7 +33,7 @@ export const rfc1123LabelRules = [
   },
   {
     pattern: /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/,
-    message: `名称只能包含小写字母、数字，以及 '-'，且以字母或数字开头和结束`,
+    message: '名称只能包含小写字母、数字，以及 \'-\'，且以字母或数字开头和结束',
   },
   {
     max: 63,
@@ -47,7 +48,7 @@ export const rfc1035LabelRules = [
   },
   {
     pattern: /^[a-z]([-a-z0-9]*[a-z0-9])?$/,
-    message: `名称只能包含小写字母、数字，以及 '-'，且以字母开头，字母或数字结束`,
+    message: '名称只能包含小写字母、数字，以及 \'-\'，且以字母开头，字母或数字结束',
   },
   {
     max: 63,

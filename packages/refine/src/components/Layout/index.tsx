@@ -1,9 +1,10 @@
-import { PropsWithChildren, useState } from "react";
 import { useUIKit } from '@cloudtower/eagle';
+import { PropsWithChildren, useState } from 'react';
+import React from 'react';
 import { Breadcrumb } from '../Breadcrumb';
-import { Menu } from "../Menu";
+import { Menu } from '../Menu';
 
-export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
+export const Layout: React.FC<PropsWithChildren<Record<string, unknown>>> = ({ children }) => {
   const kit = useUIKit();
   const [collapsed, setCollapsed] = useState(false);
   const { Header, Content, Footer, Sider } = kit.layout;
@@ -17,9 +18,7 @@ export const Layout: React.FC<PropsWithChildren> = ({ children }) => {
       <kit.layout>
         <Header style={{ padding: 0, background: '#fff' }} />
         <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb>
-
-          </Breadcrumb>
+          <Breadcrumb/>
           <div style={{ padding: 24, minHeight: 360, background: '#fff' }}>
             {children}
           </div>

@@ -1,7 +1,8 @@
-import { useBreadcrumb } from "@refinedev/core";
-import { Link } from "react-router-dom";
+import { useBreadcrumb } from '@refinedev/core';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-export const Breadcrumb = () => {
+export function Breadcrumb() {
   const { breadcrumbs } = useBreadcrumb();
 
   return (
@@ -19,4 +20,4 @@ export const Breadcrumb = () => {
       })}
     </ul>
   );
-};
+}

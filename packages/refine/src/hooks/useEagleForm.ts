@@ -1,9 +1,4 @@
-import React from "react";
-import { FormInstance, FormProps } from "antd/lib/form";
 import { useUIKit } from '@cloudtower/eagle';
-import { useForm as useFormSF } from "sunflower-antd";
-import { ButtonProps } from "antd/lib/button";
-
 import {
   HttpError,
   BaseRecord,
@@ -14,7 +9,12 @@ import {
   CreateResponse,
   UpdateResponse,
   pickNotDeprecated,
-} from "@refinedev/core";
+} from '@refinedev/core';
+import { ButtonProps } from 'antd/lib/button';
+import { FormInstance, FormProps } from 'antd/lib/form';
+import React from 'react';
+import { useForm as useFormSF } from 'sunflower-antd';
+
 
 export type UseFormProps<
   TQueryFnData extends BaseRecord = BaseRecord,
@@ -167,7 +167,7 @@ const useEagleForm = <
   }, [queryResult?.data?.data, id]);
 
   const onKeyUp = (event: React.KeyboardEvent<HTMLFormElement>) => {
-    if (submitOnEnter && event.key === "Enter") {
+    if (submitOnEnter && event.key === 'Enter') {
       form.submit();
     }
   };

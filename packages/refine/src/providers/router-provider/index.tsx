@@ -1,31 +1,32 @@
-import React, { ComponentProps } from "react";
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   GoConfig,
   ParseResponse,
   RouterBindings,
   matchResourceFromRoute,
   ResourceContext,
-} from "@refinedev/core";
-import { useCallback, useContext } from "react";
-import { parse, stringify } from "qs";
+} from '@refinedev/core';
+import { parse, stringify } from 'qs';
+import React, { ComponentProps } from 'react';
+import { useCallback, useContext } from 'react';
 import {
   useHistory,
   useLocation,
   Link,
   matchPath,
   useParams,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 export const stringifyConfig = {
   addQueryPrefix: true,
   skipNulls: true,
-  arrayFormat: "indices" as const,
+  arrayFormat: 'indices' as const,
   encode: false,
   encodeValuesOnly: true,
 };
 
 export const convertToNumberIfPossible = (value: string | undefined) => {
-  if (typeof value === "undefined") {
+  if (typeof value === 'undefined') {
     return value;
   }
   const num = Number(value);
@@ -67,17 +68,17 @@ export const routerProvider = {
         const urlHash = `#${(
           hash ||
           (keepHash && existingHash) ||
-          ""
-        ).replace(/^#/, "")}`;
+          ''
+        ).replace(/^#/, '')}`;
 
         const hasUrlHash = urlHash.length > 1;
 
-        const urlTo = to || "";
+        const urlTo = to || '';
 
-        const fullPath = `${urlTo}${hasUrlQuery ? stringify(urlQuery, stringifyConfig) : ""
-          }${hasUrlHash ? urlHash : ""}`;
+        const fullPath = `${urlTo}${hasUrlQuery ? stringify(urlQuery, stringifyConfig) : ''
+          }${hasUrlHash ? urlHash : ''}`;
 
-        if (type === "path") {
+        if (type === 'path') {
           return fullPath;
         }
 
@@ -115,7 +116,7 @@ export const routerProvider = {
     const fn = useCallback(() => {
       const parsedSearch = parse(search, { ignoreQueryPrefix: true });
 
-      const combinedParams = {
+      const combinedParams: Record<string, unknown> = {
         ...params,
         ...parsedSearch,
       };
@@ -123,7 +124,7 @@ export const routerProvider = {
       const response: ParseResponse = {
         ...(resource && { resource }),
         ...(action && { action }),
-        ...(parsedSearch?.id && { id: decodeURIComponent(parsedSearch.id) }),
+        ...(parsedSearch?.id && { id: decodeURIComponent(parsedSearch.id as string) }),
         // ...(params?.action && { action: params.action }), // lets see if there is a need for this
         pathname,
         params: {
@@ -147,8 +148,8 @@ export const routerProvider = {
   },
   Link: React.forwardRef<
     HTMLAnchorElement,
-    ComponentProps<NonNullable<RouterBindings["Link"]>>
+    ComponentProps<NonNullable<RouterBindings['Link']>>
   >(function RefineLink(props, ref) {
     return <Link {...props} ref={ref} />;
   }),
-}
+};
