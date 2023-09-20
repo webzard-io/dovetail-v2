@@ -1,4 +1,5 @@
 import { useUIKit } from '@cloudtower/eagle';
+import { css } from '@linaria/core';
 import { useParsed, useShow } from '@refinedev/core';
 import { Typography } from 'antd';
 import { get } from 'lodash-es';
@@ -8,6 +9,10 @@ import { EditButton } from '../EditButton';
 import { ShowField } from './Fields';
 
 const { Title } = Typography;
+
+const ShowContentStyle = css`
+  overflow: auto;
+`;
 
 export const ShowContent: React.FC<{ fields: ShowField[] }> = props => {
   const { fields } = props;
@@ -31,7 +36,7 @@ export const ShowContent: React.FC<{ fields: ShowField[] }> = props => {
   });
 
   return (
-    <kit.space direction="vertical">
+    <kit.space direction="vertical" className={ShowContentStyle}>
       <EditButton />
       <DeleteButton />
       {content}
