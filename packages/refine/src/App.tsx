@@ -4,6 +4,7 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList } from './pages/configmap';
+import { ConfigmapShow } from './pages/configmap/DrawPage';
 import { DeploymentCreate, DeploymentList } from './pages/deployments';
 import { dataProvider } from './providers/k8s-data-provider';
 import { GlobalStore } from './providers/k8s-data-provider/global-store';
@@ -52,7 +53,7 @@ function App() {
               kind: 'ConfigMap',
             },
             list: '/configmaps',
-            show: '/configmaps',
+            show: '/configmaps/show',
             create: '/configmaps/create',
             edit: '/configmaps/edit',
           },
@@ -69,6 +70,10 @@ function App() {
 
             <Route path="/configmaps" exact>
               <ConfigmapList />
+            </Route>
+            <Route path="/configmaps/show">
+              {/* <ConfigmapList /> */}
+              <ConfigmapShow />
             </Route>
             <Route path="/configmaps/create">
               <ConfigmapForm />

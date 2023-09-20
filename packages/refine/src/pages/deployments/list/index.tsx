@@ -4,7 +4,8 @@ import React from 'react';
 import { CreateButton } from '../../../components/CreateButton';
 import { DeleteManyButton } from '../../../components/DeleteManyButton';
 import Table, { IDObject } from '../../../components/Table';
-import { useDrawerShow } from '../../../hooks/useEagleShow/useDrawerShow';
+import { DrawerShow } from '../../../components/Show/DrawerShow';
+import { MetadataFields } from '../../../components/Show/Fields';
 import { useEagleTable } from '../../../hooks/useEagleTable';
 import {
   AgeColumnRenderer,
@@ -19,7 +20,6 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = <
   T extends IDObject,
 >() => {
   const kit = useUIKit();
-  const drawerShow = useDrawerShow();
 
   const { tableProps, selectedKeys } = useEagleTable<T>({
     useTableParams: [{ syncWithLocation: true }],
@@ -41,7 +41,7 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = <
         <DeleteManyButton ids={selectedKeys} />
         <Table {...tableProps} />
       </kit.space>
-      {drawerShow}
+      <DrawerShow fields={MetadataFields} />
     </>
   );
 };

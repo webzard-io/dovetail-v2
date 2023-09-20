@@ -5,7 +5,7 @@ import React from 'react';
 import { ShowField } from './Fields';
 import { ShowContent } from './ShowContent';
 
-export const useDrawerShow = (fields: ShowField[]) => {
+export const DrawerShow: React.FC<{ fields: ShowField[] }> = ({ fields }) => {
   const kit = useUIKit();
   const parsed = useParsed();
   const nav = useNavigation();
