@@ -19,7 +19,7 @@ import { useForm as useFormSF } from 'sunflower-antd';
 export type UseFormProps<
   TQueryFnData extends BaseRecord = BaseRecord,
   TError extends HttpError = HttpError,
-  TVariables = {},
+  TVariables = Record<string, never>,
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
   TResponseError extends HttpError = TError,
