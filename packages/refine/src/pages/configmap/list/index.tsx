@@ -4,9 +4,9 @@ import React from 'react';
 import { CreateButton } from '../../../components/CreateButton';
 import { DeleteManyButton } from '../../../components/DeleteManyButton';
 import { KeyValueListWidget } from '../../../components/Form';
+import { DrawerShow } from '../../../components/Show/DrawerShow';
+import { MetadataFields } from '../../../components/Show/Fields';
 import Table, { IDObject } from '../../../components/Table';
-import { MetadataFields } from '../../../hooks/useEagleShow/Fields';
-import { useDrawerShow } from '../../../hooks/useEagleShow/useDrawerShow';
 import { useEagleTable } from '../../../hooks/useEagleTable';
 import {
   NameColumnRenderer,
@@ -18,16 +18,6 @@ export const ConfigmapList: React.FC<IResourceComponentsProps> = <
   T extends IDObject,
 >() => {
   const kit = useUIKit();
-  const drawerShow = useDrawerShow([
-    ...MetadataFields,
-    {
-      title: 'Data',
-      path: ['data'],
-      render: val => {
-        return <KeyValueListWidget value={val as any} />;
-      },
-    },
-  ]);
 
   const { tableProps, selectedKeys } = useEagleTable<T>({
     useTableParams: [{ syncWithLocation: true }],
@@ -42,7 +32,18 @@ export const ConfigmapList: React.FC<IResourceComponentsProps> = <
         <DeleteManyButton ids={selectedKeys} />
         <Table {...tableProps} />
       </kit.space>
-      {drawerShow}
+      <DrawerShow
+        fields={[
+          ...MetadataFields,
+          {
+            title: 'Data',
+            path: ['data'],
+            render: val => {
+              return <KeyValueListWidget value={val as any} />;
+            },
+          },
+        ]}
+      />
     </>
   );
 };

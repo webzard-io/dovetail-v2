@@ -1,5 +1,5 @@
 import { useUIKit } from '@cloudtower/eagle';
-import { useGo } from '@refinedev/core';
+import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { get } from 'lodash';
 import React from 'react';
 import { Column, IDObject } from '../../components/Table';
@@ -8,12 +8,14 @@ const NameLink: React.FC<{ id: string; name: string }> = props => {
   const { name, id } = props;
   const kit = useUIKit();
   const go = useGo();
-
+  const navigation = useNavigation();
+  const parsed = useParsed();
   return (
     <kit.button
       type="link"
       onClick={() => {
         go({
+          to: navigation.showUrl(parsed.resource?.name || '', ''),
           query: {
             id,
           },
