@@ -1,6 +1,6 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
-import { KeyValueListWidget } from '../../../components/Form';
+import { KeyValue } from '../../../components/KeyValue';
 import { MetadataFields } from '../../../components/Show/Fields';
 import { PageShow } from '../../../components/Show/PageShow';
 
@@ -13,7 +13,7 @@ export const ConfigmapShow: React.FC<IResourceComponentsProps> = () => {
           title: 'Data',
           path: ['data'],
           render: val => {
-            return <KeyValueListWidget value={val as any} />;
+            return <KeyValue value={val as any} />;
           },
         },
       ]}
