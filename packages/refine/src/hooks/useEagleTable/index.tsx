@@ -1,9 +1,10 @@
 import { useUIKit } from '@cloudtower/eagle';
-import { useDelete, useParsed, useTable } from '@refinedev/core';
+import { useParsed, useTable } from '@refinedev/core';
 import { Dropdown } from 'antd';
 import { useCallback, useState } from 'react';
 import React from 'react';
 import { Column, TableProps, IDObject } from '../../components/Table';
+import { useDeleteModal } from '../useDeleteModal';
 import { useEdit } from '../useEdit';
 
 type Params<T extends IDObject> = {
@@ -28,10 +29,10 @@ export const useEagleTable = <T extends IDObject>(params: Params<T>) => {
   const kit = useUIKit();
   const parsed = useParsed();
   const { resource } = parsed;
-  const { mutate } = useDelete();
   const { edit } = useEdit();
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
   const table = useTable<T>(...useTableParams);
+  const { showDeleteConfirm } = useDeleteModal();
 
   const onPageChange = useCallback(
     (page: number) => {
@@ -51,12 +52,9 @@ export const useEagleTable = <T extends IDObject>(params: Params<T>) => {
           overlay={
             <kit.menu style={{ width: 130 }}>
               <kit.menu.Item
-                onClick={() =>
-                  mutate({
-                    resource: resource?.name || '',
-                    id: record.id,
-                  })
-                }
+                onClick={() => {
+                  showDeleteConfirm(resource?.name || '', record.id);
+                }}
               >
                 Delete
               </kit.menu.Item>

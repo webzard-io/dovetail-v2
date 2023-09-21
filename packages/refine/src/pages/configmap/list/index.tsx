@@ -3,7 +3,7 @@ import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { CreateButton } from '../../../components/CreateButton';
 import { DeleteManyButton } from '../../../components/DeleteManyButton';
-import { KeyValueListWidget } from '../../../components/Form';
+import { KeyValue } from '../../../components/KeyValue';
 import { DrawerShow } from '../../../components/Show/DrawerShow';
 import { MetadataFields } from '../../../components/Show/Fields';
 import Table, { IDObject } from '../../../components/Table';
@@ -39,7 +39,7 @@ export const ConfigmapList: React.FC<IResourceComponentsProps> = <
             title: 'Data',
             path: ['data'],
             render: val => {
-              return <KeyValueListWidget value={val as any} />;
+              return <KeyValue value={val as any} />;
             },
           },
         ]}

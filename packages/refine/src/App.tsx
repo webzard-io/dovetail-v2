@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList } from './pages/configmap';
-import { ConfigmapShow } from './pages/configmap/DrawPage';
+import { ConfigmapShow } from './pages/configmap/show';
 import { DeploymentCreate, DeploymentList } from './pages/deployments';
 import { dataProvider } from './providers/k8s-data-provider';
 import { GlobalStore } from './providers/k8s-data-provider/global-store';

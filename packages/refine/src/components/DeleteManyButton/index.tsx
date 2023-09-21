@@ -1,20 +1,18 @@
 import { useUIKit } from '@cloudtower/eagle';
-import { useResource, useDeleteMany } from '@refinedev/core';
+import { useResource } from '@refinedev/core';
 import React, { useCallback } from 'react';
+import { useDeleteManyModal } from '../../hooks/useDeleteModal/useDeleteManyModal';
 
 export const DeleteManyButton: React.FC<{ ids: string[] }> = props => {
   const { resource } = useResource();
-  const { mutate } = useDeleteMany();
   const kit = useUIKit();
+  const { showDeleteManyConfirm } = useDeleteManyModal();
 
   const onClick = useCallback(() => {
     if (resource?.name) {
-      mutate({
-        resource: resource.name,
-        ids: props.ids,
-      });
+      showDeleteManyConfirm(resource.name, props.ids);
     }
-  }, [mutate, props.ids, resource?.name]);
+  }, [props.ids, resource, showDeleteManyConfirm]);
 
   return (
     <kit.button type="primary" danger onClick={onClick}>
