@@ -6,7 +6,10 @@ import { useTranslation } from 'react-i18next';
 import ErrorContent from './ErrorContent';
 import { AuxiliaryLine } from './TableWidgets';
 
-const TableContentStyle = css``;
+const TableContainerStyle = css`
+  width: 100%;
+  border-top: 1px solid rgba(211, 218, 235, 0.6);
+`;
 
 export type IDObject = { id: string };
 
@@ -73,8 +76,8 @@ function Table<Data extends IDObject>(props: TableProps<Data>) {
   }
 
   return (
-    <div className={TableContentStyle}>
-      <div className={TableContentStyle}>
+    <div className={TableContainerStyle}>
+      <div>
         <kit.table
           tableLayout="fixed"
           rowSelection={{
