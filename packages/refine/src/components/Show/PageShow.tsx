@@ -4,11 +4,14 @@ import React from 'react';
 import { ShowField } from './Fields';
 import { ShowContent } from './ShowContent';
 
-export const PageShow: React.FC<{ fields: ShowField[] }> = ({ fields }) => {
+type Props = {
+  fieldGroups: ShowField[][];
+};
+export const PageShow: React.FC<Props> = ({ fieldGroups }) => {
   const kit = useUIKit();
   const parsed = useParsed();
   const { queryResult } = useShow({ id: parsed?.params?.id });
   const { isLoading } = queryResult;
 
-  return isLoading ? <kit.loading /> : <ShowContent fields={fields} />;
+  return isLoading ? <kit.loading /> : <ShowContent fieldGroups={fieldGroups} />;
 };
