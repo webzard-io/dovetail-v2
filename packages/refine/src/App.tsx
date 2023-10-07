@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList } from './pages/configmap';
 import { ConfigmapShow } from './pages/configmap/show';
-import { DeploymentCreate, DeploymentList } from './pages/deployments';
+import { DeploymentCreate, DeploymentList, DeploymentShow } from './pages/deployments';
 import { dataProvider } from './providers/k8s-data-provider';
 import { GlobalStore } from './providers/k8s-data-provider/global-store';
 import { liveProvider } from './providers/k8s-live-provider';
@@ -42,7 +42,7 @@ function App() {
               kind: 'Deployment',
             },
             list: '/deployments',
-            show: '/deployments',
+            show: '/deployments/show',
             create: '/deployments/create',
             edit: '/deployments/edit',
           },
@@ -63,6 +63,9 @@ function App() {
           <Switch>
             <Route path="/deployments" exact>
               <DeploymentList />
+            </Route>
+            <Route path="/deployments/show">
+              <DeploymentShow />
             </Route>
             <Route path="/deployments/create">
               <DeploymentCreate />
