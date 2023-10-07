@@ -9,6 +9,11 @@ import { AuxiliaryLine } from './TableWidgets';
 const TableContainerStyle = css`
   width: 100%;
   border-top: 1px solid rgba(211, 218, 235, 0.6);
+
+  // use eagle's own pagination component, hide antd's
+  .ant-table-pagination {
+    display: none;
+  }
 `;
 
 export type IDObject = { id: string };

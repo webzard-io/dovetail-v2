@@ -1,4 +1,10 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Icon, useUIKit } from '@cloudtower/eagle';
+import {
+  EditPen16PrimaryIcon,
+  MoreEllipsis16BlueIcon,
+  SettingsGear16GradientGrayIcon,
+  TrashBinDelete16Icon,
+} from '@cloudtower/icons-react';
 import { useParsed, useTable } from '@refinedev/core';
 import { Dropdown } from 'antd';
 import { useCallback, useState } from 'react';
@@ -45,32 +51,35 @@ export const useEagleTable = <T extends IDObject>(params: Params<T>) => {
     key: 'action',
     display: true,
     dataIndex: [],
-    title: 'Actions',
+    title: () => <SettingsGear16GradientGrayIcon />,
     render: (_: unknown, record: T) => {
       return (
         <Dropdown
           overlay={
             <kit.menu style={{ width: 130 }}>
-              <kit.menu.Item
-                onClick={() => {
-                  showDeleteConfirm(resource?.name || '', record.id);
-                }}
-              >
-                Delete
-              </kit.menu.Item>
-              <kit.menu.Item
+              <kit.menuItem
                 onClick={() => {
                   if (record.id) {
                     edit(record.id);
                   }
                 }}
               >
-                Edit
-              </kit.menu.Item>
+                <Icon src={EditPen16PrimaryIcon}>Edit</Icon>
+              </kit.menuItem>
+              <kit.menuItem
+                danger={true}
+                onClick={() => {
+                  showDeleteConfirm(resource?.name || '', record.id);
+                }}
+              >
+                <Icon src={TrashBinDelete16Icon}>Delete</Icon>
+              </kit.menuItem>
             </kit.menu>
           }
         >
-          <kit.button>...</kit.button>
+          <kit.button type="tertiary" size="small">
+            <MoreEllipsis16BlueIcon />
+          </kit.button>
         </Dropdown>
       );
     },
