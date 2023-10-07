@@ -1,5 +1,6 @@
 import { initParrotI18n } from '@cloudtower/eagle';
 import { Refine } from '@refinedev/core';
+import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
@@ -18,7 +19,8 @@ initParrotI18n();
 
 const globalStore = new GlobalStore({
   apiUrl: '/api/k8s',
-  watchApiUrl: 'api/sks-ws/k8s',
+  watchWsApiUrl: 'api/sks-ws/k8s',
+  prefix: 'default'
 });
 
 function App() {
