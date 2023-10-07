@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList } from './pages/configmap';
 import { ConfigmapShow } from './pages/configmap/show';
-import { DeploymentCreate, DeploymentList, DeploymentShow } from './pages/deployments';
+import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
 import { routerProvider } from './providers/router-provider';
 
 import 'antd/dist/antd.css';
@@ -67,7 +67,10 @@ function App() {
               <DeploymentShow />
             </Route>
             <Route path="/deployments/create">
-              <DeploymentCreate />
+              <DeploymentForm />
+            </Route>
+            <Route path="/deployments/edit">
+              <DeploymentForm />
             </Route>
 
             <Route path="/configmaps" exact>

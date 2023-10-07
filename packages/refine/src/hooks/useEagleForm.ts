@@ -12,9 +12,13 @@ import {
 } from '@refinedev/core';
 import { ButtonProps } from 'antd/lib/button';
 import { FormInstance, FormProps } from 'antd/lib/form';
-import React from 'react';
+import yaml from 'js-yaml';
+import { JSONSchema7 } from 'json-schema';
+import React, { useRef, useState } from 'react';
+import { type YamlEditorHandle } from 'src/components/YamlEditor';
+import { useSchema } from 'src/hooks/useSchema';
+import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
-
 
 export type UseFormProps<
   TQueryFnData extends BaseRecord = BaseRecord,
@@ -36,6 +40,9 @@ export type UseFormProps<
    * Shows notification when unsaved changes exist
    */
   warnWhenUnsavedChanges?: boolean;
+  editorOptions?: {
+    isGenerateAnnotations?: boolean;
+  }
 };
 
 export type UseFormReturnType<
@@ -58,6 +65,14 @@ export type UseFormReturnType<
   saveButtonProps: ButtonProps & {
     onClick: () => void;
   };
+  editorProps: {
+    ref: React.RefObject<YamlEditorHandle>;
+    defaultValue: string;
+    schema: JSONSchema7 | null;
+    id: string;
+  };
+  enableEditor: boolean;
+  switchEditor: () => void;
   onFinish: (
     values?: TVariables,
   ) => Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void>;
@@ -66,7 +81,7 @@ export type UseFormReturnType<
 const useEagleForm = <
   TQueryFnData extends BaseRecord = BaseRecord,
   TError extends HttpError = HttpError,
-  TVariables extends  { [prop: string]: unknown } = { [prop: string]: unknown },
+  TVariables extends { [prop: string]: unknown } = { [prop: string]: unknown },
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
   TResponseError extends HttpError = TError,
@@ -96,6 +111,7 @@ const useEagleForm = <
   updateMutationOptions,
   id: idFromProps,
   overtimeOptions,
+  editorOptions,
 }: UseFormProps<
   TQueryFnData,
   TError,
@@ -111,7 +127,10 @@ const useEagleForm = <
   TResponse,
   TResponseError
 > => {
+  const editor = useRef<YamlEditorHandle>(null);
+  const [enableEditor, setEnableEditor] = useState(false);
   const kit = useUIKit();
+  const schema = useSchema();
   const [formAnt] = kit.form.useForm();
   const formSF = useFormSF({
     form: formAnt,
@@ -164,6 +183,13 @@ const useEagleForm = <
 
   React.useEffect(() => {
     form.resetFields();
+
+    if (editor.current) {
+      const editorValue = yaml.dump(form.getFieldsValue(true));
+
+      editor.current.setEditorValue(editorValue);
+      editor.current.setValue(editorValue);
+    }
   }, [queryResult?.data?.data, id]);
 
   const onKeyUp = (event: React.KeyboardEvent<HTMLFormElement>) => {
@@ -186,20 +212,53 @@ const useEagleForm = <
     },
   };
 
+  const editorProps = {
+    ref: editor,
+    defaultValue: schema && editorOptions?.isGenerateAnnotations ? generateYamlBySchema(form?.getFieldsValue(true) || {}, schema) : yaml.dump(form.getFieldsValue(true)),
+    schema,
+    id: resource || '',
+  };
+
+  const initialValues = queryResult?.data?.data ? {
+    ...queryResult?.data?.data,
+  } : undefined;
+
+  if (initialValues) {
+    delete initialValues.id;
+    delete initialValues.metadata.managedFields;
+    delete initialValues.metadata.annotations['kubectl.kubernetes.io/last-applied-configuration'];
+  }
+
   return {
     form: formSF.form,
     formProps: {
       ...formSF.formProps,
-      onFinish: (values: TVariables) =>
-        onFinish(values).catch((error) => error),
+      onFinish: (values: TVariables) => {
+        const finalValues = editor.current ? yaml.load(editor.current?.getEditorValue() || '') as TVariables : values;
+
+        return onFinish(finalValues).catch((error) => error);
+      },
       onKeyUp,
       onValuesChange,
-      initialValues: queryResult?.data?.data,
+      initialValues,
     },
     saveButtonProps,
     ...useFormCoreResult,
+    editorProps,
+    enableEditor,
+    switchEditor() {
+      if (enableEditor && editor.current?.getEditorValue()) {
+        const value = yaml.load(editor.current?.getEditorValue()) as Record<string, unknown>;
+
+        form?.setFieldsValue(value);
+      }
+
+      setEnableEditor(!enableEditor);
+    },
     onFinish: async (values?: TVariables) => {
-      return await onFinish(values ?? formSF.form.getFieldsValue(true));
+      const finalValues = enableEditor ? yaml.load(editor.current?.getEditorValue() || '') : values ?? formSF.form.getFieldsValue(true);
+
+      return await onFinish(finalValues);
     },
   };
 };

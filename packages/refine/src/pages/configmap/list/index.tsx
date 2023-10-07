@@ -1,21 +1,22 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
-import { CreateButton } from '../../../components/CreateButton';
-import { DeleteManyButton } from '../../../components/DeleteManyButton';
-import { KeyValue } from '../../../components/KeyValue';
-import { DrawerShow } from '../../../components/Show/DrawerShow';
-import { MetadataFields } from '../../../components/Show/Fields';
-import Table, { IDObject } from '../../../components/Table';
-import { useEagleTable } from '../../../hooks/useEagleTable';
+import { CreateButton } from 'src/components/CreateButton';
+import { DeleteManyButton } from 'src/components/DeleteManyButton';
+import { KeyValue } from 'src/components/KeyValue';
+import { DrawerShow } from 'src/components/Show/DrawerShow';
+import { MetadataFields } from 'src/components/Show/Fields';
+import Table, { IDObject } from 'src/components/Table';
+import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   NameColumnRenderer,
   NameSpaceColumnRenderer,
   AgeColumnRenderer,
-} from '../../../hooks/useEagleTable/Columns';
+} from 'src/hooks/useEagleTable/Columns';
+import { Unstructured } from 'src/providers/k8s-data-provider/kube-api';
 
 export const ConfigmapList: React.FC<IResourceComponentsProps> = <
-  T extends IDObject,
+  T extends IDObject & Unstructured,
 >() => {
   const kit = useUIKit();
 
