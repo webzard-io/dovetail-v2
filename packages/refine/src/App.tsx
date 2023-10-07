@@ -1,14 +1,12 @@
 import { initParrotI18n } from '@cloudtower/eagle';
 import { Refine } from '@refinedev/core';
+import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList } from './pages/configmap';
 import { ConfigmapShow } from './pages/configmap/show';
 import { DeploymentCreate, DeploymentList } from './pages/deployments';
-import { dataProvider } from './providers/k8s-data-provider';
-import { GlobalStore } from './providers/k8s-data-provider/global-store';
-import { liveProvider } from './providers/k8s-live-provider';
 import { routerProvider } from './providers/router-provider';
 
 import 'antd/dist/antd.css';
@@ -18,7 +16,8 @@ initParrotI18n();
 
 const globalStore = new GlobalStore({
   apiUrl: '/api/k8s',
-  watchApiUrl: 'api/sks-ws/k8s',
+  watchWsApiUrl: 'api/sks-ws/k8s',
+  prefix: 'default'
 });
 
 function App() {
