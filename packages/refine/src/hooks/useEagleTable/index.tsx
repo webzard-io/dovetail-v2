@@ -4,12 +4,15 @@ import {
   MoreEllipsis16BlueIcon,
   SettingsGear16GradientGrayIcon,
   TrashBinDelete16Icon,
+  Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
 import { useParsed, useTable } from '@refinedev/core';
 import { Dropdown } from 'antd';
+import { Unstructured } from 'k8s-api-provider';
 import { useCallback, useState } from 'react';
 import React from 'react';
 import { Column, TableProps, IDObject } from '../../components/Table';
+import { useDownloadYAML } from '../../hooks/useDownloadYAML';
 import { useDeleteModal } from '../useDeleteModal';
 import { useEdit } from '../useEdit';
 
@@ -29,10 +32,11 @@ export enum ColumnKeys {
   podImage = 'podImage',
 }
 
-export const useEagleTable = <T extends IDObject>(params: Params<T>) => {
+export const useEagleTable = <T extends IDObject & Unstructured>(params: Params<T>) => {
   const { useTableParams, columns, tableProps } = params;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const kit = useUIKit();
+  const download = useDownloadYAML();
   const parsed = useParsed();
   const { resource } = parsed;
   const { edit } = useEdit();
@@ -56,7 +60,7 @@ export const useEagleTable = <T extends IDObject>(params: Params<T>) => {
       return (
         <Dropdown
           overlay={
-            <kit.menu style={{ width: 130 }}>
+            <kit.menu>
               <kit.menuItem
                 onClick={() => {
                   if (record.id) {
@@ -74,6 +78,20 @@ export const useEagleTable = <T extends IDObject>(params: Params<T>) => {
               >
                 <Icon src={TrashBinDelete16Icon}>Delete</Icon>
               </kit.menuItem>
+              <kit.menu.Item
+                onClick={() => {
+                  if (record.id) {
+                    download({
+                      name: record.metadata.name || record.kind,
+                      item: record,
+                    });
+                  }
+                }}
+              >
+                <Icon src={Download16GradientBlueIcon}>
+                  Download YAML
+                </Icon>
+              </kit.menu.Item>
             </kit.menu>
           }
         >
