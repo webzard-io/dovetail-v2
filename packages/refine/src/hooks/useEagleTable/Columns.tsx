@@ -2,6 +2,7 @@ import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { get } from 'lodash';
 import React from 'react';
+import { StateTag } from '../../components/StateTag';
 import { Column, IDObject } from '../../components/Table';
 
 const NameLink: React.FC<{ id: string; name: string }> = props => {
@@ -73,6 +74,7 @@ export const PhaseColumnRenderer = <T extends IDObject>(): Column<T> => {
     title: '状态',
     sortable: true,
     sorter: CommonSorter(dataIndex),
+    render: () => <StateTag />,
   };
 };
 
