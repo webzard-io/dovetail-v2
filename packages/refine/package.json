@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@cloudtower/eagle": "^0.26.5",
-    "@cloudtower/icons-react": "^0.26.5",
+    "@cloudtower/eagle": "^0.26.9",
+    "@cloudtower/icons-react": "^0.26.9",
     "@refinedev/core": "^4.38.0",
     "@refinedev/inferencer": "^4.5.4",
     "antd": "4.5.0",
@@ -43,8 +43,8 @@
     "vite": "^3.2.7"
   },
   "peerDependencies": {
-    "@cloudtower/eagle": "^0.26.5",
-    "@cloudtower/icons-react": "^0.26.5",
+    "@cloudtower/eagle": "^0.26.9",
+    "@cloudtower/icons-react": "^0.26.9",
     "@refinedev/core": "^4.38.0",
     "antd": "4.5.0",
     "i18next": "^20.1.0",
