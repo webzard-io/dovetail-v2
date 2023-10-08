@@ -4,8 +4,7 @@ import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
-import { ConfigmapForm, ConfigmapList } from './pages/configmap';
-import { ConfigmapShow } from './pages/configmap/show';
+import { ConfigmapForm, ConfigmapList, ConfigmapShow } from './pages/configmap';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
 import { routerProvider } from './providers/router-provider';
 
@@ -77,7 +76,6 @@ function App() {
               <ConfigmapList />
             </Route>
             <Route path="/configmaps/show">
-              {/* <ConfigmapList /> */}
               <ConfigmapShow />
             </Route>
             <Route path="/configmaps/create">

@@ -7,7 +7,7 @@ export function useEdit() {
   const edit = useCallback(
     (id: BaseKey) => {
       go({
-        to: `${resource?.name}/edit`,
+        to: `/${resource?.name}/edit`,
         query: {
           id,
         },
