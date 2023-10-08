@@ -102,7 +102,7 @@ export const DeploymentImageColumnRenderer = <T extends IDObject>(): Column<T> =
   };
 };
 
-export const PocSpecImageColumnRenderer = <T extends IDObject>(): Column<T> => {
+export const PodSpecImageColumnRenderer = <T extends IDObject>(): Column<T> => {
   const dataIndex = ['spec', 'containers', '0', 'image'];
   return {
     key: 'podSpecImage',
