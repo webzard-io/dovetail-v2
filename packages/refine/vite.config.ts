@@ -11,6 +11,9 @@ export default defineConfig({
       '/api': {
         target: 'http://10.255.4.115',
         ws: true,
+        headers: {
+          'x-skip-auth-verify': 'true'
+        }
       },
     },
   },
@@ -38,7 +41,15 @@ export default defineConfig({
         'react-dom',
         'react-router-dom',
         'sunflower-antd',
+        'monaco-editor',
+        'monaco-yaml',
+        'js-yaml',
       ],
     },
   },
+  resolve: {
+    alias: {
+      'src': path.resolve(__dirname, 'src'),
+    }
+  }
 });
