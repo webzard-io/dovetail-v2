@@ -1,11 +1,9 @@
 import { useUIKit } from '@cloudtower/eagle';
+import { css } from '@linaria/core';
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
-import { CreateButton } from '../../../components/CreateButton';
-import { DeleteManyButton } from '../../../components/DeleteManyButton';
 import Table, { IDObject } from '../../../components/Table';
-import { DrawerShow } from '../../../components/Show/DrawerShow';
-import { MetadataFields } from '../../../components/Show/Fields';
+import { TableToolBar } from '../../../components/Table/TableToolBar';
 import { useEagleTable } from '../../../hooks/useEagleTable';
 import {
   AgeColumnRenderer,
@@ -35,13 +33,14 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = <
   });
 
   return (
-    <>
-      <kit.space direction="vertical">
-        <CreateButton />
-        <DeleteManyButton ids={selectedKeys} />
-        <Table {...tableProps} />
-      </kit.space>
-      <DrawerShow fields={MetadataFields} />
-    </>
+    <kit.space
+      direction="vertical"
+      className={css`
+        width: 100%;
+      `}
+    >
+      <TableToolBar title="Deployments" selectedKeys={selectedKeys} />
+      <Table {...tableProps} />
+    </kit.space>
   );
 };

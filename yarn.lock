@@ -1205,13 +1205,13 @@
     "@babel/helper-validator-identifier" "^7.22.19"
     to-fast-properties "^2.0.0"
 
-"@cloudtower/eagle@^0.26.5":
-  version "0.26.6"
-  resolved "https://registry.npmmirror.com/@cloudtower/eagle/-/eagle-0.26.6.tgz#0d5f4fb8c18aefd6450f90fbd2767e39cfad4bec"
-  integrity sha512-mUW9B1n7QbS9bQiZ8e5OtTYj4tF7fOOJ4Irf76FInXLR3+RUpog/LsRZLmGa5Wu6cdEcf62f3h9GG8Wk12ARsw==
+"@cloudtower/eagle@^0.26.9":
+  version "0.26.9"
+  resolved "https://registry.npmmirror.com/@cloudtower/eagle/-/eagle-0.26.9.tgz#ef28ea26d5474dec2b1bb76a7abde686831202dd"
+  integrity sha512-BGCjPRKIcr+j1NfQZbcXanYrHvUlsSO5ETWmO5q7H1i6tAdKP16+VFtIXV4N10bHoBHb1z7fgXZVZ/L2my9SBg==
   dependencies:
-    "@cloudtower/icons-react" "0.26.6"
-    "@cloudtower/parrot" "0.26.6"
+    "@cloudtower/icons-react" "0.26.9"
+    "@cloudtower/parrot" "0.26.9"
     "@cloudtower/rc-notification" "^4.6.1"
     "@linaria/core" "^4.2.2"
     "@linaria/react" "^4.3.0"
@@ -1225,15 +1225,15 @@
     redux "^4.2.0"
     timezones.json "^1.6.1"
 
-"@cloudtower/icons-react@0.26.6", "@cloudtower/icons-react@^0.26.5":
-  version "0.26.6"
-  resolved "https://registry.npmmirror.com/@cloudtower/icons-react/-/icons-react-0.26.6.tgz#7a92de0e7578a86a3cfd9ddac0c260dfc31d3537"
-  integrity sha512-wTLy0+rbt5gEfOvyI9SlkvDuhtu7+1Q2lObe2m2hyelJrQIiBbtdMhrrgpohsOUPrPyKuHGGoy/9y3bmvRO3pw==
+"@cloudtower/icons-react@0.26.9", "@cloudtower/icons-react@^0.26.9":
+  version "0.26.9"
+  resolved "https://registry.npmmirror.com/@cloudtower/icons-react/-/icons-react-0.26.9.tgz#67356330f260b44bc1835e398292e81660c5326d"
+  integrity sha512-6Azs1bOMFCzeM2GvR/Aw9HcNih0zRz0Z3FoUsjBk/H9yq8u0NxxCbg0Qg4g+SZhXqkMMnn+duPOlquSeby0eSA==
 
-"@cloudtower/parrot@0.26.6":
-  version "0.26.6"
-  resolved "https://registry.npmmirror.com/@cloudtower/parrot/-/parrot-0.26.6.tgz#b817b17f20dc88f49bfd2532b0526fe76ccc13df"
-  integrity sha512-0ub/M1P1qFHPleqnTzxqiP8tqlH52rn2n9xd3Zw2bBq4NcQJb2I7sapDPMiCuIflFKgIrBFPUUhEZ5g/DR3yiw==
+"@cloudtower/parrot@0.26.9":
+  version "0.26.9"
+  resolved "https://registry.npmmirror.com/@cloudtower/parrot/-/parrot-0.26.9.tgz#c194f858002acde1aafa50c3ecd62ed596634b8a"
+  integrity sha512-rtxPdGg0ngOC2NcOnc/HBzkk4NjCGP9wqZBwNecoHHbRk0N1VR5PBkh7jEstda3LbrWQCS+Rs0uB6+wh8V7aEA==
   dependencies:
     i18next "21.10.0"
     lodash.merge "^4.6.2"
