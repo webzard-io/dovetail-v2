@@ -1,10 +1,11 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { IResourceComponentsProps } from '@refinedev/core';
+import { Unstructured } from 'k8s-api-provider';
 import React from 'react';
-import Table, { IDObject } from '../../../components/Table';
-import { TableToolBar } from '../../../components/Table/TableToolBar';
-import { useEagleTable } from '../../../hooks/useEagleTable';
+import Table, { IDObject } from 'src/components/Table';
+import { TableToolBar } from 'src/components/Table/TableToolBar';
+import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,
   DeploymentImageColumnRenderer,
@@ -12,10 +13,10 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
   ReplicasColumnRenderer,
-} from '../../../hooks/useEagleTable/Columns';
+} from 'src/hooks/useEagleTable/Columns';
 
 export const DeploymentList: React.FC<IResourceComponentsProps> = <
-  T extends IDObject,
+  T extends IDObject & Unstructured,
 >() => {
   const kit = useUIKit();
 
