@@ -1,10 +1,10 @@
 import { Typo, useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useParsed, useResource, useShow } from '@refinedev/core';
+import { Unstructured } from 'k8s-api-provider';
 import { get } from 'lodash-es';
 import React from 'react';
-import { DeleteButton } from '../DeleteButton';
-import { EditButton } from '../EditButton';
+import K8sDropdown from 'src/components/K8sDropdown';
 import { FirstLineFields, SecondLineFields, ShowField } from './Fields';
 
 const TopBarStyle = css`
@@ -25,7 +25,7 @@ export const ShowContent: React.FC<Props> = props => {
   const kit = useUIKit();
   const parsed = useParsed();
   const { resource } = useResource();
-  const { queryResult } = useShow({ id: parsed?.params?.id });
+  const { queryResult } = useShow<Unstructured & { id: string }>({ id: parsed?.params?.id });
   const { data } = queryResult;
   const record = data?.data;
 
@@ -55,8 +55,7 @@ export const ShowContent: React.FC<Props> = props => {
         <kit.tag color="green">Active</kit.tag>
       </div>
       <kit.space>
-        <EditButton />
-        <DeleteButton />
+        <K8sDropdown data={record} />
       </kit.space>
     </kit.space>
   );
