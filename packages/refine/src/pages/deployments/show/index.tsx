@@ -7,10 +7,21 @@ import {
   ShowField,
 } from '../../../components/Show/Fields';
 import { PageShow } from '../../../components/Show/PageShow';
+import { PodsList } from './PodsList';
 
 const secondLineFields: ShowField[] = [ImageField, ReplicaField];
-const thirdLineFields: ShowField[] = [ConditionsField];
+const tabFields: ShowField[] = [
+  {
+    key: 'pods',
+    title: 'Pods',
+    path: [],
+    render: () => {
+      return <PodsList />;
+    },
+  },
+  ConditionsField,
+];
 
 export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
-  return <PageShow fieldGroups={[[], secondLineFields, thirdLineFields]} />;
+  return <PageShow fieldGroups={[[], secondLineFields, tabFields]} />;
 };

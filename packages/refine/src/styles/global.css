@@ -1,0 +1,9 @@
+#root {
+  height: 100vh;
+}
+
+main.ant-layout-content {
+  display: flex;
+  flex-direction: column;
+  height: 0;
+}
