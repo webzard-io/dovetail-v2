@@ -86,7 +86,7 @@ export const ShowContent: React.FC<Props> = props => {
   const labelAnnotations = (
     <kit.space direction="vertical">{renderFields(SecondLineFields)}</kit.space>
   );
-  const thirdLine = (
+  const tabs = (
     <kit.tabs>
       {fieldGroups[2].map(field => {
         let content = <span>{get(record, field.path)}</span>;
@@ -124,6 +124,10 @@ export const ShowContent: React.FC<Props> = props => {
       {firstLine}
       <kit.divider />
       {modeMap[mode]}
+      {secondLine}
+      {labelAnnotations}
+      <kit.divider />
+      {tabs}
     </kit.space>
   );
 };
