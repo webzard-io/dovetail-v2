@@ -1,5 +1,6 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
+import { i18n } from 'i18next';
 import { get } from 'lodash';
 import React from 'react';
 import { StateTag } from '../../components/StateTag';
@@ -38,13 +39,13 @@ const CommonSorter =
     return -1;
   };
 
-export const NameColumnRenderer = <T extends IDObject>(): Column<T> => {
+export const NameColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
   const dataIndex = ['metadata', 'name'];
   return {
     key: 'name',
     display: true,
     dataIndex,
-    title: '名字',
+    title: i18n.t('name'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (v: string, record: T) => {
@@ -53,74 +54,74 @@ export const NameColumnRenderer = <T extends IDObject>(): Column<T> => {
   };
 };
 
-export const NameSpaceColumnRenderer = <T extends IDObject>(): Column<T> => {
+export const NameSpaceColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
   const dataIndex = ['metadata', 'namespace'];
   return {
     key: 'namespace',
     display: true,
     dataIndex,
-    title: '名字空间',
+    title: i18n.t('namespace'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
   };
 };
 
-export const PhaseColumnRenderer = <T extends IDObject>(): Column<T> => {
+export const PhaseColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
   const dataIndex = ['status', 'phase'];
   return {
     key: 'phase',
     display: true,
     dataIndex: dataIndex,
-    title: '状态',
+    title: i18n.t('phase'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: () => <StateTag />,
   };
 };
 
-export const PocImageColumnRenderer = <T extends IDObject>(): Column<T> => {
+export const PocImageColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
   const dataIndex = ['spec', 'containers', '0', 'image'];
   return {
     key: 'podSpecImage',
     display: true,
     dataIndex,
-    title: '镜像',
+    title: i18n.t('phase'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
   };
 };
 
-export const DeploymentImageColumnRenderer = <T extends IDObject>(): Column<T> => {
+export const DeploymentImageColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
   const dataIndex = ['spec', 'template', 'spec', 'containers', '0', 'image'];
   return {
     key: 'podSpecImage',
     display: true,
     dataIndex,
-    title: '镜像',
+    title: i18n.t('phase'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
   };
 };
 
-export const PodSpecImageColumnRenderer = <T extends IDObject>(): Column<T> => {
+export const PodSpecImageColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
   const dataIndex = ['spec', 'containers', '0', 'image'];
   return {
     key: 'podSpecImage',
     display: true,
     dataIndex,
-    title: '镜像',
+    title: i18n.t('phase'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
   };
 };
 
-export const ReplicasColumnRenderer = <T extends IDObject>(): Column<T> => {
+export const ReplicasColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
   const dataIndex = ['status', 'replicas'];
   return {
     key: 'replicas',
     display: true,
     dataIndex,
-    title: '副本数',
+    title: i18n.t('replicas'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (_, record: any) => {
@@ -133,13 +134,13 @@ export const ReplicasColumnRenderer = <T extends IDObject>(): Column<T> => {
   };
 };
 
-export const AgeColumnRenderer = <T extends IDObject>(): Column<T> => {
+export const AgeColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
   return {
     key: 'creationTimestamp',
     display: true,
     dataIndex,
-    title: '创建时间',
+    title: i18n.t('created_time'),
     sortable: true,
     sorter: (a: T, b: T) => {
       const valA = new Date(get(a, dataIndex));

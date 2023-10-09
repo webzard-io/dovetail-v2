@@ -5,7 +5,7 @@ import React from 'react';
 import { ShowField } from './Fields';
 import { ShowContent } from './ShowContent';
 
-export const DrawerShow: React.FC<{ fields: ShowField[] }> = ({ fields }) => {
+export const DrawerShow: React.FC<{ fieldGroups: ShowField[][] }> = ({ fieldGroups }) => {
   const kit = useUIKit();
   const parsed = useParsed();
   const nav = useNavigation();
@@ -20,7 +20,7 @@ export const DrawerShow: React.FC<{ fields: ShowField[] }> = ({ fields }) => {
       width="50%"
       visible={!!parsed?.params?.id}
     >
-      {isLoading ? <kit.loading /> : <ShowContent fields={fields} />}
+      {isLoading ? <kit.loading /> : <ShowContent fieldGroups={fieldGroups} />}
     </Drawer>
   );
 };

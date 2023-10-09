@@ -2,6 +2,7 @@ import { css } from '@linaria/core';
 import { IResourceComponentsProps } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Table, { IDObject } from 'src/components/Table';
 import { TableToolBar } from 'src/components/Table/TableToolBar';
 import { useEagleTable } from 'src/hooks/useEagleTable';
@@ -29,15 +30,16 @@ const TableStyle = css`
 export const DeploymentList: React.FC<IResourceComponentsProps> = <
   T extends IDObject & Unstructured,
 >() => {
+  const { i18n } = useTranslation();
   const { tableProps, selectedKeys } = useEagleTable<T>({
     useTableParams: [{}],
     columns: [
-      PhaseColumnRenderer(),
-      NameColumnRenderer(),
-      NameSpaceColumnRenderer(),
-      DeploymentImageColumnRenderer(),
-      ReplicasColumnRenderer(),
-      AgeColumnRenderer(),
+      PhaseColumnRenderer(i18n),
+      NameColumnRenderer(i18n),
+      NameSpaceColumnRenderer(i18n),
+      DeploymentImageColumnRenderer(i18n),
+      ReplicasColumnRenderer(i18n),
+      AgeColumnRenderer(i18n),
     ],
     tableProps: {
       currentSize: 10,
@@ -45,9 +47,7 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = <
   });
 
   return (
-    <div
-      className={ListPageStyle}
-    >
+    <div className={ListPageStyle}>
       <TableToolBar title="Deployments" selectedKeys={selectedKeys} />
       <Table className={TableStyle} {...tableProps} scroll={{ y: 'calc(100% - 48px)' }} />
     </div>
