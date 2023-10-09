@@ -16,6 +16,7 @@ export const DeploymentForm: React.FC<FormProps> = () => {
       initialValues={formProps.initialValues ?? {
         ...BASE_INIT_VALUE,
         spec: {
+          replicas: 1,
           selector: {
             matchLabels: {
               'workload.user.cattle.io/workloadselector':

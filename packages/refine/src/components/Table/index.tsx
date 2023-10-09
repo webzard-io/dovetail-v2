@@ -1,6 +1,6 @@
 import { useUIKit, TableProps as BaseTableProps } from '@cloudtower/eagle';
 import { RequiredColumnProps } from '@cloudtower/eagle/dist/spec/base';
-import { css } from '@linaria/core';
+import { css, cx } from '@linaria/core';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from './ErrorContent';
@@ -9,10 +9,17 @@ import { AuxiliaryLine } from './TableWidgets';
 const TableContainerStyle = css`
   width: 100%;
   border-top: 1px solid rgba(211, 218, 235, 0.6);
+  display: flex;
+  flex-direction: column;
 
   // use eagle's own pagination component, hide antd's
   .ant-table-pagination {
     display: none;
+  }
+
+  .table-container {
+    flex: 1;
+    min-height: 0;
   }
 `;
 
@@ -23,6 +30,7 @@ export type Column<Data extends IDObject> = RequiredColumnProps<Data> & {
 };
 
 export type TableProps<Data extends IDObject> = {
+  className?: string;
   loading: boolean;
   error: boolean;
   dataSource: Data[];
@@ -47,6 +55,7 @@ function Table<Data extends IDObject>(props: TableProps<Data>) {
     dataSource,
     rowKey,
     columns,
+    scroll,
     currentPage,
     currentSize,
     refetch,
@@ -81,25 +90,24 @@ function Table<Data extends IDObject>(props: TableProps<Data>) {
   }
 
   return (
-    <div className={TableContainerStyle}>
-      <div>
-        <kit.table
-          tableLayout="fixed"
-          rowSelection={{
-            onChange: (keys, rows) => {
-              onSelect?.(keys, rows);
-            },
-          }}
-          columns={columns}
-          dataSource={dataSource}
-          pagination={pagination}
-          error={error}
-          loading={loading}
-          rowKey={rowKey}
-          wrapper={wrapperRef}
-        />
-        <AuxiliaryLine ref={auxiliaryLineRef}></AuxiliaryLine>
-      </div>
+    <div ref={wrapperRef} className={cx(TableContainerStyle, props.className)}>
+      <kit.table
+        tableLayout="fixed"
+        rowSelection={{
+          onChange: (keys, rows) => {
+            onSelect?.(keys, rows);
+          },
+        }}
+        columns={columns}
+        dataSource={dataSource}
+        pagination={pagination}
+        error={error}
+        loading={loading}
+        rowKey={rowKey}
+        wrapper={wrapperRef}
+        scroll={scroll}
+      />
+      <AuxiliaryLine ref={auxiliaryLineRef}></AuxiliaryLine>
       <kit.pagination
         current={currentPage}
         size={currentSize}
