@@ -17,6 +17,8 @@ const TopBarStyle = css`
 const ShowContentStyle = css`
   width: 100%;
   overflow: auto;
+  height: 100%;
+  width: 100%;
 `;
 
 const EditorStyle = css`
@@ -86,7 +88,7 @@ export const ShowContent: React.FC<Props> = props => {
   const labelAnnotations = (
     <kit.space direction="vertical">{renderFields(SecondLineFields)}</kit.space>
   );
-  const thirdLine = (
+  const tabs = (
     <kit.tabs>
       {fieldGroups[2].map(field => {
         let content = <span>{get(record, field.path)}</span>;
@@ -107,7 +109,7 @@ export const ShowContent: React.FC<Props> = props => {
         {secondLine}
         {labelAnnotations}
         <kit.divider />
-        {thirdLine}
+        {tabs}
       </>
     ),
     [Mode.Yaml]: <MonacoYamlEditor

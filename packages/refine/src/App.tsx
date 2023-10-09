@@ -10,6 +10,7 @@ import { routerProvider } from './providers/router-provider';
 
 import './styles.css';
 import 'antd/dist/antd.css';
+import './styles/global.css';
 import '@cloudtower/eagle/dist/style.css';
 
 initParrotI18n();
