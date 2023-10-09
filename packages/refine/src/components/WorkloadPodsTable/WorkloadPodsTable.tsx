@@ -8,7 +8,19 @@ import { StateTag } from '../StateTag';
 import Table from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
-export const WorkloadPodsTable: React.FC = () => {
+type OwnerMatcher = { apiVersion: string; kind: string; name: string };
+
+function matchOwner(pod: PodModel, owner: OwnerMatcher): boolean {
+  return (pod.metadata.ownerReferences || []).some(ref => {
+    return (
+      ref.apiVersion === owner.apiVersion &&
+      ref.kind === owner.kind &&
+      ref.name === owner.name
+    );
+  });
+}
+
+export const WorkloadPodsTable: React.FC<{ owner?: OwnerMatcher }> = ({ owner }) => {
   const kit = useUIKit();
   const dataProvider = useDataProvider()();
   const { id } = useParsed();
@@ -21,10 +33,15 @@ export const WorkloadPodsTable: React.FC = () => {
     dataProvider
       .getList({ resource: 'pods', meta: { resourceBasePath: '/api/v1' } })
       .then(res => {
-        console.log('res.data', res.data);
-        setPods(res.data.map(p => new PodModel(p as any)));
+        setPods(
+          res.data
+            .map(p => new PodModel(p as any))
+            .filter(p => {
+              return owner ? matchOwner(p, owner) : true;
+            })
+        );
       });
-  }, [dataProvider, id]);
+  }, [dataProvider, id, owner]);
 
   const columns = [
     {

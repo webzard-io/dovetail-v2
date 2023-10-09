@@ -1,4 +1,4 @@
-import { IResourceComponentsProps } from '@refinedev/core';
+import { IResourceComponentsProps, useParsed, useResource } from '@refinedev/core';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,8 @@ import { WorkloadPodsTable } from '../../../components/WorkloadPodsTable';
 
 export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
   const { t } = useTranslation();
+  const { resource } = useResource();
+  const { id } = useParsed();
 
   const ImageField: ShowField = {
     key: 'Image',
@@ -49,7 +51,16 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
             title: 'Pods',
             path: [],
             render: () => {
-              return <WorkloadPodsTable />;
+              const { resourceBasePath = '', kind } = resource?.meta || {};
+              return (
+                <WorkloadPodsTable
+                  owner={{
+                    apiVersion: resourceBasePath.replace('/apis/', ''),
+                    kind,
+                    name: ((id as string) || '').split('/')[1],
+                  }}
+                />
+              );
             },
           },
           ConditionsField,
