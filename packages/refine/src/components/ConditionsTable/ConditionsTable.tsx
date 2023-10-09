@@ -1,14 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
+import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
-
-type Condition = {
-  lastTransitionTime: string;
-  lastUpdateTime: string;
-  message: string;
-  reason: string;
-  status: 'True' | 'False' | 'Unknown';
-  type: 'Available';
-};
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   conditions: Condition[];
@@ -16,6 +9,7 @@ type Props = {
 
 export const ConditionsTable: React.FC<Props> = ({ conditions }) => {
   const kit = useUIKit();
+  const { t } = useTranslation();
 
   const conditionsWithId = conditions.map(c => {
     return {
@@ -29,21 +23,21 @@ export const ConditionsTable: React.FC<Props> = ({ conditions }) => {
       key: 'type',
       display: true,
       dataIndex: 'type',
-      title: 'Condition',
+      title: t('condition'),
       sortable: true,
     },
     {
       key: 'status',
       display: true,
       dataIndex: 'status',
-      title: 'Status',
+      title: t('status'),
       sortable: true,
     },
     {
       key: 'lastUpdateTime',
       display: true,
       dataIndex: 'lastUpdateTime',
-      title: 'Updated',
+      title: t('updated_time'),
       sortable: true,
       render: (value: string) => {
         return <span>{new Date(value).toDateString()}</span>;
@@ -53,7 +47,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions }) => {
       key: 'message',
       display: true,
       dataIndex: 'message',
-      title: 'Message',
+      title: t('message'),
       sortable: true,
     },
   ];

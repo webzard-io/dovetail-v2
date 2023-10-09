@@ -1,19 +1,23 @@
 import { ModalProps } from '@cloudtower/eagle';
 import { BaseKey, useDeleteMany } from '@refinedev/core';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const useDeleteManyModal = (resource: string, ids: BaseKey[]) => {
   const { mutate } = useDeleteMany();
   const [visible, setVisible] = useState(false);
-  console.log('visible', visible);
+  const { t } = useTranslation();
   const modalProps: ModalProps = {
-    title: '删除',
-    okText: '删除',
+    title: t('delete'),
+    okText: t('delete'),
     okButtonProps: {
       danger: true,
     },
-    cancelText: '取消',
-    children: `确定要删除${ids.join(', ')}吗？`,
+    cancelText: t('cancel'),
+    children: t('confirm_delete_text', {
+      target: ids,
+      interpolation: { escapeValue: false },
+    }),
     onOk() {
       mutate({
         resource,

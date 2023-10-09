@@ -8,6 +8,7 @@ import {
 import { useResource } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useEdit } from 'src/hooks/useEdit';
@@ -22,8 +23,11 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const useResourceResult = useResource();
   const resource = useResourceResult.resource;
   const { edit } = useEdit();
-  const { modalProps, visible, openDeleteConfirmModal } = useDeleteModal(resource?.name || '');
+  const { modalProps, visible, openDeleteConfirmModal } = useDeleteModal(
+    resource?.name || ''
+  );
   const download = useDownloadYAML();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -37,7 +41,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 }
               }}
             >
-              <Icon src={EditPen16PrimaryIcon}>Edit</Icon>
+              <Icon src={EditPen16PrimaryIcon}>{t('edit')}</Icon>
             </kit.menuItem>
             <kit.menuItem
               danger={true}
@@ -45,7 +49,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 openDeleteConfirmModal(data.id);
               }}
             >
-              <Icon src={TrashBinDelete16Icon}>Delete</Icon>
+              <Icon src={TrashBinDelete16Icon}>{t('delete')}</Icon>
             </kit.menuItem>
             <kit.menu.Item
               onClick={() => {
@@ -57,7 +61,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 }
               }}
             >
-              <Icon src={Download16GradientBlueIcon}>Download YAML</Icon>
+              <Icon src={Download16GradientBlueIcon}>{t('download_yaml')}</Icon>
             </kit.menu.Item>
             {props.children}
           </kit.menu>
