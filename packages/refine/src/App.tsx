@@ -8,6 +8,7 @@ import { ConfigmapForm, ConfigmapList, ConfigmapShow } from './pages/configmap';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
 import { routerProvider } from './providers/router-provider';
 
+import './styles.css';
 import 'antd/dist/antd.css';
 import '@cloudtower/eagle/dist/style.css';
 

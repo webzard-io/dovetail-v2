@@ -1,15 +1,31 @@
+import { css, cx } from '@linaria/core';
 import { useBreadcrumb } from '@refinedev/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export function Breadcrumb() {
+const BreadcrumbStyle = css`
+  display: flex;
+
+  .breadcrumb-item {
+    &:not(:last-of-type):after {
+      content: ">";
+      margin: 0 8px;
+    }
+  }
+`;
+
+interface BreadcrumbProps {
+  className?: string;
+}
+
+export function Breadcrumb(props: BreadcrumbProps) {
   const { breadcrumbs } = useBreadcrumb();
 
   return (
-    <ul className="breadcrumb">
+    <ul className={cx(BreadcrumbStyle, props.className)}>
       {breadcrumbs.map((breadcrumb) => {
         return (
-          <li key={`breadcrumb-${breadcrumb.label}`}>
+          <li className='breadcrumb-item' key={`breadcrumb-${breadcrumb.label}`}>
             {breadcrumb.href ? (
               <Link to={breadcrumb.href}>{breadcrumb.label}</Link>
             ) : (
