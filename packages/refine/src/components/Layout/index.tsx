@@ -26,7 +26,9 @@ const MainContentStyle = css`
   min-height: 0;
 `;
 
-export const Layout: React.FC<PropsWithChildren<Record<string, unknown>>> = ({ children }) => {
+export const Layout: React.FC<PropsWithChildren<Record<string, unknown>>> = ({
+  children,
+}) => {
   const kit = useUIKit();
   const [collapsed, setCollapsed] = useState(false);
   const { Header, Content, Footer, Sider } = kit.layout;
@@ -45,7 +47,9 @@ export const Layout: React.FC<PropsWithChildren<Record<string, unknown>>> = ({ c
             {children}
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
+        <Footer style={{ textAlign: 'center' }}>
+          Ant Design ©2023 Created by Ant UED
+        </Footer>
       </kit.layout>
     </kit.layout>
   );

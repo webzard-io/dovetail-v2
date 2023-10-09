@@ -1,16 +1,19 @@
 import { useUIKit } from '@cloudtower/eagle';
+import { css } from '@linaria/core';
 import { useDataProvider, useParsed } from '@refinedev/core';
 import React, { useEffect, useState } from 'react';
-import { PodModel } from '../../../model/PodModel';
 import { StateTag } from '../../../components/StateTag';
+import Table from '../../../components/Table';
+import { TableToolBar } from '../../../components/Table/TableToolBar';
+import { PodModel } from '../../../model/pod-model';
 
-type Props = {};
-
-export const PodsList: React.FC<Props> = () => {
+export const PodsList: React.FC = () => {
   const kit = useUIKit();
   const dataProvider = useDataProvider()();
   const { id } = useParsed();
-  const [pods, setPods] = useState<PodModel[]>([]);
+  const [pods, setPods] = useState<PodModel[] | undefined>(undefined);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
     dataProvider
@@ -60,5 +63,26 @@ export const PodsList: React.FC<Props> = () => {
     },
   ];
 
-  return <kit.table loading={false} dataSource={pods} columns={columns} rowKey="type" />;
+  return (
+    <kit.space
+      direction="vertical"
+      className={css`
+        width: 100%;
+      `}
+    >
+      <TableToolBar title="Pods" selectedKeys={selectedKeys} hideCreate />
+      <Table
+        loading={!pods}
+        dataSource={pods!}
+        columns={columns}
+        onSelect={keys => setSelectedKeys(keys as string[])}
+        rowKey="id"
+        error={false}
+        currentPage={currentPage}
+        onPageChange={p => setCurrentPage(p)}
+        currentSize={10}
+        refetch={() => null}
+      />
+    </kit.space>
+  );
 };

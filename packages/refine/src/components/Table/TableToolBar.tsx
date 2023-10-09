@@ -7,6 +7,7 @@ import { DeleteManyButton } from '../DeleteManyButton';
 type Props = {
   title: string;
   selectedKeys: string[];
+  hideCreate?: boolean;
 };
 
 const ToolbarStyle = css`
@@ -15,7 +16,7 @@ const ToolbarStyle = css`
   margin-bottom: 16px;
 `;
 
-export const TableToolBar: React.FC<Props> = ({ title, selectedKeys }) => {
+export const TableToolBar: React.FC<Props> = ({ title, selectedKeys, hideCreate }) => {
   const kit = useUIKit();
 
   return (
@@ -23,7 +24,7 @@ export const TableToolBar: React.FC<Props> = ({ title, selectedKeys }) => {
       <span className={Typo.Display.d2_bold_title}>{title}</span>
       <kit.space>
         {selectedKeys.length > 0 ? <DeleteManyButton ids={selectedKeys} /> : undefined}
-        <CreateButton />
+        {!hideCreate ? <CreateButton /> : null}
       </kit.space>
     </kit.space>
   );

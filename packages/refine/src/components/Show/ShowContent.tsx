@@ -17,6 +17,8 @@ const TopBarStyle = css`
 const ShowContentStyle = css`
   width: 100%;
   overflow: auto;
+  height: 100%;
+  width: 100%;
 `;
 
 const EditorStyle = css`
@@ -107,7 +109,7 @@ export const ShowContent: React.FC<Props> = props => {
         {secondLine}
         {labelAnnotations}
         <kit.divider />
-        {thirdLine}
+        {tabs}
       </>
     ),
     [Mode.Yaml]: <MonacoYamlEditor
@@ -124,10 +126,6 @@ export const ShowContent: React.FC<Props> = props => {
       {firstLine}
       <kit.divider />
       {modeMap[mode]}
-      {secondLine}
-      {labelAnnotations}
-      <kit.divider />
-      {tabs}
     </kit.space>
   );
 };
