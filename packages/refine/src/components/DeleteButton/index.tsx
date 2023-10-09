@@ -8,15 +8,14 @@ export const DeleteButton: React.FC = () => {
   const { id } = useParsed();
   const kit = useUIKit();
 
-  const { showDeleteConfirm } = useDeleteModal();
+  const { modalProps, visible, openDeleteConfirmModal } = useDeleteModal(resource?.name || '');
 
   return (
-    <kit.button
-      type="primary"
-      danger
-      onClick={() => showDeleteConfirm(resource?.name || '', id || '')}
-    >
-      Delete
-    </kit.button>
+    <>
+      <kit.button type="primary" danger onClick={() => openDeleteConfirmModal(id || '')}>
+        Delete
+      </kit.button>
+      {visible ? <kit.modal {...modalProps} /> : null}
+    </>
   );
 };
