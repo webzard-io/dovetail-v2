@@ -1,17 +1,21 @@
 import { Unstructured } from 'k8s-api-provider';
 
 export type Resource = Unstructured & {
-  id: string
-}
+  id: string;
+};
 
-export class ResourceModel {
-  constructor(public data: Resource) {}
+export class ResourceModel implements Resource {
+  public id!: Resource['id'];
+  public apiVersion!: Resource['apiVersion'];
+  public kind!: Resource['kind'];
+  public metadata!: Resource['metadata'];
+
+  constructor(public data: Resource) {
+    Object.assign(this, { ...data });
+  }
 
   get name() {
     return this.data.metadata.name;
-  }
-  get id() {
-    return this.data.id;
   }
   get namespace() {
     return this.data.metadata.namespace;
