@@ -6,17 +6,21 @@ import { useDeleteManyModal } from '../../hooks/useDeleteModal/useDeleteManyModa
 export const DeleteManyButton: React.FC<{ ids: string[] }> = props => {
   const { resource } = useResource();
   const kit = useUIKit();
-  const { showDeleteManyConfirm } = useDeleteManyModal();
+  const { modalProps, visible, setVisible } = useDeleteManyModal(
+    resource?.name || '',
+    props.ids
+  );
 
   const onClick = useCallback(() => {
-    if (resource?.name) {
-      showDeleteManyConfirm(resource.name, props.ids);
-    }
-  }, [props.ids, resource, showDeleteManyConfirm]);
+    setVisible(true);
+  }, [setVisible]);
 
   return (
-    <kit.button type="primary" danger onClick={onClick}>
-      Delete
-    </kit.button>
+    <>
+      <kit.button type="primary" danger onClick={onClick}>
+        Delete
+      </kit.button>
+      {visible ? <kit.modal {...modalProps} /> : null}
+    </>
   );
 };

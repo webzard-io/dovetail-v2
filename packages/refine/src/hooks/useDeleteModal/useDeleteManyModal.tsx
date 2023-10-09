@@ -1,26 +1,29 @@
-import { ExclamationErrorCircle16RedIcon } from '@cloudtower/icons-react';
+import { ModalProps } from '@cloudtower/eagle';
 import { BaseKey, useDeleteMany } from '@refinedev/core';
-import { Modal } from 'antd';
-import React from 'react';
+import { useState } from 'react';
 
-export const useDeleteManyModal = () => {
+export const useDeleteManyModal = (resource: string, ids: BaseKey[]) => {
   const { mutate } = useDeleteMany();
-  const showDeleteManyConfirm = (resource: string, ids: BaseKey[]) => {
-    Modal.confirm({
-      title: '删除',
-      icon: <ExclamationErrorCircle16RedIcon />,
-      content: `确定要删除${ids.join(', ')}吗？`,
-      okText: '删除',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk() {
-        mutate({
-          resource,
-          ids,
-        });
-      },
-    });
+  const [visible, setVisible] = useState(false);
+  console.log('visible', visible);
+  const modalProps: ModalProps = {
+    title: '删除',
+    okText: '删除',
+    okButtonProps: {
+      danger: true,
+    },
+    cancelText: '取消',
+    children: `确定要删除${ids.join(', ')}吗？`,
+    onOk() {
+      mutate({
+        resource,
+        ids,
+      });
+      setVisible(false);
+    },
+    onCancel() {
+      setVisible(false);
+    },
   };
-
-  return { showDeleteManyConfirm };
+  return { modalProps, visible, setVisible };
 };
