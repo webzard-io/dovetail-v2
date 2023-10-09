@@ -1,10 +1,12 @@
 import { Typo, useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useParsed, useResource, useShow } from '@refinedev/core';
+import yaml from 'js-yaml';
 import { Unstructured } from 'k8s-api-provider';
 import { get } from 'lodash-es';
-import React from 'react';
+import React, { useState } from 'react';
 import K8sDropdown from 'src/components/K8sDropdown';
+import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
 import { FirstLineFields, SecondLineFields, ShowField } from './Fields';
 
 const TopBarStyle = css`
@@ -13,12 +15,22 @@ const TopBarStyle = css`
 `;
 
 const ShowContentStyle = css`
+  width: 100%;
   overflow: auto;
+`;
+
+const EditorStyle = css`
+  margin-top: 16px;
 `;
 
 type Props = {
   fieldGroups: ShowField[][];
 };
+
+enum Mode {
+  Detail = 'detail',
+  Yaml = 'yaml'
+}
 
 export const ShowContent: React.FC<Props> = props => {
   const { fieldGroups } = props;
@@ -26,6 +38,7 @@ export const ShowContent: React.FC<Props> = props => {
   const parsed = useParsed();
   const { resource } = useResource();
   const { queryResult } = useShow<Unstructured & { id: string }>({ id: parsed?.params?.id });
+  const [mode, setMode] = useState<Mode>(Mode.Detail);
   const { data } = queryResult;
   const record = data?.data;
 
@@ -55,6 +68,10 @@ export const ShowContent: React.FC<Props> = props => {
         <kit.tag color="green">Active</kit.tag>
       </div>
       <kit.space>
+        <kit.radioGroup value={mode} onChange={(e) => setMode(e.target.value)}>
+          <kit.radioButton value="detail">Detail</kit.radioButton>
+          <kit.radioButton value="yaml">YAML</kit.radioButton>
+        </kit.radioGroup>
         <K8sDropdown data={record} />
       </kit.space>
     </kit.space>
@@ -84,16 +101,29 @@ export const ShowContent: React.FC<Props> = props => {
       })}
     </kit.tabs>
   );
+  const modeMap = {
+    [Mode.Detail]: (
+      <>
+        {secondLine}
+        {labelAnnotations}
+        <kit.divider />
+        {thirdLine}
+      </>
+    ),
+    [Mode.Yaml]: <MonacoYamlEditor
+      className={EditorStyle}
+      defaultValue={yaml.dump(record)}
+      schema={{}}
+      readOnly
+    />
+  };
 
   return (
     <kit.space direction="vertical" className={ShowContentStyle}>
       {topBar}
       {firstLine}
       <kit.divider />
-      {secondLine}
-      {labelAnnotations}
-      <kit.divider />
-      {thirdLine}
+      {modeMap[mode]}
     </kit.space>
   );
 };

@@ -1,3 +1,4 @@
+import { cx } from '@linaria/core';
 import { type JSONSchema7 } from 'json-schema';
 import _ from 'lodash-es';
 
@@ -9,14 +10,15 @@ import { YamlEditorStyle } from './style';
 import YamlWorker from './yaml.worker?worker';
 
 type Props = {
+  className?: string;
   id?: string;
   defaultValue: string;
   height?: string;
-  onChange: (val: string) => void;
-  onValidate: (valid: boolean, schemaValid: boolean) => void;
+  onChange?: (val: string) => void;
+  onValidate?: (valid: boolean, schemaValid: boolean) => void;
   onEditorCreate?: (editor: monaco.editor.ICodeEditor) => void;
   onBlur?: () => void;
-  getInstance: (ins: monaco.editor.IStandaloneCodeEditor) => void;
+  getInstance?: (ins: monaco.editor.IStandaloneCodeEditor) => void;
   schema?: JSONSchema7;
   readOnly?: boolean;
 };
@@ -89,7 +91,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
     });
 
     instanceRef.current.editor = editor;
-    getInstance(editor);
+    getInstance?.(editor);
     onEditorCreate?.(editor);
 
     return () => {
@@ -107,7 +109,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
     if (editor) {
       const stop = editor.onDidChangeModelContent(() => {
         ReactDOM.unstable_batchedUpdates(() => {
-          onChange(editor.getValue());
+          onChange?.(editor.getValue());
         });
       });
 
@@ -132,7 +134,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
           const yamlValid = yamlMarks.length === 0;
           const schemaValid = schemaMarks.length === 0;
 
-          onValidate(yamlValid, schemaValid);
+          onValidate?.(yamlValid, schemaValid);
 
           if (marks.some(mark => mark.source?.includes('yaml-schema'))) {
             monaco.editor.setModelMarkers(model, 'yaml', marks.map(mark => ({ ...mark, source: '', resource: {} })));
@@ -192,7 +194,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
   return (
     <div
       ref={ref}
-      className={YamlEditorStyle}
+      className={cx(YamlEditorStyle, props.className)}
       style={{
         width: '100%',
         height: height || '500px',
