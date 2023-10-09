@@ -12,6 +12,7 @@ type Props = {
 const ToolbarStyle = css`
   justify-content: space-between;
   width: 100%;
+  margin-bottom: 16px;
 `;
 
 export const TableToolBar: React.FC<Props> = ({ title, selectedKeys }) => {
