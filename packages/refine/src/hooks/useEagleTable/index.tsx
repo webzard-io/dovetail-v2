@@ -1,20 +1,12 @@
-import { Icon, useUIKit } from '@cloudtower/eagle';
 import {
-  EditPen16PrimaryIcon,
-  MoreEllipsis16BlueIcon,
   SettingsGear16GradientGrayIcon,
-  TrashBinDelete16Icon,
-  Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
-import { useParsed, useTable } from '@refinedev/core';
-import { Dropdown } from 'antd';
+import { useTable } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
 import { useCallback, useState } from 'react';
 import React from 'react';
+import K8sDropdown from 'src/components/K8sDropdown';
 import { Column, TableProps, IDObject } from '../../components/Table';
-import { useDownloadYAML } from '../../hooks/useDownloadYAML';
-import { useDeleteModal } from '../useDeleteModal';
-import { useEdit } from '../useEdit';
 
 type Params<T extends IDObject> = {
   useTableParams: Parameters<typeof useTable<T>>;
@@ -35,14 +27,8 @@ export enum ColumnKeys {
 export const useEagleTable = <T extends IDObject & Unstructured>(params: Params<T>) => {
   const { useTableParams, columns, tableProps } = params;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-  const kit = useUIKit();
-  const download = useDownloadYAML();
-  const parsed = useParsed();
-  const { resource } = parsed;
-  const { edit } = useEdit();
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
   const table = useTable<T>(...useTableParams);
-  const { showDeleteConfirm } = useDeleteModal();
 
   const onPageChange = useCallback(
     (page: number) => {
@@ -58,47 +44,7 @@ export const useEagleTable = <T extends IDObject & Unstructured>(params: Params<
     title: () => <SettingsGear16GradientGrayIcon />,
     render: (_: unknown, record: T) => {
       return (
-        <Dropdown
-          overlay={
-            <kit.menu>
-              <kit.menuItem
-                onClick={() => {
-                  if (record.id) {
-                    edit(record.id);
-                  }
-                }}
-              >
-                <Icon src={EditPen16PrimaryIcon}>Edit</Icon>
-              </kit.menuItem>
-              <kit.menuItem
-                danger={true}
-                onClick={() => {
-                  showDeleteConfirm(resource?.name || '', record.id);
-                }}
-              >
-                <Icon src={TrashBinDelete16Icon}>Delete</Icon>
-              </kit.menuItem>
-              <kit.menu.Item
-                onClick={() => {
-                  if (record.id) {
-                    download({
-                      name: record.metadata.name || record.kind,
-                      item: record,
-                    });
-                  }
-                }}
-              >
-                <Icon src={Download16GradientBlueIcon}>
-                  Download YAML
-                </Icon>
-              </kit.menu.Item>
-            </kit.menu>
-          }
-        >
-          <kit.button type="tertiary" size="small">
-            <MoreEllipsis16BlueIcon />
-          </kit.button>
-        </Dropdown>
+        <K8sDropdown data={record} />
       );
     },
   };
