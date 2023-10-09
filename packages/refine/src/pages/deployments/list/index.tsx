@@ -1,4 +1,3 @@
-import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { IResourceComponentsProps } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
@@ -15,13 +14,23 @@ import {
   ReplicasColumnRenderer,
 } from 'src/hooks/useEagleTable/Columns';
 
+const ListPageStyle = css`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const TableStyle = css`
+  flex: 1;
+  min-height: 0;
+`;
+
 export const DeploymentList: React.FC<IResourceComponentsProps> = <
   T extends IDObject & Unstructured,
 >() => {
-  const kit = useUIKit();
-
   const { tableProps, selectedKeys } = useEagleTable<T>({
-    useTableParams: [{ syncWithLocation: true }],
+    useTableParams: [{}],
     columns: [
       PhaseColumnRenderer(),
       NameColumnRenderer(),
@@ -30,18 +39,17 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = <
       ReplicasColumnRenderer(),
       AgeColumnRenderer(),
     ],
-    tableProps: {},
+    tableProps: {
+      currentSize: 10,
+    },
   });
 
   return (
-    <kit.space
-      direction="vertical"
-      className={css`
-        width: 100%;
-      `}
+    <div
+      className={ListPageStyle}
     >
       <TableToolBar title="Deployments" selectedKeys={selectedKeys} />
-      <Table {...tableProps} />
-    </kit.space>
+      <Table className={TableStyle} {...tableProps} scroll={{ y: 'calc(100% - 48px)' }} />
+    </div>
   );
 };
