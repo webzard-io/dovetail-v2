@@ -73,7 +73,7 @@ export const PodsList: React.FC = () => {
       <TableToolBar title="Pods" selectedKeys={selectedKeys} hideCreate />
       <Table
         loading={!pods}
-        dataSource={pods!}
+        dataSource={pods || []}
         columns={columns}
         onSelect={keys => setSelectedKeys(keys as string[])}
         rowKey="id"

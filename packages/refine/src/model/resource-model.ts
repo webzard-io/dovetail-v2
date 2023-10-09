@@ -1,7 +1,11 @@
-import { ResourceType } from '../types/resource';
+import { Unstructured } from 'k8s-api-provider';
+
+export type Resource = Unstructured & {
+  id: string
+}
 
 export class ResourceModel {
-  constructor(public data: ResourceType) {}
+  constructor(public data: Resource) {}
 
   get name() {
     return this.data.metadata.name;
