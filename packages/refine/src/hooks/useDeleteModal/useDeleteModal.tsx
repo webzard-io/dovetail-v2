@@ -1,26 +1,39 @@
-import { ExclamationErrorCircle16RedIcon } from '@cloudtower/icons-react';
+import { ModalProps } from '@cloudtower/eagle';
 import { BaseKey, useDelete } from '@refinedev/core';
-import { Modal } from 'antd';
-import React from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-export const useDeleteModal = () => {
+export const useDeleteModal = (resource: string) => {
   const { mutate } = useDelete();
-  const showDeleteConfirm = (resource: string, id: BaseKey) => {
-    Modal.confirm({
-      title: '删除',
-      icon: <ExclamationErrorCircle16RedIcon />,
-      content: `确定要删除${id}吗？`,
-      okText: '删除',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk() {
-        mutate({
-          resource,
-          id,
-        });
-      },
-    });
+  const [visible, setVisible] = useState(false);
+  const [id, setId] = useState<BaseKey>('');
+  const { t } = useTranslation();
+  const modalProps: ModalProps = {
+    title: t('delete'),
+    okText: t('delete'),
+    okButtonProps: {
+      danger: true,
+    },
+    cancelText: t('cancel'),
+    children: t('confirm_delete_text', {
+      target: id,
+      interpolation: { escapeValue: false },
+    }),
+    onOk() {
+      mutate({
+        resource,
+        id,
+      });
+      setVisible(false);
+    },
+    onCancel() {
+      setVisible(false);
+    },
   };
 
-  return { showDeleteConfirm };
+  function openDeleteConfirmModal(id: BaseKey) {
+    setId(id);
+    setVisible(true);
+  }
+  return { modalProps, visible, openDeleteConfirmModal };
 };

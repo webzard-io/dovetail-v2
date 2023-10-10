@@ -2,6 +2,7 @@ import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useDataProvider, useParsed } from '@refinedev/core';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StateTag } from '../../../components/StateTag';
 import Table from '../../../components/Table';
 import { TableToolBar } from '../../../components/Table/TableToolBar';
@@ -11,6 +12,7 @@ export const PodsList: React.FC = () => {
   const kit = useUIKit();
   const dataProvider = useDataProvider()();
   const { id } = useParsed();
+  const { t } = useTranslation();
   const [pods, setPods] = useState<PodModel[] | undefined>(undefined);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -29,7 +31,7 @@ export const PodsList: React.FC = () => {
       key: 'state',
       display: true,
       dataIndex: [],
-      title: 'State',
+      title: t('state'),
       sortable: true,
       render: () => <StateTag />,
     },
@@ -37,28 +39,28 @@ export const PodsList: React.FC = () => {
       key: 'name',
       display: true,
       dataIndex: ['name'],
-      title: 'Name',
+      title: t('name'),
       sortable: true,
     },
     {
       key: 'node',
       display: true,
       dataIndex: ['nodeName'],
-      title: 'Node',
+      title: t('node_name'),
       sortable: true,
     },
     {
       key: 'image',
       display: true,
       dataIndex: ['imageNames'],
-      title: 'Image',
+      title: t('image'),
       sortable: true,
     },
     {
       key: 'restartCount',
       display: true,
       dataIndex: ['restartCount'],
-      title: 'Restarts',
+      title: t('restarts'),
       sortable: true,
     },
   ];
