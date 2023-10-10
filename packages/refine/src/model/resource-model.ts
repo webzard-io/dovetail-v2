@@ -1,8 +1,4 @@
-import { Unstructured } from 'k8s-api-provider';
-
-export type Resource = Unstructured & {
-  id: string;
-};
+import { Resource } from '../types';
 
 export class ResourceModel implements Resource {
   public id!: Resource['id'];
@@ -15,15 +11,15 @@ export class ResourceModel implements Resource {
   }
 
   get name() {
-    return this.data.metadata.name;
+    return this.data.metadata?.name;
   }
   get namespace() {
-    return this.data.metadata.namespace;
+    return this.data.metadata?.namespace;
   }
   get labels() {
-    return this.data.metadata.labels;
+    return this.data.metadata?.labels;
   }
   get annotations() {
-    return this.data.metadata.annotations;
+    return this.data.metadata?.annotations;
   }
 }

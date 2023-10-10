@@ -8,7 +8,6 @@ import { TableToolBar } from 'src/components/Table/TableToolBar';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,
-  WorkloadImageColumnRenderer,
   NameColumnRenderer,
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
@@ -27,7 +26,7 @@ const TableStyle = css`
   min-height: 0;
 `;
 
-export const DeploymentList: React.FC<IResourceComponentsProps> = <
+export const JobList: React.FC<IResourceComponentsProps> = <
   T extends IDObject & Unstructured,
 >() => {
   const { i18n } = useTranslation();
@@ -37,7 +36,6 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = <
       PhaseColumnRenderer(i18n),
       NameColumnRenderer(i18n),
       NameSpaceColumnRenderer(i18n),
-      WorkloadImageColumnRenderer(i18n),
       ReplicasColumnRenderer(i18n),
       AgeColumnRenderer(i18n),
     ],
@@ -48,7 +46,7 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = <
 
   return (
     <div className={ListPageStyle}>
-      <TableToolBar title="Deployments" selectedKeys={selectedKeys} />
+      <TableToolBar title="Jobs" selectedKeys={selectedKeys} />
       <Table className={TableStyle} {...tableProps} scroll={{ y: 'calc(100% - 48px)' }} />
     </div>
   );
