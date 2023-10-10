@@ -29,7 +29,7 @@ const TableStyle = css`
   min-height: 0;
 `;
 
-export const StatefuleSetList: React.FC<IResourceComponentsProps> = () => {
+export const StatefulSetList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
   const { tableProps, selectedKeys } = useEagleTable<WithId<StatefulSet>, WorkloadModel>({
     useTableParams: [{}],
