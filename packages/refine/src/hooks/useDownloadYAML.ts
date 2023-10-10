@@ -1,10 +1,10 @@
 import yaml from 'js-yaml';
-import { Unstructured } from 'k8s-api-provider';
+import { ResourceModel } from '../model';
 import { download } from '../utils/download';
 
 type DownloadYAMLOptions = {
   name: string;
-  item: Unstructured;
+  item: ResourceModel;
 }
 
 export function useDownloadYAML () {
