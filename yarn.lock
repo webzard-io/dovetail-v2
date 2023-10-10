@@ -5953,10 +5953,10 @@ jsonparse@^1.2.0:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
-k8s-api-provider@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/k8s-api-provider/-/k8s-api-provider-0.0.4.tgz#972b019513f2fd190f8adac20dd27138ff28fe70"
-  integrity sha512-tYm6tbJedtrehl/FxPolbdZqAFGnJFVxkN7Ne2O+z+mv2EG/eAJ63k6H5zd3XYhvahuvXk6XFvPbx5tKVEmpnQ==
+k8s-api-provider@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.npmjs.org/k8s-api-provider/-/k8s-api-provider-0.0.5.tgz#677869bcad9b70eb6adf1e1d07b6282985c21b5e"
+  integrity sha512-lPbLFTCiojzZ2YUtenqmhxWut4yyJNjre5MUS/peuh9joPQCxqb/VsoEYVueX7xYWToBFcc6JpUb1V4bjP+cLQ==
   dependencies:
     "@refinedev/core" "^4.5.8"
     "@refinedev/inferencer" "^4.0.0"

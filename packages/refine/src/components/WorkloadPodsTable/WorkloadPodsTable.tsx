@@ -1,6 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useDataProvider, useParsed } from '@refinedev/core';
+import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PodModel } from '../../model';
@@ -8,19 +9,24 @@ import { StateTag } from '../StateTag';
 import Table from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
-type OwnerMatcher = { apiVersion: string; kind: string; name: string };
-
-function matchOwner(pod: PodModel, owner: OwnerMatcher): boolean {
-  return (pod.metadata.ownerReferences || []).some(ref => {
-    return (
-      ref.apiVersion === owner.apiVersion &&
-      ref.kind === owner.kind &&
-      ref.name === owner.name
-    );
-  });
+function matchSelector(pod: PodModel, selector: LabelSelector): boolean {
+  let match = true;
+  // TODO: support complete selector match strategy
+  // https://github.com/rancher/dashboard/blob/master/shell/utils/selector.js#L166
+  for (const key in selector.matchLabels) {
+    if (
+      !pod.metadata.labels?.[key] ||
+      pod.metadata.labels?.[key] !== selector.matchLabels[key]
+    ) {
+      match = false;
+    }
+  }
+  return match;
 }
 
-export const WorkloadPodsTable: React.FC<{ owner?: OwnerMatcher }> = ({ owner }) => {
+export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
+  selector,
+}) => {
   const kit = useUIKit();
   const dataProvider = useDataProvider()();
   const { id } = useParsed();
@@ -37,11 +43,11 @@ export const WorkloadPodsTable: React.FC<{ owner?: OwnerMatcher }> = ({ owner })
           res.data
             .map(p => new PodModel(p as any))
             .filter(p => {
-              return owner ? matchOwner(p, owner) : true;
+              return selector ? matchSelector(p, selector) : true;
             })
         );
       });
-  }, [dataProvider, id, owner]);
+  }, [dataProvider, id, selector]);
 
   const columns = [
     {
