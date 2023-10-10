@@ -1,29 +1,38 @@
-import { useUIKit } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
+import { useUIKit, Typo } from '@cloudtower/eagle';
+import { css, cx } from '@linaria/core';
 import { PropsWithChildren, useState } from 'react';
 import React from 'react';
-import { Breadcrumb } from '../Breadcrumb';
 import { Menu } from '../Menu';
+
+const HeaderStyle = css`
+  &.ant-layout-header {
+    align-items: center;
+    background: #fff;
+    border-bottom: 2px solid #edf0f7;
+    display: flex;
+    height: 50px;
+    justify-content: space-between;
+    padding: 0 24px 0 14px;
+    position: relative;
+    z-index: 10;
+  }
+`;
 
 const ContentLayoutStyle = css`
   height: 100%;
 `;
 
-const BreadcrumbStyle = css`
-  margin: 8px 0;
+const SiderStyle = css`
+  &.ant-layout-sider {
+    background: #edf0f7;
+  }
 `;
 
 const ContentStyle = css`
-  margin: 0 16px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const MainContentStyle = css`
-  padding: 24px;
-  background: #fff;
-  flex: 1;
-  min-height: 0;
+  &.ant-layout-content {
+    padding: 16px;
+    background: #fff;
+  }
 `;
 
 export const Layout: React.FC<PropsWithChildren<Record<string, unknown>>> = ({
@@ -31,25 +40,20 @@ export const Layout: React.FC<PropsWithChildren<Record<string, unknown>>> = ({
 }) => {
   const kit = useUIKit();
   const [collapsed, setCollapsed] = useState(false);
-  const { Header, Content, Footer, Sider } = kit.layout;
+  const { Header, Content, Sider } = kit.layout;
 
   return (
     <kit.layout style={{ height: '100%' }}>
-      <Sider collapsible theme="light" collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div className="demo-logo-vertical" />
-        <Menu />
-      </Sider>
+      <Header className={cx(HeaderStyle, Typo.Heading.h1_bold_title)} >
+        Dovetail 2
+      </Header>
       <kit.layout className={ContentLayoutStyle}>
-        <Header style={{ padding: 0, background: '#fff' }} />
+        <Sider width={256} className={SiderStyle} theme="light" collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+          <Menu />
+        </Sider>
         <Content className={ContentStyle}>
-          <Breadcrumb className={BreadcrumbStyle} />
-          <div className={MainContentStyle}>
-            {children}
-          </div>
+          {children}
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©2023 Created by Ant UED
-        </Footer>
       </kit.layout>
     </kit.layout>
   );
