@@ -7,7 +7,10 @@ export class ResourceModel implements Resource {
   public metadata!: Resource['metadata'];
 
   constructor(public data: Resource) {
-    Object.assign(this, { ...data });
+    this.id = data.id;
+    this.apiVersion = data.apiVersion;
+    this.kind = data.kind;
+    this.metadata = data.metadata;
   }
 
   get name() {

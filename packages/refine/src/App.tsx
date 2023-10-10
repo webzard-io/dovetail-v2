@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList, ConfigmapShow } from './pages/configmap';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
+import { JobShow } from './pages/jobs';
 import { JobList } from './pages/jobs/list';
 import { StatefulSetShow, StatefulSetList } from './pages/statefulSets';
 import { routerProvider } from './providers/router-provider';
@@ -109,10 +110,10 @@ function App() {
             <Route path="/jobs" exact>
               <JobList />
             </Route>
-            {/* <Route path="/deployments/show">
-              <DeploymentShow />
+            <Route path="/jobs/show">
+              <JobShow />
             </Route>
-            <Route path="/deployments/create">
+            {/* <Route path="/deployments/create">
               <DeploymentForm />
             </Route>
             <Route path="/deployments/edit">
