@@ -1,8 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useParsed, useShow } from '@refinedev/core';
 import React from 'react';
-import { ShowField } from './Fields';
-import { ShowContent } from './ShowContent';
+import { ShowContent, ShowField } from '../ShowContent';
 
 type Props = {
   fieldGroups: ShowField[][];

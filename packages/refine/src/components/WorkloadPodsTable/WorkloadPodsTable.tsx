@@ -3,12 +3,12 @@ import { css } from '@linaria/core';
 import { useDataProvider, useParsed } from '@refinedev/core';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StateTag } from '../../../components/StateTag';
-import Table from '../../../components/Table';
-import { TableToolBar } from '../../../components/Table/TableToolBar';
-import { PodModel } from '../../../model/pod-model';
+import { PodModel } from '../../model';
+import { StateTag } from '../StateTag';
+import Table from '../Table';
+import { TableToolBar } from '../Table/TableToolBar';
 
-export const PodsList: React.FC = () => {
+export const WorkloadPodsTable: React.FC = () => {
   const kit = useUIKit();
   const dataProvider = useDataProvider()();
   const { id } = useParsed();

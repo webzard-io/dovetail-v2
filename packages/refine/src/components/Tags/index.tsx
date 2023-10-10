@@ -27,5 +27,9 @@ export const Tags: React.FC<Props> = props => {
       </kit.tag>
     );
   });
-  return <kit.space className={TagWrapper} size={8}>{tags}</kit.space>;
+  return (
+    <kit.space className={TagWrapper} size={8}>
+      {tags}
+    </kit.space>
+  );
 };
