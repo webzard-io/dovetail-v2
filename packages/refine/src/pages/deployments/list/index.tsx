@@ -1,9 +1,9 @@
 import { css } from '@linaria/core';
 import { IResourceComponentsProps } from '@refinedev/core';
-import { Unstructured } from 'k8s-api-provider';
+import { Deployment } from 'kubernetes-types/apps/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Table, { IDObject } from 'src/components/Table';
+import Table from 'src/components/Table';
 import { TableToolBar } from 'src/components/Table/TableToolBar';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
@@ -14,6 +14,8 @@ import {
   PhaseColumnRenderer,
   ReplicasColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
+import { WorkloadModel } from '../../../model';
+import { WithId } from '../../../types';
 
 const ListPageStyle = css`
   width: 100%;
@@ -27,11 +29,9 @@ const TableStyle = css`
   min-height: 0;
 `;
 
-export const DeploymentList: React.FC<IResourceComponentsProps> = <
-  T extends IDObject & Unstructured,
->() => {
+export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
-  const { tableProps, selectedKeys } = useEagleTable<T>({
+  const { tableProps, selectedKeys } = useEagleTable<WithId<Deployment>, WorkloadModel>({
     useTableParams: [{}],
     columns: [
       PhaseColumnRenderer(i18n),
@@ -44,6 +44,7 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = <
     tableProps: {
       currentSize: 10,
     },
+    formatter: d => new WorkloadModel(d),
   });
 
   return (

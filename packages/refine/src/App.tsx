@@ -7,7 +7,7 @@ import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList, ConfigmapShow } from './pages/configmap';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
 import { JobList } from './pages/jobs/list';
-import { StatefuleSetList } from './pages/statefulSets';
+import { StatefulSetShow, StatefulSetList } from './pages/statefulSets';
 import { routerProvider } from './providers/router-provider';
 
 import './styles.css';
@@ -119,12 +119,12 @@ function App() {
               <DeploymentForm />
             </Route> */}
             <Route path="/statefulsets" exact>
-              <StatefuleSetList />
+              <StatefulSetList />
             </Route>
-            {/* <Route path="/deployments/show">
-              <DeploymentShow />
+            <Route path="/statefulsets/show">
+              <StatefulSetShow />
             </Route>
-            <Route path="/deployments/create">
+            {/* <Route path="/deployments/create">
               <DeploymentForm />
             </Route>
             <Route path="/deployments/edit">
