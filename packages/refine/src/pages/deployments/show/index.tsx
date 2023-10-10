@@ -1,4 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
+import { ExtendObjectMeta } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -48,8 +49,16 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
             key: 'pods',
             title: 'Pods',
             path: [],
-            render: () => {
-              return <WorkloadPodsTable />;
+            render: (_, record) => {
+              return (
+                <WorkloadPodsTable
+                  selector={
+                    (record.metadata as ExtendObjectMeta).relations?.find(r => {
+                      return r.kind === 'Pod' && r.type === 'creates';
+                    })?.selector
+                  }
+                />
+              );
             },
           },
           ConditionsField,
