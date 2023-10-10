@@ -8,8 +8,8 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
-import { ShowField } from './Fields';
-import { Tags } from './Tags';
+import { ShowField } from './fields';
+import { Tags } from '../Tags';
 
 const TopBarStyle = css`
   justify-content: space-between;

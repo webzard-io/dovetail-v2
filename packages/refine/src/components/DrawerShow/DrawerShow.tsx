@@ -2,8 +2,7 @@ import { useUIKit } from '@cloudtower/eagle';
 import { useNavigation, useParsed, useShow } from '@refinedev/core';
 import { Drawer } from 'antd';
 import React from 'react';
-import { ShowField } from './Fields';
-import { ShowContent } from './ShowContent';
+import { ShowField, ShowContent } from '../ShowContent';
 
 export const DrawerShow: React.FC<{ fieldGroups: ShowField[][] }> = ({ fieldGroups }) => {
   const kit = useUIKit();
