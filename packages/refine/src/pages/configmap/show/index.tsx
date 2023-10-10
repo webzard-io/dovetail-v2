@@ -1,7 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { KeyValue } from '../../../components/KeyValue';
-import { PageShow } from '../../../components/Show/PageShow';
+import { PageShow } from '../../../components/PageShow';
 
 export const ConfigmapShow: React.FC<IResourceComponentsProps> = () => {
   return (

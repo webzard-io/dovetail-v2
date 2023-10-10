@@ -13,7 +13,7 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
   ReplicasColumnRenderer,
-} from 'src/hooks/useEagleTable/Columns';
+} from 'src/hooks/useEagleTable/columns';
 
 const ListPageStyle = css`
   width: 100%;
