@@ -16,6 +16,7 @@ type Props = {
   height?: string;
   onChange?: (val: string) => void;
   onValidate?: (valid: boolean, schemaValid: boolean) => void;
+  isScrollOnFocus?: boolean;
   onEditorCreate?: (editor: monaco.editor.ICodeEditor) => void;
   onBlur?: () => void;
   getInstance?: (ins: monaco.editor.IStandaloneCodeEditor) => void;
@@ -48,6 +49,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
     height,
     readOnly,
     schema,
+    isScrollOnFocus,
     onChange,
     onValidate,
     getInstance,
@@ -84,7 +86,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
       scrollBeyondLastLine: false,
       model,
       scrollbar: {
-        handleMouseWheel: false,
+        handleMouseWheel: !isScrollOnFocus,
       },
       tabSize: 2,
       readOnly: readOnly,
@@ -101,7 +103,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
       editor.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultValue, schema, id, readOnly, getInstance]);
+  }, [defaultValue, schema, id, readOnly, isScrollOnFocus, getInstance]);
 
   useEffect(() => {
     const editor = instanceRef.current.editor;
@@ -169,7 +171,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
     const editor = instanceRef.current.editor;
     const stops: monaco.IDisposable[] = [];
 
-    if (editor) {
+    if (editor && isScrollOnFocus) {
       stops.push(editor.onDidFocusEditorWidget(() => {
         editor.updateOptions({
           scrollbar: {
@@ -189,7 +191,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
     return () => {
       stops.forEach(stop => stop.dispose());
     };
-  }, [instanceRef.current.editor]);
+  }, [instanceRef.current.editor, isScrollOnFocus]);
 
   return (
     <div

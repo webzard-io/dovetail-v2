@@ -18,9 +18,6 @@ export const ConfigmapForm: React.FC<FormProps> = () => {
     <kit.form
       {...formProps}
       onFinish={formProps.onFinish}
-      style={{
-        width: '800px'
-      }}
       layout="horizontal"
     >
       {
