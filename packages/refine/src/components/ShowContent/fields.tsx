@@ -10,7 +10,7 @@ export type ShowField<Model extends ResourceModel> = {
   key: string;
   title: string;
   path: string[];
-  render?: (val: unknown, record: Model) => React.ReactElement;
+  render?: (val: unknown, record: Model) => React.ReactElement | undefined;
 };
 
 export const ImageField = (i18n: i18n): ShowField<WorkloadModel> => {

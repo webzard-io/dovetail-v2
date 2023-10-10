@@ -39,7 +39,9 @@ const CommonSorter = (dataIndex: string[]) => (a: ResourceModel, b: ResourceMode
   return -1;
 };
 
-export const NameColumnRenderer = <Model extends ResourceModel>(i18n: i18n): Column<Model> => {
+export const NameColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['metadata', 'name'];
   return {
     key: 'name',
@@ -54,7 +56,9 @@ export const NameColumnRenderer = <Model extends ResourceModel>(i18n: i18n): Col
   };
 };
 
-export const NameSpaceColumnRenderer = <Model extends ResourceModel>(i18n: i18n): Column<Model> => {
+export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['metadata', 'namespace'];
   return {
     key: 'namespace',
@@ -66,7 +70,9 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(i18n: i18n)
   };
 };
 
-export const PhaseColumnRenderer = <Model extends ResourceModel>(i18n: i18n): Column<Model> => {
+export const PhaseColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['status', 'phase'];
   return {
     key: 'phase',
@@ -79,7 +85,9 @@ export const PhaseColumnRenderer = <Model extends ResourceModel>(i18n: i18n): Co
   };
 };
 
-export const PocImageColumnRenderer = <Model extends ResourceModel>(i18n: i18n): Column<Model> => {
+export const PocImageColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['spec', 'containers', '0', 'image'];
   return {
     key: 'podSpecImage',
@@ -91,7 +99,9 @@ export const PocImageColumnRenderer = <Model extends ResourceModel>(i18n: i18n):
   };
 };
 
-export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(i18n: i18n): Column<Model> => {
+export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['imageNames'];
   return {
     key: 'image',
@@ -103,7 +113,9 @@ export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(i18n: i
   };
 };
 
-export const PodSpecImageColumnRenderer = <Model extends ResourceModel>(i18n: i18n): Column<Model> => {
+export const PodSpecImageColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['spec', 'containers', '0', 'image'];
   return {
     key: 'podSpecImage',
@@ -115,7 +127,9 @@ export const PodSpecImageColumnRenderer = <Model extends ResourceModel>(i18n: i1
   };
 };
 
-export const ReplicasColumnRenderer = <Model extends WorkloadModel>(i18n: i18n): Column<Model> => {
+export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['status', 'replicas'];
   return {
     key: 'replicas',
@@ -125,6 +139,7 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(i18n: i18n):
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (_, record: Model) => {
+      console.log('record', record);
       return (
         <span>
           {record.status?.readyReplicas}/{record.status?.replicas}
@@ -134,7 +149,9 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(i18n: i18n):
   };
 };
 
-export const AgeColumnRenderer = <Model extends ResourceModel>(i18n: i18n): Column<Model> => {
+export const AgeColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
   return {
     key: 'creationTimestamp',
