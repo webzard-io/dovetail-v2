@@ -10,7 +10,6 @@ import { routerProvider } from './providers/router-provider';
 
 import './styles.css';
 import 'antd/dist/antd.css';
-import './styles/global.css';
 import '@cloudtower/eagle/dist/style.css';
 
 initParrotI18n();
@@ -36,10 +35,14 @@ function App() {
         }}
         resources={[
           {
+            name: 'WorkLoad',
+          },
+          {
             name: 'deployments',
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'Deployment',
+              parent: 'WorkLoad'
             },
             list: '/deployments',
             show: '/deployments/show',
@@ -47,10 +50,14 @@ function App() {
             edit: '/deployments/edit',
           },
           {
+            name: 'Core',
+          },
+          {
             name: 'configmaps',
             meta: {
               resourceBasePath: '/api/v1',
               kind: 'ConfigMap',
+              parent: 'Core'
             },
             list: '/configmaps',
             show: '/configmaps/show',
