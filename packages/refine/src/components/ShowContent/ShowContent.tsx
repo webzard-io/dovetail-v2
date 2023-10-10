@@ -102,7 +102,7 @@ export const ShowContent: React.FC<Props> = props => {
   const topBar = (
     <kit.space className={TopBarStyle}>
       <div>
-        <span className={Typo.Display.d3_bold_title}>{resource?.meta?.kind}: </span>
+        <span className={Typo.Display.d2_bold_title}>{resource?.meta?.kind}: </span>
         <span className={Typo.Label.l1_regular}>{record?.metadata.name}</span>
         <kit.tag color="green">Active</kit.tag>
       </div>
