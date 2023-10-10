@@ -3,9 +3,9 @@ import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConditionsTable } from '../../../components/ConditionsTable';
-import { ShowField } from '../../../components/Show/Fields';
-import { PageShow } from '../../../components/Show/PageShow';
-import { PodsList } from './PodsList';
+import { PageShow } from '../../../components/PageShow';
+import { ShowField } from '../../../components/ShowContent/fields';
+import { WorkloadPodsTable } from '../../../components/WorkloadPodsTable';
 
 export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
   const { t } = useTranslation();
@@ -49,7 +49,7 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
             title: 'Pods',
             path: [],
             render: () => {
-              return <PodsList />;
+              return <WorkloadPodsTable />;
             },
           },
           ConditionsField,
