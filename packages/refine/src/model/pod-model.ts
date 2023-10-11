@@ -1,6 +1,7 @@
 import type { Pod } from 'kubernetes-types/core/v1';
+import { Resource } from '../types';
 import { shortenedImage } from '../utils/string';
-import { Resource, ResourceModel } from './resource-model';
+import { ResourceModel } from './resource-model';
 
 export class PodModel extends ResourceModel {
   constructor(public data: Pod & Resource) {

@@ -6,9 +6,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList, ConfigmapShow } from './pages/configmap';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
-import { JobShow } from './pages/jobs';
-import { JobList } from './pages/jobs/list';
-import { StatefulSetShow, StatefulSetList } from './pages/statefulSets';
+import { JobShow, JobList, JobForm } from './pages/jobs';
+import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulSets';
 import { routerProvider } from './providers/router-provider';
 
 import './styles.css';
@@ -56,7 +55,7 @@ function App() {
             name: 'jobs',
             meta: {
               resourceBasePath: '/apis/batch/v1',
-              kind: 'CronJob',
+              kind: 'Job',
               parent: 'WorkLoad',
             },
             list: '/jobs',
@@ -113,24 +112,24 @@ function App() {
             <Route path="/jobs/show">
               <JobShow />
             </Route>
-            {/* <Route path="/deployments/create">
-              <DeploymentForm />
+            <Route path="/jobs/create">
+              <JobForm />
             </Route>
-            <Route path="/deployments/edit">
-              <DeploymentForm />
-            </Route> */}
+            <Route path="/jobs/edit">
+              <JobForm />
+            </Route>
             <Route path="/statefulsets" exact>
               <StatefulSetList />
             </Route>
             <Route path="/statefulsets/show">
               <StatefulSetShow />
             </Route>
-            {/* <Route path="/deployments/create">
-              <DeploymentForm />
+            <Route path="/statefulsets/create">
+              <StatefulSetForm />
             </Route>
-            <Route path="/deployments/edit">
-              <DeploymentForm />
-            </Route> */}
+            <Route path="/statefulsets/edit">
+              <StatefulSetForm />
+            </Route>
 
             <Route path="/configmaps" exact>
               <ConfigmapList />

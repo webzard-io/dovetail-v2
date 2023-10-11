@@ -3,6 +3,7 @@ import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { i18n } from 'i18next';
 import { get } from 'lodash';
 import React from 'react';
+import { ImageNames } from '../../components/ImageNames';
 import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
 import { ResourceModel } from '../../model';
@@ -110,6 +111,13 @@ export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
     title: i18n.t('image'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
+    render(value) {
+      return (
+        <>
+          <ImageNames value={value} />
+        </>
+      );
+    },
   };
 };
 
