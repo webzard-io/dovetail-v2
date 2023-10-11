@@ -4,7 +4,9 @@ import { i18n } from 'i18next';
 import { get } from 'lodash';
 import React from 'react';
 import { StateTag } from '../../components/StateTag';
-import { Column, IDObject } from '../../components/Table';
+import { Column } from '../../components/Table';
+import { ResourceModel } from '../../model';
+import { WorkloadModel } from '../../model/workload-model';
 
 const NameLink: React.FC<{ id: string; name: string }> = props => {
   const { name, id } = props;
@@ -29,17 +31,17 @@ const NameLink: React.FC<{ id: string; name: string }> = props => {
   );
 };
 
-const CommonSorter =
-  (dataIndex: string[]) =>
-  <T extends IDObject>(a: T, b: T) => {
-    const valA = get(a, dataIndex);
-    const valB = get(b, dataIndex);
-    if (valA === valB) return 0;
-    if (valA > valB) return 1;
-    return -1;
-  };
+const CommonSorter = (dataIndex: string[]) => (a: ResourceModel, b: ResourceModel) => {
+  const valA = get(a, dataIndex);
+  const valB = get(b, dataIndex);
+  if (valA === valB) return 0;
+  if (valA > valB) return 1;
+  return -1;
+};
 
-export const NameColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
+export const NameColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['metadata', 'name'];
   return {
     key: 'name',
@@ -48,13 +50,15 @@ export const NameColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> =>
     title: i18n.t('name'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
-    render: (v: string, record: T) => {
+    render: (v: string, record: Model) => {
       return <NameLink name={v} id={record.id} />;
     },
   };
 };
 
-export const NameSpaceColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
+export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['metadata', 'namespace'];
   return {
     key: 'namespace',
@@ -66,7 +70,9 @@ export const NameSpaceColumnRenderer = <T extends IDObject>(i18n: i18n): Column<
   };
 };
 
-export const PhaseColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
+export const PhaseColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['status', 'phase'];
   return {
     key: 'phase',
@@ -79,7 +85,9 @@ export const PhaseColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> =
   };
 };
 
-export const PocImageColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
+export const PocImageColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['spec', 'containers', '0', 'image'];
   return {
     key: 'podSpecImage',
@@ -91,19 +99,23 @@ export const PocImageColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T
   };
 };
 
-export const DeploymentImageColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
-  const dataIndex = ['spec', 'template', 'spec', 'containers', '0', 'image'];
+export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
+  const dataIndex = ['imageNames'];
   return {
-    key: 'podSpecImage',
+    key: 'image',
     display: true,
     dataIndex,
-    title: i18n.t('phase'),
+    title: i18n.t('image'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
   };
 };
 
-export const PodSpecImageColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
+export const PodSpecImageColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['spec', 'containers', '0', 'image'];
   return {
     key: 'podSpecImage',
@@ -115,7 +127,9 @@ export const PodSpecImageColumnRenderer = <T extends IDObject>(i18n: i18n): Colu
   };
 };
 
-export const ReplicasColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
+export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['status', 'replicas'];
   return {
     key: 'replicas',
@@ -124,17 +138,20 @@ export const ReplicasColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T
     title: i18n.t('replicas'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
-    render: (_, record: any) => {
+    render: (_, record: Model) => {
+      console.log('record', record);
       return (
         <span>
-          {record.status.readyReplicas}/{record.status.replicas}
+          {record.status?.readyReplicas}/{record.status?.replicas}
         </span>
       );
     },
   };
 };
 
-export const AgeColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => {
+export const AgeColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
   return {
     key: 'creationTimestamp',
@@ -142,7 +159,7 @@ export const AgeColumnRenderer = <T extends IDObject>(i18n: i18n): Column<T> => 
     dataIndex,
     title: i18n.t('created_time'),
     sortable: true,
-    sorter: (a: T, b: T) => {
+    sorter: (a: ResourceModel, b: ResourceModel) => {
       const valA = new Date(get(a, dataIndex));
       const valB = new Date(get(b, dataIndex));
       if (valA === valB) return 0;

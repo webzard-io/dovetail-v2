@@ -1,6 +1,6 @@
 import { css } from '@linaria/core';
 import { IResourceComponentsProps } from '@refinedev/core';
-import { Deployment } from 'kubernetes-types/apps/v1';
+import { Job } from 'kubernetes-types/batch/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Table from 'src/components/Table';
@@ -12,9 +12,8 @@ import {
   NameColumnRenderer,
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
-  ReplicasColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { WorkloadModel } from '../../../model';
+import { JobModel } from '../../../model';
 import { WithId } from '../../../types';
 
 const ListPageStyle = css`
@@ -29,28 +28,41 @@ const TableStyle = css`
   min-height: 0;
 `;
 
-export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
+export const JobList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
-  const { tableProps, selectedKeys } = useEagleTable<WithId<Deployment>, WorkloadModel>({
+  const { tableProps, selectedKeys } = useEagleTable<WithId<Job>, JobModel>({
     useTableParams: [{}],
     columns: [
       PhaseColumnRenderer(i18n),
       NameColumnRenderer(i18n),
       NameSpaceColumnRenderer(i18n),
       WorkloadImageColumnRenderer(i18n),
-      ReplicasColumnRenderer(i18n),
+      {
+        key: 'completions',
+        display: true,
+        dataIndex: ['spec', 'completions'],
+        title: 'Completions',
+        sortable: true,
+      },
+      {
+        key: 'duration',
+        display: true,
+        dataIndex: ['duration'],
+        title: 'Duration',
+        sortable: true,
+      },
       AgeColumnRenderer(i18n),
     ],
     tableProps: {
       currentSize: 10,
     },
-    formatter: d => new WorkloadModel(d),
+    formatter: d => new JobModel(d),
   });
 
   return (
     <div className={ListPageStyle}>
-      <TableToolBar title="Deployments" selectedKeys={selectedKeys} />
-      <Table className={TableStyle} {...tableProps} scroll={{ y: 'calc(100% - 48px)' }} />
+      <TableToolBar title="Jobs" selectedKeys={selectedKeys} />
+      <Table {...tableProps} className={TableStyle} scroll={{ y: 'calc(100% - 48px)' }} />
     </div>
   );
 };

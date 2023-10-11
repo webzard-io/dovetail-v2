@@ -1,6 +1,6 @@
 import { css } from '@linaria/core';
 import { IResourceComponentsProps } from '@refinedev/core';
-import { Deployment } from 'kubernetes-types/apps/v1';
+import { StatefulSet } from 'kubernetes-types/apps/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Table from 'src/components/Table';
@@ -14,7 +14,7 @@ import {
   PhaseColumnRenderer,
   ReplicasColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { WorkloadModel } from '../../../model';
+import { WorkloadModel } from '../../../model/workload-model';
 import { WithId } from '../../../types';
 
 const ListPageStyle = css`
@@ -29,9 +29,9 @@ const TableStyle = css`
   min-height: 0;
 `;
 
-export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
+export const StatefulSetList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
-  const { tableProps, selectedKeys } = useEagleTable<WithId<Deployment>, WorkloadModel>({
+  const { tableProps, selectedKeys } = useEagleTable<WithId<StatefulSet>, WorkloadModel>({
     useTableParams: [{}],
     columns: [
       PhaseColumnRenderer(i18n),
@@ -49,8 +49,8 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <div className={ListPageStyle}>
-      <TableToolBar title="Deployments" selectedKeys={selectedKeys} />
-      <Table className={TableStyle} {...tableProps} scroll={{ y: 'calc(100% - 48px)' }} />
+      <TableToolBar title="StatefulSet" selectedKeys={selectedKeys} />
+      <Table {...tableProps} className={TableStyle} scroll={{ y: 'calc(100% - 48px)' }} />
     </div>
   );
 };
