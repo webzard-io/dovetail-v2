@@ -6,6 +6,7 @@ import React from 'react';
 import { ImageNames } from '../../components/ImageNames';
 import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
+import { WorkloadReplicas } from '../../components/WorkloadReplicas';
 import { ResourceModel } from '../../model';
 import { WorkloadModel } from '../../model/workload-model';
 
@@ -112,11 +113,7 @@ export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render(value) {
-      return (
-        <>
-          <ImageNames value={value} />
-        </>
-      );
+      return <ImageNames value={value} />;
     },
   };
 };
@@ -147,18 +144,7 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (_, record: Model) => {
-      const readyReplicas =
-        record.status && 'readyReplicas' in record.status
-          ? record.status.readyReplicas
-          : 0;
-      const replicas =
-        record.status && 'replicas' in record.status ? record.status.replicas : 0;
-
-      return (
-        <span>
-          {readyReplicas}/{replicas}
-        </span>
-      );
+      return <WorkloadReplicas record={record} />;
     },
   };
 };

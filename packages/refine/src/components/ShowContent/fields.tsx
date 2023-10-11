@@ -4,7 +4,10 @@ import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { ResourceModel, WorkloadModel } from '../../model';
 import { ConditionsTable } from '../ConditionsTable';
+import { CronjobJobsTable } from '../CronjobJobsTable';
+import { ImageNames } from '../ImageNames';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
+import { WorkloadReplicas } from '../WorkloadReplicas';
 
 export type ShowField<Model extends ResourceModel> = {
   key: string;
@@ -17,7 +20,10 @@ export const ImageField = (i18n: i18n): ShowField<WorkloadModel> => {
   return {
     key: 'Image',
     title: i18n.t('image'),
-    path: ['spec', 'template', 'spec', 'containers', '0', 'image'],
+    path: ['imageNames'],
+    render(value) {
+      return <ImageNames value={value as string[]} />;
+    },
   };
 };
 
@@ -27,11 +33,7 @@ export const ReplicaField = (i18n: i18n): ShowField<WorkloadModel> => {
     title: i18n.t('replicas'),
     path: ['status', 'replicas'],
     render: (_, record) => {
-      return (
-        <span>
-          {record.status?.readyReplicas}/{record.status?.replicas}
-        </span>
-      );
+      return <WorkloadReplicas record={record} />;
     },
   };
 };
@@ -60,6 +62,27 @@ export const PodsField = (_: i18n): ShowField<WorkloadModel> => {
               return r.kind === 'Pod' && r.type === 'creates';
             })?.selector
           }
+        />
+      );
+    },
+  };
+};
+
+export const JobsField = (_: i18n): ShowField<WorkloadModel> => {
+  return {
+    key: 'jobs',
+    title: 'Jobs',
+    path: [],
+    render: (_, record) => {
+      return (
+        <CronjobJobsTable
+          owner={{
+            apiVersion: record.apiVersion || '',
+            kind: record.kind || '',
+            name: record.metadata?.name || '',
+            namespace: record.metadata?.namespace || '',
+            uid: record.metadata?.uid || '',
+          }}
         />
       );
     },
