@@ -8,8 +8,10 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
-import { ShowField } from './fields';
+import { ResourceModel } from '../../model';
+import { Resource } from '../../types';
 import { Tags } from '../Tags';
+import { ShowField } from './fields';
 
 const TopBarStyle = css`
   justify-content: space-between;
@@ -27,8 +29,9 @@ const EditorStyle = css`
   margin-top: 16px;
 `;
 
-type Props = {
-  fieldGroups: ShowField[][];
+type Props<Raw extends Resource, Model extends ResourceModel> = {
+  fieldGroups: ShowField<Model>[][];
+  formatter: (r: Raw) => Model;
 };
 
 enum Mode {
@@ -36,8 +39,10 @@ enum Mode {
   Yaml = 'yaml',
 }
 
-export const ShowContent: React.FC<Props> = props => {
-  const { fieldGroups } = props;
+export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
+  props: Props<Raw, Model>
+) => {
+  const { fieldGroups, formatter } = props;
   const kit = useUIKit();
   const parsed = useParsed();
   const { resource } = useResource();
@@ -47,11 +52,11 @@ export const ShowContent: React.FC<Props> = props => {
   const [mode, setMode] = useState<Mode>(Mode.Detail);
   const { t } = useTranslation();
   const { data } = queryResult;
-  const record = data?.data;
+  const record = formatter(data?.data as Raw);
 
   if (!record) return null;
 
-  const FirstLineFields: ShowField[] = [
+  const FirstLineFields: ShowField<Model>[] = [
     {
       key: 'NameSpace',
       title: t('namespace'),
@@ -64,7 +69,7 @@ export const ShowContent: React.FC<Props> = props => {
     },
   ];
 
-  const SecondLineFields: ShowField[] = [
+  const SecondLineFields: ShowField<Model>[] = [
     {
       key: 'Labels',
       title: t('label'),
@@ -78,17 +83,20 @@ export const ShowContent: React.FC<Props> = props => {
       title: t('annotation'),
       path: ['metadata', 'annotations'],
       render: value => {
+        if (!value) return undefined;
         return <Tags value={value as Record<string, string>} />;
       },
     },
   ];
 
-  function renderFields(fields: ShowField[]) {
+  function renderFields(fields: ShowField<Model>[]) {
     if (!record) return null;
     return fields.map(field => {
-      let content = <span>{get(record, field.path)}</span>;
+      let content;
       if (field.render) {
         content = field.render(get(record, field.path), record);
+      } else {
+        content = <span>{get(record, field.path)}</span>;
       }
       return (
         <kit.space key={field.path.join()}>
@@ -103,7 +111,7 @@ export const ShowContent: React.FC<Props> = props => {
     <kit.space className={TopBarStyle}>
       <div>
         <span className={Typo.Display.d2_bold_title}>{resource?.meta?.kind}: </span>
-        <span className={Typo.Label.l1_regular}>{record?.metadata.name}</span>
+        <span className={Typo.Label.l1_regular}>{record?.metadata?.name}</span>
         <kit.tag color="green">Active</kit.tag>
       </div>
       <kit.space>
@@ -128,9 +136,11 @@ export const ShowContent: React.FC<Props> = props => {
   const tabs = (
     <kit.tabs>
       {fieldGroups[2].map(field => {
-        let content = <span>{get(record, field.path)}</span>;
+        let content;
         if (field.render) {
           content = field.render(get(record, field.path), record);
+        } else {
+          content = <span>{get(record, field.path)}</span>;
         }
         return (
           <kit.tabsTabPane tab={field.title} key={field.key}>

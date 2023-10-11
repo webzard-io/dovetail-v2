@@ -6,6 +6,9 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList, ConfigmapShow } from './pages/configmap';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
+import { JobShow } from './pages/jobs';
+import { JobList } from './pages/jobs/list';
+import { StatefulSetShow, StatefulSetList } from './pages/statefulSets';
 import { routerProvider } from './providers/router-provider';
 
 import './styles.css';
@@ -42,12 +45,36 @@ function App() {
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'Deployment',
-              parent: 'WorkLoad'
+              parent: 'WorkLoad',
             },
             list: '/deployments',
             show: '/deployments/show',
             create: '/deployments/create',
             edit: '/deployments/edit',
+          },
+          {
+            name: 'jobs',
+            meta: {
+              resourceBasePath: '/apis/batch/v1',
+              kind: 'CronJob',
+              parent: 'WorkLoad',
+            },
+            list: '/jobs',
+            show: '/jobs/show',
+            create: '/jobs/create',
+            edit: '/jobs/edit',
+          },
+          {
+            name: 'statefulsets',
+            meta: {
+              resourceBasePath: '/apis/apps/v1',
+              kind: 'StatefulSet',
+              parent: 'WorkLoad',
+            },
+            list: '/statefulsets',
+            show: '/statefulsets/show',
+            create: '/statefulsets/create',
+            edit: '/statefulsets/edit',
           },
           {
             name: 'Core',
@@ -57,7 +84,7 @@ function App() {
             meta: {
               resourceBasePath: '/api/v1',
               kind: 'ConfigMap',
-              parent: 'Core'
+              parent: 'Core',
             },
             list: '/configmaps',
             show: '/configmaps/show',
@@ -80,6 +107,30 @@ function App() {
             <Route path="/deployments/edit">
               <DeploymentForm />
             </Route>
+            <Route path="/jobs" exact>
+              <JobList />
+            </Route>
+            <Route path="/jobs/show">
+              <JobShow />
+            </Route>
+            {/* <Route path="/deployments/create">
+              <DeploymentForm />
+            </Route>
+            <Route path="/deployments/edit">
+              <DeploymentForm />
+            </Route> */}
+            <Route path="/statefulsets" exact>
+              <StatefulSetList />
+            </Route>
+            <Route path="/statefulsets/show">
+              <StatefulSetShow />
+            </Route>
+            {/* <Route path="/deployments/create">
+              <DeploymentForm />
+            </Route>
+            <Route path="/deployments/edit">
+              <DeploymentForm />
+            </Route> */}
 
             <Route path="/configmaps" exact>
               <ConfigmapList />
