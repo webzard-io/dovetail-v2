@@ -3,7 +3,7 @@ import { CronJob } from 'kubernetes-types/batch/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageShow } from '../../../components/PageShow';
-import { ImageField } from '../../../components/ShowContent/fields';
+import { ImageField, JobsField } from '../../../components/ShowContent/fields';
 import { WorkloadModel } from '../../../model';
 import { WithId } from '../../../types';
 
@@ -12,7 +12,7 @@ export const CronJobShow: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <PageShow<WithId<CronJob>, WorkloadModel>
-      fieldGroups={[[], [ImageField(i18n)], []]}
+      fieldGroups={[[], [ImageField(i18n)], [JobsField(i18n)]]}
       formatter={d => new WorkloadModel(d)}
     />
   );
