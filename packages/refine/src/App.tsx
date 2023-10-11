@@ -5,6 +5,7 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList, ConfigmapShow } from './pages/configmap';
+import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
 import { JobShow, JobList, JobForm } from './pages/jobs';
 import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulSets';
@@ -40,6 +41,19 @@ function App() {
             name: 'WorkLoad',
           },
           {
+            name: 'daemonsets',
+            meta: {
+              resourceBasePath: '/apis/apps/v1',
+              kind: 'DaemonSet',
+              parent: 'WorkLoad',
+              label: 'DaemonSets',
+            },
+            list: '/daemonsets',
+            show: '/daemonsets/show',
+            create: '/daemonsets/create',
+            edit: '/daemonsets/edit',
+          },
+          {
             name: 'deployments',
             meta: {
               resourceBasePath: '/apis/apps/v1',
@@ -69,6 +83,7 @@ function App() {
               resourceBasePath: '/apis/apps/v1',
               kind: 'StatefulSet',
               parent: 'WorkLoad',
+              label: 'StatefulSets',
             },
             list: '/statefulsets',
             show: '/statefulsets/show',
@@ -94,6 +109,19 @@ function App() {
       >
         <Layout>
           <Switch>
+            <Route path="/daemonsets" exact>
+              <DaemonSetList />
+            </Route>
+            <Route path="/daemonsets/show">
+              <DaemonSetShow />
+            </Route>
+            <Route path="/daemonsets/create">
+              <DaemonSetForm />
+            </Route>
+            <Route path="/daemonsets/edit">
+              <DaemonSetForm />
+            </Route>
+
             <Route path="/deployments" exact>
               <DeploymentList />
             </Route>
@@ -106,6 +134,7 @@ function App() {
             <Route path="/deployments/edit">
               <DeploymentForm />
             </Route>
+
             <Route path="/jobs" exact>
               <JobList />
             </Route>
@@ -118,6 +147,7 @@ function App() {
             <Route path="/jobs/edit">
               <JobForm />
             </Route>
+
             <Route path="/statefulsets" exact>
               <StatefulSetList />
             </Route>
