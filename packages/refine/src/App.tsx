@@ -2,9 +2,11 @@ import { initParrotI18n } from '@cloudtower/eagle';
 import { Refine } from '@refinedev/core';
 import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ConfigmapForm, ConfigmapList, ConfigmapShow } from './pages/configmap';
+import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
 import { JobShow, JobList, JobForm } from './pages/jobs';
@@ -24,6 +26,7 @@ const globalStore = new GlobalStore({
 });
 
 function App() {
+  const { t } = useTranslation();
   return (
     <BrowserRouter>
       <Refine
@@ -38,14 +41,28 @@ function App() {
         }}
         resources={[
           {
-            name: 'WorkLoad',
+            name: t('dovetail.workload'),
+          },
+          {
+            name: 'cronjobs',
+            meta: {
+              // TODO: dynamic load base path from API schema
+              resourceBasePath: '/apis/batch/v1beta1',
+              kind: 'CronJob',
+              parent: t('dovetail.workload'),
+              label: 'CronJobs',
+            },
+            list: '/cronjobs',
+            show: '/cronjobs/show',
+            create: '/cronjobs/create',
+            edit: '/cronjobs/edit',
           },
           {
             name: 'daemonsets',
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'DaemonSet',
-              parent: 'WorkLoad',
+              parent: t('dovetail.workload'),
               label: 'DaemonSets',
             },
             list: '/daemonsets',
@@ -58,7 +75,7 @@ function App() {
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'Deployment',
-              parent: 'WorkLoad',
+              parent: t('dovetail.workload'),
             },
             list: '/deployments',
             show: '/deployments/show',
@@ -70,7 +87,7 @@ function App() {
             meta: {
               resourceBasePath: '/apis/batch/v1',
               kind: 'Job',
-              parent: 'WorkLoad',
+              parent: t('dovetail.workload'),
             },
             list: '/jobs',
             show: '/jobs/show',
@@ -82,7 +99,7 @@ function App() {
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'StatefulSet',
-              parent: 'WorkLoad',
+              parent: t('dovetail.workload'),
               label: 'StatefulSets',
             },
             list: '/statefulsets',
@@ -109,6 +126,19 @@ function App() {
       >
         <Layout>
           <Switch>
+            <Route path="/cronjobs" exact>
+              <CronJobList />
+            </Route>
+            <Route path="/cronjobs/show">
+              <CronJobShow />
+            </Route>
+            <Route path="/cronjobs/create">
+              <CronJobForm />
+            </Route>
+            <Route path="/cronjobs/edit">
+              <CronJobForm />
+            </Route>
+
             <Route path="/daemonsets" exact>
               <DaemonSetList />
             </Route>

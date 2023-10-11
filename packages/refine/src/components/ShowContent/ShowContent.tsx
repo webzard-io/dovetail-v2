@@ -75,6 +75,9 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
       title: t('label'),
       path: ['metadata', 'labels'],
       render: value => {
+        if (!value) {
+          return undefined;
+        }
         return <Tags value={value as Record<string, string>} />;
       },
     },
@@ -83,7 +86,9 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
       title: t('annotation'),
       path: ['metadata', 'annotations'],
       render: value => {
-        if (!value) return undefined;
+        if (!value) {
+          return undefined;
+        }
         return <Tags value={value as Record<string, string>} />;
       },
     },
