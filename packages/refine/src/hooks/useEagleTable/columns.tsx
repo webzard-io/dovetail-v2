@@ -147,10 +147,16 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (_, record: Model) => {
-      console.log('record', record);
+      const readyReplicas =
+        record.status && 'readyReplicas' in record.status
+          ? record.status.readyReplicas
+          : 0;
+      const replicas =
+        record.status && 'replicas' in record.status ? record.status.replicas : 0;
+
       return (
         <span>
-          {record.status?.readyReplicas}/{record.status?.replicas}
+          {readyReplicas}/{replicas}
         </span>
       );
     },
