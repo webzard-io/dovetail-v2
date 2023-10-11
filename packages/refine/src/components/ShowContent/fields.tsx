@@ -4,6 +4,7 @@ import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { ResourceModel, WorkloadModel } from '../../model';
 import { ConditionsTable } from '../ConditionsTable';
+import { CronjobJobsTable } from '../CronjobJobsTable';
 import { ImageNames } from '../ImageNames';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
@@ -61,6 +62,27 @@ export const PodsField = (_: i18n): ShowField<WorkloadModel> => {
               return r.kind === 'Pod' && r.type === 'creates';
             })?.selector
           }
+        />
+      );
+    },
+  };
+};
+
+export const JobsField = (_: i18n): ShowField<WorkloadModel> => {
+  return {
+    key: 'jobs',
+    title: 'Jobs',
+    path: [],
+    render: (_, record) => {
+      return (
+        <CronjobJobsTable
+          owner={{
+            apiVersion: record.apiVersion || '',
+            kind: record.kind || '',
+            name: record.metadata?.name || '',
+            namespace: record.metadata?.namespace || '',
+            uid: record.metadata?.uid || '',
+          }}
         />
       );
     },
