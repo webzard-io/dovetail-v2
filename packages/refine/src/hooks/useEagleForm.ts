@@ -42,7 +42,7 @@ export type UseFormProps<
   warnWhenUnsavedChanges?: boolean;
   editorOptions?: {
     isGenerateAnnotations?: boolean;
-  }
+  };
 };
 
 export type UseFormReturnType<
@@ -74,7 +74,7 @@ export type UseFormReturnType<
   enableEditor: boolean;
   switchEditor: () => void;
   onFinish: (
-    values?: TVariables,
+    values?: TVariables
   ) => Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void>;
 };
 
@@ -145,9 +145,7 @@ const useEagleForm = <
     TResponse,
     TResponseError
   >({
-    onMutationSuccess: onMutationSuccessProp
-      ? onMutationSuccessProp
-      : undefined,
+    onMutationSuccess: onMutationSuccessProp ? onMutationSuccessProp : undefined,
     onMutationError,
     redirect,
     action,
@@ -174,10 +172,8 @@ const useEagleForm = <
 
   const { formLoading, onFinish, queryResult, id } = useFormCoreResult;
 
-  const {
-    warnWhenUnsavedChanges: warnWhenUnsavedChangesRefine,
-    setWarnWhen,
-  } = useWarnAboutChange();
+  const { warnWhenUnsavedChanges: warnWhenUnsavedChangesRefine, setWarnWhen } =
+    useWarnAboutChange();
   const warnWhenUnsavedChanges =
     warnWhenUnsavedChangesProp ?? warnWhenUnsavedChangesRefine;
 
@@ -214,19 +210,28 @@ const useEagleForm = <
 
   const editorProps = {
     ref: editor,
-    defaultValue: schema && editorOptions?.isGenerateAnnotations ? generateYamlBySchema(form?.getFieldsValue(true) || {}, schema) : yaml.dump(form.getFieldsValue(true)),
+    defaultValue:
+      schema && editorOptions?.isGenerateAnnotations
+        ? generateYamlBySchema(form?.getFieldsValue(true) || {}, schema)
+        : yaml.dump(form.getFieldsValue(true)),
     schema,
     id: resource || '',
   };
 
-  const initialValues = queryResult?.data?.data ? {
-    ...queryResult?.data?.data,
-  } : undefined;
+  const initialValues = queryResult?.data?.data
+    ? {
+        ...queryResult?.data?.data,
+      }
+    : undefined;
 
   if (initialValues) {
     delete initialValues.id;
     delete initialValues.metadata.managedFields;
-    delete initialValues.metadata.annotations['kubectl.kubernetes.io/last-applied-configuration'];
+    if (initialValues.metadata.annotations) {
+      delete initialValues.metadata.annotations[
+        'kubectl.kubernetes.io/last-applied-configuration'
+      ];
+    }
   }
 
   return {
@@ -234,9 +239,11 @@ const useEagleForm = <
     formProps: {
       ...formSF.formProps,
       onFinish: (values: TVariables) => {
-        const finalValues = editor.current ? yaml.load(editor.current?.getEditorValue() || '') as TVariables : values;
+        const finalValues = editor.current
+          ? (yaml.load(editor.current?.getEditorValue() || '') as TVariables)
+          : values;
 
-        return onFinish(finalValues).catch((error) => error);
+        return onFinish(finalValues).catch(error => error);
       },
       onKeyUp,
       onValuesChange,
@@ -248,7 +255,10 @@ const useEagleForm = <
     enableEditor,
     switchEditor() {
       if (enableEditor && editor.current?.getEditorValue()) {
-        const value = yaml.load(editor.current?.getEditorValue()) as Record<string, unknown>;
+        const value = yaml.load(editor.current?.getEditorValue()) as Record<
+          string,
+          unknown
+        >;
 
         form?.setFieldsValue(value);
       }
@@ -256,7 +266,9 @@ const useEagleForm = <
       setEnableEditor(!enableEditor);
     },
     onFinish: async (values?: TVariables) => {
-      const finalValues = enableEditor ? yaml.load(editor.current?.getEditorValue() || '') : values ?? formSF.form.getFieldsValue(true);
+      const finalValues = enableEditor
+        ? yaml.load(editor.current?.getEditorValue() || '')
+        : values ?? formSF.form.getFieldsValue(true);
 
       return await onFinish(finalValues);
     },

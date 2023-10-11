@@ -5,10 +5,10 @@ import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PodModel } from '../../model';
+import { ImageNames } from '../ImageNames';
 import { StateTag } from '../StateTag';
 import Table from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
-import { ImageNames } from '../ImageNames';
 
 function matchSelector(pod: PodModel, selector: LabelSelector): boolean {
   let match = true;
