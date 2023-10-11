@@ -7,30 +7,28 @@ export const DeploymentForm: React.FC<FormProps> = () => {
   return (
     <YamlForm
       initialValues={{
+        apiVersion: 'apps/v1',
+        kind: 'Deployment',
         ...BASE_INIT_VALUE,
         spec: {
           replicas: 1,
           selector: {
-            matchLabels: {
-              'workload.user.cattle.io/workloadselector':
-                'apps.deployment-default-undefined',
-            },
+            matchLabels: {},
           },
           template: {
             metadata: {
-              labels: {
-                'workload.user.cattle.io/workloadselector':
-                  'apps.deployment-default-undefined',
-              },
+              labels: {},
             },
             spec: {
-              containers: [{
-                name: '',
-                image: '',
-              }]
-            }
-          }
-        }
+              containers: [
+                {
+                  name: '',
+                  image: '',
+                },
+              ],
+            },
+          },
+        },
       }}
     />
   );

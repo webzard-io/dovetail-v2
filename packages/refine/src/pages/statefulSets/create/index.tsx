@@ -3,34 +3,32 @@ import React from 'react';
 import YamlForm from 'src/components/YamlForm';
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
 
-export const DeploymentForm: React.FC<FormProps> = () => {
+export const StatefulSetForm: React.FC<FormProps> = () => {
   return (
     <YamlForm
       initialValues={{
+        apiVersion: 'apps/v1',
+        kind: 'StatefulSet',
         ...BASE_INIT_VALUE,
         spec: {
           replicas: 1,
           selector: {
-            matchLabels: {
-              'workload.user.cattle.io/workloadselector':
-                'apps.deployment-default-undefined',
-            },
+            matchLabels: {},
           },
           template: {
             metadata: {
-              labels: {
-                'workload.user.cattle.io/workloadselector':
-                  'apps.deployment-default-undefined',
-              },
+              labels: {},
             },
             spec: {
-              containers: [{
-                name: '',
-                image: '',
-              }]
-            }
-          }
-        }
+              containers: [
+                {
+                  name: '',
+                  image: '',
+                },
+              ],
+            },
+          },
+        },
       }}
     />
   );
