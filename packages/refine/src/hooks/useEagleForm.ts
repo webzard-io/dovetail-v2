@@ -9,12 +9,14 @@ import {
   CreateResponse,
   UpdateResponse,
   pickNotDeprecated,
+  useResource,
 } from '@refinedev/core';
 import { ButtonProps } from 'antd/lib/button';
 import { FormInstance, FormProps } from 'antd/lib/form';
 import yaml from 'js-yaml';
 import { JSONSchema7 } from 'json-schema';
 import React, { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { type YamlEditorHandle } from 'src/components/YamlEditor';
 import { useSchema } from 'src/hooks/useSchema';
 import { generateYamlBySchema } from 'src/utils/yaml';
@@ -72,6 +74,7 @@ export type UseFormReturnType<
     id: string;
   };
   enableEditor: boolean;
+  errorResponseBody?: Record<string, unknown> | null;
   switchEditor: () => void;
   onFinish: (
     values?: TVariables,
@@ -128,7 +131,13 @@ const useEagleForm = <
   TResponseError
 > => {
   const editor = useRef<YamlEditorHandle>(null);
+  const { t } = useTranslation();
   const [enableEditor, setEnableEditor] = useState(false);
+  const [isYamlValid, setIsYamlValid] = useState(true);
+  const [isSchemaValid, setIsSchemaValid] = useState(true);
+  const [editorErrors, setEditorErrors] = useState<string[]>([]);
+  const [errorResponseBody, setErrorResponseBody] = useState<Record<string, unknown> | null>(null);
+  const useResourceResult = useResource();
   const kit = useUIKit();
   const schema = useSchema();
   const [formAnt] = kit.form.useForm();
@@ -189,8 +198,23 @@ const useEagleForm = <
 
       editor.current.setEditorValue(editorValue);
       editor.current.setValue(editorValue);
+      editor.current.foldSymbol('annotations:');
+      editor.current.foldSymbol('managedFields:');
+      editor.current.foldSymbol('status:');
+      editor.current.foldSymbol('kubectl.kubernetes.io/last-applied-configuration:');
     }
   }, [queryResult?.data?.data, id]);
+
+  React.useEffect(()=> {
+    const response = useFormCoreResult.mutationResult.error?.response;
+
+    if (response && !response?.bodyUsed) {
+      response.json?.().then((body: Record<string, unknown>)=> {
+        setErrorResponseBody(body);
+      });
+    }
+  }, [useFormCoreResult.mutationResult]);
+
 
   const onKeyUp = (event: React.KeyboardEvent<HTMLFormElement>) => {
     if (submitOnEnter && event.key === 'Enter') {
@@ -216,7 +240,16 @@ const useEagleForm = <
     ref: editor,
     defaultValue: schema && editorOptions?.isGenerateAnnotations ? generateYamlBySchema(form?.getFieldsValue(true) || {}, schema) : yaml.dump(form.getFieldsValue(true)),
     schema,
-    id: resource || '',
+    id: useResourceResult.resource?.name || '',
+    errorMsgs: editorErrors,
+    onValidate(yamlValid: boolean, schemaValid: boolean) {
+      setIsYamlValid(yamlValid);
+      setIsSchemaValid(schemaValid);
+
+      if (yamlValid && schemaValid) {
+        setEditorErrors([]);
+      }
+    },
   };
 
   const initialValues = queryResult?.data?.data ? {
@@ -234,6 +267,16 @@ const useEagleForm = <
     formProps: {
       ...formSF.formProps,
       onFinish: (values: TVariables) => {
+        const errors = [
+          !isYamlValid && t('dovetail.yaml_format_wrong'),
+          !isSchemaValid && t('dovetail.yaml_value_wrong')
+        ].filter(error=> !!error);
+
+        if (errors.length) {
+          setEditorErrors(errors);
+          return ;
+        }
+
         const finalValues = editor.current ? yaml.load(editor.current?.getEditorValue() || '') as TVariables : values;
 
         return onFinish(finalValues).catch((error) => error);
@@ -246,6 +289,7 @@ const useEagleForm = <
     ...useFormCoreResult,
     editorProps,
     enableEditor,
+    errorResponseBody,
     switchEditor() {
       if (enableEditor && editor.current?.getEditorValue()) {
         const value = yaml.load(editor.current?.getEditorValue()) as Record<string, unknown>;

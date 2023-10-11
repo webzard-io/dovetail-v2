@@ -6,6 +6,7 @@ import FormLayout from 'src/components/FormLayout';
 import { YamlEditorComponent } from 'src/components/YamlEditor/YamlEditorComponent';
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
 import useEagleForm from 'src/hooks/useEagleForm';
+import { getCommonErrors } from 'src/utils/error';
 
 const EditorStyle = css`
   flex: 1;
@@ -17,9 +18,10 @@ interface YamlFormProps {
 }
 
 function YamlForm(props: YamlFormProps) {
-  const { formProps, saveButtonProps, editorProps } = useEagleForm();
+  const { formProps, saveButtonProps, editorProps, errorResponseBody, mutationResult } = useEagleForm();
   const kit = useUIKit();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const responseErrors = errorResponseBody ? getCommonErrors(errorResponseBody, i18n) : [];
 
   return (
     <FormLayout>
@@ -40,6 +42,16 @@ function YamlForm(props: YamlFormProps) {
                 />
               </kit.form.Item>
               <kit.form.Item>
+                {mutationResult.error && <kit.alert
+                  message={errorResponseBody ? (
+                    <ul>
+                      {responseErrors.map((error, index)=> (
+                        <li key={error}>{responseErrors.length > 1 ? index + 1 + '. ' : ''}{error}</li>
+                      ))}
+                    </ul>
+                  ) : mutationResult.error.message}
+                  type="error"
+                  style={{ marginTop: 16 }} />}
                 <kit.button {...saveButtonProps} type="primary" style={{ marginTop: 16 }}>
                   {t('save')}
                 </kit.button>
