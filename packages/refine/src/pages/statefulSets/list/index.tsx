@@ -32,7 +32,7 @@ const TableStyle = css`
 export const StatefulSetList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
   const { tableProps, selectedKeys } = useEagleTable<WithId<StatefulSet>, WorkloadModel>({
-    useTableParams: [{}],
+    useTableParams: {},
     columns: [
       PhaseColumnRenderer(i18n),
       NameColumnRenderer(i18n),
