@@ -10,18 +10,19 @@ import { WorkloadReplicas } from '../../components/WorkloadReplicas';
 import { ResourceModel } from '../../model';
 import { WorkloadModel } from '../../model/workload-model';
 
-const NameLink: React.FC<{ id: string; name: string }> = props => {
-  const { name, id } = props;
+const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
+  const { name, id, resource } = props;
   const kit = useUIKit();
   const go = useGo();
   const navigation = useNavigation();
   const parsed = useParsed();
+  const resourceName = resource || parsed.resource?.name || '';
   return (
     <kit.button
       type="link"
       onClick={() => {
         go({
-          to: navigation.showUrl(parsed.resource?.name || '', ''),
+          to: navigation.showUrl(resourceName, ''),
           query: {
             id,
           },
@@ -42,7 +43,8 @@ const CommonSorter = (dataIndex: string[]) => (a: ResourceModel, b: ResourceMode
 };
 
 export const NameColumnRenderer = <Model extends ResourceModel>(
-  i18n: i18n
+  i18n: i18n,
+  resource = ''
 ): Column<Model> => {
   const dataIndex = ['metadata', 'name'];
   return {
@@ -53,7 +55,7 @@ export const NameColumnRenderer = <Model extends ResourceModel>(
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (v: string, record: Model) => {
-      return <NameLink name={v} id={record.id} />;
+      return <NameLink name={v} id={record.id} resource={resource} />;
     },
   };
 };
