@@ -31,8 +31,9 @@ const TableStyle = css`
 
 export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
+
   const { tableProps, selectedKeys } = useEagleTable<WithId<Deployment>, WorkloadModel>({
-    useTableParams: [{}],
+    useTableParams: {},
     columns: [
       PhaseColumnRenderer(i18n),
       NameColumnRenderer(i18n),

@@ -1,14 +1,16 @@
 import { SettingsGear16GradientGrayIcon } from '@cloudtower/icons-react';
-import { useTable } from '@refinedev/core';
-import { useCallback, useState } from 'react';
+import { useParsed, useTable } from '@refinedev/core';
+import { useCallback, useMemo, useState } from 'react';
+import { merge } from 'lodash-es';
 import React from 'react';
 import K8sDropdown from 'src/components/K8sDropdown';
 import { Column, TableProps } from '../../components/Table';
 import { ResourceModel } from '../../model';
 import { Resource } from '../../types';
+import { ALL_NS, NS_STORE_KEY } from 'src/components/NamespacesFilter';
 
 type Params<Raw extends Resource, Model extends ResourceModel> = {
-  useTableParams: Parameters<typeof useTable<Raw>>;
+  useTableParams: Parameters<typeof useTable<Raw>>[0];
   columns: Column<Model>[];
   tableProps?: Partial<TableProps<Model>>;
   formatter: (d: Raw) => Model;
@@ -27,10 +29,34 @@ export enum ColumnKeys {
 export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>(
   params: Params<Raw, Model>
 ) => {
-  const { useTableParams, columns, tableProps, formatter } = params;
+  const { columns, tableProps, formatter } = params;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
-  const table = useTable<Raw>(...useTableParams);
+
+  const parsed = useParsed();
+  const nsFilter = parsed.params?.['namespace-filter'] || ALL_NS;
+
+  const useTableParams = useMemo(() => {
+    // TODO: check whether resource can be namespaced
+    return merge(
+      params.useTableParams,
+      nsFilter === ALL_NS
+        ? {}
+        : {
+            filters: {
+              permanent: [
+                {
+                  field: 'metadata.namespace',
+                  operator: 'eq',
+                  value: nsFilter,
+                },
+              ],
+            },
+          }
+    );
+  }, [params.useTableParams, nsFilter]);
+
+  const table = useTable<Raw>(useTableParams);
 
   const onPageChange = useCallback(
     (page: number) => {
