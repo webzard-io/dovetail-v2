@@ -61,7 +61,7 @@ export const CronjobJobsTable: React.FC<{
 
   const columns = [
     PhaseColumnRenderer(i18n),
-    NameColumnRenderer(i18n),
+    NameColumnRenderer(i18n, 'jobs'),
     NameSpaceColumnRenderer(i18n),
     WorkloadImageColumnRenderer(i18n),
     {
