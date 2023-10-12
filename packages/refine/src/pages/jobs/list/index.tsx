@@ -12,6 +12,8 @@ import {
   NameColumnRenderer,
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
+  DurationColumnRenderer,
+  CompletionsCountColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import { JobModel } from '../../../model';
 import { WithId } from '../../../types';
@@ -37,20 +39,8 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
       NameColumnRenderer(i18n),
       NameSpaceColumnRenderer(i18n),
       WorkloadImageColumnRenderer(i18n),
-      {
-        key: 'completions',
-        display: true,
-        dataIndex: ['spec', 'completions'],
-        title: 'Completions',
-        sortable: true,
-      },
-      {
-        key: 'duration',
-        display: true,
-        dataIndex: ['duration'],
-        title: 'Duration',
-        sortable: true,
-      },
+      CompletionsCountColumnRenderer(i18n),
+      DurationColumnRenderer(i18n),
       AgeColumnRenderer(i18n),
     ],
     tableProps: {
