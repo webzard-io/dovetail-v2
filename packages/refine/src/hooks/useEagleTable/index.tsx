@@ -1,13 +1,12 @@
 import { SettingsGear16GradientGrayIcon } from '@cloudtower/icons-react';
-import { useParsed, useTable } from '@refinedev/core';
-import { useCallback, useMemo, useState } from 'react';
+import { useTable } from '@refinedev/core';
 import { merge } from 'lodash-es';
-import React from 'react';
-import K8sDropdown from 'src/components/K8sDropdown';
+import React, { useCallback, useMemo, useState } from 'react';
+import K8sDropdown from '../../components/K8sDropdown';
+import { useNamespacesFilter, ALL_NS } from '../../components/NamespacesFilter';
 import { Column, TableProps } from '../../components/Table';
 import { ResourceModel } from '../../model';
 import { Resource } from '../../types';
-import { ALL_NS, NS_STORE_KEY } from 'src/components/NamespacesFilter';
 
 type Params<Raw extends Resource, Model extends ResourceModel> = {
   useTableParams: Parameters<typeof useTable<Raw>>[0];
@@ -33,8 +32,7 @@ export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
 
-  const parsed = useParsed();
-  const nsFilter = parsed.params?.['namespace-filter'] || ALL_NS;
+  const { value: nsFilter } = useNamespacesFilter();
 
   const useTableParams = useMemo(() => {
     // TODO: check whether resource can be namespaced
