@@ -28,7 +28,7 @@ export type UseFormProps<
   TVariables = Record<string, never>,
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError,
+  TResponseError extends HttpError = TError
 > = UseFormPropsCore<
   TQueryFnData,
   TError,
@@ -53,7 +53,7 @@ export type UseFormReturnType<
   TVariables = {},
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError,
+  TResponseError extends HttpError = TError
 > = UseFormReturnTypeCore<
   TQueryFnData,
   TError,
@@ -87,7 +87,7 @@ const useEagleForm = <
   TVariables extends { [prop: string]: unknown } = { [prop: string]: unknown },
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError,
+  TResponseError extends HttpError = TError
 >({
   action,
   resource,
@@ -136,7 +136,10 @@ const useEagleForm = <
   const [isYamlValid, setIsYamlValid] = useState(true);
   const [isSchemaValid, setIsSchemaValid] = useState(true);
   const [editorErrors, setEditorErrors] = useState<string[]>([]);
-  const [errorResponseBody, setErrorResponseBody] = useState<Record<string, unknown> | null>(null);
+  const [errorResponseBody, setErrorResponseBody] = useState<Record<
+    string,
+    unknown
+  > | null>(null);
   const useResourceResult = useResource();
   const kit = useUIKit();
   const schema = useSchema();
@@ -194,23 +197,22 @@ const useEagleForm = <
 
       editor.current.setEditorValue(editorValue);
       editor.current.setValue(editorValue);
-      editor.current.foldSymbol('annotations:');
-      editor.current.foldSymbol('managedFields:');
-      editor.current.foldSymbol('status:');
-      editor.current.foldSymbol('kubectl.kubernetes.io/last-applied-configuration:');
+      // editor.current.foldSymbol('annotations:');
+      // editor.current.foldSymbol('managedFields:');
+      // editor.current.foldSymbol('status:');
+      // editor.current.foldSymbol('kubectl.kubernetes.io/last-applied-configuration:');
     }
   }, [queryResult?.data?.data, id]);
 
-  React.useEffect(()=> {
+  React.useEffect(() => {
     const response = useFormCoreResult.mutationResult.error?.response;
 
     if (response && !response?.bodyUsed) {
-      response.json?.().then((body: Record<string, unknown>)=> {
+      response.json?.().then((body: Record<string, unknown>) => {
         setErrorResponseBody(body);
       });
     }
   }, [useFormCoreResult.mutationResult]);
-
 
   const onKeyUp = (event: React.KeyboardEvent<HTMLFormElement>) => {
     if (submitOnEnter && event.key === 'Enter') {
@@ -274,12 +276,12 @@ const useEagleForm = <
       onFinish: (values: TVariables) => {
         const errors = [
           !isYamlValid && t('dovetail.yaml_format_wrong'),
-          !isSchemaValid && t('dovetail.yaml_value_wrong')
-        ].filter(error=> !!error);
+          !isSchemaValid && t('dovetail.yaml_value_wrong'),
+        ].filter(error => !!error);
 
         if (errors.length) {
           setEditorErrors(errors);
-          return ;
+          return;
         }
 
         const finalValues = editor.current
