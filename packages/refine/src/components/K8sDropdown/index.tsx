@@ -6,15 +6,15 @@ import {
   Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
 import { useResource } from '@refinedev/core';
-import { Unstructured } from 'k8s-api-provider';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useEdit } from 'src/hooks/useEdit';
+import { ResourceModel } from '../../model';
 
 interface K8sDropdownProps {
-  data: Unstructured & { id: string };
+  data: ResourceModel;
 }
 
 function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
@@ -55,7 +55,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
               onClick={() => {
                 if (data.id) {
                   download({
-                    name: data.metadata.name || data.kind,
+                    name: data.metadata?.name || data.kind || '',
                     item: data,
                   });
                 }

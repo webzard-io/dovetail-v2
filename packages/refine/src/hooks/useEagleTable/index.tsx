@@ -1,17 +1,18 @@
-import {
-  SettingsGear16GradientGrayIcon,
-} from '@cloudtower/icons-react';
+import { SettingsGear16GradientGrayIcon } from '@cloudtower/icons-react';
 import { useTable } from '@refinedev/core';
-import { Unstructured } from 'k8s-api-provider';
-import { useCallback, useState } from 'react';
-import React from 'react';
-import K8sDropdown from 'src/components/K8sDropdown';
-import { Column, TableProps, IDObject } from '../../components/Table';
+import { merge } from 'lodash-es';
+import React, { useCallback, useMemo, useState } from 'react';
+import K8sDropdown from '../../components/K8sDropdown';
+import { useNamespacesFilter, ALL_NS } from '../../components/NamespacesFilter';
+import { Column, TableProps } from '../../components/Table';
+import { ResourceModel } from '../../model';
+import { Resource } from '../../types';
 
-type Params<T extends IDObject> = {
-  useTableParams: Parameters<typeof useTable<T>>;
-  columns: Column<T>[];
-  tableProps?: Partial<TableProps<T>>;
+type Params<Raw extends Resource, Model extends ResourceModel> = {
+  useTableParams: Parameters<typeof useTable<Raw>>[0];
+  columns: Column<Model>[];
+  tableProps?: Partial<TableProps<Model>>;
+  formatter: (d: Raw) => Model;
 };
 
 export enum ColumnKeys {
@@ -24,11 +25,36 @@ export enum ColumnKeys {
   podImage = 'podImage',
 }
 
-export const useEagleTable = <T extends IDObject & Unstructured>(params: Params<T>) => {
-  const { useTableParams, columns, tableProps } = params;
+export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>(
+  params: Params<Raw, Model>
+) => {
+  const { columns, tableProps, formatter } = params;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
-  const table = useTable<T>(...useTableParams);
+
+  const { value: nsFilter } = useNamespacesFilter();
+
+  const useTableParams = useMemo(() => {
+    // TODO: check whether resource can be namespaced
+    return merge(
+      params.useTableParams,
+      nsFilter === ALL_NS
+        ? {}
+        : {
+            filters: {
+              permanent: [
+                {
+                  field: 'metadata.namespace',
+                  operator: 'eq',
+                  value: nsFilter,
+                },
+              ],
+            },
+          }
+    );
+  }, [params.useTableParams, nsFilter]);
+
+  const table = useTable<Raw>(useTableParams);
 
   const onPageChange = useCallback(
     (page: number) => {
@@ -37,21 +63,21 @@ export const useEagleTable = <T extends IDObject & Unstructured>(params: Params<
     [setCurrentPage]
   );
 
-  const actionColumn: Column<T> = {
+  const actionColumn: Column<Model> = {
     key: 'action',
     display: true,
     dataIndex: [],
     title: () => <SettingsGear16GradientGrayIcon />,
-    render: (_: unknown, record: T) => {
-      return (
-        <K8sDropdown data={record} />
-      );
+    render: (_: unknown, record: Model) => {
+      return <K8sDropdown data={record} />;
     },
   };
 
-  const finalProps: TableProps<T> = {
+  const finalDataSource = table.tableQueryResult.data?.data.map(formatter);
+
+  const finalProps: TableProps<Model> = {
     loading: table.tableQueryResult.isLoading,
-    dataSource: table.tableQueryResult.data?.data || [],
+    dataSource: finalDataSource || [],
     columns: [...columns, actionColumn],
     refetch: () => null,
     error: false,
