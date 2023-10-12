@@ -6,6 +6,7 @@ import React from 'react';
 import { ImageNames } from '../../components/ImageNames';
 import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
+import Time from '../../components/Time';
 import { WorkloadReplicas } from '../../components/WorkloadReplicas';
 import { PodModel, ResourceModel } from '../../model';
 import { WorkloadModel } from '../../model/workload-model';
@@ -142,7 +143,7 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
       return -1;
     },
     render: (value: string) => {
-      return <span>{new Date(value).toDateString()}</span>;
+      return <Time date={new Date(value)} />;
     },
   };
 };

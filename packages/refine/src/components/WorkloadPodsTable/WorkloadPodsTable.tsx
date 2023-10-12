@@ -72,7 +72,7 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
         width: 100%;
       `}
     >
-      <TableToolBar title="Pods" selectedKeys={selectedKeys} hideCreate />
+      <TableToolBar title="" selectedKeys={selectedKeys} hideCreate />
       <Table
         loading={!pods}
         dataSource={pods || []}
