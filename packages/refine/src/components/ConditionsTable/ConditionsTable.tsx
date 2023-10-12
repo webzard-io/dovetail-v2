@@ -2,6 +2,7 @@ import { useUIKit } from '@cloudtower/eagle';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import Time from '../Time';
 
 type Props = {
   conditions: Condition[];
@@ -39,8 +40,9 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       dataIndex: 'lastUpdateTime',
       title: t('updated_time'),
       sortable: true,
-      render: (value: string) => {
-        return <span>{new Date(value).toDateString()}</span>;
+      render: (value: string, record: Condition) => {
+        const time = value || record.lastTransitionTime;
+        return <Time date={new Date(time)} />;
       },
     },
     {
@@ -58,6 +60,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       dataSource={conditionsWithId}
       columns={columns}
       rowKey="type"
+      empty={t('dovetail.empty')}
     />
   );
 };

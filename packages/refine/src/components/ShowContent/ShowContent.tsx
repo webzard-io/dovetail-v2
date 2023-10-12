@@ -12,6 +12,7 @@ import { ResourceModel } from '../../model';
 import { Resource } from '../../types';
 import { StateTag } from '../StateTag';
 import { Tags } from '../Tags';
+import Time from '../Time';
 import { ShowField } from './fields';
 
 const TopBarStyle = css`
@@ -53,9 +54,11 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
   const [mode, setMode] = useState<Mode>(Mode.Detail);
   const { t } = useTranslation();
   const { data } = queryResult;
-  const record = formatter(data?.data as Raw);
+  if (!data?.data) {
+    return null;
+  }
 
-  if (!record) return null;
+  const record = formatter(data?.data as Raw);
 
   const FirstLineFields: ShowField<Model>[] = [
     {
@@ -67,8 +70,8 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
       key: 'Age',
       title: t('created_time'),
       path: ['metadata', 'creationTimestamp'],
-      render: value => {
-        return <span>{new Date(value as string).toDateString()}</span>;
+      render(value) {
+        return <Time date={new Date(value as string)} />;
       },
     },
   ];

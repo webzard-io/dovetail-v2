@@ -8,6 +8,7 @@
     "@refinedev/core": "^4.38.0",
     "@refinedev/inferencer": "^4.5.4",
     "antd": "4.5.0",
+    "dayjs": "^1.11.10",
     "i18next": "^20.1.0",
     "js-yaml": "^4.1.0",
     "k8s-api-provider": "^0.0.5",

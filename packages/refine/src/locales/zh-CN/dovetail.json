@@ -35,5 +35,8 @@
   "save": "保存",
   "more": "更多",
   "workload": "工作负载",
-  "all_namespaces": "所有名字空间"
+  "all_namespaces": "所有名字空间",
+  "empty": "无可显示的数据",
+  "schedule": "调度",
+  "lastScheduleTime": "上次调度"
 }
