@@ -38,5 +38,8 @@
   "all_namespaces": "所有名字空间",
   "empty": "无可显示的数据",
   "schedule": "调度",
-  "lastScheduleTime": "上次调度"
+  "lastScheduleTime": "上次调度",
+  "duration": "持续时间",
+  "completions": "完成 Job 历史数",
+  "started": "开始时间"
 }
