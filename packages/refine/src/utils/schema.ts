@@ -134,14 +134,21 @@ export function resolveRef(schema: JSONSchema7, schemas: Record<string, JSONSche
     case schema.type === 'object':
       for (const key in schema.properties) {
         const subSchema = schema.properties[key] as JSONSchema7;
+
         if (prune.optional && !schema.required?.includes(key)) {
           delete schema.properties[key];
         }
         if (prune.fields.includes(key)) {
           delete schema.properties[key];
         }
+
         resolveRef(subSchema, schemas, options);
       }
+
+      if (schema.additionalProperties) {
+        resolveRef(schema.additionalProperties as JSONSchema7, schemas, options);
+      }
+
       break;
     case !!(schema.allOf && schema.allOf[0]):
       resolveRef(schema.allOf?.[0] as JSONSchema7, schemas, options);
