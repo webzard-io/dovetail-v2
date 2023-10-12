@@ -1,11 +1,14 @@
 import type { DaemonSet, Deployment, StatefulSet } from 'kubernetes-types/apps/v1';
 import type { CronJob, Job } from 'kubernetes-types/batch/v1';
+import { Pod } from 'kubernetes-types/core/v1';
 import { WithId } from '../types';
 import { shortenedImage } from '../utils/string';
 import { ResourceModel } from './resource-model';
 
 export class WorkloadModel extends ResourceModel {
-  constructor(public data: WithId<Deployment | StatefulSet | Job | DaemonSet | CronJob>) {
+  constructor(
+    public data: WithId<Deployment | StatefulSet | Job | DaemonSet | CronJob | Pod>
+  ) {
     super(data);
   }
 

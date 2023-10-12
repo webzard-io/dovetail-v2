@@ -7,21 +7,22 @@ import { ImageNames } from '../../components/ImageNames';
 import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
 import { WorkloadReplicas } from '../../components/WorkloadReplicas';
-import { ResourceModel } from '../../model';
+import { PodModel, ResourceModel } from '../../model';
 import { WorkloadModel } from '../../model/workload-model';
 
-const NameLink: React.FC<{ id: string; name: string }> = props => {
-  const { name, id } = props;
+const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
+  const { name, id, resource } = props;
   const kit = useUIKit();
   const go = useGo();
   const navigation = useNavigation();
   const parsed = useParsed();
+  const resourceName = resource || parsed.resource?.name || '';
   return (
     <kit.button
       type="link"
       onClick={() => {
         go({
-          to: navigation.showUrl(parsed.resource?.name || '', ''),
+          to: navigation.showUrl(resourceName, ''),
           query: {
             id,
           },
@@ -33,16 +34,18 @@ const NameLink: React.FC<{ id: string; name: string }> = props => {
   );
 };
 
-const CommonSorter = (dataIndex: string[]) => (a: ResourceModel, b: ResourceModel) => {
-  const valA = get(a, dataIndex);
-  const valB = get(b, dataIndex);
-  if (valA === valB) return 0;
-  if (valA > valB) return 1;
-  return -1;
-};
+export const CommonSorter =
+  (dataIndex: string[]) => (a: ResourceModel, b: ResourceModel) => {
+    const valA = get(a, dataIndex);
+    const valB = get(b, dataIndex);
+    if (valA === valB) return 0;
+    if (valA > valB) return 1;
+    return -1;
+  };
 
 export const NameColumnRenderer = <Model extends ResourceModel>(
-  i18n: i18n
+  i18n: i18n,
+  resource = ''
 ): Column<Model> => {
   const dataIndex = ['metadata', 'name'];
   return {
@@ -53,7 +56,7 @@ export const NameColumnRenderer = <Model extends ResourceModel>(
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (v: string, record: Model) => {
-      return <NameLink name={v} id={record.id} />;
+      return <NameLink name={v} id={record.id} resource={resource} />;
     },
   };
 };
@@ -83,21 +86,7 @@ export const PhaseColumnRenderer = <Model extends ResourceModel>(
     title: i18n.t('phase'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
-    render: () => <StateTag />,
-  };
-};
-
-export const PocImageColumnRenderer = <Model extends ResourceModel>(
-  i18n: i18n
-): Column<Model> => {
-  const dataIndex = ['spec', 'containers', '0', 'image'];
-  return {
-    key: 'podSpecImage',
-    display: true,
-    dataIndex,
-    title: i18n.t('phase'),
-    sortable: true,
-    sorter: CommonSorter(dataIndex),
+    render: v => <StateTag state={v} />,
   };
 };
 
@@ -115,20 +104,6 @@ export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
     render(value) {
       return <ImageNames value={value} />;
     },
-  };
-};
-
-export const PodSpecImageColumnRenderer = <Model extends ResourceModel>(
-  i18n: i18n
-): Column<Model> => {
-  const dataIndex = ['spec', 'containers', '0', 'image'];
-  return {
-    key: 'podSpecImage',
-    display: true,
-    dataIndex,
-    title: i18n.t('phase'),
-    sortable: true,
-    sorter: CommonSorter(dataIndex),
   };
 };
 
@@ -169,5 +144,33 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
     render: (value: string) => {
       return <span>{new Date(value).toDateString()}</span>;
     },
+  };
+};
+
+export const NodeNameColumnRenderer = <Model extends PodModel>(
+  i18n: i18n
+): Column<Model> => {
+  const dataIndex = ['status', 'replicas'];
+  return {
+    key: 'node',
+    display: true,
+    dataIndex: ['spec', 'nodeName'],
+    title: i18n.t('node_name'),
+    sortable: true,
+    sorter: CommonSorter(dataIndex),
+  };
+};
+
+export const RestartCountColumnRenderer = <Model extends PodModel>(
+  i18n: i18n
+): Column<Model> => {
+  const dataIndex = ['status', 'replicas'];
+  return {
+    key: 'restartCount',
+    display: true,
+    dataIndex: ['restartCount'],
+    title: i18n.t('restarts'),
+    sortable: true,
+    sorter: CommonSorter(dataIndex),
   };
 };

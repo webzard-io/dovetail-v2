@@ -10,7 +10,8 @@ import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
 import { JobShow, JobList, JobForm } from './pages/jobs';
-import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulSets';
+import { PodShow, PodList, PodForm } from './pages/pods';
+import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulsets';
 import { routerProvider } from './providers/router-provider';
 
 import './styles.css';
@@ -108,6 +109,19 @@ function App() {
             edit: '/statefulsets/edit',
           },
           {
+            name: 'pods',
+            meta: {
+              resourceBasePath: '/api/v1',
+              kind: 'Pod',
+              parent: t('dovetail.workload'),
+              label: 'Pods',
+            },
+            list: '/pods',
+            show: '/pods/show',
+            create: '/pods/create',
+            edit: '/pods/edit',
+          },
+          {
             name: 'Core',
           },
           {
@@ -189,6 +203,19 @@ function App() {
             </Route>
             <Route path="/statefulsets/edit">
               <StatefulSetForm />
+            </Route>
+
+            <Route path="/pods" exact>
+              <PodList />
+            </Route>
+            <Route path="/pods/show">
+              <PodShow />
+            </Route>
+            <Route path="/pods/create">
+              <PodForm />
+            </Route>
+            <Route path="/pods/edit">
+              <PodForm />
             </Route>
 
             <Route path="/configmaps" exact>
