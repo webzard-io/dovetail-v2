@@ -7,7 +7,7 @@ type Props = {
   conditions: Condition[];
 };
 
-export const ConditionsTable: React.FC<Props> = ({ conditions }) => {
+export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
   const kit = useUIKit();
   const { t } = useTranslation();
 

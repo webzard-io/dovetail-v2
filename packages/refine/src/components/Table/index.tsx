@@ -3,8 +3,11 @@ import { RequiredColumnProps } from '@cloudtower/eagle/dist/spec/base';
 import { css, cx } from '@linaria/core';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ResourceModel } from '../../model';
 import ErrorContent from './ErrorContent';
 import { AuxiliaryLine } from './TableWidgets';
+
+export type IDObject = { id: string };
 
 const TableContainerStyle = css`
   width: 100%;
@@ -23,13 +26,11 @@ const TableContainerStyle = css`
   }
 `;
 
-export type IDObject = { id: string };
-
-export type Column<Data extends IDObject> = RequiredColumnProps<Data> & {
+export type Column<Data extends ResourceModel> = RequiredColumnProps<Data> & {
   display: boolean;
 };
 
-export type TableProps<Data extends IDObject> = {
+export type TableProps<Data extends ResourceModel> = {
   className?: string;
   loading: boolean;
   error: boolean;
@@ -46,7 +47,7 @@ export type TableProps<Data extends IDObject> = {
   onSizeChange?: (size: number) => void;
 };
 
-function Table<Data extends IDObject>(props: TableProps<Data>) {
+function Table<Data extends ResourceModel>(props: TableProps<Data>) {
   const kit = useUIKit();
   const { t } = useTranslation();
   const {

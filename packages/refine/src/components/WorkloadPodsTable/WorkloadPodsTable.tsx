@@ -5,6 +5,7 @@ import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PodModel } from '../../model';
+import { ImageNames } from '../ImageNames';
 import { StateTag } from '../StateTag';
 import Table from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
@@ -15,7 +16,7 @@ function matchSelector(pod: PodModel, selector: LabelSelector): boolean {
   // https://github.com/rancher/dashboard/blob/master/shell/utils/selector.js#L166
   for (const key in selector.matchLabels) {
     if (
-      !pod.metadata.labels?.[key] ||
+      !pod.metadata?.labels?.[key] ||
       pod.metadata.labels?.[key] !== selector.matchLabels[key]
     ) {
       match = false;
@@ -78,6 +79,13 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
       dataIndex: ['imageNames'],
       title: t('image'),
       sortable: true,
+      render(value: string[]) {
+        return (
+          <>
+            <ImageNames value={value} />
+          </>
+        );
+      },
     },
     {
       key: 'restartCount',
