@@ -31,7 +31,7 @@ const TableStyle = css`
 export const JobList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
   const { tableProps, selectedKeys } = useEagleTable<WithId<Job>, JobModel>({
-    useTableParams: [{}],
+    useTableParams: {},
     columns: [
       PhaseColumnRenderer(i18n),
       NameColumnRenderer(i18n),

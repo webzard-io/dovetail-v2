@@ -22,7 +22,7 @@ export const ConfigmapList: React.FC<IResourceComponentsProps> = <
   const { i18n } = useTranslation();
 
   const { tableProps, selectedKeys } = useEagleTable<T>({
-    useTableParams: [{ syncWithLocation: true }],
+    useTableParams: { syncWithLocation: true },
     columns: [
       NameColumnRenderer(i18n),
       NameSpaceColumnRenderer(i18n),
