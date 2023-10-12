@@ -39,8 +39,9 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       dataIndex: 'lastUpdateTime',
       title: t('updated_time'),
       sortable: true,
-      render: (value: string) => {
-        return <span>{new Date(value).toDateString()}</span>;
+      render: (value: string, record: Condition) => {
+        const time = value || record.lastTransitionTime;
+        return <span>{new Date(time).toDateString()}</span>;
       },
     },
     {
@@ -58,6 +59,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       dataSource={conditionsWithId}
       columns={columns}
       rowKey="type"
+      empty={t('dovetail.empty')}
     />
   );
 };
