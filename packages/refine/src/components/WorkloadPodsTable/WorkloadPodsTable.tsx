@@ -1,13 +1,20 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useDataProvider, useParsed } from '@refinedev/core';
+import { Pod } from 'kubernetes-types/core/v1';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  NameColumnRenderer,
+  NodeNameColumnRenderer,
+  PhaseColumnRenderer,
+  RestartCountColumnRenderer,
+  WorkloadImageColumnRenderer,
+} from '../../hooks/useEagleTable/columns';
 import { PodModel } from '../../model';
-import { ImageNames } from '../ImageNames';
-import { StateTag } from '../StateTag';
-import Table from '../Table';
+import { WithId } from '../../types';
+import Table, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
 function matchSelector(pod: PodModel, selector: LabelSelector): boolean {
@@ -31,7 +38,7 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
   const kit = useUIKit();
   const dataProvider = useDataProvider()();
   const { id } = useParsed();
-  const { t } = useTranslation();
+  const { i18n } = useTranslation();
   const [pods, setPods] = useState<PodModel[] | undefined>(undefined);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -42,7 +49,7 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
       .then(res => {
         setPods(
           res.data
-            .map(p => new PodModel(p as any))
+            .map(p => new PodModel(p as WithId<Pod>))
             .filter(p => {
               return selector ? matchSelector(p, selector) : true;
             })
@@ -50,50 +57,12 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
       });
   }, [dataProvider, id, selector]);
 
-  const columns = [
-    {
-      key: 'state',
-      display: true,
-      dataIndex: [],
-      title: t('state'),
-      sortable: true,
-      render: () => <StateTag />,
-    },
-    {
-      key: 'name',
-      display: true,
-      dataIndex: ['name'],
-      title: t('name'),
-      sortable: true,
-    },
-    {
-      key: 'node',
-      display: true,
-      dataIndex: ['nodeName'],
-      title: t('node_name'),
-      sortable: true,
-    },
-    {
-      key: 'image',
-      display: true,
-      dataIndex: ['imageNames'],
-      title: t('image'),
-      sortable: true,
-      render(value: string[]) {
-        return (
-          <>
-            <ImageNames value={value} />
-          </>
-        );
-      },
-    },
-    {
-      key: 'restartCount',
-      display: true,
-      dataIndex: ['restartCount'],
-      title: t('restarts'),
-      sortable: true,
-    },
+  const columns: Column<PodModel>[] = [
+    PhaseColumnRenderer(i18n),
+    NameColumnRenderer(i18n, 'pods'),
+    NodeNameColumnRenderer(i18n),
+    WorkloadImageColumnRenderer(i18n),
+    RestartCountColumnRenderer(i18n),
   ];
 
   return (
