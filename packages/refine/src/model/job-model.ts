@@ -1,5 +1,6 @@
 import { Job } from 'kubernetes-types/batch/v1';
 import { WithId } from '../types';
+import { elapsedTime, getSecondsDiff } from '../utils/time';
 import { WorkloadModel } from './workload-model';
 
 export class JobModel extends WorkloadModel {
@@ -8,7 +9,20 @@ export class JobModel extends WorkloadModel {
   }
 
   get duration() {
-    //TODO: Full version. https://github.com/rancher/dashboard/blob/4892bb7c95d8a5eba5feed056261deb473e3cc08/shell/models/batch.job.js#L5
-    return this.data.status?.startTime;
+    const completionTime = this.data.status?.completionTime;
+    const startTime = this.data.status?.startTime;
+
+    if (!startTime || !completionTime) {
+      return 0;
+    }
+
+    return getSecondsDiff(startTime, completionTime);
+  }
+
+  get durationDisplay() {
+    return elapsedTime(this.duration).label;
+  }
+  get completionsDisplay() {
+    return `${this.data.status?.succeeded || 0}/${this.data.spec?.completions}`;
   }
 }

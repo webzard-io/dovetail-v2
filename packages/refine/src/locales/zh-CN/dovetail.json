@@ -35,5 +35,7 @@
   "save": "保存",
   "more": "更多",
   "workload": "工作负载",
-  "all_namespaces": "所有名字空间"
+  "all_namespaces": "所有名字空间",
+  "duration": "持续时间",
+  "completions": "完成 Job 历史数"
 }
