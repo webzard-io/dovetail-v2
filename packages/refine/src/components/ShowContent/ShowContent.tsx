@@ -10,6 +10,7 @@ import K8sDropdown from 'src/components/K8sDropdown';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
 import { ResourceModel } from '../../model';
 import { Resource } from '../../types';
+import { StateTag } from '../StateTag';
 import { Tags } from '../Tags';
 import { ShowField } from './fields';
 
@@ -66,6 +67,9 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
       key: 'Age',
       title: t('created_time'),
       path: ['metadata', 'creationTimestamp'],
+      render: value => {
+        return <span>{new Date(value as string).toDateString()}</span>;
+      },
     },
   ];
 
@@ -117,7 +121,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
       <div>
         <span className={Typo.Display.d2_bold_title}>{resource?.meta?.kind}: </span>
         <span className={Typo.Label.l1_regular}>{record?.metadata?.name}</span>
-        <kit.tag color="green">Active</kit.tag>
+        <StateTag state={get(record, ['status', 'phase'])} />
       </div>
       <kit.space>
         <kit.radioGroup value={mode} onChange={e => setMode(e.target.value)}>

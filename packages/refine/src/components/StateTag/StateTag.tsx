@@ -1,7 +1,11 @@
 import { useUIKit } from '@cloudtower/eagle';
 import React from 'react';
 
-export const StateTag: React.FC = () => {
+type Props = {
+  state: string;
+};
+
+export const StateTag: React.FC<Props> = ({ state }) => {
   const kit = useUIKit();
-  return <kit.tag color="green">Active</kit.tag>;
+  return <kit.tag color="green">{state || 'Active'}</kit.tag>;
 };
