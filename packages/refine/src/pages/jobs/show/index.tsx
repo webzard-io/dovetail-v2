@@ -8,6 +8,7 @@ import {
   ImageField,
   PodsField,
 } from '../../../components/ShowContent/fields';
+import Time from '../../../components/Time';
 import { JobModel } from '../../../model';
 import { WithId } from '../../../types';
 
@@ -16,7 +17,21 @@ export const JobShow: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <PageShow<WithId<Job>, JobModel>
-      fieldGroups={[[], [ImageField(i18n)], [PodsField(i18n), ConditionsField(i18n)]]}
+      fieldGroups={[
+        [],
+        [
+          {
+            key: 'started',
+            title: i18n.t('started'),
+            path: ['status', 'startTime'],
+            render(value) {
+              return <Time date={value as string} />;
+            },
+          },
+          ImageField(i18n),
+        ],
+        [PodsField(i18n), ConditionsField(i18n)],
+      ]}
       formatter={d => new JobModel(d)}
     />
   );
