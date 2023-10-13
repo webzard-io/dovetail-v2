@@ -11,14 +11,14 @@ interface OpenAPIResponse {
           200: {
             content: {
               'application/json': {
-                schema: JSONSchema7
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+                schema: JSONSchema7;
+              };
+            };
+          };
+        };
+      };
+    };
+  };
   components: {
     schemas: {
       [prop: string]: JSONSchema7 & {
@@ -28,8 +28,8 @@ interface OpenAPIResponse {
           version: string;
         }[];
       };
-    }
-  }
+    };
+  };
 }
 
 class K8sOpenAPI {
@@ -41,16 +41,20 @@ class K8sOpenAPI {
   }
 
   public async fetch(): Promise<OpenAPIResponse> {
-    const response = await fetch(`/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3${this.resourceBasePath}`);
+    const response = await fetch(
+      `/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3${this.resourceBasePath}`
+    );
 
     return response.json();
   }
 
   public async findSchema(kind: string) {
-    const result = this.response || await this.fetch();
+    const result = this.response || (await this.fetch());
     const schema = Object.values(result.components.schemas).find(schema =>
-      schema['x-kubernetes-group-version-kind']?.some(({ kind: schemaKind, version: schemaVersion, group: schemaGroup }) =>
-        kind === schemaKind && this.apiVersion === `${schemaGroup ? schemaGroup + '/' : ''}${schemaVersion}`
+      schema['x-kubernetes-group-version-kind']?.some(
+        ({ kind: schemaKind, version: schemaVersion, group: schemaGroup }) =>
+          kind === schemaKind &&
+          this.apiVersion === `${schemaGroup ? schemaGroup + '/' : ''}${schemaVersion}`
       )
     );
 

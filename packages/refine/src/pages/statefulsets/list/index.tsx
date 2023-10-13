@@ -34,10 +34,6 @@ export const StatefulSetList: React.FC<IResourceComponentsProps> = () => {
   });
 
   return (
-    <ListPage
-      title="StatefulSet"
-      selectedKeys={selectedKeys}
-      tableProps={tableProps}
-    />
+    <ListPage title="StatefulSet" selectedKeys={selectedKeys} tableProps={tableProps} />
   );
 };

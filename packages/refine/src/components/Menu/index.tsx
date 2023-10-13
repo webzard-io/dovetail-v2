@@ -10,9 +10,9 @@ const MenuStyle = css`
     padding: 8px;
 
     .ant-menu-item-selected {
-      background: linear-gradient(90deg,#0080ff,#005ed1);
+      background: linear-gradient(90deg, #0080ff, #005ed1);
       border-radius: 6px;
-      box-shadow: 0 1px 2px rgba(184,192,204,.6);
+      box-shadow: 0 1px 2px rgba(184, 192, 204, 0.6);
       color: #fff;
 
       a:hover {
@@ -21,9 +21,9 @@ const MenuStyle = css`
     }
 
     .ant-menu-item:not(.ant-menu-item-selected):hover {
-      background: linear-gradient(90deg,#fff,hsla(0,0%,100%,.6));
+      background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0.6));
       border-radius: 6px;
-      box-shadow: 0 0 4px rgba(235,239,245,.6), 0 8px 16px rgba(129,138,153,.18);
+      box-shadow: 0 0 4px rgba(235, 239, 245, 0.6), 0 8px 16px rgba(129, 138, 153, 0.18);
     }
   }
 `;
@@ -33,15 +33,17 @@ export const Menu = () => {
   const { menuItems, selectedKey } = useMenu();
 
   function renderMenuItems(items: ITreeMenu[]) {
-    return items.map((item) => item.list ? (
-      <kit.menuItem key={item.key}>
-        <NavLink to={item.route || ''}>{item.label}</NavLink>
-      </kit.menuItem>
-    ) : (
-      <kit.menuItemGroup key={item.key} title={item.name}>
-        {renderMenuItems(item.children)}
-      </kit.menuItemGroup>
-    ));
+    return items.map(item =>
+      item.list ? (
+        <kit.menuItem key={item.key}>
+          <NavLink to={item.route || ''}>{item.label}</NavLink>
+        </kit.menuItem>
+      ) : (
+        <kit.menuItemGroup key={item.key} title={item.name}>
+          {renderMenuItems(item.children)}
+        </kit.menuItemGroup>
+      )
+    );
   }
 
   return (

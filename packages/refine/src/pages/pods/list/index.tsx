@@ -52,11 +52,5 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
     formatter: d => new PodModel(d),
   });
 
-  return (
-    <ListPage
-      title="Pod"
-      selectedKeys={selectedKeys}
-      tableProps={tableProps}
-    />
-  );
+  return <ListPage title="Pod" selectedKeys={selectedKeys} tableProps={tableProps} />;
 };
