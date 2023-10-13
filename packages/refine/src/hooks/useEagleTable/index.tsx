@@ -36,22 +36,21 @@ export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>
 
   const useTableParams = useMemo(() => {
     // TODO: check whether resource can be namespaced
-    return merge(
+    const mergedParams = merge(
       params.useTableParams,
-      nsFilter === ALL_NS
-        ? {}
-        : {
-            filters: {
-              permanent: [
-                {
-                  field: 'metadata.namespace',
-                  operator: 'eq',
-                  value: nsFilter,
-                },
-              ],
+      {
+        filters: {
+          permanent: [
+            {
+              field: 'metadata.namespace',
+              operator: 'eq',
+              value: nsFilter === ALL_NS ? null : nsFilter,
             },
-          }
+          ],
+        },
+      }
     );
+    return mergedParams;
   }, [params.useTableParams, nsFilter]);
 
   const table = useTable<Raw>(useTableParams);
