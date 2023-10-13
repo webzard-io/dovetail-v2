@@ -124,18 +124,6 @@ function App() {
           {
             name: 'Core',
           },
-          {
-            name: 'configmaps',
-            meta: {
-              resourceBasePath: '/api/v1',
-              kind: 'ConfigMap',
-              parent: 'Core',
-            },
-            list: '/configmaps',
-            show: '/configmaps/show',
-            create: '/configmaps/create',
-            edit: '/configmaps/edit',
-          },
         ]}
       >
         <Layout>
@@ -216,19 +204,6 @@ function App() {
             </Route>
             <Route path="/pods/edit">
               <PodForm />
-            </Route>
-
-            <Route path="/configmaps" exact>
-              <ConfigmapList />
-            </Route>
-            <Route path="/configmaps/show">
-              <ConfigmapShow />
-            </Route>
-            <Route path="/configmaps/create">
-              <ConfigmapForm />
-            </Route>
-            <Route path="/configmaps/edit">
-              <ConfigmapForm />
             </Route>
           </Switch>
         </Layout>
