@@ -5,17 +5,18 @@ import { WithId } from '../types';
 import { shortenedImage } from '../utils/string';
 import { ResourceModel } from './resource-model';
 
-export class WorkloadModel extends ResourceModel {
-  constructor(
-    public data: WithId<Deployment | StatefulSet | Job | DaemonSet | CronJob | Pod>
-  ) {
+type WorkloadTypes = Deployment | StatefulSet | Job | DaemonSet | CronJob | Pod;
+export class WorkloadModel<
+  T extends WorkloadTypes = WorkloadTypes,
+> extends ResourceModel {
+  constructor(public data: WithId<T>) {
     super(data);
   }
 
-  get status() {
+  get status(): T['status'] {
     return this.data.status;
   }
-  get spec() {
+  get spec(): T['spec'] {
     return this.data.spec;
   }
 

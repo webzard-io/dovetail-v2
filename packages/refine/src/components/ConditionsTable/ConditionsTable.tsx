@@ -2,6 +2,7 @@ import { useUIKit } from '@cloudtower/eagle';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { addId } from '../../utils/addId';
 import Time from '../Time';
 
 type Props = {
@@ -12,12 +13,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
   const kit = useUIKit();
   const { t } = useTranslation();
 
-  const conditionsWithId = conditions.map(c => {
-    return {
-      ...c,
-      id: c.type,
-    };
-  });
+  const conditionsWithId = addId(conditions, 'type');
 
   const columns = [
     {

@@ -3,6 +3,7 @@ import { Pod } from 'kubernetes-types/core/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageShow } from '../../../components/PageShow';
+import { PodContainersTable } from '../../../components/PodContainersTable';
 import { ConditionsField } from '../../../components/ShowContent/fields';
 import { PodModel } from '../../../model';
 import { WithId } from '../../../types';
@@ -36,7 +37,22 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
             path: ['readyDisplay'],
           },
         ],
-        [ConditionsField(i18n)],
+        [
+          {
+            key: 'container',
+            title: i18n.t('container'),
+            path: [],
+            render: (_, record) => {
+              return (
+                <PodContainersTable
+                  containerStatuses={record.status?.containerStatuses || []}
+                  initContainerStatuses={record.status?.initContainerStatuses || []}
+                />
+              );
+            },
+          },
+          ConditionsField(i18n),
+        ],
       ]}
       formatter={d => new PodModel(d)}
     />

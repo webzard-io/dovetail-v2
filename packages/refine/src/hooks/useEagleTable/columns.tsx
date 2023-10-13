@@ -35,14 +35,13 @@ const NameLink: React.FC<{ id: string; name: string; resource?: string }> = prop
   );
 };
 
-export const CommonSorter =
-  (dataIndex: string[]) => (a: ResourceModel, b: ResourceModel) => {
-    const valA = get(a, dataIndex);
-    const valB = get(b, dataIndex);
-    if (valA === valB) return 0;
-    if (valA > valB) return 1;
-    return -1;
-  };
+export const CommonSorter = (dataIndex: string[]) => (a: unknown, b: unknown) => {
+  const valA = get(a, dataIndex);
+  const valB = get(b, dataIndex);
+  if (valA === valB) return 0;
+  if (valA > valB) return 1;
+  return -1;
+};
 
 export const NameColumnRenderer = <Model extends ResourceModel>(
   i18n: i18n,
