@@ -1,18 +1,22 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useDataProvider, useParsed } from '@refinedev/core';
+import { Job } from 'kubernetes-types/batch/v1';
 import { OwnerReference } from 'kubernetes-types/meta/v1';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   AgeColumnRenderer,
+  CompletionsCountColumnRenderer,
+  DurationColumnRenderer,
   NameColumnRenderer,
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
   WorkloadImageColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { JobModel } from '../../model';
-import Table from '../Table';
+import { WithId } from '../../types';
+import Table, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
 function matchOwner(
@@ -51,7 +55,7 @@ export const CronjobJobsTable: React.FC<{
       .then(res => {
         setJobs(
           res.data
-            .map(p => new JobModel(p as any))
+            .map(p => new JobModel(p as WithId<Job>))
             .filter(p => {
               return owner ? matchOwner(p, owner) : true;
             })
@@ -59,25 +63,13 @@ export const CronjobJobsTable: React.FC<{
       });
   }, [dataProvider, id, owner]);
 
-  const columns = [
+  const columns: Column<JobModel>[] = [
     PhaseColumnRenderer(i18n),
     NameColumnRenderer(i18n, 'jobs'),
     NameSpaceColumnRenderer(i18n),
     WorkloadImageColumnRenderer(i18n),
-    {
-      key: 'completions',
-      display: true,
-      dataIndex: ['spec', 'completions'],
-      title: 'Completions',
-      sortable: true,
-    },
-    {
-      key: 'duration',
-      display: true,
-      dataIndex: ['duration'],
-      title: 'Duration',
-      sortable: true,
-    },
+    CompletionsCountColumnRenderer(i18n),
+    DurationColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
   ];
 

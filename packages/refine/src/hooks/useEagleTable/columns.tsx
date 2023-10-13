@@ -8,7 +8,7 @@ import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
 import Time from '../../components/Time';
 import { WorkloadReplicas } from '../../components/WorkloadReplicas';
-import { PodModel, ResourceModel } from '../../model';
+import { JobModel, PodModel, ResourceModel } from '../../model';
 import { WorkloadModel } from '../../model/workload-model';
 
 const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
@@ -151,11 +151,11 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
 export const NodeNameColumnRenderer = <Model extends PodModel>(
   i18n: i18n
 ): Column<Model> => {
-  const dataIndex = ['status', 'replicas'];
+  const dataIndex = ['spec', 'nodeName'];
   return {
     key: 'node',
     display: true,
-    dataIndex: ['spec', 'nodeName'],
+    dataIndex,
     title: i18n.t('node_name'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
@@ -165,12 +165,40 @@ export const NodeNameColumnRenderer = <Model extends PodModel>(
 export const RestartCountColumnRenderer = <Model extends PodModel>(
   i18n: i18n
 ): Column<Model> => {
-  const dataIndex = ['status', 'replicas'];
+  const dataIndex = ['restartCount'];
   return {
     key: 'restartCount',
     display: true,
-    dataIndex: ['restartCount'],
+    dataIndex,
     title: i18n.t('restarts'),
+    sortable: true,
+    sorter: CommonSorter(dataIndex),
+  };
+};
+
+export const CompletionsCountColumnRenderer = <Model extends JobModel>(
+  i18n: i18n
+): Column<Model> => {
+  const dataIndex = ['completionsDisplay'];
+  return {
+    key: 'completions',
+    display: true,
+    dataIndex,
+    title: i18n.t('completions'),
+    sortable: true,
+    sorter: CommonSorter(dataIndex),
+  };
+};
+
+export const DurationColumnRenderer = <Model extends JobModel>(
+  i18n: i18n
+): Column<Model> => {
+  const dataIndex = ['durationDisplay'];
+  return {
+    key: 'duration',
+    display: true,
+    dataIndex,
+    title: i18n.t('duration'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
   };
