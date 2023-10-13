@@ -1205,13 +1205,13 @@
     "@babel/helper-validator-identifier" "^7.22.19"
     to-fast-properties "^2.0.0"
 
-"@cloudtower/eagle@^0.26.9":
-  version "0.26.9"
-  resolved "https://registry.npmmirror.com/@cloudtower/eagle/-/eagle-0.26.9.tgz#ef28ea26d5474dec2b1bb76a7abde686831202dd"
-  integrity sha512-BGCjPRKIcr+j1NfQZbcXanYrHvUlsSO5ETWmO5q7H1i6tAdKP16+VFtIXV4N10bHoBHb1z7fgXZVZ/L2my9SBg==
+"@cloudtower/eagle@^0.26.11":
+  version "0.26.11"
+  resolved "https://registry.npmmirror.com/@cloudtower/eagle/-/eagle-0.26.11.tgz#4dc4538391ad3cf5d3191f87e89c45a0d8d7bb2a"
+  integrity sha512-c6/GbLO9E4UFc4+ouNcZxkJQrgwZlSCsSxwJeooY9KZrLIdsByj4o58GqcUHKa5SABWU0p1S88QwWioDTH2M5g==
   dependencies:
-    "@cloudtower/icons-react" "0.26.9"
-    "@cloudtower/parrot" "0.26.9"
+    "@cloudtower/icons-react" "0.26.11"
+    "@cloudtower/parrot" "0.26.11"
     "@cloudtower/rc-notification" "^4.6.1"
     "@linaria/core" "^4.2.2"
     "@linaria/react" "^4.3.0"
@@ -1225,17 +1225,17 @@
     redux "^4.2.0"
     timezones.json "^1.6.1"
 
-"@cloudtower/icons-react@0.26.9", "@cloudtower/icons-react@^0.26.9":
-  version "0.26.9"
-  resolved "https://registry.npmmirror.com/@cloudtower/icons-react/-/icons-react-0.26.9.tgz#67356330f260b44bc1835e398292e81660c5326d"
-  integrity sha512-6Azs1bOMFCzeM2GvR/Aw9HcNih0zRz0Z3FoUsjBk/H9yq8u0NxxCbg0Qg4g+SZhXqkMMnn+duPOlquSeby0eSA==
+"@cloudtower/icons-react@0.26.11", "@cloudtower/icons-react@^0.26.11":
+  version "0.26.11"
+  resolved "https://registry.npmmirror.com/@cloudtower/icons-react/-/icons-react-0.26.11.tgz#7eb8af08592b1bae643f148008538af9be2e3f39"
+  integrity sha512-h4/y+6BOjyhK7KoWNrl3GbKwqJohsGUh5GInpAeQds9rLnzeKu0GZyv1gs2S2oh1QBAUUtvnUATcCpm7qnGyxg==
 
-"@cloudtower/parrot@0.26.9":
-  version "0.26.9"
-  resolved "https://registry.npmmirror.com/@cloudtower/parrot/-/parrot-0.26.9.tgz#c194f858002acde1aafa50c3ecd62ed596634b8a"
-  integrity sha512-rtxPdGg0ngOC2NcOnc/HBzkk4NjCGP9wqZBwNecoHHbRk0N1VR5PBkh7jEstda3LbrWQCS+Rs0uB6+wh8V7aEA==
+"@cloudtower/parrot@0.26.11":
+  version "0.26.11"
+  resolved "https://registry.npmmirror.com/@cloudtower/parrot/-/parrot-0.26.11.tgz#defe2b71a3345166a270f562995a6f2dc9749644"
+  integrity sha512-pIXVSXcJPFBzqGg5ryzrK0H3x/pqgmc7uIxtFHnU+3c5BKhM8otAyV2IFptN00lleU9Pld/lyPnCQjgmeS40Kw==
   dependencies:
-    i18next "21.10.0"
+    i18next "^21.10.0"
     lodash.merge "^4.6.2"
 
 "@cloudtower/rc-notification@^4.6.1":
@@ -5160,19 +5160,19 @@ husky@^6.0.0:
   resolved "https://registry.npmmirror.com/husky/-/husky-6.0.0.tgz#810f11869adf51604c32ea577edbc377d7f9319e"
   integrity sha512-SQS2gDTB7tBN486QSoKPKQItZw97BMOd+Kdb6ghfpBc0yXyzrddI0oDV5MkDAbuB4X2mO3/nj60TRMcYxwzZeQ==
 
-i18next@21.10.0:
-  version "21.10.0"
-  resolved "https://registry.npmmirror.com/i18next/-/i18next-21.10.0.tgz#85429af55fdca4858345d0e16b584ec29520197d"
-  integrity sha512-YeuIBmFsGjUfO3qBmMOc0rQaun4mIpGKET5WDwvu8lU7gvwpcariZLNtL0Fzj+zazcHUrlXHiptcFhBMFaxzfg==
-  dependencies:
-    "@babel/runtime" "^7.17.2"
-
 i18next@^20.1.0:
   version "20.6.1"
   resolved "https://registry.npmmirror.com/i18next/-/i18next-20.6.1.tgz#535e5f6e5baeb685c7d25df70db63bf3cc0aa345"
   integrity sha512-yCMYTMEJ9ihCwEQQ3phLo7I/Pwycf8uAx+sRHwwk5U9Aui/IZYgQRyMqXafQOw5QQ7DM1Z+WyEXWIqSuJHhG2A==
   dependencies:
     "@babel/runtime" "^7.12.0"
+
+i18next@^21.10.0:
+  version "21.10.0"
+  resolved "https://registry.npmmirror.com/i18next/-/i18next-21.10.0.tgz#85429af55fdca4858345d0e16b584ec29520197d"
+  integrity sha512-YeuIBmFsGjUfO3qBmMOc0rQaun4mIpGKET5WDwvu8lU7gvwpcariZLNtL0Fzj+zazcHUrlXHiptcFhBMFaxzfg==
+  dependencies:
+    "@babel/runtime" "^7.17.2"
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"

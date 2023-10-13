@@ -41,5 +41,8 @@
   "lastScheduleTime": "上次调度",
   "duration": "持续时间",
   "completions": "完成 Job 历史数",
-  "started": "开始时间"
+  "started": "开始时间",
+  "ready": "就绪",
+  "init_container": "初始化容器",
+  "container": "容器"
 }

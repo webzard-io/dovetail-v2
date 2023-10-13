@@ -3,7 +3,7 @@ import { WithId } from '../types';
 import { elapsedTime, getSecondsDiff } from '../utils/time';
 import { WorkloadModel } from './workload-model';
 
-export class JobModel extends WorkloadModel {
+export class JobModel extends WorkloadModel<Job> {
   constructor(public data: WithId<Job>) {
     super(data);
   }
