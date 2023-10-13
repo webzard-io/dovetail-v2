@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@cloudtower/eagle": "^0.26.9",
-    "@cloudtower/icons-react": "^0.26.9",
+    "@cloudtower/eagle": "^0.26.11",
+    "@cloudtower/icons-react": "^0.26.11",
     "@refinedev/core": "^4.38.0",
     "@refinedev/inferencer": "^4.5.4",
     "antd": "4.5.0",

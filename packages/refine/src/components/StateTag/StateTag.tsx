@@ -11,6 +11,7 @@ export const StateTag: React.FC<Props> = ({ state }) => {
     running: 'green',
     active: 'green',
     succeeded: 'blue',
+    terminated: 'red',
     pending: 'lightgrey',
   };
   return (
