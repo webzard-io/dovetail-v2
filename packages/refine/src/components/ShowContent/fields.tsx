@@ -6,6 +6,7 @@ import { ResourceModel, WorkloadModel } from '../../model';
 import { ConditionsTable } from '../ConditionsTable';
 import { CronjobJobsTable } from '../CronjobJobsTable';
 import { ImageNames } from '../ImageNames';
+import { Tags } from '../Tags';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
 
@@ -85,6 +86,17 @@ export const JobsField = (_: i18n): ShowField<WorkloadModel> => {
           }}
         />
       );
+    },
+  };
+};
+
+export const DataField = (i18n: i18n): ShowField<ResourceModel> => {
+  return {
+    key: 'data',
+    title: i18n.t('data'),
+    path: ['data', 'data'],
+    render: val => {
+      return <Tags value={val as Record<string, string>} />;
     },
   };
 };

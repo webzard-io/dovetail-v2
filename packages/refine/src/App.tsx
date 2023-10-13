@@ -3,14 +3,15 @@ import { Refine } from '@refinedev/core';
 import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch as Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
-// import { ConfigmapForm, ConfigmapList, ConfigmapShow } from './pages/configmap';
+import { ResourceCRUD } from './components/ResourceCRUD';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
 import { JobShow, JobList, JobForm } from './pages/jobs';
 import { PodShow, PodList, PodForm } from './pages/pods';
+import { ResourcesConfig } from './pages/resources-config';
 import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulsets';
 import { routerProvider } from './providers/router-provider';
 
@@ -124,6 +125,21 @@ function App() {
           {
             name: 'Core',
           },
+          ...ResourcesConfig.map(c => {
+            return {
+              name: c.name,
+              meta: {
+                resourceBasePath: c.basePath,
+                kind: c.kind,
+                parent: c.parent,
+                label: `${c.kind}s`,
+              },
+              list: `/${c.name}`,
+              show: `/${c.name}/show`,
+              create: `/${c.name}/create`,
+              edit: `/${c.name}/edit`,
+            };
+          }),
         ]}
       >
         <Layout>
@@ -140,7 +156,6 @@ function App() {
             <Route path="/cronjobs/edit">
               <CronJobForm />
             </Route>
-
             <Route path="/daemonsets" exact>
               <DaemonSetList />
             </Route>
@@ -153,7 +168,6 @@ function App() {
             <Route path="/daemonsets/edit">
               <DaemonSetForm />
             </Route>
-
             <Route path="/deployments" exact>
               <DeploymentList />
             </Route>
@@ -166,7 +180,6 @@ function App() {
             <Route path="/deployments/edit">
               <DeploymentForm />
             </Route>
-
             <Route path="/jobs" exact>
               <JobList />
             </Route>
@@ -179,7 +192,6 @@ function App() {
             <Route path="/jobs/edit">
               <JobForm />
             </Route>
-
             <Route path="/statefulsets" exact>
               <StatefulSetList />
             </Route>
@@ -192,7 +204,6 @@ function App() {
             <Route path="/statefulsets/edit">
               <StatefulSetForm />
             </Route>
-
             <Route path="/pods" exact>
               <PodList />
             </Route>
@@ -205,6 +216,7 @@ function App() {
             <Route path="/pods/edit">
               <PodForm />
             </Route>
+            <ResourceCRUD configs={ResourcesConfig} />
           </Switch>
         </Layout>
       </Refine>
