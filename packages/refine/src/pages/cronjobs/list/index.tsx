@@ -49,11 +49,5 @@ export const CronJobList: React.FC<IResourceComponentsProps> = () => {
     formatter: d => new WorkloadModel(d),
   });
 
-  return (
-    <ListPage
-      title="CronJob"
-      selectedKeys={selectedKeys}
-      tableProps={tableProps}
-    />
-  );
+  return <ListPage title="CronJob" selectedKeys={selectedKeys} tableProps={tableProps} />;
 };

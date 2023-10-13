@@ -9,11 +9,7 @@ export function MetadataForm() {
 
   return (
     <>
-      <kit.form.Item
-        label="Name"
-        name={['metadata', 'name']}
-        rules={rfc1123LabelRules}
-      >
+      <kit.form.Item label="Name" name={['metadata', 'name']} rules={rfc1123LabelRules}>
         <NameInputWidget />
       </kit.form.Item>
       <kit.form.Item

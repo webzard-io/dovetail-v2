@@ -24,7 +24,8 @@ export class PodModel extends WorkloadModel<Pod> {
   }
 
   get readyDisplay() {
-    return `${this.data.status?.containerStatuses?.filter(c => c.ready).length}/${this
-      .data.spec?.containers.length}`;
+    return `${this.data.status?.containerStatuses?.filter(c => c.ready).length}/${
+      this.data.spec?.containers.length
+    }`;
   }
 }

@@ -90,7 +90,10 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
   }
 
   return (
-    <div ref={wrapperRef} className={cx(TableContainerStyle, props.className, 'table-wrapper')}>
+    <div
+      ref={wrapperRef}
+      className={cx(TableContainerStyle, props.className, 'table-wrapper')}
+    >
       <kit.table
         tableLayout="fixed"
         rowSelection={{

@@ -2,11 +2,11 @@ type Labels = Record<string, string>;
 type LabelsArray = { key: string; value: string }[];
 
 export function toLabelStrings(labels: Labels = {}): string[] {
-  return Object.keys(labels).map((key) => `${key}/${labels[key]}`);
+  return Object.keys(labels).map(key => `${key}/${labels[key]}`);
 }
 
 export function toLabelsArray(labels: Labels = {}): LabelsArray {
-  return Object.keys(labels).map((key) => ({
+  return Object.keys(labels).map(key => ({
     key,
     value: labels[key],
   }));

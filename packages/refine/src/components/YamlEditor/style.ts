@@ -39,7 +39,7 @@ export const WrapperStyle = css`
   border-radius: 8px;
 
   &[data-is-error='true'] {
-    border-color: #F0483E;
+    border-color: #f0483e;
 
     & .${ToolBarStyle} {
       padding-bottom: 7px;
@@ -49,7 +49,7 @@ export const WrapperStyle = css`
 `;
 
 export const TitleStyle = css`
-  color: #00122E;
+  color: #00122e;
   font-size: 13px;
   font-weight: 700;
   line-height: 20px;
@@ -65,12 +65,12 @@ export const IconStyle = css`
 
   &[data-disabled='true'] {
     cursor: not-allowed;
-    opacity: .5;
+    opacity: 0.5;
   }
 `;
 
 export const DisabledIconStyle = css`
-  fill: rgba(#2C3852, 0.6);
+  fill: rgba(#2c3852, 0.6);
   cursor: not-allowed;
 `;
 
@@ -84,7 +84,7 @@ export const PlainCodeStyle = css`
 `;
 
 export const ErrorMsgStyle = css`
-  color: #F0483E;
+  color: #f0483e;
   font-size: 12px;
   line-height: 18px;
   word-break: break-all;

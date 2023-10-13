@@ -3,7 +3,10 @@ import { JSONSchema7 } from 'json-schema';
 import { isObject } from 'lodash-es';
 import { generateSchemaTypeValue } from './schema';
 
-export function generateYamlBySchema(defaultValue: Record<string, unknown>, schema: JSONSchema7) {
+export function generateYamlBySchema(
+  defaultValue: Record<string, unknown>,
+  schema: JSONSchema7
+) {
   const typeObject = generateSchemaTypeValue(schema) as Record<string, unknown>;
 
   function makeAnnotations(obj: Record<string, unknown>, key: string) {
@@ -25,7 +28,11 @@ export function generateYamlBySchema(defaultValue: Record<string, unknown>, sche
     return result;
   }
 
-  function merge(obj1: Record<string, unknown>, obj2: Record<string, unknown>, merged: Record<string, unknown> = {}) {
+  function merge(
+    obj1: Record<string, unknown>,
+    obj2: Record<string, unknown>,
+    merged: Record<string, unknown> = {}
+  ) {
     for (const key in obj1) {
       merged[key] = obj1[key];
     }
@@ -33,7 +40,10 @@ export function generateYamlBySchema(defaultValue: Record<string, unknown>, sche
     for (const key in obj2) {
       if (key in obj1) {
         if (isObject(obj2[key]) && isObject(obj1[key])) {
-          merged[key] = merge(obj1[key] as Record<string, unknown>, obj2[key] as Record<string, unknown>);
+          merged[key] = merge(
+            obj1[key] as Record<string, unknown>,
+            obj2[key] as Record<string, unknown>
+          );
         }
       } else {
         merged = {

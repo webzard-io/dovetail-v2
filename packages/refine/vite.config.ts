@@ -12,8 +12,8 @@ export default defineConfig({
         target: 'http://10.255.4.115',
         ws: true,
         headers: {
-          'x-skip-auth-verify': 'true'
-        }
+          'x-skip-auth-verify': 'true',
+        },
       },
     },
   },
@@ -49,7 +49,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      'src': path.resolve(__dirname, 'src'),
-    }
-  }
+      src: path.resolve(__dirname, 'src'),
+    },
+  },
 });
