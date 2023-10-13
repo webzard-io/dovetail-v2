@@ -1,9 +1,9 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
-import { useDataProvider, useParsed } from '@refinedev/core';
+import { useList } from '@refinedev/core';
 import { Job } from 'kubernetes-types/batch/v1';
 import { OwnerReference } from 'kubernetes-types/meta/v1';
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   AgeColumnRenderer,
@@ -42,26 +42,22 @@ export const CronjobJobsTable: React.FC<{
   owner?: OwnerReference & { namespace: string };
 }> = ({ owner }) => {
   const kit = useUIKit();
-  const dataProvider = useDataProvider()();
-  const { id } = useParsed();
   const { i18n } = useTranslation();
-  const [jobs, setJobs] = useState<JobModel[] | undefined>(undefined);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  useEffect(() => {
-    dataProvider
-      .getList({ resource: 'jobs', meta: { resourceBasePath: '/apis/batch/v1' } })
-      .then(res => {
-        setJobs(
-          res.data
-            .map(p => new JobModel(p as WithId<Job>))
-            .filter(p => {
-              return owner ? matchOwner(p, owner) : true;
-            })
-        );
+  const { data } = useList({
+    resource: 'jobs',
+    meta: { resourceBasePath: '/apis/batch/v1', kind: 'Job' },
+  });
+
+  const dataSource = useMemo(() => {
+    return data?.data
+      .map(p => new JobModel(p as WithId<Job>))
+      .filter(p => {
+        return owner ? matchOwner(p, owner) : true;
       });
-  }, [dataProvider, id, owner]);
+  }, [data?.data, owner]);
 
   const columns: Column<JobModel>[] = [
     PhaseColumnRenderer(i18n),
@@ -82,8 +78,8 @@ export const CronjobJobsTable: React.FC<{
     >
       <TableToolBar title="Jobs" selectedKeys={selectedKeys} hideCreate />
       <Table
-        loading={!jobs}
-        dataSource={jobs || []}
+        loading={!dataSource}
+        dataSource={dataSource || []}
         columns={columns}
         onSelect={keys => setSelectedKeys(keys as string[])}
         rowKey="id"
