@@ -1,9 +1,9 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
-import { useDataProvider, useParsed } from '@refinedev/core';
+import { useList } from '@refinedev/core';
 import { Pod } from 'kubernetes-types/core/v1';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   NameColumnRenderer,
@@ -36,26 +36,22 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
   selector,
 }) => {
   const kit = useUIKit();
-  const dataProvider = useDataProvider()();
-  const { id } = useParsed();
   const { i18n } = useTranslation();
-  const [pods, setPods] = useState<PodModel[] | undefined>(undefined);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  useEffect(() => {
-    dataProvider
-      .getList({ resource: 'pods', meta: { resourceBasePath: '/api/v1' } })
-      .then(res => {
-        setPods(
-          res.data
-            .map(p => new PodModel(p as WithId<Pod>))
-            .filter(p => {
-              return selector ? matchSelector(p, selector) : true;
-            })
-        );
+  const { data } = useList({
+    resource: 'pods',
+    meta: { resourceBasePath: '/api/v1', kind: 'Pod' },
+  });
+
+  const dataSource = useMemo(() => {
+    return data?.data
+      .map(p => new PodModel(p as WithId<Pod>))
+      .filter(p => {
+        return selector ? matchSelector(p, selector) : true;
       });
-  }, [dataProvider, id, selector]);
+  }, [data?.data, selector]);
 
   const columns: Column<PodModel>[] = [
     PhaseColumnRenderer(i18n),
@@ -74,8 +70,8 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
     >
       <TableToolBar title="" selectedKeys={selectedKeys} hideCreate />
       <Table
-        loading={!pods}
-        dataSource={pods || []}
+        loading={!dataSource}
+        dataSource={dataSource || []}
         columns={columns}
         onSelect={keys => setSelectedKeys(keys as string[])}
         rowKey="id"
