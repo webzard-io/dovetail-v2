@@ -17,7 +17,7 @@ import { ResourceModel } from 'src/model/resource-model';
 import { Tags } from '../../../components/Tags';
 
 export const ConfigmapList: React.FC<IResourceComponentsProps> = <
-  T extends IDObject & Unstructured
+  T extends IDObject & Unstructured,
 >() => {
   const kit = useUIKit();
   const { i18n } = useTranslation();
@@ -50,12 +50,13 @@ export const ConfigmapList: React.FC<IResourceComponentsProps> = <
               key: 'data',
               title: 'Data',
               path: ['data'],
-              render: (val: any) => {
-                return <Tags value={val} />;
+              render: val => {
+                return <Tags value={val as Record<string, string>} />;
               },
             },
           ],
         ]}
+        formatter={d => new ResourceModel(d)}
       />
     </>
   );
