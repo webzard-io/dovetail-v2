@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { TagColor, useUIKit } from '@cloudtower/eagle';
 import React from 'react';
 
 type Props = {
@@ -7,12 +7,12 @@ type Props = {
 
 export const StateTag: React.FC<Props> = ({ state }) => {
   const kit = useUIKit();
-  const colorMap: Record<string, string> = {
+  const colorMap: Record<string, TagColor> = {
     running: 'green',
     active: 'green',
     succeeded: 'blue',
     terminated: 'red',
-    pending: 'lightgrey',
+    pending: 'gray',
   };
   return (
     <kit.tag color={colorMap[state?.toLowerCase() || ''] || 'green'}>

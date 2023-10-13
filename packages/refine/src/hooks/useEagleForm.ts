@@ -25,10 +25,10 @@ import { useForm as useFormSF } from 'sunflower-antd';
 export type UseFormProps<
   TQueryFnData extends BaseRecord = BaseRecord,
   TError extends HttpError = HttpError,
-  TVariables = Record<string, never>,
+  TVariables extends object = object,
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError
+  TResponseError extends HttpError = TError,
 > = UseFormPropsCore<
   TQueryFnData,
   TError,
@@ -50,10 +50,10 @@ export type UseFormProps<
 export type UseFormReturnType<
   TQueryFnData extends BaseRecord = BaseRecord,
   TError extends HttpError = HttpError,
-  TVariables = {},
+  TVariables extends object = object,
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError
+  TResponseError extends HttpError = TError,
 > = UseFormReturnTypeCore<
   TQueryFnData,
   TError,
@@ -87,7 +87,7 @@ const useEagleForm = <
   TVariables extends { [prop: string]: unknown } = { [prop: string]: unknown },
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError
+  TResponseError extends HttpError = TError,
 >({
   action,
   resource,
@@ -202,7 +202,7 @@ const useEagleForm = <
       // editor.current.foldSymbol('status:');
       // editor.current.foldSymbol('kubectl.kubernetes.io/last-applied-configuration:');
     }
-  }, [queryResult?.data?.data, id]);
+  }, [queryResult?.data?.data, id, form]);
 
   React.useEffect(() => {
     const response = useFormCoreResult.mutationResult.error?.response;
@@ -273,7 +273,7 @@ const useEagleForm = <
     form: formSF.form,
     formProps: {
       ...formSF.formProps,
-      onFinish: (values: TVariables) => {
+      onFinish: values => {
         const errors = [
           !isYamlValid && t('dovetail.yaml_format_wrong'),
           !isSchemaValid && t('dovetail.yaml_value_wrong'),
@@ -288,7 +288,7 @@ const useEagleForm = <
           ? (yaml.load(editor.current?.getEditorValue() || '') as TVariables)
           : values;
 
-        return onFinish(finalValues).catch(error => error);
+        return onFinish(finalValues as TVariables).catch(error => error);
       },
       onKeyUp,
       onValuesChange,
