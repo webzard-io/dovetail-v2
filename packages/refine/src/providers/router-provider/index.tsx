@@ -9,13 +9,7 @@ import {
 import { parse, stringify } from 'qs';
 import React, { ComponentProps } from 'react';
 import { useCallback, useContext } from 'react';
-import {
-  useHistory,
-  useLocation,
-  Link,
-  matchPath,
-  useParams,
-} from 'react-router-dom';
+import { useHistory, useLocation, Link, matchPath, useParams } from 'react-router-dom';
 
 export const stringifyConfig = {
   addQueryPrefix: true,
@@ -36,20 +30,13 @@ export const convertToNumberIfPossible = (value: string | undefined) => {
   return value;
 };
 
-
 export const routerProvider = {
   go: () => {
     const { search: existingSearch, hash: existingHash } = useLocation();
     const history = useHistory();
 
     const fn = useCallback(
-      ({
-        to,
-        type,
-        query,
-        hash,
-        options: { keepQuery, keepHash } = {},
-      }: GoConfig) => {
+      ({ to, type, query, hash, options: { keepQuery, keepHash } = {} }: GoConfig) => {
         /** Construct query params */
         const urlQuery = {
           ...(keepQuery &&
@@ -65,18 +52,18 @@ export const routerProvider = {
         const hasUrlQuery = Object.keys(urlQuery).length > 0;
 
         /** Get hash */
-        const urlHash = `#${(
-          hash ||
-          (keepHash && existingHash) ||
+        const urlHash = `#${(hash || (keepHash && existingHash) || '').replace(
+          /^#/,
           ''
-        ).replace(/^#/, '')}`;
+        )}`;
 
         const hasUrlHash = urlHash.length > 1;
 
         const urlTo = to || '';
 
-        const fullPath = `${urlTo}${hasUrlQuery ? stringify(urlQuery, stringifyConfig) : ''
-          }${hasUrlHash ? urlHash : ''}`;
+        const fullPath = `${urlTo}${
+          hasUrlQuery ? stringify(urlQuery, stringifyConfig) : ''
+        }${hasUrlHash ? urlHash : ''}`;
 
         if (type === 'path') {
           return fullPath;
@@ -85,7 +72,7 @@ export const routerProvider = {
         /** Navigate to the url */
         return history[type || 'push'](fullPath);
       },
-      [existingHash, existingSearch, history],
+      [existingHash, existingSearch, history]
     );
 
     return fn;
@@ -129,12 +116,12 @@ export const routerProvider = {
         pathname,
         params: {
           ...combinedParams,
-          current: convertToNumberIfPossible(
-            combinedParams.current as string,
-          ) as number | undefined,
-          pageSize: convertToNumberIfPossible(
-            combinedParams.pageSize as string,
-          ) as number | undefined,
+          current: convertToNumberIfPossible(combinedParams.current as string) as
+            | number
+            | undefined,
+          pageSize: convertToNumberIfPossible(combinedParams.pageSize as string) as
+            | number
+            | undefined,
           to: combinedParams.to
             ? decodeURIComponent(combinedParams.to as string)
             : undefined,

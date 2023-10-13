@@ -59,16 +59,30 @@ export function getCommonErrors(response: ErrorResponse, i18n: I18n) {
         params = info.params;
         message = info.message;
       } catch {
-        return i18n.t([`error.${cause.reason}`, `error.${cause.code}`, `${message}${cause.field ? `(${cause.field})` : ''}`], {
-          ...params,
-          fallbackLng: '',
-        });
+        return i18n.t(
+          [
+            `error.${cause.reason}`,
+            `error.${cause.code}`,
+            `${message}${cause.field ? `(${cause.field})` : ''}`,
+          ],
+          {
+            ...params,
+            fallbackLng: '',
+          }
+        );
       }
 
-      return i18n.t([`error.${cause.reason}`, `error.${cause.code}`, `${message}${cause.field ? `(${cause.field})` : ''}`], {
-        ...params,
-        fallbackLng: '',
-      });
+      return i18n.t(
+        [
+          `error.${cause.reason}`,
+          `error.${cause.code}`,
+          `${message}${cause.field ? `(${cause.field})` : ''}`,
+        ],
+        {
+          ...params,
+          fallbackLng: '',
+        }
+      );
     });
   }
 

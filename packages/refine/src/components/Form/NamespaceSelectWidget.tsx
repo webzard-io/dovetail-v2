@@ -18,19 +18,18 @@ export function NamespaceSelectWidget(props: NamespaceSelectProps) {
 
   return (
     <kit.select input={props} disabled={action === 'edit'}>
-      {
-        data?.data.map(namespace => (
-          <kit.option
-            key={namespace.metadata.name}
-            value={namespace.metadata.name}
-          >{namespace.metadata.name}</kit.option>
-        ))
-      }
+      {data?.data.map(namespace => (
+        <kit.option key={namespace.metadata.name} value={namespace.metadata.name}>
+          {namespace.metadata.name}
+        </kit.option>
+      ))}
     </kit.select>
   );
 }
 
-export const namespaceRules = [{
-  required: true,
-  message: 'Please input the namespace.'
-}];
+export const namespaceRules = [
+  {
+    required: true,
+    message: 'Please input the namespace.',
+  },
+];

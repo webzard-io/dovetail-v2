@@ -35,11 +35,5 @@ export const JobList: React.FC<IResourceComponentsProps> = () => {
     formatter: d => new JobModel(d),
   });
 
-  return (
-    <ListPage
-      title="Jobs"
-      selectedKeys={selectedKeys}
-      tableProps={tableProps}
-    />
-  );
+  return <ListPage title="Jobs" selectedKeys={selectedKeys} tableProps={tableProps} />;
 };

@@ -17,7 +17,7 @@ import { ResourceModel } from 'src/model/resource-model';
 import { Tags } from '../../../components/Tags';
 
 export const ConfigmapList: React.FC<IResourceComponentsProps> = <
-  T extends IDObject & Unstructured,
+  T extends IDObject & Unstructured
 >() => {
   const kit = useUIKit();
   const { i18n } = useTranslation();
@@ -30,7 +30,9 @@ export const ConfigmapList: React.FC<IResourceComponentsProps> = <
       AgeColumnRenderer(i18n),
     ],
     tableProps: {},
-    formatter(data) { return new ResourceModel(data); }
+    formatter(data) {
+      return new ResourceModel(data);
+    },
   });
 
   return (

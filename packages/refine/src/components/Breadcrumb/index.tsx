@@ -8,7 +8,7 @@ const BreadcrumbStyle = css`
 
   .breadcrumb-item {
     &:not(:last-of-type):after {
-      content: ">";
+      content: '>';
       margin: 0 8px;
     }
   }
@@ -23,9 +23,9 @@ export function Breadcrumb(props: BreadcrumbProps) {
 
   return (
     <ul className={cx(BreadcrumbStyle, props.className)}>
-      {breadcrumbs.map((breadcrumb) => {
+      {breadcrumbs.map(breadcrumb => {
         return (
-          <li className='breadcrumb-item' key={`breadcrumb-${breadcrumb.label}`}>
+          <li className="breadcrumb-item" key={`breadcrumb-${breadcrumb.label}`}>
             {breadcrumb.href ? (
               <Link to={breadcrumb.href}>{breadcrumb.label}</Link>
             ) : (

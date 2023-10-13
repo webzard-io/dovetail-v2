@@ -2,10 +2,15 @@ import { JSONSchema7, JSONSchema7Type } from 'json-schema';
 import { pick } from 'lodash';
 
 type TransformOptions = {
-  generateValue?: (schema: JSONSchema7) => JSONSchema7Type | undefined | null | Record<string, unknown>;
-}
+  generateValue?: (
+    schema: JSONSchema7
+  ) => JSONSchema7Type | undefined | null | Record<string, unknown>;
+};
 
-export function generateValueFromSchema(schema: JSONSchema7, options: TransformOptions): JSONSchema7Type | undefined | Record<string, unknown> {
+export function generateValueFromSchema(
+  schema: JSONSchema7,
+  options: TransformOptions
+): JSONSchema7Type | undefined | Record<string, unknown> {
   const { generateValue } = options;
 
   if (!schema) {
@@ -29,7 +34,9 @@ export function generateValueFromSchema(schema: JSONSchema7, options: TransformO
         return generateValue?.(schema) || [];
       }
 
-      return new Array(schema.minItems).fill(generateValueFromSchema(schema.items, options));
+      return new Array(schema.minItems).fill(
+        generateValueFromSchema(schema.items, options)
+      );
     case schema.type === 'number':
     case schema.type === 'integer':
       return generateValue?.(schema) || 0;
@@ -39,31 +46,30 @@ export function generateValueFromSchema(schema: JSONSchema7, options: TransformO
       for (const key in schema.properties) {
         obj[key] = generateValueFromSchema(
           schema.properties[key] as JSONSchema7,
-          options,
+          options
         );
       }
 
       return obj;
     }
-    case Array.isArray(schema.type) &&
-      'anyOf' in schema &&
-      Boolean(schema.anyOf?.length):
+    case Array.isArray(schema.type) && 'anyOf' in schema && Boolean(schema.anyOf?.length):
     case Array.isArray(schema.type) &&
       'oneOf' in schema &&
       Boolean(schema.oneOf?.length): {
-        const subSchema = (schema.anyOf || schema.oneOf)?.[0];
+      const subSchema = (schema.anyOf || schema.oneOf)?.[0];
 
-        return generateValueFromSchema(subSchema as JSONSchema7, options);
-      }
-    case 'allOf' in schema
-      && Boolean(schema.allOf?.length):
+      return generateValueFromSchema(subSchema as JSONSchema7, options);
+    }
+    case 'allOf' in schema && Boolean(schema.allOf?.length):
       return generateValueFromSchema(schema.allOf?.[0] as JSONSchema7, options);
     default:
       return undefined;
   }
 }
 
-export function generateSchemaTypeValue(schema: JSONSchema7): JSONSchema7Type | undefined | Record<string, unknown> {
+export function generateSchemaTypeValue(
+  schema: JSONSchema7
+): JSONSchema7Type | undefined | Record<string, unknown> {
   return generateValueFromSchema(schema, {
     generateValue(schema): JSONSchema7Type | undefined | null | Record<string, unknown> {
       if (schema.type === 'array' && schema.items) {
@@ -71,7 +77,7 @@ export function generateSchemaTypeValue(schema: JSONSchema7): JSONSchema7Type | 
       } else {
         return schema.type;
       }
-    }
+    },
   });
 }
 
@@ -85,7 +91,11 @@ type ResolveOptions = {
   };
 };
 
-export function resolveRef(schema: JSONSchema7, schemas: Record<string, JSONSchema7>, options: ResolveOptions) {
+export function resolveRef(
+  schema: JSONSchema7,
+  schemas: Record<string, JSONSchema7>,
+  options: ResolveOptions
+) {
   const { prune } = options;
 
   if (schema.$ref) {
@@ -98,7 +108,7 @@ export function resolveRef(schema: JSONSchema7, schemas: Record<string, JSONSche
       [
         'io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta',
         'io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta',
-      ].some((k) => refKey.includes(k)) &&
+      ].some(k => refKey.includes(k)) &&
       schema.properties
     ) {
       schema.properties = pick(schema.properties, [
@@ -124,9 +134,7 @@ export function resolveRef(schema: JSONSchema7, schemas: Record<string, JSONSche
   switch (true) {
     case schema.type === 'array':
       if (Array.isArray(schema.items)) {
-        schema.items.forEach((item) =>
-          resolveRef(item as JSONSchema7, schemas, options)
-        );
+        schema.items.forEach(item => resolveRef(item as JSONSchema7, schemas, options));
       } else if (typeof schema.items === 'object') {
         resolveRef(schema.items, schemas, options);
       }

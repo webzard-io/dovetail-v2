@@ -7,7 +7,7 @@ import { ResourceModel } from './resource-model';
 
 type WorkloadTypes = Deployment | StatefulSet | Job | DaemonSet | CronJob | Pod;
 export class WorkloadModel<
-  T extends WorkloadTypes = WorkloadTypes,
+  T extends WorkloadTypes = WorkloadTypes
 > extends ResourceModel {
   constructor(public data: WithId<T>) {
     super(data);

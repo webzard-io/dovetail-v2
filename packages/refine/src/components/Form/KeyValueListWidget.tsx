@@ -66,14 +66,11 @@ export function KeyValueListWidget(props: KeyValueListWidgetProps) {
 
   const onChange = useCallback(
     (newItems: { key: string; value: string }[]) => {
-      const newValue = newItems.reduce(
-        (result, item) => {
-          result[item.key] = item.value;
+      const newValue = newItems.reduce((result, item) => {
+        result[item.key] = item.value;
 
-          return result;
-        },
-        {} as Record<string, string>
-      );
+        return result;
+      }, {} as Record<string, string>);
 
       props.onChange?.(newValue);
     },
