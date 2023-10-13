@@ -13,6 +13,7 @@ import {
   NameSpaceColumnRenderer,
   AgeColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
+import { ResourceModel } from 'src/model/resource-model';
 import { Tags } from '../../../components/Tags';
 
 export const ConfigmapList: React.FC<IResourceComponentsProps> = <
@@ -21,7 +22,7 @@ export const ConfigmapList: React.FC<IResourceComponentsProps> = <
   const kit = useUIKit();
   const { i18n } = useTranslation();
 
-  const { tableProps, selectedKeys } = useEagleTable<T>({
+  const { tableProps, selectedKeys } = useEagleTable<T, ResourceModel>({
     useTableParams: { syncWithLocation: true },
     columns: [
       NameColumnRenderer(i18n),
@@ -29,6 +30,7 @@ export const ConfigmapList: React.FC<IResourceComponentsProps> = <
       AgeColumnRenderer(i18n),
     ],
     tableProps: {},
+    formatter(data) { return new ResourceModel(data); }
   });
 
   return (

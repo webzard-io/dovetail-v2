@@ -1,10 +1,8 @@
-import { css } from '@linaria/core';
 import { IResourceComponentsProps } from '@refinedev/core';
 import { Pod } from 'kubernetes-types/core/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Table from 'src/components/Table';
-import { TableToolBar } from 'src/components/Table/TableToolBar';
+import ListPage from 'src/components/ListPage';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,
@@ -16,20 +14,8 @@ import {
   RestartCountColumnRenderer,
   NodeNameColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { PodModel } from '../../../model';
-import { WithId } from '../../../types';
-
-const ListPageStyle = css`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
-const TableStyle = css`
-  flex: 1;
-  min-height: 0;
-`;
+import { PodModel } from 'src/model';
+import { WithId } from 'src/types';
 
 export const PodList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
@@ -67,9 +53,10 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
   });
 
   return (
-    <div className={ListPageStyle}>
-      <TableToolBar title="Pod" selectedKeys={selectedKeys} />
-      <Table {...tableProps} className={TableStyle} scroll={{ y: 'calc(100% - 48px)' }} />
-    </div>
+    <ListPage
+      title="Pod"
+      selectedKeys={selectedKeys}
+      tableProps={tableProps}
+    />
   );
 };

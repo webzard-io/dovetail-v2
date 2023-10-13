@@ -21,7 +21,6 @@ const TableContainerStyle = css`
   }
 
   .table-container {
-    flex: 1;
     min-height: 0;
   }
 `;
@@ -91,7 +90,7 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
   }
 
   return (
-    <div ref={wrapperRef} className={cx(TableContainerStyle, props.className)}>
+    <div ref={wrapperRef} className={cx(TableContainerStyle, props.className, 'table-wrapper')}>
       <kit.table
         tableLayout="fixed"
         rowSelection={{
