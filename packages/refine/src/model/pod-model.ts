@@ -3,7 +3,7 @@ import { WithId } from '../types';
 import { shortenedImage } from '../utils/string';
 import { WorkloadModel } from './workload-model';
 
-export class PodModel extends WorkloadModel {
+export class PodModel extends WorkloadModel<Pod> {
   constructor(public data: WithId<Pod>) {
     super(data);
   }
