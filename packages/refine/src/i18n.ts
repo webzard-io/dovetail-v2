@@ -8,16 +8,14 @@ export const resources = {
   'zh-CN': ZH,
 };
 
-i18n
-  .use(initReactI18next)
-  .init({
-    supportedLngs: ['en-US', 'zh-CN'],
-    resources,
-    ns: Object.keys(resources['zh-CN']),
-    defaultNS: 'dovetail',
-    fallbackLng: ['en-US', 'zh-CN'],
-    lng: 'zh-CN',
-    nsSeparator: '.',
-  });
+i18n.use(initReactI18next).init({
+  supportedLngs: ['en-US', 'zh-CN'],
+  resources,
+  ns: Object.keys(resources['zh-CN']),
+  defaultNS: 'dovetail',
+  fallbackLng: ['en-US', 'zh-CN'],
+  lng: 'zh-CN',
+  nsSeparator: '.',
+});
 
 export default i18n;
