@@ -19,6 +19,7 @@ import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type YamlEditorHandle } from 'src/components/YamlEditor';
 import { useSchema } from 'src/hooks/useSchema';
+import { pruneBeforeEdit } from 'src/utils/k8s';
 import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
 
@@ -260,13 +261,7 @@ const useEagleForm = <
     : undefined;
 
   if (initialValues) {
-    delete initialValues.id;
-    delete initialValues.metadata.managedFields;
-    if (initialValues.metadata.annotations) {
-      delete initialValues.metadata.annotations[
-        'kubectl.kubernetes.io/last-applied-configuration'
-      ];
-    }
+    pruneBeforeEdit(initialValues);
   }
 
   return {

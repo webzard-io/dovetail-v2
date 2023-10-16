@@ -13,6 +13,7 @@ type Params<Raw extends Resource, Model extends ResourceModel> = {
   columns: Column<Model>[];
   tableProps?: Partial<TableProps<Model>>;
   formatter: (d: Raw) => Model;
+  Dropdown?: React.FC<{ data: Model }>;
 };
 
 export enum ColumnKeys {
@@ -28,7 +29,7 @@ export enum ColumnKeys {
 export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>(
   params: Params<Raw, Model>
 ) => {
-  const { columns, tableProps, formatter } = params;
+  const { columns, tableProps, formatter, Dropdown = K8sDropdown } = params;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
 
@@ -36,20 +37,17 @@ export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>
 
   const useTableParams = useMemo(() => {
     // TODO: check whether resource can be namespaced
-    const mergedParams = merge(
-      params.useTableParams,
-      {
-        filters: {
-          permanent: [
-            {
-              field: 'metadata.namespace',
-              operator: 'eq',
-              value: nsFilter === ALL_NS ? null : nsFilter,
-            },
-          ],
-        },
-      }
-    );
+    const mergedParams = merge(params.useTableParams, {
+      filters: {
+        permanent: [
+          {
+            field: 'metadata.namespace',
+            operator: 'eq',
+            value: nsFilter === ALL_NS ? null : nsFilter,
+          },
+        ],
+      },
+    });
     return mergedParams;
   }, [params.useTableParams, nsFilter]);
 
@@ -68,7 +66,7 @@ export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>
     dataIndex: [],
     title: () => <SettingsGear16GradientGrayIcon />,
     render: (_: unknown, record: Model) => {
-      return <K8sDropdown data={record} />;
+      return <Dropdown data={record} />;
     },
   };
 

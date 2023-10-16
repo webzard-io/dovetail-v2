@@ -34,6 +34,7 @@ const EditorStyle = css`
 type Props<Raw extends Resource, Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
   formatter: (r: Raw) => Model;
+  Dropdown?: React.FC<{ data: Model }>;
 };
 
 enum Mode {
@@ -44,7 +45,7 @@ enum Mode {
 export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
   props: Props<Raw, Model>
 ) => {
-  const { fieldGroups, formatter } = props;
+  const { fieldGroups, formatter, Dropdown = K8sDropdown } = props;
   const kit = useUIKit();
   const parsed = useParsed();
   const { resource } = useResource();
@@ -131,7 +132,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
           <kit.radioButton value="detail">{t('detail')}</kit.radioButton>
           <kit.radioButton value="yaml">YAML</kit.radioButton>
         </kit.radioGroup>
-        <K8sDropdown data={record} />
+        <Dropdown data={record} />
       </kit.space>
     </kit.space>
   );
