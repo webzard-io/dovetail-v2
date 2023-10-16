@@ -4,28 +4,28 @@ import { shortenedImage } from '../utils/string';
 import { WorkloadModel } from './workload-model';
 
 export class PodModel extends WorkloadModel<Pod> {
-  constructor(public data: WithId<Pod>) {
-    super(data);
+  constructor(public rawYaml: WithId<Pod>) {
+    super(rawYaml);
   }
 
   get imageNames() {
     return (
-      this.data.spec?.containers.map(container =>
+      this.rawYaml.spec?.containers.map(container =>
         shortenedImage(container.image || '')
       ) || []
     );
   }
 
   get restartCount() {
-    if (this.data.status?.containerStatuses) {
-      return this.data.status?.containerStatuses[0].restartCount || 0;
+    if (this.rawYaml.status?.containerStatuses) {
+      return this.rawYaml.status?.containerStatuses[0].restartCount || 0;
     }
     return 0;
   }
 
   get readyDisplay() {
-    return `${this.data.status?.containerStatuses?.filter(c => c.ready).length}/${
-      this.data.spec?.containers.length
+    return `${this.rawYaml.status?.containerStatuses?.filter(c => c.ready).length}/${
+      this.rawYaml.spec?.containers.length
     }`;
   }
 }
