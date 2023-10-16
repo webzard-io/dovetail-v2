@@ -6,11 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Route, Switch as Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ResourceCRUD } from './components/ResourceCRUD';
+import { ConfigMapConfig } from './pages/configmaps';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
+import { JobConfig } from './pages/jobs';
 import { PodShow, PodList, PodForm } from './pages/pods';
-import { ResourcesConfig } from './pages/resources-config';
+import { SecretsConfig } from './pages/secrets';
 import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulsets';
 import { routerProvider } from './providers/router-provider';
 
@@ -26,6 +28,8 @@ const globalStore = new GlobalStore({
   watchWsApiUrl: 'api/sks-ws/k8s',
   prefix: 'default',
 });
+
+const ResourcesConfig = [JobConfig, ConfigMapConfig, SecretsConfig];
 
 function App() {
   const { t } = useTranslation();

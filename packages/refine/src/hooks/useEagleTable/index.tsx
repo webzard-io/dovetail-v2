@@ -1,3 +1,4 @@
+import { Icon } from '@cloudtower/eagle';
 import { SettingsGear16GradientGrayIcon } from '@cloudtower/icons-react';
 import { useTable } from '@refinedev/core';
 import { merge } from 'lodash-es';
@@ -64,7 +65,7 @@ export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>
     key: 'action',
     display: true,
     dataIndex: [],
-    title: () => <SettingsGear16GradientGrayIcon />,
+    title: () => <Icon src={SettingsGear16GradientGrayIcon} />,
     render: (_: unknown, record: Model) => {
       return <Dropdown data={record} />;
     },
