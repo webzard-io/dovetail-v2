@@ -9,7 +9,6 @@ import { ResourceCRUD } from './components/ResourceCRUD';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
-import { JobShow, JobList, JobForm } from './pages/jobs';
 import { PodShow, PodList, PodForm } from './pages/pods';
 import { ResourcesConfig } from './pages/resources-config';
 import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulsets';
@@ -18,6 +17,7 @@ import { routerProvider } from './providers/router-provider';
 import './styles.css';
 import 'antd/dist/antd.css';
 import '@cloudtower/eagle/dist/style.css';
+import { RESOURCE_GROUP, ResourceConfig } from './types';
 
 initParrotI18n();
 
@@ -44,6 +44,11 @@ function App() {
         resources={[
           {
             name: t('dovetail.workload'),
+            identifier: RESOURCE_GROUP.WORKLOAD,
+          },
+          {
+            name: 'Core',
+            identifier: RESOURCE_GROUP.CORE,
           },
           {
             name: 'cronjobs',
@@ -51,7 +56,7 @@ function App() {
               // TODO: dynamic load base path from API schema
               resourceBasePath: '/apis/batch/v1beta1',
               kind: 'CronJob',
-              parent: t('dovetail.workload'),
+              parent: RESOURCE_GROUP.WORKLOAD,
               label: 'CronJobs',
             },
             list: '/cronjobs',
@@ -64,7 +69,7 @@ function App() {
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'DaemonSet',
-              parent: t('dovetail.workload'),
+              parent: RESOURCE_GROUP.WORKLOAD,
               label: 'DaemonSets',
             },
             list: '/daemonsets',
@@ -77,7 +82,7 @@ function App() {
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'Deployment',
-              parent: t('dovetail.workload'),
+              parent: RESOURCE_GROUP.WORKLOAD,
             },
             list: '/deployments',
             show: '/deployments/show',
@@ -85,23 +90,11 @@ function App() {
             edit: '/deployments/edit',
           },
           {
-            name: 'jobs',
-            meta: {
-              resourceBasePath: '/apis/batch/v1',
-              kind: 'Job',
-              parent: t('dovetail.workload'),
-            },
-            list: '/jobs',
-            show: '/jobs/show',
-            create: '/jobs/create',
-            edit: '/jobs/edit',
-          },
-          {
             name: 'statefulsets',
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'StatefulSet',
-              parent: t('dovetail.workload'),
+              parent: RESOURCE_GROUP.WORKLOAD,
               label: 'StatefulSets',
             },
             list: '/statefulsets',
@@ -114,16 +107,13 @@ function App() {
             meta: {
               resourceBasePath: '/api/v1',
               kind: 'Pod',
-              parent: t('dovetail.workload'),
+              parent: RESOURCE_GROUP.WORKLOAD,
               label: 'Pods',
             },
             list: '/pods',
             show: '/pods/show',
             create: '/pods/create',
             edit: '/pods/edit',
-          },
-          {
-            name: 'Core',
           },
           ...ResourcesConfig.map(c => {
             return {
@@ -180,18 +170,6 @@ function App() {
             <Route path="/deployments/edit">
               <DeploymentForm />
             </Route>
-            <Route path="/jobs" exact>
-              <JobList />
-            </Route>
-            <Route path="/jobs/show">
-              <JobShow />
-            </Route>
-            <Route path="/jobs/create">
-              <JobForm />
-            </Route>
-            <Route path="/jobs/edit">
-              <JobForm />
-            </Route>
             <Route path="/statefulsets" exact>
               <StatefulSetList />
             </Route>
@@ -216,7 +194,7 @@ function App() {
             <Route path="/pods/edit">
               <PodForm />
             </Route>
-            <ResourceCRUD configs={ResourcesConfig} />
+            <ResourceCRUD configs={ResourcesConfig as ResourceConfig[]} />
           </Switch>
         </Layout>
       </Refine>

@@ -19,6 +19,7 @@ export const ResourceCRUD: React.FC<Props> = props => {
           <>
             <Route path={`/${config.name}`} exact>
               <ResourceList
+                name={config.kind}
                 formatter={formatter}
                 columns={config.columns?.(i18n) || []}
               />
