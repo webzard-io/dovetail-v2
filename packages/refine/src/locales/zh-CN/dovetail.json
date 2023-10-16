@@ -46,5 +46,7 @@
   "init_container": "初始化容器",
   "container": "容器",
   "redeploy": "重新部署",
-  "data": "数据"
+  "data": "数据",
+  "suspend": "暂停",
+  "resume": "重新开始"
 }
