@@ -22,12 +22,14 @@ export const ResourceCRUD: React.FC<Props> = props => {
                 name={config.kind}
                 formatter={formatter}
                 columns={config.columns?.(i18n) || []}
+                Dropdown={config.Dropdown}
               />
             </Route>
             <Route path={`/${config.name}/show`}>
               <ResourceShow
                 formatter={formatter}
                 filedGroups={config.showFields?.(i18n) || []}
+                Dropdown={config.Dropdown}
               />
             </Route>
             <Route path={`/${config.name}/create`}>

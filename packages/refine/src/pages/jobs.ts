@@ -6,6 +6,7 @@ import {
   PodsField,
   StartTimeField,
 } from '../components/ShowContent';
+import { WorkloadDropdown } from '../components/WorkloadDropdown';
 import { JOB_INIT_VALUE } from '../constants/k8s';
 import {
   AgeColumnRenderer,
@@ -41,4 +42,5 @@ export const JobConfig: ResourceConfig<WithId<Job>, JobModel> = {
     [PodsField(i18n), ConditionsField(i18n)],
   ],
   initValue: JOB_INIT_VALUE,
+  Dropdown: WorkloadDropdown
 };

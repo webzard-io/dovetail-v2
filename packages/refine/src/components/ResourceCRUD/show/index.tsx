@@ -8,12 +8,19 @@ import { ShowField } from '../../ShowContent';
 type Props<Model extends ResourceModel> = IResourceComponentsProps & {
   formatter: (v: Resource) => Model;
   filedGroups: ShowField<Model>[][];
+  Dropdown?: React.FC<{ data: Model }>;
 };
 
 export function ResourceShow<Raw extends Resource, Model extends ResourceModel>(
   props: Props<Model>
 ) {
-  const { formatter, filedGroups } = props;
+  const { formatter, filedGroups, Dropdown } = props;
 
-  return <PageShow<WithId<Raw>, Model> fieldGroups={filedGroups} formatter={formatter} />;
+  return (
+    <PageShow<WithId<Raw>, Model>
+      fieldGroups={filedGroups}
+      formatter={formatter}
+      Dropdown={Dropdown}
+    />
+  );
 }
