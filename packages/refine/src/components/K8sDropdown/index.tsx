@@ -1,7 +1,7 @@
 import { Icon, useUIKit } from '@cloudtower/eagle';
 import {
   EditPen16PrimaryIcon,
-  MoreEllipsis16BlueIcon,
+  MoreEllipsis316BoldBlueIcon,
   TrashBinDelete16Icon,
   Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
@@ -68,7 +68,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
         }
       >
         <kit.button type="tertiary" size="small">
-          <MoreEllipsis16BlueIcon />
+          <Icon src={MoreEllipsis316BoldBlueIcon} />
         </kit.button>
       </kit.dropdown>
       {visible ? <kit.modal {...modalProps} /> : null}

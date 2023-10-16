@@ -3,20 +3,23 @@ import { Refine } from '@refinedev/core';
 import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch as Switch } from 'react-router-dom';
 import { Layout } from './components/Layout';
-// import { ConfigmapForm, ConfigmapList, ConfigmapShow } from './pages/configmap';
+import { ResourceCRUD } from './components/ResourceCRUD';
+import { ConfigMapConfig } from './pages/configmaps';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
-import { JobShow, JobList, JobForm } from './pages/jobs';
+import { JobConfig } from './pages/jobs';
 import { PodShow, PodList, PodForm } from './pages/pods';
+import { SecretsConfig } from './pages/secrets';
 import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulsets';
 import { routerProvider } from './providers/router-provider';
 
 import './styles.css';
 import 'antd/dist/antd.css';
 import '@cloudtower/eagle/dist/style.css';
+import { RESOURCE_GROUP, ResourceConfig } from './types';
 
 initParrotI18n();
 
@@ -25,6 +28,8 @@ const globalStore = new GlobalStore({
   watchWsApiUrl: 'api/sks-ws/k8s',
   prefix: 'default',
 });
+
+const ResourcesConfig = [JobConfig, ConfigMapConfig, SecretsConfig];
 
 function App() {
   const { t } = useTranslation();
@@ -43,6 +48,11 @@ function App() {
         resources={[
           {
             name: t('dovetail.workload'),
+            identifier: RESOURCE_GROUP.WORKLOAD,
+          },
+          {
+            name: 'Core',
+            identifier: RESOURCE_GROUP.CORE,
           },
           {
             name: 'cronjobs',
@@ -50,7 +60,7 @@ function App() {
               // TODO: dynamic load base path from API schema
               resourceBasePath: '/apis/batch/v1beta1',
               kind: 'CronJob',
-              parent: t('dovetail.workload'),
+              parent: RESOURCE_GROUP.WORKLOAD,
               label: 'CronJobs',
             },
             list: '/cronjobs',
@@ -63,7 +73,7 @@ function App() {
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'DaemonSet',
-              parent: t('dovetail.workload'),
+              parent: RESOURCE_GROUP.WORKLOAD,
               label: 'DaemonSets',
             },
             list: '/daemonsets',
@@ -76,7 +86,7 @@ function App() {
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'Deployment',
-              parent: t('dovetail.workload'),
+              parent: RESOURCE_GROUP.WORKLOAD,
             },
             list: '/deployments',
             show: '/deployments/show',
@@ -84,23 +94,11 @@ function App() {
             edit: '/deployments/edit',
           },
           {
-            name: 'jobs',
-            meta: {
-              resourceBasePath: '/apis/batch/v1',
-              kind: 'Job',
-              parent: t('dovetail.workload'),
-            },
-            list: '/jobs',
-            show: '/jobs/show',
-            create: '/jobs/create',
-            edit: '/jobs/edit',
-          },
-          {
             name: 'statefulsets',
             meta: {
               resourceBasePath: '/apis/apps/v1',
               kind: 'StatefulSet',
-              parent: t('dovetail.workload'),
+              parent: RESOURCE_GROUP.WORKLOAD,
               label: 'StatefulSets',
             },
             list: '/statefulsets',
@@ -113,7 +111,7 @@ function App() {
             meta: {
               resourceBasePath: '/api/v1',
               kind: 'Pod',
-              parent: t('dovetail.workload'),
+              parent: RESOURCE_GROUP.WORKLOAD,
               label: 'Pods',
             },
             list: '/pods',
@@ -121,9 +119,21 @@ function App() {
             create: '/pods/create',
             edit: '/pods/edit',
           },
-          {
-            name: 'Core',
-          },
+          ...ResourcesConfig.map(c => {
+            return {
+              name: c.name,
+              meta: {
+                resourceBasePath: c.basePath,
+                kind: c.kind,
+                parent: c.parent,
+                label: `${c.kind}s`,
+              },
+              list: `/${c.name}`,
+              show: `/${c.name}/show`,
+              create: `/${c.name}/create`,
+              edit: `/${c.name}/edit`,
+            };
+          }),
         ]}
       >
         <Layout>
@@ -140,7 +150,6 @@ function App() {
             <Route path="/cronjobs/edit">
               <CronJobForm />
             </Route>
-
             <Route path="/daemonsets" exact>
               <DaemonSetList />
             </Route>
@@ -153,7 +162,6 @@ function App() {
             <Route path="/daemonsets/edit">
               <DaemonSetForm />
             </Route>
-
             <Route path="/deployments" exact>
               <DeploymentList />
             </Route>
@@ -166,20 +174,6 @@ function App() {
             <Route path="/deployments/edit">
               <DeploymentForm />
             </Route>
-
-            <Route path="/jobs" exact>
-              <JobList />
-            </Route>
-            <Route path="/jobs/show">
-              <JobShow />
-            </Route>
-            <Route path="/jobs/create">
-              <JobForm />
-            </Route>
-            <Route path="/jobs/edit">
-              <JobForm />
-            </Route>
-
             <Route path="/statefulsets" exact>
               <StatefulSetList />
             </Route>
@@ -192,7 +186,6 @@ function App() {
             <Route path="/statefulsets/edit">
               <StatefulSetForm />
             </Route>
-
             <Route path="/pods" exact>
               <PodList />
             </Route>
@@ -205,6 +198,7 @@ function App() {
             <Route path="/pods/edit">
               <PodForm />
             </Route>
+            <ResourceCRUD configs={ResourcesConfig as ResourceConfig[]} />
           </Switch>
         </Layout>
       </Refine>
