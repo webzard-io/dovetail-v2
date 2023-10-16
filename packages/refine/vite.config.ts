@@ -9,7 +9,7 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/api': {
-        target: 'http://10.255.4.115',
+        target: 'http://10.255.1.94',
         ws: true,
         headers: {
           'x-skip-auth-verify': 'true',
