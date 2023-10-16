@@ -1,8 +1,8 @@
 import { i18n } from 'i18next';
-import { DataField } from '../components/ShowContent';
-import { AgeColumnRenderer } from '../hooks/useEagleTable/columns';
-import { ResourceModel } from '../model';
-import { RESOURCE_GROUP, Resource, ResourceConfig } from '../types';
+import { DataField } from '../../components/ShowContent';
+import { AgeColumnRenderer } from '../../hooks/useEagleTable/columns';
+import { ResourceModel } from '../../model';
+import { RESOURCE_GROUP, Resource, ResourceConfig } from '../../types';
 
 export const SecretsConfig: ResourceConfig<Resource, ResourceModel> = {
   name: 'secrets',

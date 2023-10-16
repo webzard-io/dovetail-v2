@@ -5,9 +5,9 @@ import {
   ImageField,
   PodsField,
   StartTimeField,
-} from '../components/ShowContent';
-import { WorkloadDropdown } from '../components/WorkloadDropdown';
-import { JOB_INIT_VALUE } from '../constants/k8s';
+} from '../../components/ShowContent';
+import { WorkloadDropdown } from '../../components/WorkloadDropdown';
+import { JOB_INIT_VALUE } from '../../constants/k8s';
 import {
   AgeColumnRenderer,
   WorkloadImageColumnRenderer,
@@ -16,9 +16,9 @@ import {
   PhaseColumnRenderer,
   DurationColumnRenderer,
   CompletionsCountColumnRenderer,
-} from '../hooks/useEagleTable/columns';
-import { JobModel } from '../model';
-import { RESOURCE_GROUP, ResourceConfig, WithId } from '../types';
+} from '../../hooks/useEagleTable/columns';
+import { JobModel } from '../../model';
+import { RESOURCE_GROUP, ResourceConfig, WithId } from '../../types';
 
 export const JobConfig: ResourceConfig<WithId<Job>, JobModel> = {
   name: 'jobs',
