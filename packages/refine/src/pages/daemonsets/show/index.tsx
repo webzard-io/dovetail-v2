@@ -2,6 +2,7 @@ import { IResourceComponentsProps } from '@refinedev/core';
 import { DaemonSet } from 'kubernetes-types/apps/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { WorkloadDropdown } from 'src/components/WorkloadDropdown';
 import { PageShow } from '../../../components/PageShow';
 import {
   ConditionsField,
@@ -23,6 +24,7 @@ export const DaemonSetShow: React.FC<IResourceComponentsProps> = () => {
         [PodsField(i18n), ConditionsField(i18n)],
       ]}
       formatter={d => new WorkloadModel(d)}
+      Dropdown={WorkloadDropdown}
     />
   );
 };
