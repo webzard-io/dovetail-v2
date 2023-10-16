@@ -2,6 +2,7 @@ import { IResourceComponentsProps } from '@refinedev/core';
 import { CronJob } from 'kubernetes-types/batch/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { CronJobDropdown } from 'src/components/CronJobDropdown';
 import ListPage from 'src/components/ListPage';
 import Time from 'src/components/Time';
 import { useEagleTable } from 'src/hooks/useEagleTable';
@@ -12,12 +13,12 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { WorkloadModel } from 'src/model/workload-model';
+import { CronJobModel } from 'src/model';
 import { WithId } from 'src/types';
 
 export const CronJobList: React.FC<IResourceComponentsProps> = () => {
   const { i18n, t } = useTranslation();
-  const { tableProps, selectedKeys } = useEagleTable<WithId<CronJob>, WorkloadModel>({
+  const { tableProps, selectedKeys } = useEagleTable<WithId<CronJob>, CronJobModel>({
     useTableParams: {},
     columns: [
       PhaseColumnRenderer(i18n),
@@ -46,7 +47,8 @@ export const CronJobList: React.FC<IResourceComponentsProps> = () => {
     tableProps: {
       currentSize: 10,
     },
-    formatter: d => new WorkloadModel(d),
+    formatter: d => new CronJobModel(d),
+    Dropdown: CronJobDropdown,
   });
 
   return <ListPage title="CronJob" selectedKeys={selectedKeys} tableProps={tableProps} />;
