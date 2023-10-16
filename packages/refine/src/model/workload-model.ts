@@ -50,4 +50,12 @@ export class WorkloadModel<
     });
     return newOne;
   }
+
+  scale(value: number) {
+    const newOne = cloneDeep(this.data);
+    if (newOne.kind === 'Deployment' || newOne.kind === 'StatefulSet') {
+      set(newOne, 'spec.replicas', value);
+    }
+    return newOne;
+  }
 }
