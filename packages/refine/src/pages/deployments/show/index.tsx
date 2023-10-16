@@ -9,6 +9,7 @@ import {
   PodsField,
   ReplicaField,
 } from '../../../components/ShowContent/fields';
+import { WorkloadDropdown } from '../../../components/WorkloadDropdown';
 import { WorkloadModel } from '../../../model';
 import { WithId } from '../../../types';
 
@@ -23,6 +24,7 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
         [PodsField(i18n), ConditionsField(i18n)],
       ]}
       formatter={d => new WorkloadModel(d)}
+      Dropdown={WorkloadDropdown}
     />
   );
 };
