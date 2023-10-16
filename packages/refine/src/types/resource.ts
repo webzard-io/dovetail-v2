@@ -4,6 +4,11 @@ import { ShowField } from '../components/ShowContent';
 import { Column } from '../components/Table';
 import { ResourceModel } from '../model';
 
+export enum RESOURCE_GROUP {
+  WORKLOAD = 'WORKLOAD',
+  CORE = 'CORE',
+}
+
 export type WithId<T> = T & { id: string };
 
 export interface Resource {
@@ -19,20 +24,6 @@ export interface Resource {
   metadata?: ObjectMeta;
 }
 
-export type ResourceConfigFunc<
-  Raw extends Resource = Resource,
-  Model extends ResourceModel = ResourceModel,
-> = () => {
-  name: string;
-  kind: string;
-  basePath: string;
-  apiVersion: string;
-  parent?: string;
-  formatter?: (v: Raw) => Model;
-  initYaml?: Record<string, unknown>;
-  columns?: (i18n: i18n) => Column<Model>[];
-};
-
 export type ResourceConfig<
   Raw extends Resource = Resource,
   Model extends ResourceModel = ResourceModel,
@@ -41,9 +32,9 @@ export type ResourceConfig<
   kind: string;
   basePath: string;
   apiVersion: string;
-  parent?: string;
+  parent?: RESOURCE_GROUP;
   formatter?: (v: Raw) => Model;
-  initYaml?: Record<string, unknown>;
+  initValue?: Record<string, unknown>;
   columns?: (i18n: i18n) => Column<Model>[];
   showFields?: (i18n: i18n) => ShowField<Model>[][];
 };

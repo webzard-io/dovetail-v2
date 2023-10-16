@@ -10,7 +10,7 @@ export const ResourceForm: React.FC<Props> = ({ config }) => {
   return (
     <YamlForm
       initialValues={
-        config.initYaml || {
+        config.initValue || {
           apiVersion: config.apiVersion,
           kind: config.kind,
           ...BASE_INIT_VALUE,

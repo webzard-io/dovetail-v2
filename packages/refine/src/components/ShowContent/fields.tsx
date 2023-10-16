@@ -2,11 +2,12 @@ import { i18n } from 'i18next';
 import { ExtendObjectMeta } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
-import { ResourceModel, WorkloadModel } from '../../model';
+import { JobModel, ResourceModel, WorkloadModel } from '../../model';
 import { ConditionsTable } from '../ConditionsTable';
 import { CronjobJobsTable } from '../CronjobJobsTable';
 import { ImageNames } from '../ImageNames';
 import { Tags } from '../Tags';
+import Time from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
 
@@ -97,6 +98,17 @@ export const DataField = (i18n: i18n): ShowField<ResourceModel> => {
     path: ['data', 'data'],
     render: val => {
       return <Tags value={val as Record<string, string>} />;
+    },
+  };
+};
+
+export const StartTimeField = (i18n: i18n): ShowField<JobModel> => {
+  return {
+    key: 'started',
+    title: i18n.t('started'),
+    path: ['status', 'startTime'],
+    render(value) {
+      return <Time date={value as string} />;
     },
   };
 };
