@@ -3,6 +3,7 @@ import { StatefulSet } from 'kubernetes-types/apps/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import ListPage from 'src/components/ListPage';
+import { WorkloadDropdown } from 'src/components/WorkloadDropdown';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,
@@ -31,6 +32,7 @@ export const StatefulSetList: React.FC<IResourceComponentsProps> = () => {
       currentSize: 10,
     },
     formatter: d => new WorkloadModel(d),
+    Dropdown: WorkloadDropdown,
   });
 
   return (
