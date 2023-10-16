@@ -1,11 +1,12 @@
 import { ModalProps } from '@cloudtower/eagle';
-import { BaseKey, useDelete } from '@refinedev/core';
+import { BaseKey, useDelete, useNavigation } from '@refinedev/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const useDeleteModal = (resource: string) => {
   const { mutate } = useDelete();
   const [visible, setVisible] = useState(false);
+  const navigation = useNavigation();
   const [id, setId] = useState<BaseKey>('');
   const { t } = useTranslation();
   const modalProps: ModalProps = {
@@ -25,6 +26,7 @@ export const useDeleteModal = (resource: string) => {
         id,
       });
       setVisible(false);
+      navigation.list(resource);
     },
     onCancel() {
       setVisible(false);

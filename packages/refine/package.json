@@ -30,6 +30,7 @@
     "@linaria/core": "^4.5.4",
     "@linaria/react": "^4.5.4",
     "@linaria/vite": "^4.5.4",
+    "@playwright/test": "^1.39.0",
     "@refinedev/cli": "^2.9.0",
     "@types/js-yaml": "^4.0.6",
     "@types/json-schema": "^7.0.13",
@@ -63,6 +64,7 @@
     "build": "tsc && vite build",
     "preview": "refine start",
     "refine": "refine",
+    "test": "npx playwright test --workers 1",
     "lint": "eslint src --ext .ts,.tsx"
   },
   "browserslist": {
