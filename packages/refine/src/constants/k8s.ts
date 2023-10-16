@@ -153,3 +153,5 @@ export const POD_INIT_VALUE = {
     containers: [BASE_CONTAINER_INIT_VALUE],
   },
 };
+
+export const TIMESTAMP_LABEL = 'sks.user.kubesmart.smtx.io/timestamp';
