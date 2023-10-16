@@ -6,23 +6,23 @@ export class ResourceModel implements Resource {
   public kind!: Resource['kind'];
   public metadata!: Resource['metadata'];
 
-  constructor(public data: Resource) {
-    this.id = data.id;
-    this.apiVersion = data.apiVersion;
-    this.kind = data.kind;
-    this.metadata = data.metadata;
+  constructor(public rawYaml: Resource) {
+    this.id = rawYaml.id;
+    this.apiVersion = rawYaml.apiVersion;
+    this.kind = rawYaml.kind;
+    this.metadata = rawYaml.metadata;
   }
 
   get name() {
-    return this.data.metadata?.name;
+    return this.rawYaml.metadata?.name;
   }
   get namespace() {
-    return this.data.metadata?.namespace;
+    return this.rawYaml.metadata?.namespace;
   }
   get labels() {
-    return this.data.metadata?.labels;
+    return this.rawYaml.metadata?.labels;
   }
   get annotations() {
-    return this.data.metadata?.annotations;
+    return this.rawYaml.metadata?.annotations;
   }
 }

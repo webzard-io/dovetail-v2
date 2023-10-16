@@ -11,25 +11,25 @@ type WorkloadTypes = Deployment | StatefulSet | Job | DaemonSet | CronJob | Pod;
 export class WorkloadModel<
   T extends WorkloadTypes = WorkloadTypes,
 > extends ResourceModel {
-  constructor(public data: WithId<T>) {
-    super(data);
+  constructor(public rawYaml: WithId<T>) {
+    super(rawYaml);
   }
 
   get status(): T['status'] {
-    return this.data.status;
+    return this.rawYaml.status;
   }
   get spec(): T['spec'] {
-    return this.data.spec;
+    return this.rawYaml.spec;
   }
 
   get imageNames() {
     const containers =
       // cronjob
-      this.data.spec && 'jobTemplate' in this.data.spec
-        ? this.data.spec.jobTemplate.spec?.template.spec?.containers
+      this.rawYaml.spec && 'jobTemplate' in this.rawYaml.spec
+        ? this.rawYaml.spec.jobTemplate.spec?.template.spec?.containers
         : // other wokload
-        this.data.spec && 'template' in this.data.spec
-        ? this.data.spec?.template.spec?.containers
+        this.rawYaml.spec && 'template' in this.rawYaml.spec
+        ? this.rawYaml.spec?.template.spec?.containers
         : [];
 
     return containers?.map(container => shortenedImage(container.image || '')) || [];
@@ -41,7 +41,7 @@ export class WorkloadModel<
   }
 
   redeploy() {
-    const newOne = cloneDeep(this.data);
+    const newOne = cloneDeep(this.rawYaml);
     const path = 'spec.template.metadata.annotations';
     const annotations = get(newOne, path, {});
     set(newOne, path, {

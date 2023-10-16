@@ -95,7 +95,7 @@ export const DataField = (i18n: i18n): ShowField<ResourceModel> => {
   return {
     key: 'data',
     title: i18n.t('data'),
-    path: ['data', 'data'],
+    path: ['rawYaml', 'data'],
     render: val => {
       return <Tags value={val as Record<string, string>} />;
     },
