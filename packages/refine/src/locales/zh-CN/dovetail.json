@@ -45,5 +45,6 @@
   "ready": "就绪",
   "init_container": "初始化容器",
   "container": "容器",
-  "redeploy": "重新部署"
+  "redeploy": "重新部署",
+  "data": "数据"
 }

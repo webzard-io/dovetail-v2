@@ -7,7 +7,12 @@ import { WorkloadModel } from '../../model';
 import { pruneBeforeEdit } from '../../utils/k8s';
 import K8sDropdown from '../K8sDropdown';
 
-export const WorkloadDropdown: React.FC<{ data: WorkloadModel }> = ({ data }) => {
+type Props<Model extends WorkloadModel> = {
+  data: Model;
+};
+
+export function WorkloadDropdown<Model extends WorkloadModel>(props: Props<Model>) {
+  const { data } = props;
   const kit = useUIKit();
   const { resource } = useResource();
   const { mutate } = useUpdate();
@@ -31,4 +36,4 @@ export const WorkloadDropdown: React.FC<{ data: WorkloadModel }> = ({ data }) =>
       </kit.menu.Item>
     </K8sDropdown>
   );
-};
+}
