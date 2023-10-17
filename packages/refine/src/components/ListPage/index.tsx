@@ -26,7 +26,7 @@ interface ListPageProps<T extends ResourceModel> {
   tableProps: TableProps<T>;
 }
 
-function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
+export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
   const { title, selectedKeys, tableProps } = props;
 
   return (
@@ -36,5 +36,3 @@ function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
     </div>
   );
 }
-
-export default ListPage;

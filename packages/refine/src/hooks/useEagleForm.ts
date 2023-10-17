@@ -85,7 +85,7 @@ export type UseFormReturnType<
 };
 
 const useEagleForm = <
-  TQueryFnData extends Unstructured = Unstructured & { id: string; },
+  TQueryFnData extends Unstructured = Unstructured & { id: string },
   TError extends HttpError = HttpError,
   TVariables extends { [prop: string]: unknown } = { [prop: string]: unknown },
   TData extends Unstructured = TQueryFnData,
@@ -281,8 +281,8 @@ const useEagleForm = <
       ...formSF.formProps,
       onFinish: values => {
         const errors = [
-          !isYamlValid && t('dovetail.yaml_format_wrong'),
-          !isSchemaValid && t('dovetail.yaml_value_wrong'),
+          !isYamlValid ? t('dovetail.yaml_format_wrong') : '',
+          !isSchemaValid ? t('dovetail.yaml_value_wrong') : '',
         ].filter(error => !!error);
 
         if (errors.length) {

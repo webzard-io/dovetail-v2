@@ -24,8 +24,6 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'dovetail',
-      fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'mjs' : 'js'}`,
-      formats: ['es', 'cjs'],
     },
     rollupOptions: {
       external: [

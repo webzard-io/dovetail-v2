@@ -10,6 +10,7 @@ export const SecretsConfig: ResourceConfig<Resource, ResourceModel> = {
   basePath: '/api/v1',
   apiVersion: 'v1',
   parent: RESOURCE_GROUP.STORAGE,
+  label: 'Secrets',
   columns: (i18n: i18n) => [AgeColumnRenderer(i18n)],
   showFields: (i18n: i18n) => [[], [], [SecretDataField(i18n)]],
 };
