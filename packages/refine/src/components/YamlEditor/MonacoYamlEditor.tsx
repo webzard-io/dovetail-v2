@@ -90,8 +90,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
       },
       tabSize: 2,
       readOnly: readOnly,
-      // TODO: disable it to pass e2e tests. Need find a better way to fix it.
-      autoIndent: 'none',
+      autoIndent: import.meta.env.VITE_IS_TEST ? 'none' : 'advanced',
     });
 
     instanceRef.current.editor = editor;
