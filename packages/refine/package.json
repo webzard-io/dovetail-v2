@@ -61,6 +61,7 @@
   },
   "scripts": {
     "dev": "refine dev",
+    "dev:test": "VITE_IS_TEST=true refine dev",
     "build": "tsc && vite build",
     "preview": "refine start",
     "refine": "refine",
