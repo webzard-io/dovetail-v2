@@ -22,6 +22,7 @@ export const JobConfig: ResourceConfig<WithId<Job>, JobModel> = {
   kind: 'Job',
   basePath: '/apis/batch/v1',
   apiVersion: 'batch/v1',
+  label: 'Jobs',
   parent: RESOURCE_GROUP.WORKLOAD,
   formatter: d => new JobModel(d),
   columns: (i18n: i18n) => [

@@ -28,16 +28,18 @@ export interface Resource {
 
 export type ResourceConfig<
   Raw extends Resource = Resource,
-  Model extends ResourceModel = ResourceModel,
+  Model extends ResourceModel = ResourceModel
 > = {
   name: string;
   kind: string;
   basePath: string;
   apiVersion: string;
+  label: string;
   parent?: RESOURCE_GROUP;
   formatter?: (v: Raw) => Model;
   initValue?: Record<string, unknown>;
   columns?: (i18n: i18n) => Column<Model>[];
   showFields?: (i18n: i18n) => ShowField<Model>[][];
   Dropdown?: React.FC<{ data: Model }>;
+  isCustom?: boolean;
 };
