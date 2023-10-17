@@ -4,13 +4,13 @@ import { elapsedTime, getSecondsDiff } from '../utils/time';
 import { WorkloadModel } from './workload-model';
 
 export class JobModel extends WorkloadModel<Job> {
-  constructor(public data: WithId<Job>) {
-    super(data);
+  constructor(public rawYaml: WithId<Job>) {
+    super(rawYaml);
   }
 
   get duration() {
-    const completionTime = this.data.status?.completionTime;
-    const startTime = this.data.status?.startTime;
+    const completionTime = this.rawYaml.status?.completionTime;
+    const startTime = this.rawYaml.status?.startTime;
 
     if (!completionTime && startTime) {
       return getSecondsDiff(startTime, Date.now().toString());
@@ -27,6 +27,6 @@ export class JobModel extends WorkloadModel<Job> {
     return elapsedTime(this.duration).label;
   }
   get completionsDisplay() {
-    return `${this.data.status?.succeeded || 0}/${this.data.spec?.completions}`;
+    return `${this.rawYaml.status?.succeeded || 0}/${this.rawYaml.spec?.completions}`;
   }
 }

@@ -90,6 +90,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
       },
       tabSize: 2,
       readOnly: readOnly,
+      autoIndent: import.meta.env.VITE_IS_TEST ? 'none' : 'advanced',
     });
 
     instanceRef.current.editor = editor;
