@@ -52,7 +52,7 @@ export class WorkloadModel<
   }
 
   scale(value: number) {
-    const newOne = cloneDeep(this.data);
+    const newOne = cloneDeep(this.rawYaml);
     if (newOne.kind === 'Deployment' || newOne.kind === 'StatefulSet') {
       set(newOne, 'spec.replicas', value);
     }

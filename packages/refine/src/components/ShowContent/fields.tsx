@@ -40,7 +40,7 @@ export const ReplicaField = (i18n: i18n): ShowField<WorkloadModel> => {
   };
 };
 
-export const ConditionsField = (i18n: i18n): ShowField<WorkloadModel> => {
+export const ConditionsField = (i18n: i18n): ShowField<ResourceModel> => {
   return {
     key: 'Conditions',
     title: i18n.t('condition'),
@@ -124,6 +124,49 @@ export const StartTimeField = (i18n: i18n): ShowField<JobModel> => {
     path: ['status', 'startTime'],
     render(value) {
       return <Time date={value as string} />;
+    },
+  };
+};
+
+export const ServiceTypeField = (i18n: i18n): ShowField<ResourceModel> => {
+  return {
+    key: 'type',
+    title: i18n.t('dovetail.type'),
+    path: ['rawYaml', 'spec', 'type'],
+  };
+};
+
+export const ClusterIpField = (i18n: i18n): ShowField<ResourceModel> => {
+  return {
+    key: 'clusterIp',
+    title: i18n.t('dovetail.clusterIp'),
+    path: ['rawYaml', 'spec', 'clusterIP'],
+  };
+};
+
+export const SessionAffinityField = (i18n: i18n): ShowField<ResourceModel> => {
+  return {
+    key: 'clusterIp',
+    title: i18n.t('dovetail.sessionAffinity'),
+    path: ['rawYaml', 'spec', 'sessionAffinity'],
+  };
+};
+
+export const ServicePodsField = (_: i18n): ShowField<ResourceModel> => {
+  return {
+    key: 'pods',
+    title: 'Pods',
+    path: [],
+    render: (_, record) => {
+      return (
+        <WorkloadPodsTable
+          selector={
+            (record.metadata as ExtendObjectMeta).relations?.find(r => {
+              return r.kind === 'Pod' && r.type === 'selects';
+            })?.selector
+          }
+        />
+      );
     },
   };
 };
