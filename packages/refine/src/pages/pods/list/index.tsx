@@ -1,5 +1,6 @@
 import { IResourceComponentsProps, useList } from '@refinedev/core';
 import { Pod } from 'kubernetes-types/core/v1';
+import { compact } from 'lodash-es';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ListPage from 'src/components/ListPage';
@@ -22,7 +23,7 @@ import { PodMetrics } from 'src/types/metric';
 export const PodList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
 
-  const { data } = useList({
+  const { data: metricsData } = useList({
     resource: 'podMetrics',
     meta: {
       resourceBasePath: '/apis/metrics.k8s.io/v1beta1',
@@ -32,17 +33,18 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
   });
 
   const metricsMap = useMemo(() => {
-    return ((data?.data || []) as WithId<PodMetrics>[]).reduce<
+    return ((metricsData?.data || []) as WithId<PodMetrics>[]).reduce<
       Record<string, PodMetricsModel>
     >((prev, cur) => {
       prev[cur.id] = new PodMetricsModel(cur);
       return prev;
     }, {});
-  }, [data]);
+  }, [metricsData]);
+  const supportMetrics = Boolean(metricsData);
 
   const { tableProps, selectedKeys } = useEagleTable<WithId<Pod>, PodModel>({
     useTableParams: {},
-    columns: [
+    columns: compact([
       PhaseColumnRenderer(i18n),
       NameColumnRenderer(i18n),
       NameSpaceColumnRenderer(i18n),
@@ -57,7 +59,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
       },
       RestartCountColumnRenderer(i18n),
       NodeNameColumnRenderer(i18n),
-      {
+      supportMetrics && {
         key: 'memory_usage',
         display: true,
         dataIndex: ['spec'],
@@ -68,7 +70,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
           return metricsMap[record.id]?.usage.memory.si;
         },
       },
-      {
+      supportMetrics && {
         key: 'cpu_usage',
         display: true,
         dataIndex: ['spec'],
@@ -88,7 +90,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
         sorter: CommonSorter(['status', 'podIP']),
       },
       AgeColumnRenderer(i18n),
-    ],
+    ]),
     tableProps: {
       currentSize: 10,
     },
