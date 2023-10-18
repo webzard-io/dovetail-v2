@@ -202,3 +202,17 @@ export const DurationColumnRenderer = <Model extends JobModel>(
     sorter: CommonSorter(dataIndex),
   };
 };
+
+export const ServiceTypeColumnRenderer = <Model extends ResourceModel>(
+  i18n: i18n
+): Column<Model> => {
+  const dataIndex = ['rawYaml', 'spec', 'type'];
+  return {
+    key: 'type',
+    title: i18n.t('dovetail.type'),
+    display: true,
+    dataIndex,
+    sortable: true,
+    sorter: CommonSorter(dataIndex),
+  };
+};

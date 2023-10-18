@@ -5,6 +5,7 @@ import { Pod } from 'kubernetes-types/core/v1';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { matchSelector } from 'src/utils/selector';
 import {
   NameColumnRenderer,
   NodeNameColumnRenderer,
@@ -16,21 +17,6 @@ import { PodModel } from '../../model';
 import { WithId } from '../../types';
 import Table, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
-
-function matchSelector(pod: PodModel, selector: LabelSelector): boolean {
-  let match = true;
-  // TODO: support complete selector match strategy
-  // https://github.com/rancher/dashboard/blob/master/shell/utils/selector.js#L166
-  for (const key in selector.matchLabels) {
-    if (
-      !pod.metadata?.labels?.[key] ||
-      pod.metadata.labels?.[key] !== selector.matchLabels[key]
-    ) {
-      match = false;
-    }
-  }
-  return match;
-}
 
 export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
   selector,

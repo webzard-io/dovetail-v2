@@ -13,6 +13,7 @@ import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployme
 import { JobConfig } from './pages/jobs';
 import { PodShow, PodList, PodForm } from './pages/pods';
 import { SecretsConfig } from './pages/secrets';
+import { ServicesConfig } from './pages/services';
 import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulsets';
 import { routerProvider } from './providers/router-provider';
 
@@ -29,7 +30,7 @@ const globalStore = new GlobalStore({
   prefix: 'default',
 });
 
-const ResourcesConfig = [JobConfig, ConfigMapConfig, SecretsConfig];
+const ResourcesConfig = [JobConfig, ConfigMapConfig, SecretsConfig, ServicesConfig];
 
 function App() {
   const { t } = useTranslation();
@@ -47,12 +48,20 @@ function App() {
         }}
         resources={[
           {
+            name: t('dovetail.cluster'),
+            identifier: RESOURCE_GROUP.CLUSTER,
+          },
+          {
             name: t('dovetail.workload'),
             identifier: RESOURCE_GROUP.WORKLOAD,
           },
           {
-            name: 'Core',
-            identifier: RESOURCE_GROUP.CORE,
+            name: t('dovetail.network'),
+            identifier: RESOURCE_GROUP.NETWORK,
+          },
+          {
+            name: t('dovetail.storage'),
+            identifier: RESOURCE_GROUP.STORAGE,
           },
           {
             name: 'cronjobs',

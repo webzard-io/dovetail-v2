@@ -48,5 +48,10 @@
   "redeploy": "重新部署",
   "data": "数据",
   "suspend": "暂停",
-  "resume": "重新开始"
+  "resume": "重新开始",
+  "cluster": "集群",
+  "storage": "存储",
+  "network": "网络",
+  "clusterIp": "集群 IP",
+  "sessionAffinity": "会话保持"
 }
