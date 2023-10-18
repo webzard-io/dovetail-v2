@@ -6,7 +6,9 @@ import { ResourceModel } from '../model';
 
 export enum RESOURCE_GROUP {
   WORKLOAD = 'WORKLOAD',
-  CORE = 'CORE',
+  STORAGE = 'STORAGE',
+  NETWORK = 'NETWORK',
+  CLUSTER = 'CLUSTER',
 }
 
 export type WithId<T> = T & { id: string };
