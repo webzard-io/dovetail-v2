@@ -2,12 +2,13 @@ import { Typo, useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useParsed, useResource, useShow } from '@refinedev/core';
 import yaml from 'js-yaml';
-import { Unstructured } from 'k8s-api-provider';
-import { get } from 'lodash-es';
+import { Unstructured, relationPlugin } from 'k8s-api-provider';
+import { get, omit } from 'lodash-es';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
+import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
 import { ResourceModel } from '../../model';
 import { Resource } from '../../types';
 import { StateTag } from '../StateTag';
@@ -54,6 +55,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
   });
   const [mode, setMode] = useState<Mode>(Mode.Detail);
   const { t } = useTranslation();
+  const { fold } = useK8sYamlEditor();
   const { data } = queryResult;
   if (!data?.data) {
     return null;
@@ -175,8 +177,16 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
     [Mode.Yaml]: (
       <MonacoYamlEditor
         className={EditorStyle}
-        defaultValue={yaml.dump(record)}
+        defaultValue={yaml.dump(
+          omit(
+            relationPlugin.restoreItem(data.data),
+            'id'
+          )
+        )}
         schema={{}}
+        onEditorCreate={(editor)=> {
+          fold(editor);
+        }}
         readOnly
       />
     ),

@@ -2,10 +2,12 @@ import path from 'path';
 import linaria from '@linaria/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import commonjs from 'vite-plugin-commonjs';
 
 export default defineConfig({
-  plugins: [react(), linaria()],
+  plugins: [commonjs(), react(), linaria()],
   server: {
+    force: true,
     host: '0.0.0.0',
     proxy: {
       '/api': {
@@ -44,6 +46,7 @@ export default defineConfig({
         'monaco-editor',
         'monaco-yaml',
         'js-yaml',
+        'k8s-api-provider',
       ],
     },
   },

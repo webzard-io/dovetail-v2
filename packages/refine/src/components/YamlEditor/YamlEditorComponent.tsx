@@ -55,7 +55,7 @@ export type YamlEditorProps = {
   readOnly?: boolean;
   onChange?: (value: string) => void;
   onValidate?: (valid: boolean, schemaValid: boolean) => void;
-  onEditorCreate?: (editor: monaco.editor.ICodeEditor) => void;
+  onEditorCreate?: (editor: monaco.editor.IStandaloneCodeEditor) => void;
   onBlur?: () => void;
 };
 
@@ -63,6 +63,7 @@ export type YamlEditorHandle = {
   setValue: (value: string) => void;
   setEditorValue: (value: string) => void;
   getEditorValue: () => string;
+  getEditorInstance: () => monaco.editor.IStandaloneCodeEditor | null;
 };
 
 export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>(
@@ -99,6 +100,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
         getEditorValue: () => {
           return editorInstance.current?.getValue() || '';
         },
+        getEditorInstance: () => editorInstance.current || null,
       };
     });
 
@@ -118,7 +120,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
     );
 
     const onEditorCreate = useCallback(
-      (editor: monaco.editor.ICodeEditor) => {
+      (editor: monaco.editor.IStandaloneCodeEditor) => {
         if (editor.getValue() !== value) {
           editorInstance.current?.getModel()?.setValue(value);
         }
@@ -221,8 +223,8 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                   isCollapsed
                     ? ''
                     : isDiff
-                    ? t('dovetail.back_to_edit')
-                    : t('dovetail.view_changes')
+                      ? t('dovetail.back_to_edit')
+                      : t('dovetail.view_changes')
                 }
               >
                 {isDiff ? (
