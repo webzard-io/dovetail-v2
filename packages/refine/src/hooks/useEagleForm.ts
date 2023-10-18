@@ -15,6 +15,7 @@ import { ButtonProps } from 'antd/lib/button';
 import { FormInstance, FormProps } from 'antd/lib/form';
 import yaml from 'js-yaml';
 import { JSONSchema7 } from 'json-schema';
+import { relationPlugin, Unstructured } from 'k8s-api-provider';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type YamlEditorHandle } from 'src/components/YamlEditor';
@@ -83,10 +84,10 @@ export type UseFormReturnType<
 };
 
 const useEagleForm = <
-  TQueryFnData extends BaseRecord = BaseRecord,
+  TQueryFnData extends Unstructured = Unstructured & { id: string; },
   TError extends HttpError = HttpError,
   TVariables extends { [prop: string]: unknown } = { [prop: string]: unknown },
-  TData extends BaseRecord = TQueryFnData,
+  TData extends Unstructured = TQueryFnData,
   TResponse extends BaseRecord = TData,
   TResponseError extends HttpError = TError,
 >({
@@ -256,7 +257,7 @@ const useEagleForm = <
 
   const initialValues = queryResult?.data?.data
     ? {
-        ...queryResult?.data?.data,
+        ...relationPlugin.restoreItem(queryResult.data.data),
       }
     : undefined;
 
