@@ -11,5 +11,5 @@ export const ConfigMapConfig: ResourceConfig<Resource, ResourceModel> = {
   apiVersion: 'v1',
   parent: RESOURCE_GROUP.CORE,
   columns: (i18n: i18n) => [AgeColumnRenderer(i18n)],
-  showFields: (i18n: i18n) => [[], [DataField(i18n)], []],
+  showFields: (i18n: i18n) => [[], [], [DataField(i18n)]],
 };
