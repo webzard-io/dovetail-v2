@@ -18,11 +18,17 @@ import { JSONSchema7 } from 'json-schema';
 import { relationPlugin, Unstructured } from 'k8s-api-provider';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { type YamlEditorHandle } from 'src/components/YamlEditor';
+import { type YamlEditorHandle, type YamlEditorProps } from 'src/components/YamlEditor';
+import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
 import { useSchema } from 'src/hooks/useSchema';
 import { pruneBeforeEdit } from 'src/utils/k8s';
 import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
+
+type EditorProps = Omit<YamlEditorProps, 'schema'> & {
+  ref: React.RefObject<YamlEditorHandle>;
+  schema: JSONSchema7 | null;
+};
 
 export type UseFormProps<
   TQueryFnData extends BaseRecord = BaseRecord,
@@ -69,12 +75,7 @@ export type UseFormReturnType<
   saveButtonProps: ButtonProps & {
     onClick: () => void;
   };
-  editorProps: {
-    ref: React.RefObject<YamlEditorHandle>;
-    defaultValue: string;
-    schema: JSONSchema7 | null;
-    id: string;
-  };
+  editorProps: EditorProps;
   enableEditor: boolean;
   errorResponseBody?: Record<string, unknown> | null;
   switchEditor: () => void;
@@ -133,6 +134,7 @@ const useEagleForm = <
   TResponseError
 > => {
   const editor = useRef<YamlEditorHandle>(null);
+  const isFoldRef = useRef<boolean>(false);
   const { t } = useTranslation();
   const [enableEditor, setEnableEditor] = useState(false);
   const [isYamlValid, setIsYamlValid] = useState(true);
@@ -150,6 +152,7 @@ const useEagleForm = <
     form: formAnt,
   });
   const { form } = formSF;
+  const { fold } = useK8sYamlEditor();
 
   const useFormCoreResult = useFormCore<
     TQueryFnData,
@@ -196,15 +199,16 @@ const useEagleForm = <
 
     if (editor.current) {
       const editorValue = yaml.dump(form.getFieldsValue(true));
+      const editorInstance = editor.current.getEditorInstance();
 
       editor.current.setEditorValue(editorValue);
       editor.current.setValue(editorValue);
-      // editor.current.foldSymbol('annotations:');
-      // editor.current.foldSymbol('managedFields:');
-      // editor.current.foldSymbol('status:');
-      // editor.current.foldSymbol('kubectl.kubernetes.io/last-applied-configuration:');
+      if (queryResult?.data?.data && editorInstance && !isFoldRef.current) {
+        fold(editorInstance);
+        isFoldRef.current = true;
+      }
     }
-  }, [queryResult?.data?.data, id, form]);
+  }, [queryResult?.data?.data, id, form, fold]);
 
   React.useEffect(() => {
     const response = useFormCoreResult.mutationResult.error?.response;
@@ -236,13 +240,13 @@ const useEagleForm = <
     },
   };
 
-  const editorProps = {
+  const editorProps: EditorProps = {
     ref: editor,
     defaultValue:
       schema && editorOptions?.isGenerateAnnotations
         ? generateYamlBySchema(form?.getFieldsValue(true) || {}, schema)
         : yaml.dump(form.getFieldsValue(true)),
-    schema,
+    schema: schema,
     id: useResourceResult.resource?.name || '',
     errorMsgs: editorErrors,
     onValidate(yamlValid: boolean, schemaValid: boolean) {
@@ -251,6 +255,12 @@ const useEagleForm = <
 
       if (yamlValid && schemaValid) {
         setEditorErrors([]);
+      }
+    },
+    onEditorCreate(editor) {
+      if (queryResult?.data?.data && !isFoldRef.current) {
+        fold(editor);
+        isFoldRef.current = true;
       }
     },
   };

@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
+import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
 import { ResourceModel } from '../../model';
 import { Resource } from '../../types';
 import { StateTag } from '../StateTag';
@@ -54,6 +55,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
   });
   const [mode, setMode] = useState<Mode>(Mode.Detail);
   const { t } = useTranslation();
+  const { fold } = useK8sYamlEditor();
   const { data } = queryResult;
   if (!data?.data) {
     return null;
@@ -182,6 +184,9 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
           )
         )}
         schema={{}}
+        onEditorCreate={(editor)=> {
+          fold(editor);
+        }}
         readOnly
       />
     ),
