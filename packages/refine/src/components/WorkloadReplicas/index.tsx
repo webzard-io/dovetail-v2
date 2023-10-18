@@ -25,8 +25,7 @@ export const WorkloadReplicas: React.FC<{ record: WorkloadModel }> = ({ record }
   const replicas =
     record.status && 'replicas' in record.status ? record.status.replicas : 0;
 
-  const canScale =
-    record.data.kind === 'Deployment' || record.data.kind === 'StatefulSet';
+  const canScale = record.kind === 'Deployment' || record.kind === 'StatefulSet';
   const currentReplicas = get(record, 'spec.replicas', 0);
 
   const scale = (delta: number) => {
