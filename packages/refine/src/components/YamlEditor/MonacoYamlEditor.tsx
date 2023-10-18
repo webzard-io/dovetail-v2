@@ -17,7 +17,7 @@ type Props = {
   onChange?: (val: string) => void;
   onValidate?: (valid: boolean, schemaValid: boolean) => void;
   isScrollOnFocus?: boolean;
-  onEditorCreate?: (editor: monaco.editor.ICodeEditor) => void;
+  onEditorCreate?: (editor: monaco.editor.IStandaloneCodeEditor) => void;
   onBlur?: () => void;
   getInstance?: (ins: monaco.editor.IStandaloneCodeEditor) => void;
   schema?: JSONSchema7;
