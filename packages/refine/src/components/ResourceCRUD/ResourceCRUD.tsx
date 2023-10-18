@@ -16,7 +16,7 @@ export const ResourceCRUD: React.FC<Props> = props => {
       {configs.map(config => {
         const formatter = config.formatter || ((v: Resource) => new ResourceModel(v));
         return (
-          <>
+          <React.Fragment key={config.name}>
             <Route path={`/${config.name}`} exact>
               <ResourceList
                 name={config.kind}
@@ -38,7 +38,7 @@ export const ResourceCRUD: React.FC<Props> = props => {
             <Route path={`/${config.name}/edit`}>
               <ResourceForm config={config} />
             </Route>
-          </>
+          </React.Fragment>
         );
       })}
     </>

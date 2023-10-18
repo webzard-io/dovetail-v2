@@ -6,7 +6,7 @@ import { JobModel, ResourceModel, WorkloadModel } from '../../model';
 import { ConditionsTable } from '../ConditionsTable';
 import { CronjobJobsTable } from '../CronjobJobsTable';
 import { ImageNames } from '../ImageNames';
-import { Tags } from '../Tags';
+import { KeyValue } from '../KeyValue';
 import Time from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
@@ -97,7 +97,22 @@ export const DataField = (i18n: i18n): ShowField<ResourceModel> => {
     title: i18n.t('data'),
     path: ['rawYaml', 'data'],
     render: val => {
-      return <Tags value={val as Record<string, string>} />;
+      return <KeyValue value={val as Record<string, string>} />;
+    },
+  };
+};
+
+export const SecretDataField = (i18n: i18n): ShowField<ResourceModel> => {
+  return {
+    key: 'data',
+    title: i18n.t('data'),
+    path: ['rawYaml', 'data'],
+    render: val => {
+      const decodeVal: Record<string, string> = {};
+      for (const key in val as Record<string, string>) {
+        decodeVal[key] = atob((val as Record<string, string>)[key]);
+      }
+      return <KeyValue value={decodeVal} />;
     },
   };
 };
