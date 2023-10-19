@@ -6012,10 +6012,10 @@ jsonparse@^1.2.0:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
-k8s-api-provider@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/k8s-api-provider/-/k8s-api-provider-0.0.8.tgz#7fd73e6290edd1e22a01df142d2165a9bfda8f0b"
-  integrity sha512-DjZrnr/3lxonWZ6d6/04zJJfBohIWNzXR2yTwWEcxX/xpi4hx4xmnW+Of5L1/sJe0o5si9u4GtEVMtaRYhgn0w==
+k8s-api-provider@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.npmjs.org/k8s-api-provider/-/k8s-api-provider-0.0.9.tgz#929f7aa7501609ca15abc05ba67271704fdaf76b"
+  integrity sha512-7utaLLRDiBCurFs4W1lJUV0a/EL1Uahhzyt0t03cFea+KURtJnk8c3n6sH0GWBTJnAhfmRiefn4F0fj6GHM6gA==
   dependencies:
     kubernetes-types "^1.26.0"
     ky "^0.33.3"

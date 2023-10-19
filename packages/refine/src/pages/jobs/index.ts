@@ -1,19 +1,16 @@
 import { i18n } from 'i18next';
 import { Job } from 'kubernetes-types/batch/v1';
+import K8sDropdown from '../../components/K8sDropdown';
 import {
   ConditionsField,
   ImageField,
   PodsField,
   StartTimeField,
 } from '../../components/ShowContent';
-import { WorkloadDropdown } from '../../components/WorkloadDropdown';
 import { JOB_INIT_VALUE } from '../../constants/k8s';
 import {
   AgeColumnRenderer,
   WorkloadImageColumnRenderer,
-  NameColumnRenderer,
-  NameSpaceColumnRenderer,
-  PhaseColumnRenderer,
   DurationColumnRenderer,
   CompletionsCountColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
@@ -28,9 +25,6 @@ export const JobConfig: ResourceConfig<WithId<Job>, JobModel> = {
   parent: RESOURCE_GROUP.WORKLOAD,
   formatter: d => new JobModel(d),
   columns: (i18n: i18n) => [
-    PhaseColumnRenderer(i18n),
-    NameColumnRenderer(i18n),
-    NameSpaceColumnRenderer(i18n),
     WorkloadImageColumnRenderer(i18n),
     CompletionsCountColumnRenderer(i18n),
     DurationColumnRenderer(i18n),
@@ -42,5 +36,5 @@ export const JobConfig: ResourceConfig<WithId<Job>, JobModel> = {
     [PodsField(i18n), ConditionsField(i18n)],
   ],
   initValue: JOB_INIT_VALUE,
-  Dropdown: WorkloadDropdown
+  Dropdown: K8sDropdown,
 };
