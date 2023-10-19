@@ -7,7 +7,7 @@ import { WithId } from '../types';
 import { shortenedImage } from '../utils/string';
 import { ResourceModel } from './resource-model';
 
-type WorkloadTypes = Deployment | StatefulSet | Job | DaemonSet | CronJob | Pod;
+export type WorkloadTypes = Deployment | StatefulSet | Job | DaemonSet | CronJob | Pod;
 export class WorkloadModel<
   T extends WorkloadTypes = WorkloadTypes,
 > extends ResourceModel {

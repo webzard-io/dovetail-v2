@@ -53,5 +53,6 @@
   "storage": "存储",
   "network": "网络",
   "clusterIp": "集群 IP",
-  "sessionAffinity": "会话保持"
+  "sessionAffinity": "会话保持",
+  "rollback": "回滚"
 }
