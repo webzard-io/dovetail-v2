@@ -9,6 +9,8 @@
   "compilerOptions": {
     "paths": {
       "src/*": ["./src/*"]
-    }
+    },
+    "declaration": true,
+    "declarationDir": "lib"
   }
 }

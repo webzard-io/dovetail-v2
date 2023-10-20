@@ -3,7 +3,7 @@ import { Pod } from 'kubernetes-types/core/v1';
 import { compact } from 'lodash-es';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import ListPage from 'src/components/ListPage';
+import { ListPage } from 'src/components/ListPage';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,

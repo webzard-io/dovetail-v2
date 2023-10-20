@@ -1,9 +1,11 @@
+import { initParrotI18n } from '@cloudtower/eagle';
 import React from 'react';
 // eslint-disable-next-line react/no-deprecated
 import { render } from 'react-dom';
 
 import App from './App';
 import './i18n';
+initParrotI18n();
 
 const container = document.getElementById('root') as HTMLElement;
 
