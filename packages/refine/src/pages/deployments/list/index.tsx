@@ -2,7 +2,7 @@ import { IResourceComponentsProps } from '@refinedev/core';
 import { Deployment } from 'kubernetes-types/apps/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import ListPage from 'src/components/ListPage';
+import { ListPage } from 'src/components/ListPage';
 import { WorkloadDropdown } from 'src/components/WorkloadDropdown';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {

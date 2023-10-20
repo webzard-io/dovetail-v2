@@ -7,9 +7,9 @@ import { ResourceForm } from './create';
 import { ResourceList } from './list';
 import { ResourceShow } from './show';
 
-type Props = { configs: ResourceConfig[] };
+type Props = { configs: ResourceConfig[]; urlPrefix?: string };
 export const ResourceCRUD: React.FC<Props> = props => {
-  const { configs } = props;
+  const { configs, urlPrefix } = props;
   const { i18n } = useTranslation();
   return (
     <>
@@ -17,7 +17,7 @@ export const ResourceCRUD: React.FC<Props> = props => {
         const formatter = config.formatter || ((v: Resource) => new ResourceModel(v));
         return (
           <React.Fragment key={config.name}>
-            <Route path={`/${config.name}`} exact>
+            <Route path={`${urlPrefix}/${config.name}`} exact>
               <ResourceList
                 name={config.kind}
                 formatter={formatter}
@@ -25,17 +25,17 @@ export const ResourceCRUD: React.FC<Props> = props => {
                 Dropdown={config.Dropdown}
               />
             </Route>
-            <Route path={`/${config.name}/show`}>
+            <Route path={`${urlPrefix}/${config.name}/show`}>
               <ResourceShow
                 formatter={formatter}
                 filedGroups={config.showFields?.(i18n) || []}
                 Dropdown={config.Dropdown}
               />
             </Route>
-            <Route path={`/${config.name}/create`}>
+            <Route path={`${urlPrefix}/${config.name}/create`}>
               <ResourceForm config={config} />
             </Route>
-            <Route path={`/${config.name}/edit`}>
+            <Route path={`${urlPrefix}/${config.name}/edit`}>
               <ResourceForm config={config} />
             </Route>
           </React.Fragment>

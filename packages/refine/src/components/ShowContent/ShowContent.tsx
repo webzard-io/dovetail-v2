@@ -141,7 +141,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
 
   const firstLine = (
     <kit.space size={8}>
-      {renderFields([...FirstLineFields, ...fieldGroups[0]])}
+      {renderFields([...FirstLineFields, ...(fieldGroups[0] || [])])}
     </kit.space>
   );
   const secondLine = <kit.space size={8}>{renderFields(fieldGroups[1])}</kit.space>;

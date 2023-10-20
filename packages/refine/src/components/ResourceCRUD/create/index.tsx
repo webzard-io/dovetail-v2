@@ -2,11 +2,17 @@ import { FormProps } from 'antd/lib/form';
 import React from 'react';
 import YamlForm from 'src/components/YamlForm';
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
-import { ResourceConfig } from '../../../types';
+import { Resource, ResourceConfig } from '../../../types';
+import { ResourceModel } from '../../../model';
 
-type Props = { config: ResourceConfig } & FormProps;
+type Props<Raw extends Resource, Model extends ResourceModel> = {
+  config: ResourceConfig<Raw, Model>;
+};
 
-export const ResourceForm: React.FC<Props> = ({ config }) => {
+export function ResourceForm<Raw extends Resource, Model extends ResourceModel>(
+  props: Props<Raw, Model>
+) {
+  const { config } = props;
   return (
     <YamlForm
       initialValues={
@@ -19,4 +25,4 @@ export const ResourceForm: React.FC<Props> = ({ config }) => {
       }
     />
   );
-};
+}

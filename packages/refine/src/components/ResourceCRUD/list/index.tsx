@@ -9,7 +9,7 @@ import {
 } from '../../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../../model';
 import { Resource, WithId } from '../../../types';
-import ListPage from '../../ListPage';
+import { ListPage } from '../../ListPage';
 import { Column } from '../../Table';
 
 type Props<Model extends ResourceModel> = IResourceComponentsProps & {
@@ -35,7 +35,7 @@ export function ResourceList<Raw extends Resource, Model extends ResourceModel>(
       currentSize: 10,
     },
     formatter,
-    Dropdown
+    Dropdown,
   });
 
   return (
