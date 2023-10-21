@@ -15,6 +15,7 @@ import { StateTag } from '../StateTag';
 import { Tags } from '../Tags';
 import Time from '../Time';
 import { ShowField } from './fields';
+import { EventsTable } from '../EventsTable';
 
 const TopBarStyle = css`
   justify-content: space-between;
@@ -163,6 +164,9 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
           </kit.tabsTabPane>
         );
       })}
+      <kit.tabsTabPane tab={t('event')} key={'event'}>
+        <EventsTable />
+      </kit.tabsTabPane>
     </kit.tabs>
   );
   const modeMap = {
@@ -177,14 +181,9 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
     [Mode.Yaml]: (
       <MonacoYamlEditor
         className={EditorStyle}
-        defaultValue={yaml.dump(
-          omit(
-            relationPlugin.restoreItem(data.data),
-            'id'
-          )
-        )}
+        defaultValue={yaml.dump(omit(relationPlugin.restoreItem(data.data), 'id'))}
         schema={{}}
-        onEditorCreate={(editor)=> {
+        onEditorCreate={editor => {
           fold(editor);
         }}
         readOnly

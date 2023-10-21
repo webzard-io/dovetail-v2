@@ -96,11 +96,15 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
     >
       <kit.table
         tableLayout="fixed"
-        rowSelection={{
-          onChange: (keys, rows) => {
-            onSelect?.(keys, rows);
-          },
-        }}
+        rowSelection={
+          onSelect
+            ? {
+                onChange: (keys, rows) => {
+                  onSelect?.(keys, rows);
+                },
+              }
+            : undefined
+        }
         columns={columns}
         dataSource={dataSource}
         pagination={pagination}
