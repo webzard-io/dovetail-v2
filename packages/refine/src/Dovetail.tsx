@@ -1,6 +1,11 @@
 import { Refine, ResourceProps } from '@refinedev/core';
 import { History } from 'history';
-import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
+import {
+  dataProvider,
+  liveProvider,
+  GlobalStore,
+  GlobalStoreInitParams,
+} from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { Router } from 'react-router-dom';
 import { ResourceCRUD } from './components/ResourceCRUD';
@@ -13,12 +18,6 @@ import '@cloudtower/eagle/dist/style.css';
 
 import { ResourceConfig } from './types';
 
-const globalStore = new GlobalStore({
-  apiUrl: '/api/k8s',
-  watchWsApiUrl: 'api/sks-ws/k8s',
-  prefix: 'default',
-});
-
 type Props = {
   resourcesConfig: ResourceConfig[];
   useHashUrl?: boolean;
@@ -26,10 +25,22 @@ type Props = {
   refineResources?: ResourceProps[];
   Layout?: React.FC<unknown>;
   history: History;
+  globalStoreParams: GlobalStoreInitParams;
 };
 
 export const Dovetail: React.FC<Props> = props => {
-  const { resourcesConfig, urlPrefix = '', useHashUrl, Layout, history } = props;
+  const {
+    resourcesConfig,
+    urlPrefix = '',
+    useHashUrl,
+    Layout,
+    history,
+    globalStoreParams,
+  } = props;
+
+  const globalStore = useMemo(() => {
+    return new GlobalStore(globalStoreParams);
+  }, [globalStoreParams]);
 
   const notCustomResources = useMemo(() => {
     return resourcesConfig.filter(c => !c.isCustom);
