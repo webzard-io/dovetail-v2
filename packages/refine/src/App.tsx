@@ -2,7 +2,7 @@ import { createBrowserHistory } from 'history';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Router } from 'react-router-dom';
-import { Layout, ResourceCRUD } from './components';
+import { Layout } from './components';
 import { Dovetail } from './Dovetail';
 import { ConfigMapConfig } from './pages/configmaps';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
@@ -96,6 +96,11 @@ function App() {
       refineResources={refineResources}
       Layout={Layout}
       history={histroy}
+      globalStoreParams={{
+        apiUrl: '/api/k8s',
+        watchWsApiUrl: 'api/sks-ws/k8s',
+        prefix: 'default',
+      }}
     >
       <Router history={histroy}>
         <Route path="/cronjobs" exact>
