@@ -27,6 +27,9 @@ const NameLink: React.FC<{ id: string; name: string; resource?: string }> = prop
           query: {
             id,
           },
+          options: {
+            keepQuery: true,
+          },
         });
       }}
     >

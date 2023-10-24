@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { addId } from '../../utils/addId';
 import Time from '../Time';
+import ErrorContent from '../Table/ErrorContent';
 
 type Props = {
   conditions: Condition[];
@@ -49,6 +50,10 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       sortable: true,
     },
   ];
+
+  if (conditionsWithId.length === 0) {
+    return <ErrorContent errorText={t('dovetail.empty')} style={{ padding: '15px 0' }} />;
+  }
 
   return (
     <kit.table
