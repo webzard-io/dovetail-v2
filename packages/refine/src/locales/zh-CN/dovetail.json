@@ -57,5 +57,10 @@
   "storage": "存储",
   "network": "网络",
   "clusterIp": "集群 IP",
-  "sessionAffinity": "会话保持"
+  "sessionAffinity": "会话保持",
+  "log": "日志",
+  "select_container": "选择容器",
+  "wrap": "折叠",
+  "resume_log": "继续",
+  "log_new_lines": "，并展示 {{ count }} 行新日志"
 }

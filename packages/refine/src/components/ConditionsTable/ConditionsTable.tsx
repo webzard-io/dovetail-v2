@@ -32,6 +32,13 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       sortable: true,
     },
     {
+      key: 'reason',
+      display: true,
+      dataIndex: 'reason',
+      title: t('reason'),
+      sortable: true,
+    },
+    {
       key: 'lastUpdateTime',
       display: true,
       dataIndex: 'lastUpdateTime',
