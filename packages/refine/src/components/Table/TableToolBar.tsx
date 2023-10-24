@@ -1,5 +1,5 @@
 import { useUIKit, Typo } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
+import { css, cx } from '@linaria/core';
 import React from 'react';
 import { CreateButton } from '../CreateButton';
 import { DeleteManyButton } from '../DeleteManyButton';
@@ -20,7 +20,7 @@ export const TableToolBar: React.FC<Props> = ({ title, selectedKeys, hideCreate 
   const kit = useUIKit();
 
   return (
-    <kit.space className={ToolbarStyle}>
+    <kit.space className={cx(ToolbarStyle, 'table-toolbar')}>
       <span className={Typo.Display.d2_bold_title}>{title}</span>
       <kit.space>
         {selectedKeys.length > 0 ? <DeleteManyButton ids={selectedKeys} /> : undefined}
