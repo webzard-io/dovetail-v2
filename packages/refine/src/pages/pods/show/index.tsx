@@ -7,6 +7,7 @@ import { PodContainersTable } from '../../../components/PodContainersTable';
 import { ConditionsField } from '../../../components/ShowContent/fields';
 import { PodModel } from '../../../model';
 import { WithId } from '../../../types';
+import { PodLog } from 'src/components/PodLog';
 
 export const PodShow: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
@@ -52,6 +53,14 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
             },
           },
           ConditionsField(i18n),
+          {
+            key: 'log',
+            title: i18n.t('log'),
+            path: [],
+            render: (_, record) => {
+              return <PodLog pod={record} />;
+            },
+          },
         ],
       ]}
       formatter={d => new PodModel(d)}
