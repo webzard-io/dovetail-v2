@@ -18,7 +18,14 @@ interface YamlFormProps {
 }
 
 function YamlForm(props: YamlFormProps) {
-  const { formProps, saveButtonProps, editorProps, errorResponseBody, mutationResult } =
+  const {
+    formProps,
+    saveButtonProps,
+    editorProps,
+    errorResponseBody,
+    mutationResult,
+    isLoadingSchema,
+  } =
     useEagleForm();
   const kit = useUIKit();
   const { t, i18n } = useTranslation();
@@ -33,13 +40,13 @@ function YamlForm(props: YamlFormProps) {
         initialValues={formProps.initialValues ?? props.initialValues ?? BASE_INIT_VALUE}
         layout="horizontal"
       >
-        {editorProps.schema ? (
+        {!isLoadingSchema ? (
           <>
             <kit.form.Item style={{ flex: 1 }}>
               <YamlEditorComponent
                 {...editorProps}
                 className={EditorStyle}
-                schema={editorProps.schema}
+                schema={editorProps.schema || {}}
                 collapsable={false}
               />
             </kit.form.Item>

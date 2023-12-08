@@ -3,12 +3,20 @@ import { JSONSchema7 } from 'json-schema';
 import { useState, useEffect, useMemo } from 'react';
 import OpenAPI from 'src/utils/openapi';
 
-type useSchemaOptions = {
+type UseSchemaOptions = {
   resource?: IResourceItem;
 }
 
-export function useSchema(options?: useSchemaOptions): JSONSchema7 | null {
+type UseSchemaResult = {
+  schema: JSONSchema7 | null;
+  loading: boolean;
+  error: Error | null;
+}
+
+export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
   const [schema, setSchema] = useState<JSONSchema7 | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | null>(null);
   const useResourceResult = useResource();
   const resource = options?.resource || useResourceResult.resource;
   const openapi = useMemo(
@@ -18,11 +26,23 @@ export function useSchema(options?: useSchemaOptions): JSONSchema7 | null {
 
   useEffect(() => {
     (async function () {
-      const schema = await openapi.findSchema(resource?.meta?.kind);
+      setLoading(true);
+      setError(null);
+      try {
+        const schema = await openapi.findSchema(resource?.meta?.kind);
 
-      setSchema(schema || null);
+        setSchema(schema || null);
+      } catch(e) {
+        setError(e as Error);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [resource, openapi]);
 
-  return schema;
+  return {
+    schema,
+    loading,
+    error,
+  };
 }

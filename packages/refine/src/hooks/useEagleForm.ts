@@ -76,6 +76,9 @@ export type UseFormReturnType<
     onClick: () => void;
   };
   editorProps: EditorProps;
+  schema: JSONSchema7 | null;
+  isLoadingSchema: boolean;
+  loadSchemaError: Error | null;
   enableEditor: boolean;
   errorResponseBody?: Record<string, unknown> | null;
   switchEditor: () => void;
@@ -146,7 +149,7 @@ const useEagleForm = <
   > | null>(null);
   const useResourceResult = useResource();
   const kit = useUIKit();
-  const schema = useSchema();
+  const { schema, loading: isLoadingSchema, error: loadSchemaError } = useSchema();
   const [formAnt] = kit.form.useForm();
   const formSF = useFormSF({
     form: formAnt,
@@ -305,6 +308,9 @@ const useEagleForm = <
     editorProps,
     enableEditor,
     errorResponseBody,
+    schema,
+    isLoadingSchema,
+    loadSchemaError,
     switchEditor() {
       if (enableEditor && editor.current?.getEditorValue()) {
         const value = yaml.load(editor.current?.getEditorValue()) as Record<
