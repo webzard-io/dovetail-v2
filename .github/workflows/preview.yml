@@ -1,9 +1,30 @@
-name: Actions Runner Controller Demo
+name: Deploy Preview
 on:
   push:
 
 jobs:
   Explore-GitHub-Actions:
-    runs-on: arc-runner-set
+    runs-on: arc-runner-set-webzard
     steps:
       - run: echo "🎉 This job uses runner scale set runners!"
+  deploy_site:
+    runs-on: arc-runner-set-webzard
+    name: Deploy the site
+    steps:
+      - name: Executing remote SSH commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: 10.255.4.115
+          username: root
+          key: ${{ secrets.KEY }}
+          script: |
+            whoami
+            ls -al
+            nvm use 16
+            cd /home/smartx/dovetail-v2
+            git fetch
+            git checkout origin/yz-ai
+            yarn
+            pm2 delete preview
+            cd packages/refine
+            pm2 start npm --name "preview" -- run preview
