@@ -46,7 +46,7 @@ export type YamlEditorProps = {
   title?: string;
   defaultValue?: string;
   errorMsgs?: string[];
-  schema: JSONSchema7;
+  schema: JSONSchema7 | null;
   id?: string;
   className?: string;
   height?: string;
@@ -223,8 +223,8 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                   isCollapsed
                     ? ''
                     : isDiff
-                      ? t('dovetail.back_to_edit')
-                      : t('dovetail.view_changes')
+                    ? t('dovetail.back_to_edit')
+                    : t('dovetail.view_changes')
                 }
               >
                 {isDiff ? (
@@ -293,7 +293,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                 onValidate={onValidate}
                 onEditorCreate={onEditorCreate}
                 onBlur={props.onBlur}
-                schema={schema}
+                schema={schema || undefined}
                 readOnly={readOnly}
               />
             </Suspense>

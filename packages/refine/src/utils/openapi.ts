@@ -49,28 +49,34 @@ class K8sOpenAPI {
   }
 
   public async findSchema(kind: string) {
-    const result = this.response || (await this.fetch());
-    const schema = Object.values(result.components.schemas).find(schema =>
-      schema['x-kubernetes-group-version-kind']?.some(
-        ({ kind: schemaKind, version: schemaVersion, group: schemaGroup }) =>
-          kind === schemaKind &&
-          this.apiVersion === `${schemaGroup ? schemaGroup + '/' : ''}${schemaVersion}`
-      )
-    );
+    try {
+      const result = this.response || (await this.fetch());
+      const schema = Object.values(result.components.schemas).find(
+        schema =>
+          schema['x-kubernetes-group-version-kind']?.some(
+            ({ kind: schemaKind, version: schemaVersion, group: schemaGroup }) =>
+              kind === schemaKind &&
+              this.apiVersion ===
+                `${schemaGroup ? schemaGroup + '/' : ''}${schemaVersion}`
+          )
+      );
 
-    if (schema) {
-      resolveRef(schema, result.components.schemas, {
-        prune: {
-          description: true,
-          optional: false,
-          fields: [],
-          metadata: true,
-          xProperty: true,
-        },
-      });
+      if (schema) {
+        resolveRef(schema, result.components.schemas, {
+          prune: {
+            description: true,
+            optional: false,
+            fields: [],
+            metadata: true,
+            xProperty: true,
+          },
+        });
+      }
+
+      return schema;
+    } catch (error) {
+      console.log('failed to fetch schema', { error });
     }
-
-    return schema;
   }
 }
 
