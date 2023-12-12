@@ -10,13 +10,7 @@ import { KeyValue } from '../KeyValue';
 import Time from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
-
-export type ShowField<Model extends ResourceModel> = {
-  key: string;
-  title: string;
-  path: string[];
-  render?: (val: unknown, record: Model) => React.ReactElement | undefined;
-};
+import { ShowField } from '../../types';
 
 export const ImageField = (i18n: i18n): ShowField<WorkloadModel> => {
   return {

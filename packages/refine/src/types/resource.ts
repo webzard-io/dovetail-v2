@@ -1,8 +1,8 @@
 import { i18n } from 'i18next';
 import { ObjectMeta } from 'kubernetes-types/meta/v1';
-import { ShowField } from '../components/ShowContent';
 import { Column } from '../components/Table';
 import { ResourceModel } from '../model';
+import { ShowField } from '..';
 
 export enum RESOURCE_GROUP {
   WORKLOAD = 'WORKLOAD',
@@ -28,7 +28,7 @@ export interface Resource {
 
 export type ResourceConfig<
   Raw extends Resource = Resource,
-  Model extends ResourceModel = ResourceModel
+  Model extends ResourceModel = ResourceModel,
 > = {
   name: string;
   kind: string;

@@ -10,11 +10,10 @@ import K8sDropdown from 'src/components/K8sDropdown';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
 import { ResourceModel } from '../../model';
-import { Resource } from '../../types';
+import { Resource, ShowField } from '../../types';
 import { StateTag } from '../StateTag';
 import { Tags } from '../Tags';
 import Time from '../Time';
-import { ShowField } from './fields';
 import { EventsTable } from '../EventsTable';
 
 const TopBarStyle = css`

@@ -1,9 +1,8 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { ResourceModel } from '../../../model';
-import { Resource, WithId } from '../../../types';
+import { Resource, WithId, ShowField } from '../../../types';
 import { PageShow } from '../../PageShow';
-import { ShowField } from '../../ShowContent';
 
 type Props<
   Raw extends Resource,
