@@ -2,8 +2,8 @@ import { useUIKit } from '@cloudtower/eagle';
 import { useParsed, useShow } from '@refinedev/core';
 import React from 'react';
 import { ResourceModel } from '../../model';
-import { Resource } from '../../types';
-import { ShowContent, ShowField } from '../ShowContent';
+import { Resource, ShowField } from '../../types';
+import { ShowContent } from '../ShowContent';
 
 type Props<Raw extends Resource, Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
