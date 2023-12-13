@@ -5,7 +5,7 @@ import OpenAPI from 'src/utils/openapi';
 
 type useSchemaOptions = {
   resource?: IResourceItem;
-}
+};
 
 export function useSchema(options?: useSchemaOptions): JSONSchema7 | null {
   const [schema, setSchema] = useState<JSONSchema7 | null>(null);

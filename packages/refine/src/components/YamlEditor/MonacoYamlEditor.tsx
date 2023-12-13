@@ -42,7 +42,9 @@ const schemaMap = new Map();
 
 const MonacoYamlEditor: React.FC<Props> = props => {
   const ref = useRef<HTMLDivElement>(null);
-  const instanceRef = useRef<{ editor: monaco.editor.IStandaloneCodeEditor | null }>({ editor: null });
+  const instanceRef = useRef<{ editor: monaco.editor.IStandaloneCodeEditor | null }>({
+    editor: null,
+  });
   const {
     defaultValue,
     id,
@@ -126,12 +128,15 @@ const MonacoYamlEditor: React.FC<Props> = props => {
     const editor = instanceRef.current.editor;
 
     if (editor) {
-      const stop = monaco.editor.onDidChangeMarkers((uri) => {
+      const stop = monaco.editor.onDidChangeMarkers(uri => {
         const model = instanceRef.current.editor?.getModel();
         const currentEditorUri = model?.uri;
 
         if (model && uri.toString() === currentEditorUri?.toString()) {
-          const marks = monaco.editor.getModelMarkers({ owner: 'yaml', resource: currentEditorUri });
+          const marks = monaco.editor.getModelMarkers({
+            owner: 'yaml',
+            resource: currentEditorUri,
+          });
           const yamlMarks = marks.filter(m => m.source === 'YAML');
           const schemaMarks = marks.filter(m => m.source !== 'YAML');
           const yamlValid = yamlMarks.length === 0;
@@ -140,7 +145,11 @@ const MonacoYamlEditor: React.FC<Props> = props => {
           onValidate?.(yamlValid, schemaValid);
 
           if (marks.some(mark => mark.source?.includes('yaml-schema'))) {
-            monaco.editor.setModelMarkers(model, 'yaml', marks.map(mark => ({ ...mark, source: '', resource: {} })));
+            monaco.editor.setModelMarkers(
+              model,
+              'yaml',
+              marks.map(mark => ({ ...mark, source: '', resource: {} }))
+            );
           }
         }
       });
@@ -149,7 +158,6 @@ const MonacoYamlEditor: React.FC<Props> = props => {
         stop.dispose();
       };
     }
-
   }, [onValidate, instanceRef.current.editor]);
 
   useEffect(() => {
@@ -173,20 +181,24 @@ const MonacoYamlEditor: React.FC<Props> = props => {
     const stops: monaco.IDisposable[] = [];
 
     if (editor && isScrollOnFocus) {
-      stops.push(editor.onDidFocusEditorWidget(() => {
-        editor.updateOptions({
-          scrollbar: {
-            handleMouseWheel: true,
-          }
-        });
-      }));
-      stops.push(editor.onDidBlurEditorWidget(() => {
-        editor.updateOptions({
-          scrollbar: {
-            handleMouseWheel: false,
-          }
-        });
-      }));
+      stops.push(
+        editor.onDidFocusEditorWidget(() => {
+          editor.updateOptions({
+            scrollbar: {
+              handleMouseWheel: true,
+            },
+          });
+        })
+      );
+      stops.push(
+        editor.onDidBlurEditorWidget(() => {
+          editor.updateOptions({
+            scrollbar: {
+              handleMouseWheel: false,
+            },
+          });
+        })
+      );
     }
 
     return () => {
