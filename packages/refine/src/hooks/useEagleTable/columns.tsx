@@ -1,7 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { i18n } from 'i18next';
-import { get } from 'lodash';
+import { get, sumBy } from 'lodash';
 import React from 'react';
 import { ImageNames } from '../../components/ImageNames';
 import { StateTag } from '../../components/StateTag';
@@ -10,6 +10,7 @@ import Time from '../../components/Time';
 import { WorkloadReplicas } from '../../components/WorkloadReplicas';
 import { JobModel, PodModel, ResourceModel } from '../../model';
 import { WorkloadModel } from '../../model/workload-model';
+import { usePods } from '../usePods';
 
 const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
   const { name, id, resource } = props;
@@ -106,6 +107,24 @@ export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
     sorter: CommonSorter(dataIndex),
     render(value) {
       return <ImageNames value={value} />;
+    },
+  };
+};
+
+export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
+  i18n: i18n
+): Column<Model> => {
+  const dataIndex = ['restarts'];
+  return {
+    key: 'restarts',
+    display: true,
+    dataIndex,
+    title: i18n.t('restarts'),
+    sortable: false,
+    render(_, record) {
+      const { pods } = usePods(get(record, 'spec.selector')!);
+      const restarts = sumBy(pods, 'restartCount');
+      return <span>{restarts}</span>;
     },
   };
 };

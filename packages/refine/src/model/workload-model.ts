@@ -35,11 +35,6 @@ export class WorkloadModel<
     return containers?.map(container => shortenedImage(container.image || '')) || [];
   }
 
-  get restartCount() {
-    // TODO: need count from pods
-    return 0;
-  }
-
   redeploy() {
     const newOne = cloneDeep(this.rawYaml);
     const path = 'spec.template.metadata.annotations';
