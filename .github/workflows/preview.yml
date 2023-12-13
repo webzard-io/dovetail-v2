@@ -3,10 +3,6 @@ on:
   push:
 
 jobs:
-  Explore-GitHub-Actions:
-    runs-on: arc-runner-set-webzard
-    steps:
-      - run: echo "🎉 This job uses runner scale set runners!"
   deploy_site:
     runs-on: arc-runner-set-webzard
     name: Deploy the site
@@ -23,8 +19,30 @@ jobs:
             nvm use 16
             cd /home/smartx/dovetail-v2
             git fetch
-            git checkout origin/yz-ai
+            git checkout origin/${{ github.ref_name }}
             yarn
             pm2 delete preview
             cd packages/refine
+            yarn vite build
             pm2 start npm --name "preview" -- run preview
+      - name: Comment the PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issues = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              head: `${context.repo.owner}:${context.ref.replace('refs/heads/', '')}`
+            })
+
+            const pr = context.issue.number || issues.data[0].number
+
+            if (pr) {
+              github.rest.issues.createComment({
+                issue_number: pr,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: 'Your code has been deployed to http://10.255.4.115:4173/ .'
+              })
+            }
