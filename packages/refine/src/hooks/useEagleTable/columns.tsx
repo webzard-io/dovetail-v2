@@ -219,3 +219,43 @@ export const ServiceTypeColumnRenderer = <Model extends ResourceModel>(
     sorter: CommonSorter(dataIndex),
   };
 };
+import { NetworkPolicy } from 'kubernetes-types/networking/v1';
+
+const RuleCount: React.FC<{ policy: NetworkPolicy }> = ({ policy }) => {
+  const ingressCount = get(policy, 'spec.ingress.length', 0);
+  const egressCount = get(policy, 'spec.egress.length', 0);
+  return <span>{ingressCount + egressCount} rules</span>;
+};
+
+const PodSelector: React.FC<{ policy: NetworkPolicy }> = ({ policy }) => {
+  const podSelector = get(policy, 'spec.podSelector.matchLabels', {});
+  return (
+    <div>
+      {Object.entries(podSelector).map(([key, value]) => (
+        <div key={key}>
+          {key}: {value}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const RuleCountColumnRenderer = (i18n: i18n): Column<ResourceModel> => {
+  return {
+    key: 'ruleCount',
+    display: true,
+    dataIndex: ['rawYaml'],
+    title: i18n.t('rule_count'),
+    render: value => <RuleCount policy={value} />,
+  };
+};
+
+export const PodSelectorColumnRenderer = (i18n: i18n): Column<ResourceModel> => {
+  return {
+    key: 'podSelector',
+    display: true,
+    dataIndex: ['rawYaml'],
+    title: i18n.t('pod_selector'),
+    render: value => <PodSelector policy={value} />,
+  };
+};

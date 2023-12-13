@@ -5,6 +5,7 @@ import { Route, Router } from 'react-router-dom';
 import { Layout } from './components';
 import { Dovetail } from './Dovetail';
 import { ConfigMapConfig } from './pages/configmaps';
+import { NetworkPolicyConfig } from './pages/networkpolicies';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
@@ -66,6 +67,7 @@ function App() {
       ConfigMapConfig,
       SecretsConfig,
       ServicesConfig,
+      NetworkPolicyConfig,
     ];
   }, []);
 

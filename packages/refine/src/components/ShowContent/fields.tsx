@@ -164,3 +164,52 @@ export const ServicePodsField = (_: i18n): ShowField<ResourceModel> => {
     },
   };
 };
+import { List, Tag, Typography } from 'antd';
+import { get } from 'lodash';
+
+const { Text } = Typography;
+
+const RuleList: React.FC<{ rules: any[] }> = ({ rules }) => {
+  return (
+    <List
+      bordered
+      dataSource={rules}
+      renderItem={rule => (
+        <List.Item>
+          <List.Item.Meta
+            title={<Text strong>{get(rule, 'type', 'N/A')}</Text>}
+            description={
+              <div>
+                <div>
+                  <strong>CIDR:</strong> {get(rule, 'cidr', 'N/A')}
+                </div>
+                <div>
+                  <strong>Exceptions:</strong>{' '}
+                  {get(rule, 'exceptions', []).join(', ') || 'None'}
+                </div>
+                <div>
+                  <strong>Ports:</strong> {get(rule, 'ports', []).join(', ') || 'All'}
+                </div>
+                <div>
+                  <strong>Protocol:</strong> {get(rule, 'protocol', 'Any')}
+                </div>
+              </div>
+            }
+          />
+          {get(rule, 'action') && <Tag color="green">{rule.action}</Tag>}
+        </List.Item>
+      )}
+    />
+  );
+};
+
+export const IngressEgressRulesField = (i18n: i18n): ShowField<ResourceModel> => {
+  return {
+    key: 'ingressEgressRules',
+    title: i18n.t('Ingress/Egress Rules'),
+    path: ['rawYaml', 'spec', 'ingressEgressRules'],
+    render: rules => {
+      return <RuleList rules={rules} />;
+    },
+  };
+};
