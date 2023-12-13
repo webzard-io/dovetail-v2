@@ -10,6 +10,8 @@ import { KeyValue } from '../KeyValue';
 import Time from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
+import { usePods } from '../../hooks/usePods';
+import { get, sumBy } from 'lodash-es';
 
 export type ShowField<Model extends ResourceModel> = {
   key: string;
@@ -25,6 +27,18 @@ export const ImageField = (i18n: i18n): ShowField<WorkloadModel> => {
     path: ['imageNames'],
     render(value) {
       return <ImageNames value={value as string[]} />;
+    },
+  };
+};
+export const WorkloadRestartsField = (i18n: i18n): ShowField<WorkloadModel> => {
+  return {
+    key: 'restarts',
+    title: i18n.t('restarts'),
+    path: [],
+    render(_, record) {
+      const { pods } = usePods(get(record, 'spec.selector')!);
+      const restarts = sumBy(pods, 'restartCount');
+      return <span>{restarts}</span>;
     },
   };
 };

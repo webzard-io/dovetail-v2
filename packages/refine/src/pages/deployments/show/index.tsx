@@ -8,6 +8,7 @@ import {
   ImageField,
   PodsField,
   ReplicaField,
+  WorkloadRestartsField,
 } from '../../../components/ShowContent/fields';
 import { WorkloadDropdown } from '../../../components/WorkloadDropdown';
 import { WorkloadModel } from '../../../model';
@@ -20,7 +21,7 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
     <PageShow<WithId<Deployment>, WorkloadModel>
       fieldGroups={[
         [],
-        [ImageField(i18n), ReplicaField(i18n)],
+        [ImageField(i18n), ReplicaField(i18n), WorkloadRestartsField(i18n)],
         [PodsField(i18n), ConditionsField(i18n)],
       ]}
       formatter={d => new WorkloadModel(d)}
