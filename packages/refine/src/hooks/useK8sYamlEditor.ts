@@ -1,18 +1,13 @@
 import * as monaco from 'monaco-editor';
 
 function useK8sYamlEditor() {
-
   function foldSymbol(editor: monaco.editor.IStandaloneCodeEditor, symbol: string) {
     const model = editor.getModel();
 
-    const matchs = model?.findMatches(
-      symbol,
-      false,
-      false,
-      false,
-      '',
-      false
-    ).filter(match => match.range.startColumn === 1) || [];
+    const matchs =
+      model
+        ?.findMatches(symbol, false, false, false, '', false)
+        .filter(match => match.range.startColumn === 1) || [];
 
     return new Promise(async (resolve, reject) => {
       try {
@@ -36,14 +31,14 @@ function useK8sYamlEditor() {
       '  annotations:',
       '  managedFields:',
       'status:',
-      '    kubectl.kubernetes.io/last-applied-configuration:'
+      '    kubectl.kubernetes.io/last-applied-configuration:',
     ];
 
     for (const symbol of symbols) {
       await foldSymbol(editor, symbol);
     }
 
-    editor.setScrollPosition({scrollTop: 0});
+    editor.setScrollPosition({ scrollTop: 0 });
   }
 
   return {
