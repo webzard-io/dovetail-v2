@@ -62,5 +62,8 @@
   "select_container": "选择容器",
   "wrap": "折叠",
   "resume_log": "继续",
-  "log_new_lines": "，并展示 {{ count }} 行新日志"
+  "log_new_lines": "，并展示 {{ count }} 行新日志",
+  "fetch_schema_fail": "获取 schema 失败。",
+  "obtain_data_error": "获取数据时遇到问题。",
+  "retry": "重试"
 }

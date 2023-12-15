@@ -1,8 +1,9 @@
 import * as monaco from 'monaco-editor';
+import { useCallback } from 'react';
 
 function useK8sYamlEditor() {
 
-  function foldSymbol(editor: monaco.editor.IStandaloneCodeEditor, symbol: string) {
+  const foldSymbol = useCallback(function (editor: monaco.editor.IStandaloneCodeEditor, symbol: string) {
     const model = editor.getModel();
 
     const matchs = model?.findMatches(
@@ -28,9 +29,9 @@ function useK8sYamlEditor() {
         reject(e);
       }
     });
-  }
+  }, []);
 
-  async function fold(editor: monaco.editor.IStandaloneCodeEditor) {
+  const fold = useCallback(async function (editor: monaco.editor.IStandaloneCodeEditor) {
     await editor.getAction('editor.unfoldAll').run();
     const symbols = [
       '  annotations:',
@@ -44,7 +45,7 @@ function useK8sYamlEditor() {
     }
 
     editor.setScrollPosition({scrollTop: 0});
-  }
+  }, [foldSymbol]);
 
   return {
     fold,
