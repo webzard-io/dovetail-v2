@@ -108,13 +108,15 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
     if (!record) return null;
     return fields.map(field => {
       let content;
+      const path =
+        field.path[0] === 'rawYaml' ? field.path : ['rawYaml'].concat(field.path);
       if (field.render) {
-        content = field.render(get(record, field.path), record);
+        content = field.render(get(record, path), record);
       } else {
-        content = <span>{get(record, field.path)}</span>;
+        content = <span>{get(record, path)}</span>;
       }
       return (
-        <kit.space key={field.path.join()}>
+        <kit.space key={path.join()}>
           <span className={Typo.Label.l3_regular}>{field.title}: </span>
           {content}
         </kit.space>
