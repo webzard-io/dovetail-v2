@@ -98,7 +98,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
           editorInstance.current?.getModel()?.setValue(value);
         },
         getEditorValue: () => {
-          return editorInstance.current?.getValue() || '';
+          return editorInstance.current?.getValue() ?? '';
         },
         getEditorInstance: () => editorInstance.current || null,
       };

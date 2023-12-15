@@ -8,5 +8,8 @@
   "yaml_value_wrong": "Configuration has invalid values.",
   "edit_yaml": "Edit YAML",
   "copied": "Copied",
-  "already_reset": "Already reset"
+  "already_reset": "Already reset",
+  "fetch_schema_fail": "Failed to fetch schema.",
+  "obtain_data_error": "Having trouble getting data.",
+  "retry": "Retry"
 }
