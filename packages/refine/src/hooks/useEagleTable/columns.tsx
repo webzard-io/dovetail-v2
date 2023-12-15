@@ -219,3 +219,51 @@ export const ServiceTypeColumnRenderer = <Model extends ResourceModel>(
     sorter: CommonSorter(dataIndex),
   };
 };
+import { NetworkPolicy } from 'kubernetes-types/networking/v1';
+
+const RulesCount: React.FC<{ ingress?: any[]; egress?: any[] }> = ({
+  ingress,
+  egress,
+}) => {
+  const ingressCount = ingress ? ingress.length : 0;
+  const egressCount = egress ? egress.length : 0;
+  return <span className="italic">{ingressCount + egressCount} rules</span>;
+};
+
+const PodSelector: React.FC<{ matchLabels?: object }> = ({ matchLabels }) => {
+  const labels = matchLabels
+    ? Object.entries(matchLabels)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(', ')
+    : 'None';
+  return <span className="font-mono bg-gray-100 rounded px-2 py-1">{labels}</span>;
+};
+
+export const RulesCountColumnRenderer = (i18n: i18n): Column<NetworkPolicy> => {
+  return {
+    key: 'rulesCount',
+    display: true,
+    dataIndex: ['rawYaml', 'spec'],
+    title: i18n.t('rules_count'),
+    sortable: false,
+    render: spec => {
+      const ingress = get(spec, 'ingress', []);
+      const egress = get(spec, 'egress', []);
+      return <RulesCount ingress={ingress} egress={egress} />;
+    },
+  };
+};
+
+export const PodSelectorColumnRenderer = (i18n: i18n): Column<NetworkPolicy> => {
+  return {
+    key: 'podSelector',
+    display: true,
+    dataIndex: ['rawYaml', 'spec'],
+    title: i18n.t('pod_selector'),
+    sortable: false,
+    render: spec => {
+      const matchLabels = get(spec, 'podSelector.matchLabels', {});
+      return <PodSelector matchLabels={matchLabels} />;
+    },
+  };
+};
