@@ -52,6 +52,7 @@ export type UseFormProps<
   warnWhenUnsavedChanges?: boolean;
   editorOptions?: {
     isGenerateAnnotations?: boolean;
+    isSkipSchema?: boolean;
   };
 };
 
@@ -76,12 +77,17 @@ export type UseFormReturnType<
     onClick: () => void;
   };
   editorProps: EditorProps;
+  schema: JSONSchema7 | null;
+  isLoadingSchema: boolean;
+  loadSchemaError: Error | null;
+  fetchSchema: ()=> void;
   enableEditor: boolean;
   errorResponseBody?: Record<string, unknown> | null;
   switchEditor: () => void;
   onFinish: (
     values?: TVariables
   ) => Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void>;
+
 };
 
 const useEagleForm = <
@@ -146,7 +152,9 @@ const useEagleForm = <
   > | null>(null);
   const useResourceResult = useResource();
   const kit = useUIKit();
-  const schema = useSchema();
+  const { schema, loading: isLoadingSchema, error: loadSchemaError, fetchSchema } = useSchema({
+    skip: editorOptions?.isSkipSchema
+  });
   const [formAnt] = kit.form.useForm();
   const formSF = useFormSF({
     form: formAnt,
@@ -305,6 +313,10 @@ const useEagleForm = <
     editorProps,
     enableEditor,
     errorResponseBody,
+    schema,
+    isLoadingSchema,
+    loadSchemaError,
+    fetchSchema,
     switchEditor() {
       if (enableEditor && editor.current?.getEditorValue()) {
         const value = yaml.load(editor.current?.getEditorValue()) as Record<
