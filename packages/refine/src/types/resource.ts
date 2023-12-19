@@ -1,8 +1,8 @@
 import { i18n } from 'i18next';
+import { ResourceModel } from 'k8s-api-provider';
 import { ObjectMeta } from 'kubernetes-types/meta/v1';
 import { ShowField } from '../components/ShowContent';
 import { Column } from '../components/Table';
-import { ResourceModel } from '../model';
 
 export enum RESOURCE_GROUP {
   WORKLOAD = 'WORKLOAD',

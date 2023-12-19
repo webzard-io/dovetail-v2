@@ -1,13 +1,13 @@
 import { IResourceComponentsProps } from '@refinedev/core';
+import { PodModel } from 'k8s-api-provider';
 import { Pod } from 'kubernetes-types/core/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { PodLog } from 'src/components/PodLog';
 import { PageShow } from '../../../components/PageShow';
 import { PodContainersTable } from '../../../components/PodContainersTable';
 import { ConditionsField } from '../../../components/ShowContent/fields';
-import { PodModel } from '../../../model';
 import { WithId } from '../../../types';
-import { PodLog } from 'src/components/PodLog';
 
 export const PodShow: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
@@ -63,7 +63,6 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
           },
         ],
       ]}
-      formatter={d => new PodModel(d)}
     />
   );
 };

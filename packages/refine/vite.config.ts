@@ -3,7 +3,7 @@ import linaria from '@linaria/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import commonjs from 'vite-plugin-commonjs';
-import { getProxyConfig, applyK8sYamlPlugin } from "./tools/proxy-k8s";
+import { getProxyConfig, applyK8sYamlPlugin } from './tools/proxy-k8s';
 
 export default defineConfig({
   plugins: [commonjs(), react(), linaria()],
@@ -11,9 +11,9 @@ export default defineConfig({
     force: true,
     host: '0.0.0.0',
     proxy: {
-      "/proxy-k8s": getProxyConfig(),
+      '/proxy-k8s': getProxyConfig(),
       '/api': {
-        target: process.env.API_HOST || 'http://10.255.4.115',
+        target: process.env.API_HOST || 'http://192.168.31.105',
         ws: true,
         headers: {
           'x-skip-auth-verify': 'true',

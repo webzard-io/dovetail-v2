@@ -1,9 +1,9 @@
 import { FormProps } from 'antd/lib/form';
+import { ResourceModel } from 'k8s-api-provider';
 import React from 'react';
 import YamlForm from 'src/components/YamlForm';
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
 import { Resource, ResourceConfig } from '../../../types';
-import { ResourceModel } from '../../../model';
 
 type Props<Raw extends Resource, Model extends ResourceModel> = {
   config: ResourceConfig<Raw, Model>;

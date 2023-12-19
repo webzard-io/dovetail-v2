@@ -1,4 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
+import { WorkloadModel } from 'k8s-api-provider';
 import { StatefulSet } from 'kubernetes-types/apps/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +11,6 @@ import {
   PodsField,
   ReplicaField,
 } from '../../../components/ShowContent/fields';
-import { WorkloadModel } from '../../../model';
 import { WithId } from '../../../types';
 
 export const StatefulSetShow: React.FC<IResourceComponentsProps> = () => {
@@ -23,7 +23,6 @@ export const StatefulSetShow: React.FC<IResourceComponentsProps> = () => {
         [ImageField(i18n), ReplicaField(i18n)],
         [PodsField(i18n), ConditionsField(i18n)],
       ]}
-      formatter={d => new WorkloadModel(d)}
       Dropdown={WorkloadDropdown}
     />
   );

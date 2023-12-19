@@ -3,19 +3,19 @@ import { css } from '@linaria/core';
 import { useParsed, useResource, useShow } from '@refinedev/core';
 import yaml from 'js-yaml';
 import { Unstructured, relationPlugin } from 'k8s-api-provider';
+import { ResourceModel } from 'k8s-api-provider';
 import { get, omit } from 'lodash-es';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
-import { ResourceModel } from '../../model';
 import { Resource } from '../../types';
+import { EventsTable } from '../EventsTable';
 import { StateTag } from '../StateTag';
 import { Tags } from '../Tags';
 import Time from '../Time';
 import { ShowField } from './fields';
-import { EventsTable } from '../EventsTable';
 
 const TopBarStyle = css`
   justify-content: space-between;
@@ -35,7 +35,7 @@ const EditorStyle = css`
 
 type Props<Raw extends Resource, Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
-  formatter: (r: Raw) => Model;
+  formatter?: (r: Raw) => Model;
   Dropdown?: React.FC<{ data: Model }>;
 };
 

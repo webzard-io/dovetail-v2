@@ -4,9 +4,9 @@ import {
   VmResume16Icon,
 } from '@cloudtower/icons-react';
 import { useResource, useUpdate } from '@refinedev/core';
-import React from 'react';
+import { CronJobModel } from 'k8s-api-provider';
+import { CronJob } from 'kubernetes-types/batch/v1';
 import { useTranslation } from 'react-i18next';
-import { CronJobModel } from '../../model';
 import { pruneBeforeEdit } from '../../utils/k8s';
 import K8sDropdown from '../K8sDropdown';
 
@@ -16,19 +16,20 @@ type Props<Model extends CronJobModel> = {
 
 export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>) {
   const { data } = props;
+  const { spec } = data as CronJob;
   const kit = useUIKit();
   const { resource } = useResource();
   const { mutate } = useUpdate();
   const { t } = useTranslation();
 
-  const suspended = Boolean(data.spec?.suspend);
+  const suspended = Boolean(spec?.suspend);
 
   return (
     <K8sDropdown data={data}>
       <kit.menu.Item
         onClick={() => {
           const v = suspended ? data.resume() : data.suspend();
-          const id = v.id;
+          const id = data.id;
           pruneBeforeEdit(v);
           mutate({
             id,

@@ -1,14 +1,13 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useNavigation, useParsed, useShow } from '@refinedev/core';
 import { Drawer } from 'antd';
-import React from 'react';
-import { ResourceModel } from '../../model';
+import { ResourceModel } from 'k8s-api-provider';
 import { Resource } from '../../types';
 import { ShowField, ShowContent } from '../ShowContent';
 
 type Props<Raw extends Resource, Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
-  formatter: (r: Raw) => Model;
+  formatter?: (r: Raw) => Model;
 };
 
 export const DrawerShow = <Raw extends Resource, Model extends ResourceModel>(

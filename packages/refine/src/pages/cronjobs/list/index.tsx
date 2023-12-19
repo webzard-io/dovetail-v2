@@ -47,7 +47,6 @@ export const CronJobList: React.FC<IResourceComponentsProps> = () => {
     tableProps: {
       currentSize: 10,
     },
-    formatter: d => new CronJobModel(d),
     Dropdown: CronJobDropdown,
   });
 

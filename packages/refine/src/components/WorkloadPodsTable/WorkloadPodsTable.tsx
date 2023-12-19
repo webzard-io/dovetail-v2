@@ -1,6 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useList } from '@refinedev/core';
+import { PodModel } from 'k8s-api-provider';
 import { Pod } from 'kubernetes-types/core/v1';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useMemo, useState } from 'react';
@@ -13,7 +14,6 @@ import {
   RestartCountColumnRenderer,
   WorkloadImageColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { PodModel } from '../../model';
 import { WithId } from '../../types';
 import Table, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
