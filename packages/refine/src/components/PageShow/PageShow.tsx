@@ -1,18 +1,15 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useParsed, useShow } from '@refinedev/core';
+import { ResourceModel } from 'k8s-api-provider';
 import React from 'react';
-import { ResourceModel } from '../../model';
-import { Resource } from '../../types';
 import { ShowContent, ShowField } from '../ShowContent';
 
-type Props<Raw extends Resource, Model extends ResourceModel> = {
+type Props<Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
-  formatter: (r: Raw) => Model;
+  formatter?: (r: Model) => Model;
   Dropdown?: React.FC<{ data: Model }>;
 };
-export const PageShow = <Raw extends Resource, Model extends ResourceModel>(
-  props: Props<Raw, Model>
-) => {
+export const PageShow = <Model extends ResourceModel>(props: Props<Model>) => {
   const kit = useUIKit();
   const parsed = useParsed();
   const { queryResult } = useShow({ id: parsed?.params?.id });
