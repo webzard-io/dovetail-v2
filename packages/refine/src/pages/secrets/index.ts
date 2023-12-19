@@ -1,10 +1,10 @@
 import { i18n } from 'i18next';
+import { ResourceModel } from 'k8s-api-provider';
 import { SecretDataField } from '../../components/ShowContent';
 import { AgeColumnRenderer } from '../../hooks/useEagleTable/columns';
-import { ResourceModel } from '../../model';
-import { RESOURCE_GROUP, Resource, ResourceConfig } from '../../types';
+import { RESOURCE_GROUP, ResourceConfig } from '../../types';
 
-export const SecretsConfig: ResourceConfig<Resource, ResourceModel> = {
+export const SecretsConfig: ResourceConfig<ResourceModel> = {
   name: 'secrets',
   kind: 'Secret',
   basePath: '/api/v1',

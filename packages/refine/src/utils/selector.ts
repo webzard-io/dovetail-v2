@@ -1,5 +1,5 @@
+import { PodModel } from 'k8s-api-provider';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
-import { PodModel } from 'src/model';
 
 export function matchSelector(pod: PodModel, selector: LabelSelector): boolean {
   let match = true;

@@ -1,5 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
-import { CronJob } from 'kubernetes-types/batch/v1';
+import { CronJobModel } from 'k8s-api-provider';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CronJobDropdown } from 'src/components/CronJobDropdown';
@@ -13,12 +13,10 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { CronJobModel } from 'src/model';
-import { WithId } from 'src/types';
 
 export const CronJobList: React.FC<IResourceComponentsProps> = () => {
   const { i18n, t } = useTranslation();
-  const { tableProps, selectedKeys } = useEagleTable<WithId<CronJob>, CronJobModel>({
+  const { tableProps, selectedKeys } = useEagleTable<CronJobModel>({
     useTableParams: {},
     columns: [
       PhaseColumnRenderer(i18n),
@@ -47,7 +45,6 @@ export const CronJobList: React.FC<IResourceComponentsProps> = () => {
     tableProps: {
       currentSize: 10,
     },
-    formatter: d => new CronJobModel(d),
     Dropdown: CronJobDropdown,
   });
 

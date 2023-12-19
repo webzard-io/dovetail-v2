@@ -1,9 +1,9 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useResource, useUpdate } from '@refinedev/core';
+import { WorkloadModel } from 'k8s-api-provider';
 import { get } from 'lodash-es';
 import React from 'react';
-import { WorkloadModel } from '../../model/workload-model';
 import { pruneBeforeEdit } from '../../utils/k8s';
 
 const MinusButtonStyle = css`
@@ -29,7 +29,8 @@ export const WorkloadReplicas: React.FC<{ record: WorkloadModel }> = ({ record }
   const currentReplicas = get(record, 'spec.replicas', 0);
 
   const scale = (delta: number) => {
-    const v = record.scale(currentReplicas + delta);
+    // TODO: fix the result of scale
+    const v = record.scale(currentReplicas + delta) as WorkloadModel;
     const id = v.id;
     pruneBeforeEdit(v);
     mutate({

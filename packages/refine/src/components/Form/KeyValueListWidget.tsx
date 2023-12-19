@@ -29,7 +29,6 @@ function KeyValueInput(props: KeyValueInputProps) {
   );
   const onValueChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      console.log(event);
       const value = event.target.value;
 
       props.onChange?.({
@@ -97,7 +96,6 @@ export function KeyValueListWidget(props: KeyValueListWidgetProps) {
             key={index}
             item={item}
             onChange={newItem => {
-              console.log(newItem);
               const temp = [...items];
 
               temp.splice(index, 1, newItem);

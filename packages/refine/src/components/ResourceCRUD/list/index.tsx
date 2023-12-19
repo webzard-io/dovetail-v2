@@ -1,4 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
+import { ResourceModel } from 'k8s-api-provider';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useEagleTable } from '../../../hooks/useEagleTable';
@@ -7,23 +8,19 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
 } from '../../../hooks/useEagleTable/columns';
-import { ResourceModel } from '../../../model';
-import { Resource, WithId } from '../../../types';
 import { ListPage } from '../../ListPage';
 import { Column } from '../../Table';
 
 type Props<Model extends ResourceModel> = IResourceComponentsProps & {
-  formatter: (v: Resource) => Model;
+  formatter?: (v: Model) => Model;
   columns: Column<Model>[];
   Dropdown?: React.FC<{ data: Model }>;
 };
 
-export function ResourceList<Raw extends Resource, Model extends ResourceModel>(
-  props: Props<Model>
-) {
+export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
   const { formatter, name, columns, Dropdown } = props;
   const { i18n } = useTranslation();
-  const { tableProps, selectedKeys } = useEagleTable<WithId<Raw>, Model>({
+  const { tableProps, selectedKeys } = useEagleTable<Model>({
     useTableParams: {},
     columns: [
       PhaseColumnRenderer(i18n),
