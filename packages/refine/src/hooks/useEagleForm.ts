@@ -15,7 +15,7 @@ import { ButtonProps } from 'antd/lib/button';
 import { FormInstance, FormProps } from 'antd/lib/form';
 import yaml from 'js-yaml';
 import { JSONSchema7 } from 'json-schema';
-import { relationPlugin, Unstructured } from 'k8s-api-provider';
+import { Unstructured } from 'k8s-api-provider';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type YamlEditorHandle, type YamlEditorProps } from 'src/components/YamlEditor';
@@ -80,14 +80,13 @@ export type UseFormReturnType<
   schema: JSONSchema7 | null;
   isLoadingSchema: boolean;
   loadSchemaError: Error | null;
-  fetchSchema: ()=> void;
+  fetchSchema: () => void;
   enableEditor: boolean;
   errorResponseBody?: Record<string, unknown> | null;
   switchEditor: () => void;
   onFinish: (
     values?: TVariables
   ) => Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void>;
-
 };
 
 const useEagleForm = <
@@ -152,8 +151,13 @@ const useEagleForm = <
   > | null>(null);
   const useResourceResult = useResource();
   const kit = useUIKit();
-  const { schema, loading: isLoadingSchema, error: loadSchemaError, fetchSchema } = useSchema({
-    skip: editorOptions?.isSkipSchema
+  const {
+    schema,
+    loading: isLoadingSchema,
+    error: loadSchemaError,
+    fetchSchema,
+  } = useSchema({
+    skip: editorOptions?.isSkipSchema,
   });
   const [formAnt] = kit.form.useForm();
   const formSF = useFormSF({
@@ -275,7 +279,7 @@ const useEagleForm = <
 
   const initialValues = queryResult?.data?.data
     ? {
-        ...relationPlugin.restoreItem(queryResult.data.data),
+        ...relation.restoreItem(queryResult.data.data),
       }
     : undefined;
 

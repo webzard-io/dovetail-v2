@@ -2,7 +2,6 @@ import { Typo, useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useParsed, useResource, useShow } from '@refinedev/core';
 import yaml from 'js-yaml';
-import { Unstructured, relationPlugin } from 'k8s-api-provider';
 import { ResourceModel } from 'k8s-api-provider';
 import { get, omit } from 'lodash-es';
 import React, { useState } from 'react';
@@ -51,7 +50,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
   const kit = useUIKit();
   const parsed = useParsed();
   const { resource } = useResource();
-  const { queryResult } = useShow<Unstructured & { id: string }>({
+  const { queryResult } = useShow<Model>({
     id: parsed?.params?.id,
   });
   const [mode, setMode] = useState<Mode>(Mode.Detail);
@@ -62,7 +61,9 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
     return null;
   }
 
-  const record = formatter(data?.data as Raw);
+  const model = data.data;
+
+  const record = formatter ? formatter(model as unknown as Raw) : data?.data;
 
   const FirstLineFields: ShowField<Model>[] = [
     {
@@ -181,7 +182,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
     [Mode.Yaml]: (
       <MonacoYamlEditor
         className={EditorStyle}
-        defaultValue={yaml.dump(omit(relationPlugin.restoreItem(data.data), 'id'))}
+        defaultValue={yaml.dump(omit(model.restore(), 'id'))}
         schema={{}}
         onEditorCreate={editor => {
           fold(editor);

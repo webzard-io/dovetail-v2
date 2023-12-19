@@ -1,4 +1,5 @@
 import { IResourceComponentsProps, useList } from '@refinedev/core';
+import { PodModel, PodMetricsModel } from 'k8s-api-provider';
 import { Pod } from 'kubernetes-types/core/v1';
 import { compact } from 'lodash-es';
 import React, { useMemo } from 'react';
@@ -15,15 +16,12 @@ import {
   RestartCountColumnRenderer,
   NodeNameColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { PodModel } from 'src/model';
-import { PodMetricsModel } from 'src/model/pod-metrics-model';
 import { WithId } from 'src/types';
-import { PodMetrics } from 'src/types/metric';
 
 export const PodList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
 
-  const { data: metricsData } = useList({
+  const { data: metricsData } = useList<PodMetricsModel>({
     resource: 'podMetrics',
     meta: {
       resourceBasePath: '/apis/metrics.k8s.io/v1beta1',
@@ -33,12 +31,13 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
   });
 
   const metricsMap = useMemo(() => {
-    return ((metricsData?.data || []) as WithId<PodMetrics>[]).reduce<
-      Record<string, PodMetricsModel>
-    >((prev, cur) => {
-      prev[cur.id] = new PodMetricsModel(cur);
-      return prev;
-    }, {});
+    return (metricsData?.data || []).reduce<Record<string, PodMetricsModel>>(
+      (prev, cur) => {
+        prev[cur.id] = cur;
+        return prev;
+      },
+      {}
+    );
   }, [metricsData]);
   const supportMetrics = Boolean(metricsData);
 

@@ -1,8 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useList } from '@refinedev/core';
-import { JobModel } from 'k8s-api-provider';
-import { Job } from 'kubernetes-types/batch/v1';
+import { JobModel, ResourceModel } from 'k8s-api-provider';
 import { OwnerReference } from 'kubernetes-types/meta/v1';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +14,6 @@ import {
   PhaseColumnRenderer,
   WorkloadImageColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { WithId } from '../../types';
 import Table, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
@@ -46,20 +44,18 @@ export const CronjobJobsTable: React.FC<{
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { data } = useList({
+  const { data } = useList<JobModel>({
     resource: 'jobs',
     meta: { resourceBasePath: '/apis/batch/v1', kind: 'Job' },
   });
 
   const dataSource = useMemo(() => {
-    return data?.data
-      .map(p => new JobModel(p as WithId<Job>))
-      .filter(p => {
-        return owner ? matchOwner(p, owner) : true;
-      });
+    return data?.data.filter(p => {
+      return owner ? matchOwner(p, owner) : true;
+    });
   }, [data?.data, owner]);
 
-  const columns: Column<JobModel>[] = [
+  const columns = [
     PhaseColumnRenderer(i18n),
     NameColumnRenderer(i18n, 'jobs'),
     NameSpaceColumnRenderer(i18n),
@@ -67,7 +63,7 @@ export const CronjobJobsTable: React.FC<{
     CompletionsCountColumnRenderer(i18n),
     DurationColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
-  ];
+  ] as Column<ResourceModel>[];
 
   return (
     <kit.space
