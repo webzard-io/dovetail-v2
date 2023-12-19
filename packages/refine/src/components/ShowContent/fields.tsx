@@ -1,7 +1,14 @@
-import { ExtendObjectMeta } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
-import { JobModel, ResourceModel, WorkloadModel } from '../../model';
+import i18n from '../../i18n';
+import {
+  JobModel,
+  ResourceModel,
+  WorkloadModel,
+  WorkloadBaseModel,
+  CronJobModel,
+} from '../../models';
+import { ExtendObjectMeta } from '../../plugins/relation-plugin';
 import { ConditionsTable } from '../ConditionsTable';
 import { CronjobJobsTable } from '../CronjobJobsTable';
 import { ImageNames } from '../ImageNames';
@@ -9,7 +16,6 @@ import { KeyValue } from '../KeyValue';
 import Time from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
-import i18n from '../../i18n';
 
 export type ShowField<Model extends ResourceModel> = {
   key: string;
@@ -18,7 +24,7 @@ export type ShowField<Model extends ResourceModel> = {
   render?: (val: unknown, record: Model) => React.ReactElement | undefined;
 };
 
-export const ImageField = (): ShowField<WorkloadModel> => {
+export const ImageField = (): ShowField<WorkloadBaseModel> => {
   return {
     key: 'Image',
     title: i18n.t('dovetail.image'),
@@ -70,7 +76,7 @@ export const PodsField = (): ShowField<WorkloadModel> => {
   };
 };
 
-export const JobsField = (): ShowField<WorkloadModel> => {
+export const JobsField = (): ShowField<JobModel | CronJobModel> => {
   return {
     key: 'jobs',
     title: 'Jobs',

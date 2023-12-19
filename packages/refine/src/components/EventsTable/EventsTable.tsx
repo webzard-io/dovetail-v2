@@ -1,9 +1,4 @@
-import { Icon, RequiredColumnProps, useUIKit } from '@cloudtower/eagle';
-import {
-  CheckmarkDoneSuccessCorrect16BoldGreenIcon,
-  XmarkFailed16BoldRedIcon,
-} from '@cloudtower/icons-react';
-import { Event } from 'kubernetes-types/core/v1';
+import { useList, useParsed } from '@refinedev/core';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,26 +6,20 @@ import {
   CommonSorter,
   NameSpaceColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { WithId } from '../../types';
+import { ResourceModel } from '../../models';
 import { addId } from '../../utils/addId';
-import { StateTag } from '../StateTag';
-import Time from '../Time';
-import { useList, useParsed, useShow } from '@refinedev/core';
-import { ResourceModel } from '../../model';
 import Table from '../Table';
 
-type Props = {};
-
-export const EventsTable: React.FC<Props> = ({}) => {
-  const kit = useUIKit();
+export const EventsTable: React.FC = ({}) => {
   const { i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const parsed = useParsed();
 
-  const { data, isLoading } = useList({
+  const { data, isLoading } = useList<ResourceModel>({
     resource: 'events',
     meta: { resourceBasePath: '/apis/events.k8s.io/v1', kind: 'Event' },
   });
+  const parsed = useParsed();
+
   const columns = useMemo(
     () => [
       NameSpaceColumnRenderer(),
@@ -71,14 +60,12 @@ export const EventsTable: React.FC<Props> = ({}) => {
     [i18n]
   );
 
-  const dataSource = useMemo(
+  const dataSource = useMemo<ResourceModel[]>(
     () =>
-      addId(data?.data || [], 'metadata.uid')
-        .filter(d => {
-          const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
-          return objectId === parsed.id;
-        })
-        .map(d => new ResourceModel(d)),
+      addId(data?.data || [], 'metadata.uid' as any).filter((d: any) => {
+        const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
+        return objectId === parsed.id;
+      }) as ResourceModel[],
     [data?.data, parsed]
   );
 

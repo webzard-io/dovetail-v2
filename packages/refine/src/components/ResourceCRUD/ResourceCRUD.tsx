@@ -1,8 +1,6 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { Route } from 'react-router-dom';
-import { ResourceModel } from '../../model';
-import { ResourceConfig, Resource } from '../../types';
+import { ResourceConfig } from '../../types';
 import { ResourceForm } from './create';
 import { ResourceList } from './list';
 import { ResourceShow } from './show';
@@ -10,25 +8,23 @@ import { ResourceShow } from './show';
 type Props = { configs: ResourceConfig[]; urlPrefix?: string };
 export const ResourceCRUD: React.FC<Props> = props => {
   const { configs, urlPrefix } = props;
-  const { i18n } = useTranslation();
   return (
     <>
       {configs.map(config => {
-        const formatter = config.formatter || ((v: Resource) => new ResourceModel(v));
         return (
           <React.Fragment key={config.name}>
             <Route path={`${urlPrefix}/${config.name}`} exact>
               <ResourceList
                 name={config.kind}
-                formatter={formatter}
-                columns={config.columns?.(i18n) || []}
+                formatter={config.formatter}
+                columns={config.columns?.() || []}
                 Dropdown={config.Dropdown}
               />
             </Route>
             <Route path={`${urlPrefix}/${config.name}/show`}>
               <ResourceShow
-                formatter={formatter}
-                filedGroups={config.showFields?.(i18n) || []}
+                formatter={config.formatter}
+                filedGroups={config.showFields?.() || []}
                 Dropdown={config.Dropdown}
               />
             </Route>

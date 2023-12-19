@@ -11,7 +11,8 @@ import { useTranslation } from 'react-i18next';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useEdit } from 'src/hooks/useEdit';
-import { ResourceModel } from '../../model';
+import { useGlobalStore } from '../../hooks';
+import { ResourceModel } from '../../models';
 
 interface K8sDropdownProps {
   record: ResourceModel;
@@ -20,6 +21,7 @@ interface K8sDropdownProps {
 function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const { record } = props;
   const kit = useUIKit();
+  const {globalStore} = useGlobalStore();
   const useResourceResult = useResource();
   const resource = useResourceResult.resource;
   const { edit } = useEdit();
@@ -56,7 +58,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 if (record.id) {
                   download({
                     name: record.metadata?.name || record.kind || '',
-                    item: record,
+                    item: globalStore?.restoreItem(record) || record,
                   });
                 }
               }}

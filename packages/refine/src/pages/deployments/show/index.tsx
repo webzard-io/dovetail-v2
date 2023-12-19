@@ -1,7 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
-import { Deployment } from 'kubernetes-types/apps/v1';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { PageShow } from '../../../components/PageShow';
 import {
   ConditionsField,
@@ -10,20 +8,17 @@ import {
   ReplicaField,
 } from '../../../components/ShowContent/fields';
 import { WorkloadDropdown } from '../../../components/WorkloadDropdown';
-import { WorkloadModel } from '../../../model';
-import { WithId } from '../../../types';
+import { WorkloadModel } from '../../../models';
 
 export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
-  const { i18n } = useTranslation();
 
   return (
-    <PageShow<WithId<Deployment>, WorkloadModel>
+    <PageShow<WorkloadModel>
       fieldGroups={[
         [],
         [ImageField(), ReplicaField()],
         [PodsField(), ConditionsField()],
       ]}
-      formatter={d => new WorkloadModel(d)}
       Dropdown={WorkloadDropdown}
     />
   );

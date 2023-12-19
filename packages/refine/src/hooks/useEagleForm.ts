@@ -15,7 +15,7 @@ import { ButtonProps } from 'antd/lib/button';
 import { FormInstance, FormProps } from 'antd/lib/form';
 import yaml from 'js-yaml';
 import { JSONSchema7 } from 'json-schema';
-import { relationPlugin, Unstructured } from 'k8s-api-provider';
+import { Unstructured } from 'k8s-api-provider';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type YamlEditorHandle, type YamlEditorProps } from 'src/components/YamlEditor';
@@ -24,6 +24,7 @@ import { useSchema } from 'src/hooks/useSchema';
 import { pruneBeforeEdit } from 'src/utils/k8s';
 import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
+import { useGlobalStore } from './useGlobalStore';
 
 type EditorProps = Omit<YamlEditorProps, 'schema'> & {
   ref: React.RefObject<YamlEditorHandle>;
@@ -80,14 +81,13 @@ export type UseFormReturnType<
   schema: JSONSchema7 | null;
   isLoadingSchema: boolean;
   loadSchemaError: Error | null;
-  fetchSchema: ()=> void;
+  fetchSchema: () => void;
   enableEditor: boolean;
   errorResponseBody?: Record<string, unknown> | null;
   switchEditor: () => void;
   onFinish: (
     values?: TVariables
   ) => Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void>;
-
 };
 
 const useEagleForm = <
@@ -151,9 +151,15 @@ const useEagleForm = <
     unknown
   > | null>(null);
   const useResourceResult = useResource();
+  const {globalStore} = useGlobalStore();
   const kit = useUIKit();
-  const { schema, loading: isLoadingSchema, error: loadSchemaError, fetchSchema } = useSchema({
-    skip: editorOptions?.isSkipSchema
+  const {
+    schema,
+    loading: isLoadingSchema,
+    error: loadSchemaError,
+    fetchSchema,
+  } = useSchema({
+    skip: editorOptions?.isSkipSchema,
   });
   const [formAnt] = kit.form.useForm();
   const formSF = useFormSF({
@@ -272,11 +278,8 @@ const useEagleForm = <
       }
     },
   };
-
   const initialValues = queryResult?.data?.data
-    ? {
-        ...relationPlugin.restoreItem(queryResult.data.data),
-      }
+    ? globalStore?.restoreItem(queryResult.data.data)
     : undefined;
 
   if (initialValues) {

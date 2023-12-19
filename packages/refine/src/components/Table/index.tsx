@@ -3,7 +3,7 @@ import { RequiredColumnProps } from '@cloudtower/eagle/dist/spec/base';
 import { css, cx } from '@linaria/core';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ResourceModel } from '../../model';
+import { ResourceModel } from '../../models';
 import ErrorContent from './ErrorContent';
 import { AuxiliaryLine } from './TableWidgets';
 
