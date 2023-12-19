@@ -2,6 +2,7 @@ import { useUIKit } from '@cloudtower/eagle';
 import { useNavigation, useParsed, useShow } from '@refinedev/core';
 import { Drawer } from 'antd';
 import { ResourceModel } from 'k8s-api-provider';
+import React from 'react';
 import { Resource } from '../../types';
 import { ShowField, ShowContent } from '../ShowContent';
 

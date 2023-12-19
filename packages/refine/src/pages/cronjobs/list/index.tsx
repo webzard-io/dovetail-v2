@@ -1,4 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
+import { CronJobModel } from 'k8s-api-provider';
 import { CronJob } from 'kubernetes-types/batch/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +14,6 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { CronJobModel } from 'src/model';
 import { WithId } from 'src/types';
 
 export const CronJobList: React.FC<IResourceComponentsProps> = () => {

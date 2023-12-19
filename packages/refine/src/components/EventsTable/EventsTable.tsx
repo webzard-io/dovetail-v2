@@ -1,6 +1,5 @@
-import { Icon, RequiredColumnProps, useUIKit } from '@cloudtower/eagle';
 import { useList, useParsed } from '@refinedev/core';
-import { Event } from 'kubernetes-types/core/v1';
+import { ResourceModel } from 'k8s-api-provider';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -8,18 +7,13 @@ import {
   CommonSorter,
   NameSpaceColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { addId } from '../../utils/addId';
 import Table from '../Table';
 
-type Props = {};
-
-export const EventsTable: React.FC<Props> = ({}) => {
-  const kit = useUIKit();
+export const EventsTable: React.FC = ({}) => {
   const { i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const parsed = useParsed();
 
-  const { data, isLoading } = useList({
+  const { data, isLoading } = useList<ResourceModel>({
     resource: 'events',
     meta: { resourceBasePath: '/apis/events.k8s.io/v1', kind: 'Event' },
   });
@@ -62,20 +56,20 @@ export const EventsTable: React.FC<Props> = ({}) => {
     ],
     [i18n]
   );
-
-  const dataSource = useMemo(
-    () =>
-      addId(data?.data || [], 'metadata.uid').filter(d => {
-        const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
-        return objectId === parsed.id;
-      }),
-    [data?.data, parsed]
-  );
+  // TODO: need fix
+  // const dataSource = useMemo(
+  //   () =>
+  //     addId(data?.data || [], 'metadata.uid').filter(d => {
+  //       const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
+  //       return objectId === parsed.id;
+  //     }),
+  //   [data?.data, parsed]
+  // );
 
   return (
     <Table
       loading={isLoading}
-      dataSource={dataSource || []}
+      dataSource={[]}
       columns={columns}
       rowKey="id"
       error={false}

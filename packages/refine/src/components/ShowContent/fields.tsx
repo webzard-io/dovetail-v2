@@ -1,6 +1,6 @@
 import { i18n } from 'i18next';
-import { ExtendObjectMeta } from 'k8s-api-provider';
-import { JobModel, ResourceModel, WorkloadModel } from 'k8s-api-provider';
+import { ExtendObjectMeta, WorkloadBaseModel } from 'k8s-api-provider';
+import { JobModel, ResourceModel } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { ConditionsTable } from '../ConditionsTable';
@@ -18,7 +18,9 @@ export type ShowField<Model extends ResourceModel> = {
   render?: (val: unknown, record: Model) => React.ReactElement | undefined;
 };
 
-export const ImageField = (i18n: i18n): ShowField<WorkloadModel> => {
+export const ImageField = <Model extends WorkloadBaseModel>(
+  i18n: i18n
+): ShowField<Model> => {
   return {
     key: 'Image',
     title: i18n.t('image'),
@@ -29,7 +31,7 @@ export const ImageField = (i18n: i18n): ShowField<WorkloadModel> => {
   };
 };
 
-export const ReplicaField = (i18n: i18n): ShowField<WorkloadModel> => {
+export const ReplicaField = (i18n: i18n): ShowField<WorkloadBaseModel> => {
   return {
     key: 'Replicas',
     title: i18n.t('replicas'),
@@ -51,7 +53,7 @@ export const ConditionsField = (i18n: i18n): ShowField<ResourceModel> => {
   };
 };
 
-export const PodsField = (_: i18n): ShowField<WorkloadModel> => {
+export const PodsField = (_: i18n): ShowField<WorkloadBaseModel> => {
   return {
     key: 'pods',
     title: 'Pods',
@@ -70,7 +72,7 @@ export const PodsField = (_: i18n): ShowField<WorkloadModel> => {
   };
 };
 
-export const JobsField = (_: i18n): ShowField<WorkloadModel> => {
+export const JobsField = (_: i18n): ShowField<WorkloadBaseModel> => {
   return {
     key: 'jobs',
     title: 'Jobs',

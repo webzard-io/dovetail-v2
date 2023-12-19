@@ -6,6 +6,7 @@ import {
 import { useResource, useUpdate } from '@refinedev/core';
 import { CronJobModel } from 'k8s-api-provider';
 import { CronJob } from 'kubernetes-types/batch/v1';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { pruneBeforeEdit } from '../../utils/k8s';
 import K8sDropdown from '../K8sDropdown';

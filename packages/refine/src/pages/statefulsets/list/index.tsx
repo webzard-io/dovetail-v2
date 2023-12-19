@@ -1,4 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
+import { WorkloadModel } from 'k8s-api-provider';
 import { StatefulSet } from 'kubernetes-types/apps/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +15,6 @@ import {
   ReplicasColumnRenderer,
   WorkloadRestartsColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { WorkloadModel } from 'src/model/workload-model';
 import { WithId } from 'src/types';
 
 export const StatefulSetList: React.FC<IResourceComponentsProps> = () => {
