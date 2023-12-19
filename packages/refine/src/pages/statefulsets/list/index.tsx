@@ -12,6 +12,7 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
   ReplicasColumnRenderer,
+  WorkloadRestartsColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import { WorkloadModel } from 'src/model/workload-model';
 import { WithId } from 'src/types';
@@ -25,13 +26,13 @@ export const StatefulSetList: React.FC<IResourceComponentsProps> = () => {
       NameColumnRenderer(i18n),
       NameSpaceColumnRenderer(i18n),
       WorkloadImageColumnRenderer(i18n),
+      WorkloadRestartsColumnRenderer(i18n),
       ReplicasColumnRenderer(i18n),
       AgeColumnRenderer(i18n),
     ],
     tableProps: {
       currentSize: 10,
     },
-    formatter: d => new WorkloadModel(d),
     Dropdown: WorkloadDropdown,
   });
 

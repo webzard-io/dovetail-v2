@@ -1,9 +1,9 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useResource, useUpdate } from '@refinedev/core';
+import { WorkloadModel } from 'k8s-api-provider';
 import { get } from 'lodash-es';
 import React from 'react';
-import { WorkloadModel } from '../../model/workload-model';
 import { pruneBeforeEdit } from '../../utils/k8s';
 
 const MinusButtonStyle = css`

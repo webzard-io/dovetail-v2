@@ -2,12 +2,12 @@ import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
 import FormLayout from 'src/components/FormLayout';
 import { YamlEditorComponent } from 'src/components/YamlEditor/YamlEditorComponent';
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
 import useEagleForm from 'src/hooks/useEagleForm';
 import { getCommonErrors } from 'src/utils/error';
-import ErrorContent from 'src/components/ErrorContent';
 
 const FormStyle = css`
   height: 100%;

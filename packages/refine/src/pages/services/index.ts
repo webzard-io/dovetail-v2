@@ -1,4 +1,5 @@
 import { i18n } from 'i18next';
+import { ResourceModel } from 'k8s-api-provider';
 import {
   ConditionsField,
   ServiceTypeField,
@@ -10,7 +11,6 @@ import {
   AgeColumnRenderer,
   ServiceTypeColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { ResourceModel } from '../../model';
 import { RESOURCE_GROUP, Resource, ResourceConfig } from '../../types';
 
 export const ServicesConfig: ResourceConfig<Resource, ResourceModel> = {

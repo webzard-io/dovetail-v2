@@ -1,8 +1,5 @@
 import { Icon, RequiredColumnProps, useUIKit } from '@cloudtower/eagle';
-import {
-  CheckmarkDoneSuccessCorrect16BoldGreenIcon,
-  XmarkFailed16BoldRedIcon,
-} from '@cloudtower/icons-react';
+import { useList, useParsed } from '@refinedev/core';
 import { Event } from 'kubernetes-types/core/v1';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,12 +8,7 @@ import {
   CommonSorter,
   NameSpaceColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { WithId } from '../../types';
 import { addId } from '../../utils/addId';
-import { StateTag } from '../StateTag';
-import Time from '../Time';
-import { useList, useParsed, useShow } from '@refinedev/core';
-import { ResourceModel } from '../../model';
 import Table from '../Table';
 
 type Props = {};
@@ -73,12 +65,10 @@ export const EventsTable: React.FC<Props> = ({}) => {
 
   const dataSource = useMemo(
     () =>
-      addId(data?.data || [], 'metadata.uid')
-        .filter(d => {
-          const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
-          return objectId === parsed.id;
-        })
-        .map(d => new ResourceModel(d)),
+      addId(data?.data || [], 'metadata.uid').filter(d => {
+        const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
+        return objectId === parsed.id;
+      }),
     [data?.data, parsed]
   );
 

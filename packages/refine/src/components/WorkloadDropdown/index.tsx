@@ -1,9 +1,9 @@
 import { Icon, useUIKit } from '@cloudtower/eagle';
 import { DynamicResourceSchedule16BlueIcon } from '@cloudtower/icons-react';
 import { useResource, useUpdate } from '@refinedev/core';
+import { WorkloadModel } from 'k8s-api-provider';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { WorkloadModel } from '../../model';
 import { pruneBeforeEdit } from '../../utils/k8s';
 import K8sDropdown from '../K8sDropdown';
 

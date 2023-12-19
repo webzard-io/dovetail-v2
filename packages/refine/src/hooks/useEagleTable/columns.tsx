@@ -1,6 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { i18n } from 'i18next';
+import { JobModel, PodModel, ResourceModel, WorkloadModel } from 'k8s-api-provider';
 import { get } from 'lodash';
 import React from 'react';
 import { ImageNames } from '../../components/ImageNames';
@@ -8,8 +9,6 @@ import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
 import Time from '../../components/Time';
 import { WorkloadReplicas } from '../../components/WorkloadReplicas';
-import { JobModel, PodModel, ResourceModel } from '../../model';
-import { WorkloadModel } from '../../model/workload-model';
 
 const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
   const { name, id, resource } = props;
@@ -104,9 +103,23 @@ export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
     title: i18n.t('image'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
-    render(value) {
+    render(value, record) {
+      console.log('record', record);
       return <ImageNames value={value} />;
     },
+  };
+};
+
+export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
+  i18n: i18n
+): Column<Model> => {
+  const dataIndex = ['restarts'];
+  return {
+    key: 'restarts',
+    display: true,
+    dataIndex,
+    title: i18n.t('restarts'),
+    sortable: false,
   };
 };
 

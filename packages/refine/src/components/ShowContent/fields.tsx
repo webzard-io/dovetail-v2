@@ -1,8 +1,8 @@
 import { i18n } from 'i18next';
 import { ExtendObjectMeta } from 'k8s-api-provider';
+import { JobModel, ResourceModel, WorkloadModel } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
-import { JobModel, ResourceModel, WorkloadModel } from '../../model';
 import { ConditionsTable } from '../ConditionsTable';
 import { CronjobJobsTable } from '../CronjobJobsTable';
 import { ImageNames } from '../ImageNames';

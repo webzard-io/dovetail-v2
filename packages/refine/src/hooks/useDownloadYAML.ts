@@ -1,5 +1,5 @@
 import yaml from 'js-yaml';
-import { ResourceModel } from '../model';
+import { ResourceModel } from 'k8s-api-provider';
 import { download } from '../utils/download';
 
 type DownloadYAMLOptions = {

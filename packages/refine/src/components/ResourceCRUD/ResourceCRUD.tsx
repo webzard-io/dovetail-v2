@@ -1,7 +1,7 @@
+import { ResourceModel } from 'k8s-api-provider';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route } from 'react-router-dom';
-import { ResourceModel } from '../../model';
 import { ResourceConfig, Resource } from '../../types';
 import { ResourceForm } from './create';
 import { ResourceList } from './list';
@@ -14,7 +14,8 @@ export const ResourceCRUD: React.FC<Props> = props => {
   return (
     <>
       {configs.map(config => {
-        const formatter = config.formatter || ((v: Resource) => new ResourceModel(v));
+        // const formatter = config.formatter || ((v: Resource) => new ResourceModel(v));
+        const formatter = (v: Resource) => v as ResourceModel;
         return (
           <React.Fragment key={config.name}>
             <Route path={`${urlPrefix}/${config.name}`} exact>

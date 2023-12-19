@@ -1,4 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
+import { WorkloadModel } from 'k8s-api-provider';
 import { Deployment } from 'kubernetes-types/apps/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +14,6 @@ import {
   PhaseColumnRenderer,
   ReplicasColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { WorkloadModel } from '../../../model';
 import { WithId } from '../../../types';
 
 export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
@@ -32,7 +32,6 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
     tableProps: {
       currentSize: 10,
     },
-    formatter: d => new WorkloadModel(d),
     Dropdown: WorkloadDropdown,
   });
 

@@ -39,7 +39,7 @@ export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
     } finally {
       setLoading(false);
     }
-  }, [resource, openapi])
+  }, [resource, openapi]);
 
   useEffect(() => {
     if (options?.skip) return;

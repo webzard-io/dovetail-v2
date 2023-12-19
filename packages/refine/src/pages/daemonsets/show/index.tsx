@@ -1,4 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
+import { WorkloadModel } from 'k8s-api-provider';
 import { DaemonSet } from 'kubernetes-types/apps/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +10,6 @@ import {
   ImageField,
   PodsField,
 } from '../../../components/ShowContent/fields';
-import { WorkloadModel } from '../../../model';
 import { WithId } from '../../../types';
 
 export const DaemonSetShow: React.FC<IResourceComponentsProps> = () => {
@@ -18,7 +18,6 @@ export const DaemonSetShow: React.FC<IResourceComponentsProps> = () => {
   return (
     <PageShow<WithId<DaemonSet>, WorkloadModel>
       fieldGroups={[[], [ImageField(i18n)], [PodsField(i18n), ConditionsField(i18n)]]}
-      formatter={d => new WorkloadModel(d)}
       Dropdown={WorkloadDropdown}
     />
   );

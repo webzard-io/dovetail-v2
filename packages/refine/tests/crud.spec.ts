@@ -14,16 +14,16 @@ metadata:
 data: {
   timezone: Asia/Shanghai
 }
-`
+`;
 
 test.describe('CRUD', () => {
   test('create resource', async ({ page }) => {
     await page.goto('http://localhost:5173');
     await page.getByRole('link', { name: 'ConfigMaps' }).click();
     await page.getByRole('button', { name: '创建' }).click();
-    const monacoEditor = page.locator(".monaco-editor").nth(0);
+    const monacoEditor = page.locator('.monaco-editor').nth(0);
     await monacoEditor.click();
-    await page.keyboard.press("Meta+KeyA")
+    await page.keyboard.press('Meta+KeyA');
     await page.keyboard.insertText(YAML);
   
     await page.getByRole('button', { name: '保存' }).click();

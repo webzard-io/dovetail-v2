@@ -1,19 +1,19 @@
 import { Icon } from '@cloudtower/eagle';
 import { SettingsGear16GradientGrayIcon } from '@cloudtower/icons-react';
 import { useTable } from '@refinedev/core';
+import { ResourceModel } from 'k8s-api-provider';
 import { merge } from 'lodash-es';
 import React, { useCallback, useMemo, useState } from 'react';
 import K8sDropdown from '../../components/K8sDropdown';
 import { useNamespacesFilter, ALL_NS } from '../../components/NamespacesFilter';
 import { Column, TableProps } from '../../components/Table';
-import { ResourceModel } from '../../model';
 import { Resource } from '../../types';
 
 type Params<Raw extends Resource, Model extends ResourceModel> = {
   useTableParams: Parameters<typeof useTable<Raw>>[0];
   columns: Column<Model>[];
   tableProps?: Partial<TableProps<Model>>;
-  formatter: (d: Raw) => Model;
+  formatter?: (d: Raw) => Model;
   Dropdown?: React.FC<{ data: Model }>;
 };
 

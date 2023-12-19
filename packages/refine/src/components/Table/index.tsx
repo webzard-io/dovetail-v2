@@ -1,9 +1,9 @@
 import { useUIKit, TableProps as BaseTableProps } from '@cloudtower/eagle';
 import { RequiredColumnProps } from '@cloudtower/eagle/dist/spec/base';
 import { css, cx } from '@linaria/core';
+import { ResourceModel } from 'k8s-api-provider';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ResourceModel } from '../../model';
 import ErrorContent from './ErrorContent';
 import { AuxiliaryLine } from './TableWidgets';
 

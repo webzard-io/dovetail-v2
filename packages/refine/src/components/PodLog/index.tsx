@@ -1,10 +1,10 @@
 import { useUIKit } from '@cloudtower/eagle';
-import { LogViewer } from '@patternfly/react-log-viewer';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { PodModel } from '../../model';
-import { useDataProvider } from '@refinedev/core';
-import { useTranslation } from 'react-i18next';
 import { css } from '@linaria/core';
+import { LogViewer } from '@patternfly/react-log-viewer';
+import { useDataProvider } from '@refinedev/core';
+import { PodModel } from 'k8s-api-provider';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import '@patternfly/react-core/dist/styles/base-no-reset.css';
 import {

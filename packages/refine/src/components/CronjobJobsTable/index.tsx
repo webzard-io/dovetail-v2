@@ -1,6 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useList } from '@refinedev/core';
+import { JobModel } from 'k8s-api-provider';
 import { Job } from 'kubernetes-types/batch/v1';
 import { OwnerReference } from 'kubernetes-types/meta/v1';
 import React, { useMemo, useState } from 'react';
@@ -14,7 +15,6 @@ import {
   PhaseColumnRenderer,
   WorkloadImageColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { JobModel } from '../../model';
 import { WithId } from '../../types';
 import Table, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
