@@ -3,7 +3,7 @@ import { css } from '@linaria/core';
 import { useResource, useUpdate } from '@refinedev/core';
 import { get } from 'lodash-es';
 import React from 'react';
-import { WorkloadModel } from '../../model/workload-model';
+import { WorkloadModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
 
 const MinusButtonStyle = css`
