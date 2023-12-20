@@ -5,6 +5,7 @@ import {
   liveProvider,
   GlobalStore,
   GlobalStoreInitParams,
+  ProviderPlugins,
 } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { Router } from 'react-router-dom';
@@ -32,14 +33,13 @@ export const Dovetail: React.FC<Props> = props => {
   const {
     resourcesConfig,
     urlPrefix = '',
-    useHashUrl,
     Layout,
     history,
     globalStoreParams,
   } = props;
 
   const globalStore = useMemo(() => {
-    return new GlobalStore(globalStoreParams);
+    return new GlobalStore(globalStoreParams, ProviderPlugins);
   }, [globalStoreParams]);
 
   const notCustomResources = useMemo(() => {

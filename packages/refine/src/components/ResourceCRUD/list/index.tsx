@@ -8,7 +8,7 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
 } from '../../../hooks/useEagleTable/columns';
-import { Resource, WithId } from '../../../types';
+import { Resource } from '../../../types';
 import { ListPage } from '../../ListPage';
 import { Column } from '../../Table';
 
@@ -18,12 +18,10 @@ type Props<Model extends ResourceModel> = IResourceComponentsProps & {
   Dropdown?: React.FC<{ data: Model }>;
 };
 
-export function ResourceList<Raw extends Resource, Model extends ResourceModel>(
-  props: Props<Model>
-) {
+export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
   const { formatter, name, columns, Dropdown } = props;
   const { i18n } = useTranslation();
-  const { tableProps, selectedKeys } = useEagleTable<WithId<Raw>, Model>({
+  const { tableProps, selectedKeys } = useEagleTable<Model>({
     useTableParams: {},
     columns: [
       PhaseColumnRenderer(i18n),

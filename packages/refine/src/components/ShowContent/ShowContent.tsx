@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
-import { Resource } from '../../types';
 import { EventsTable } from '../EventsTable';
 import { StateTag } from '../StateTag';
 import { Tags } from '../Tags';
@@ -32,7 +31,7 @@ const EditorStyle = css`
   margin-top: 16px;
 `;
 
-type Props<Raw extends Resource, Model extends ResourceModel> = {
+type Props<Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
   formatter?: (r: Raw) => Model;
   Dropdown?: React.FC<{ data: Model }>;
@@ -43,8 +42,8 @@ enum Mode {
   Yaml = 'yaml',
 }
 
-export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
-  props: Props<Raw, Model>
+export const ShowContent = <Model extends ResourceModel>(
+  props: Props<Model>
 ) => {
   const { fieldGroups, formatter, Dropdown = K8sDropdown } = props;
   const kit = useUIKit();

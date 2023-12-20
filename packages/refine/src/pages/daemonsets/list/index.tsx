@@ -1,6 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import { WorkloadModel } from 'k8s-api-provider';
-import { DaemonSet } from 'kubernetes-types/apps/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListPage } from 'src/components/ListPage';
@@ -13,11 +12,10 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { WithId } from '../../../types';
 
 export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
-  const { tableProps, selectedKeys } = useEagleTable<WithId<DaemonSet>, WorkloadModel>({
+  const { tableProps, selectedKeys } = useEagleTable<WorkloadModel>({
     useTableParams: {},
     columns: [
       PhaseColumnRenderer(i18n),

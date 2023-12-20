@@ -73,7 +73,7 @@ export const applyK8sYamlPlugin: () => Plugin = () => {
     name: 'apply-k8s-yaml',
     configureServer(server) {
       server.middlewares.use('/raw-yaml', bodyParser.raw());
-      server.middlewares.use('/raw-yaml', async (req, res, next) => {
+      server.middlewares.use('/raw-yaml', async (req, res) => {
         const raw = (req as any).body;
         const specs: k8s.KubernetesObject[] = loadAll(raw);
         const validSpecs = specs.filter((s) => s && s.kind && s.metadata);

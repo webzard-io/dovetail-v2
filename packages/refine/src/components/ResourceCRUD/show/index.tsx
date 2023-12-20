@@ -1,7 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import { ResourceModel } from 'k8s-api-provider';
 import React from 'react';
-import { Resource, WithId } from '../../../types';
+import { Resource } from '../../../types';
 import { PageShow } from '../../PageShow';
 import { ShowField } from '../../ShowContent';
 
@@ -14,13 +14,11 @@ type Props<
   Dropdown?: React.FC<{ data: Model }>;
 };
 
-export function ResourceShow<Raw extends Resource, Model extends ResourceModel>(
-  props: Props<Raw, Model>
-) {
+export function ResourceShow<Model extends ResourceModel>(props: Props<Model>) {
   const { formatter, filedGroups, Dropdown } = props;
 
   return (
-    <PageShow<WithId<Raw>, Model>
+    <PageShow<Model>
       fieldGroups={filedGroups}
       formatter={formatter}
       Dropdown={Dropdown}

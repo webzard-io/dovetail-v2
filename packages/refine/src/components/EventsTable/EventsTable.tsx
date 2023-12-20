@@ -7,6 +7,7 @@ import {
   CommonSorter,
   NameSpaceColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
+import { addId } from '../../utils/addId';
 import Table from '../Table';
 
 export const EventsTable: React.FC = ({}) => {
@@ -17,6 +18,8 @@ export const EventsTable: React.FC = ({}) => {
     resource: 'events',
     meta: { resourceBasePath: '/apis/events.k8s.io/v1', kind: 'Event' },
   });
+  const parsed = useParsed();
+
   const columns = useMemo(
     () => [
       NameSpaceColumnRenderer(i18n),
@@ -56,20 +59,21 @@ export const EventsTable: React.FC = ({}) => {
     ],
     [i18n]
   );
-  // TODO: need fix
-  // const dataSource = useMemo(
-  //   () =>
-  //     addId(data?.data || [], 'metadata.uid').filter(d => {
-  //       const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
-  //       return objectId === parsed.id;
-  //     }),
-  //   [data?.data, parsed]
-  // );
+
+  const dataSource = useMemo<ResourceModel[]>(
+    () =>
+      // TODO: fix as any
+      addId(data?.data || [], 'metadata.uid' as any).filter((d: any) => {
+        const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
+        return objectId === parsed.id;
+      }) as ResourceModel[],
+    [data?.data, parsed]
+  );
 
   return (
     <Table
       loading={isLoading}
-      dataSource={[]}
+      dataSource={dataSource || []}
       columns={columns}
       rowKey="id"
       error={false}

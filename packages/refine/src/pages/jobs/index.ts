@@ -1,6 +1,5 @@
 import { i18n } from 'i18next';
 import { JobModel } from 'k8s-api-provider';
-import { Job } from 'kubernetes-types/batch/v1';
 import K8sDropdown from '../../components/K8sDropdown';
 import {
   ConditionsField,
@@ -15,9 +14,9 @@ import {
   DurationColumnRenderer,
   CompletionsCountColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { RESOURCE_GROUP, ResourceConfig, WithId } from '../../types';
+import { RESOURCE_GROUP, ResourceConfig } from '../../types';
 
-export const JobConfig: ResourceConfig<WithId<Job>, JobModel> = {
+export const JobConfig: ResourceConfig<JobModel> = {
   name: 'jobs',
   kind: 'Job',
   basePath: '/apis/batch/v1',
