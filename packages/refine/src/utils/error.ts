@@ -30,7 +30,7 @@ export function getSubmitError(
   text: string,
   i18n: I18n
 ) {
-  return !errorResponse ? i18n.t('sks.network_error') : text;
+  return !errorResponse ? i18n.t('dovetail.network_error') : text;
 }
 
 export function getCommonErrors(response: ErrorResponse, i18n: I18n) {

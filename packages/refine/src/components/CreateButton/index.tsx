@@ -23,7 +23,7 @@ export function CreateButton() {
 
   return (
     <kit.button type="primary" onClick={onClick}>
-      {t('create')}
+      {t('dovetail.create')}
     </kit.button>
   );
 }

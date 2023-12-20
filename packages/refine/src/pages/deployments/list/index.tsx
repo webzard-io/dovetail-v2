@@ -22,12 +22,12 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps, selectedKeys } = useEagleTable<WithId<Deployment>, WorkloadModel>({
     useTableParams: {},
     columns: [
-      PhaseColumnRenderer(i18n),
-      NameColumnRenderer(i18n),
-      NameSpaceColumnRenderer(i18n),
-      WorkloadImageColumnRenderer(i18n),
-      ReplicasColumnRenderer(i18n),
-      AgeColumnRenderer(i18n),
+      PhaseColumnRenderer(),
+      NameColumnRenderer(),
+      NameSpaceColumnRenderer(),
+      WorkloadImageColumnRenderer(),
+      ReplicasColumnRenderer(),
+      AgeColumnRenderer(),
     ],
     tableProps: {
       currentSize: 10,

@@ -29,7 +29,7 @@ export const PodContainersTable: React.FC<Props> = ({
       {
         key: 'state',
         dataIndex: ['state'],
-        title: i18n.t('state'),
+        title: i18n.t('dovetail.state'),
         sortable: true,
         sorter: CommonSorter(['state']),
         render: v => <StateTag state={Object.keys(v)[0]} />,
@@ -37,7 +37,7 @@ export const PodContainersTable: React.FC<Props> = ({
       {
         key: 'ready',
         dataIndex: ['ready'],
-        title: i18n.t('ready'),
+        title: i18n.t('dovetail.ready'),
         sortable: true,
         sorter: CommonSorter(['ready']),
         render: v => (
@@ -51,21 +51,21 @@ export const PodContainersTable: React.FC<Props> = ({
       {
         key: 'name',
         dataIndex: ['name'],
-        title: i18n.t('name'),
+        title: i18n.t('dovetail.name'),
         sortable: true,
         sorter: CommonSorter(['name']),
       },
       {
         key: 'image',
         dataIndex: ['image'],
-        title: i18n.t('image'),
+        title: i18n.t('dovetail.image'),
         sortable: true,
         sorter: CommonSorter(['image']),
       },
       {
         key: 'init',
         dataIndex: [],
-        title: i18n.t('init_container'),
+        title: i18n.t('dovetail.init_container'),
         render: (_, record) => {
           const isInit = initContainerStatuses.some(
             c => c.containerID === record.containerID
@@ -79,14 +79,14 @@ export const PodContainersTable: React.FC<Props> = ({
       {
         key: 'restartCount',
         dataIndex: ['restartCount'],
-        title: i18n.t('restarts'),
+        title: i18n.t('dovetail.restarts'),
         sortable: true,
         sorter: CommonSorter(['restartCount']),
       },
       {
         key: 'started',
         dataIndex: ['state', 'running', 'startedAt'],
-        title: i18n.t('started'),
+        title: i18n.t('dovetail.started'),
         sortable: true,
         sorter: CommonSorter(['state', 'running', 'startedAt']),
         render: (value: string) => {

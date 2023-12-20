@@ -12,6 +12,7 @@ import {
 } from '../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../model';
 import { RESOURCE_GROUP, Resource, ResourceConfig } from '../../types';
+import { SERVICE_INIT_VALUE } from 'src/constants/k8s';
 
 export const ServicesConfig: ResourceConfig<Resource, ResourceModel> = {
   name: 'services',
@@ -20,10 +21,11 @@ export const ServicesConfig: ResourceConfig<Resource, ResourceModel> = {
   apiVersion: 'v1',
   label: 'Services',
   parent: RESOURCE_GROUP.NETWORK,
-  columns: (i18n: i18n) => [ServiceTypeColumnRenderer(i18n), AgeColumnRenderer(i18n)],
+  columns: (i18n: i18n) => [ServiceTypeColumnRenderer(), AgeColumnRenderer()],
   showFields: (i18n: i18n) => [
     [],
-    [ServiceTypeField(i18n), ClusterIpField(i18n), SessionAffinityField(i18n)],
-    [ServicePodsField(i18n), ConditionsField(i18n)],
+    [ServiceTypeField(), ClusterIpField(), SessionAffinityField()],
+    [ServicePodsField(), ConditionsField()],
   ],
+  initValue: SERVICE_INIT_VALUE
 };

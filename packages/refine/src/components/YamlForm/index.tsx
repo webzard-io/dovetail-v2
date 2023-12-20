@@ -95,7 +95,7 @@ function YamlForm(props: YamlFormProps) {
                   />
                 )}
                 <kit.button {...saveButtonProps} type="primary" style={{ marginTop: 16 }}>
-                  {t('save')}
+                  {t('dovetail.save')}
                 </kit.button>
               </kit.form.Item>
             </>
