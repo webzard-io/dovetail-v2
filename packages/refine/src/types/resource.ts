@@ -26,17 +26,14 @@ export interface Resource {
   metadata?: ObjectMeta;
 }
 
-export type ResourceConfig<
-  Raw extends Resource = Resource,
-  Model extends ResourceModel = ResourceModel
-> = {
+export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   name: string;
   kind: string;
   basePath: string;
   apiVersion: string;
   label: string;
   parent?: RESOURCE_GROUP;
-  formatter?: (v: Raw) => Model;
+  formatter?: (v: Model) => Model;
   initValue?: Record<string, unknown>;
   columns?: (i18n: i18n) => Column<Model>[];
   showFields?: (i18n: i18n) => ShowField<Model>[][];

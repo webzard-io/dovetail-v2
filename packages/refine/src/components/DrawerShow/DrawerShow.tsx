@@ -3,16 +3,15 @@ import { useNavigation, useParsed, useShow } from '@refinedev/core';
 import { Drawer } from 'antd';
 import { ResourceModel } from 'k8s-api-provider';
 import React from 'react';
-import { Resource } from '../../types';
 import { ShowField, ShowContent } from '../ShowContent';
 
-type Props<Raw extends Resource, Model extends ResourceModel> = {
+type Props<Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
-  formatter?: (r: Raw) => Model;
+  formatter?: (r: Model) => Model;
 };
 
-export const DrawerShow = <Raw extends Resource, Model extends ResourceModel>(
-  props: Props<Raw, Model>
+export const DrawerShow = <Model extends ResourceModel>(
+  props: Props<Model>
 ) => {
   const kit = useUIKit();
   const parsed = useParsed();

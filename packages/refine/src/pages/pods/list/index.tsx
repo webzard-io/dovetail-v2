@@ -1,6 +1,5 @@
 import { IResourceComponentsProps, useList } from '@refinedev/core';
 import { PodModel, PodMetricsModel } from 'k8s-api-provider';
-import { Pod } from 'kubernetes-types/core/v1';
 import { compact } from 'lodash-es';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +15,6 @@ import {
   RestartCountColumnRenderer,
   NodeNameColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { WithId } from 'src/types';
 
 export const PodList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
@@ -41,7 +39,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
   }, [metricsData]);
   const supportMetrics = Boolean(metricsData);
 
-  const { tableProps, selectedKeys } = useEagleTable<WithId<Pod>, PodModel>({
+  const { tableProps, selectedKeys } = useEagleTable<PodModel>({
     useTableParams: {},
     columns: compact([
       PhaseColumnRenderer(i18n),

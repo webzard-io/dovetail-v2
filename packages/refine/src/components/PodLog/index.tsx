@@ -1,4 +1,8 @@
 import { useUIKit } from '@cloudtower/eagle';
+import {
+  Resume24Icon,
+  SuspendedPause24GradientOrangeIcon,
+} from '@cloudtower/icons-react';
 import { css } from '@linaria/core';
 import { LogViewer } from '@patternfly/react-log-viewer';
 import { useDataProvider } from '@refinedev/core';
@@ -7,10 +11,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import '@patternfly/react-core/dist/styles/base-no-reset.css';
-import {
-  Resume24Icon,
-  SuspendedPause24GradientOrangeIcon,
-} from '@cloudtower/icons-react';
 
 const ToolbarStyle = css`
   margin-bottom: 8px;
@@ -31,7 +31,8 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
   const [selectedContainer, setSelectedContainer] = useState(
     pod.spec?.containers[0]?.name || ''
   );
-  const [follow, setFollow] = useState(true);
+  // const [follow, setFollow] = useState(true);
+  const follow = true;
   const [logs, setLogs] = useState<string[]>([]);
   const [currentItemCount, setCurrentItemCount] = useState(0);
   const [paused, setPaused] = useState(false);
