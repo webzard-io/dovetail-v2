@@ -33,7 +33,7 @@ const EditorStyle = css`
 
 type Props<Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
-  formatter?: (r: Raw) => Model;
+  formatter?: (r: Model) => Model;
   Dropdown?: React.FC<{ data: Model }>;
 };
 
@@ -42,9 +42,7 @@ enum Mode {
   Yaml = 'yaml',
 }
 
-export const ShowContent = <Model extends ResourceModel>(
-  props: Props<Model>
-) => {
+export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) => {
   const { fieldGroups, formatter, Dropdown = K8sDropdown } = props;
   const kit = useUIKit();
   const parsed = useParsed();
@@ -61,8 +59,9 @@ export const ShowContent = <Model extends ResourceModel>(
   }
 
   const model = data.data;
+  console.log('model', model);
 
-  const record = formatter ? formatter(model as unknown as Raw) : data?.data;
+  const record = formatter ? formatter(model) : data?.data;
 
   const FirstLineFields: ShowField<Model>[] = [
     {
@@ -181,7 +180,7 @@ export const ShowContent = <Model extends ResourceModel>(
     [Mode.Yaml]: (
       <MonacoYamlEditor
         className={EditorStyle}
-        defaultValue={yaml.dump(omit(model.restore(), 'id'))}
+        defaultValue={yaml.dump(model.rawYaml)}
         schema={{}}
         onEditorCreate={editor => {
           fold(editor);

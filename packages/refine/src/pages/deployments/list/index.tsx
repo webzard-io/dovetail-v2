@@ -12,6 +12,7 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
   ReplicasColumnRenderer,
+  WorkloadRestartsColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 
 export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
@@ -24,6 +25,7 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
       NameColumnRenderer(i18n),
       NameSpaceColumnRenderer(i18n),
       WorkloadImageColumnRenderer(i18n),
+      WorkloadRestartsColumnRenderer(i18n),
       ReplicasColumnRenderer(i18n),
       AgeColumnRenderer(i18n),
     ],

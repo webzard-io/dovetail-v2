@@ -2,9 +2,9 @@ import { i18n } from 'i18next';
 import { ResourceModel } from 'k8s-api-provider';
 import { DataField } from '../../components/ShowContent';
 import { AgeColumnRenderer } from '../../hooks/useEagleTable/columns';
-import { RESOURCE_GROUP, Resource, ResourceConfig } from '../../types';
+import { RESOURCE_GROUP, ResourceConfig } from '../../types';
 
-export const ConfigMapConfig: ResourceConfig<Resource, ResourceModel> = {
+export const ConfigMapConfig: ResourceConfig<ResourceModel> = {
   name: 'configmaps',
   kind: 'ConfigMap',
   basePath: '/api/v1',

@@ -1,6 +1,6 @@
 import { i18n } from 'i18next';
 import { ExtendObjectMeta, WorkloadBaseModel } from 'k8s-api-provider';
-import { JobModel, ResourceModel } from 'k8s-api-provider';
+import { JobModel, ResourceModel, WorkloadModel } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { ConditionsTable } from '../ConditionsTable';
@@ -31,7 +31,7 @@ export const ImageField = <Model extends WorkloadBaseModel>(
   };
 };
 
-export const ReplicaField = (i18n: i18n): ShowField<WorkloadBaseModel> => {
+export const ReplicaField = (i18n: i18n): ShowField<WorkloadModel> => {
   return {
     key: 'Replicas',
     title: i18n.t('replicas'),
@@ -109,7 +109,8 @@ export const SecretDataField = (i18n: i18n): ShowField<ResourceModel> => {
     key: 'data',
     title: i18n.t('data'),
     path: ['rawYaml', 'data'],
-    render: val => {
+    render: (val, data) => {
+      console.log('screateData', data);
       const decodeVal: Record<string, string> = {};
       for (const key in val as Record<string, string>) {
         decodeVal[key] = atob((val as Record<string, string>)[key]);

@@ -36,6 +36,9 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
   const useTableParams = useMemo(() => {
     // TODO: check whether resource can be namespaced
     const mergedParams = merge(params.useTableParams, {
+      pagination: {
+        mode: 'off',
+      },
       filters: {
         permanent: [
           {
@@ -50,7 +53,6 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
   }, [params.useTableParams, nsFilter]);
 
   const table = useTable<Model>(useTableParams);
-
   const onPageChange = useCallback(
     (page: number) => {
       setCurrentPage(page);
@@ -70,7 +72,6 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
 
   const data = table.tableQueryResult.data?.data;
   const finalDataSource = formatter ? data?.map(formatter) : data;
-
   const finalProps: TableProps<Model> = {
     loading: table.tableQueryResult.isLoading,
     dataSource: finalDataSource || [],

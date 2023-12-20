@@ -1,7 +1,13 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { i18n } from 'i18next';
-import { JobModel, PodModel, ResourceModel, WorkloadModel } from 'k8s-api-provider';
+import {
+  JobModel,
+  PodModel,
+  ResourceModel,
+  WorkloadModel,
+  WorkloadBaseModel,
+} from 'k8s-api-provider';
 import { get } from 'lodash';
 import React from 'react';
 import { ImageNames } from '../../components/ImageNames';
@@ -92,7 +98,7 @@ export const PhaseColumnRenderer = <Model extends ResourceModel>(
   };
 };
 
-export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
+export const WorkloadImageColumnRenderer = <Model extends WorkloadBaseModel>(
   i18n: i18n
 ): Column<Model> => {
   const dataIndex = ['imageNames'];
@@ -104,8 +110,7 @@ export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render(value, record) {
-      console.log('record', record);
-      return <ImageNames value={value} />;
+      return <ImageNames value={record.imageNames} />;
     },
   };
 };
