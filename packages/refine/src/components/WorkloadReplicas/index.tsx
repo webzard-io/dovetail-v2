@@ -29,7 +29,8 @@ export const WorkloadReplicas: React.FC<{ record: WorkloadModel }> = ({ record }
   const currentReplicas = get(record, 'spec.replicas', 0);
 
   const scale = (delta: number) => {
-    const v = record.scale(currentReplicas + delta);
+    // TODO: fix the result of scale
+    const v = record.scale(currentReplicas + delta) as WorkloadModel;
     const id = v.id;
     pruneBeforeEdit(v);
     mutate({

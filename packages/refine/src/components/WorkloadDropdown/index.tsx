@@ -22,7 +22,8 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: Props<Model
     <K8sDropdown data={data}>
       <kit.menu.Item
         onClick={() => {
-          const v = data.redeploy();
+          // TODO: fix return of redeploy
+          const v = data.redeploy() as WorkloadModel;
           const id = v.id;
           pruneBeforeEdit(v);
           mutate({

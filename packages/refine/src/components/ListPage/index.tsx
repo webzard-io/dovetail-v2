@@ -1,9 +1,9 @@
 import { css } from '@linaria/core';
+import { ResourceModel } from 'k8s-api-provider';
 import React from 'react';
 import Table from 'src/components/Table';
 import { TableProps } from 'src/components/Table';
 import { TableToolBar } from 'src/components/Table/TableToolBar';
-import { ResourceModel } from 'src/model';
 
 const ListPageStyle = css`
   width: 100%;

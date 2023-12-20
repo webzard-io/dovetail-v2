@@ -11,9 +11,9 @@ import {
   AgeColumnRenderer,
   ServiceTypeColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { RESOURCE_GROUP, Resource, ResourceConfig } from '../../types';
+import { RESOURCE_GROUP, ResourceConfig } from '../../types';
 
-export const ServicesConfig: ResourceConfig<Resource, ResourceModel> = {
+export const ServicesConfig: ResourceConfig<ResourceModel> = {
   name: 'services',
   kind: 'Service',
   basePath: '/api/v1',

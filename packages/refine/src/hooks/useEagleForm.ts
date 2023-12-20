@@ -277,10 +277,7 @@ const useEagleForm = <
     },
   };
   const initialValues = queryResult?.data?.data
-    ? {
-        // TODO: need update restoreItem
-        // ...relation.restoreItem(queryResult.data.data),
-      }
+    ? (queryResult.data.data as any).rawYaml
     : undefined;
 
   if (initialValues) {

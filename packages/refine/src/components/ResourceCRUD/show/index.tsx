@@ -1,15 +1,11 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import { ResourceModel } from 'k8s-api-provider';
 import React from 'react';
-import { Resource } from '../../../types';
 import { PageShow } from '../../PageShow';
 import { ShowField } from '../../ShowContent';
 
-type Props<
-  Raw extends Resource,
-  Model extends ResourceModel,
-> = IResourceComponentsProps & {
-  formatter?: (v: Raw) => Model;
+type Props<Model extends ResourceModel> = IResourceComponentsProps & {
+  formatter?: (v: Model) => Model;
   filedGroups: ShowField<Model>[][];
   Dropdown?: React.FC<{ data: Model }>;
 };
