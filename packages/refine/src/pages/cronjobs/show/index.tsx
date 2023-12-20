@@ -13,7 +13,7 @@ export const CronJobShow: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <PageShow<WithId<CronJob>, CronJobModel>
-      fieldGroups={[[], [ImageField(i18n)], [JobsField(i18n)]]}
+      fieldGroups={[[], [ImageField()], [JobsField()]]}
       formatter={d => new CronJobModel(d)}
       Dropdown={CronJobDropdown}
     />

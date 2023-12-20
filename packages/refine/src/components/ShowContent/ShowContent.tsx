@@ -67,12 +67,12 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
   const FirstLineFields: ShowField<Model>[] = [
     {
       key: 'NameSpace',
-      title: t('namespace'),
+      title: t('dovetail.namespace'),
       path: ['metadata', 'namespace'],
     },
     {
       key: 'Age',
-      title: t('created_time'),
+      title: t('dovetail.created_time'),
       path: ['metadata', 'creationTimestamp'],
       render(value) {
         return <Time date={new Date(value as string)} />;
@@ -83,7 +83,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
   const SecondLineFields: ShowField<Model>[] = [
     {
       key: 'Labels',
-      title: t('label'),
+      title: t('dovetail.label'),
       path: ['metadata', 'labels'],
       render: value => {
         if (!value) {
@@ -94,7 +94,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
     },
     {
       key: 'Annotations',
-      title: t('annotation'),
+      title: t('dovetail.annotation'),
       path: ['metadata', 'annotations'],
       render: value => {
         if (!value) {
@@ -132,7 +132,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
       </div>
       <kit.space>
         <kit.radioGroup value={mode} onChange={e => setMode(e.target.value)}>
-          <kit.radioButton value="detail">{t('detail')}</kit.radioButton>
+          <kit.radioButton value="detail">{t('dovetail.detail')}</kit.radioButton>
           <kit.radioButton value="yaml">YAML</kit.radioButton>
         </kit.radioGroup>
         <Dropdown data={record} />
@@ -164,7 +164,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
           </kit.tabsTabPane>
         );
       })}
-      <kit.tabsTabPane tab={t('event')} key={'event'}>
+      <kit.tabsTabPane tab={t('dovetail.event')} key={'event'}>
         <EventsTable />
       </kit.tabsTabPane>
     </kit.tabs>

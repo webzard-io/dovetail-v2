@@ -41,7 +41,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 }
               }}
             >
-              <Icon src={EditPen16PrimaryIcon}>{t('edit')}</Icon>
+              <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit')}</Icon>
             </kit.menuItem>
             <kit.menuItem
               danger={true}
@@ -49,7 +49,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 openDeleteConfirmModal(data.id);
               }}
             >
-              <Icon src={TrashBinDelete16Icon}>{t('delete')}</Icon>
+              <Icon src={TrashBinDelete16Icon}>{t('dovetail.delete')}</Icon>
             </kit.menuItem>
             <kit.menu.Item
               onClick={() => {
@@ -61,7 +61,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 }
               }}
             >
-              <Icon src={Download16GradientBlueIcon}>{t('download_yaml')}</Icon>
+              <Icon src={Download16GradientBlueIcon}>{t('dovetail.download_yaml')}</Icon>
             </kit.menu.Item>
             {props.children}
           </kit.menu>

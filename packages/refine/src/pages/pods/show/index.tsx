@@ -24,12 +24,12 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
           },
           {
             key: 'Workload',
-            title: i18n.t('workload'),
+            title: i18n.t('dovetail.workload'),
             path: ['metadata', 'ownerReferences', '0', 'name'],
           },
           {
             key: 'Node',
-            title: i18n.t('node_name'),
+            title: i18n.t('dovetail.node_name'),
             path: ['spec', 'nodeName'],
           },
           {
@@ -41,7 +41,7 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
         [
           {
             key: 'container',
-            title: i18n.t('container'),
+            title: i18n.t('dovetail.container'),
             path: [],
             render: (_, record) => {
               return (
@@ -52,10 +52,10 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
               );
             },
           },
-          ConditionsField(i18n),
+          ConditionsField(),
           {
             key: 'log',
-            title: i18n.t('log'),
+            title: i18n.t('dovetail.log'),
             path: [],
             render: (_, record) => {
               return <PodLog pod={record} />;

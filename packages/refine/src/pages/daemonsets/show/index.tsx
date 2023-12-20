@@ -17,7 +17,7 @@ export const DaemonSetShow: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <PageShow<WithId<DaemonSet>, WorkloadModel>
-      fieldGroups={[[], [ImageField(i18n)], [PodsField(i18n), ConditionsField(i18n)]]}
+      fieldGroups={[[], [ImageField()], [PodsField(), ConditionsField()]]}
       formatter={d => new WorkloadModel(d)}
       Dropdown={WorkloadDropdown}
     />

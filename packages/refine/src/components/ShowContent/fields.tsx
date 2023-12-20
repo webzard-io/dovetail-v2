@@ -1,4 +1,3 @@
-import { i18n } from 'i18next';
 import { ExtendObjectMeta } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
@@ -10,6 +9,7 @@ import { KeyValue } from '../KeyValue';
 import Time from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
+import i18n from '../../i18n';
 
 export type ShowField<Model extends ResourceModel> = {
   key: string;
@@ -18,10 +18,10 @@ export type ShowField<Model extends ResourceModel> = {
   render?: (val: unknown, record: Model) => React.ReactElement | undefined;
 };
 
-export const ImageField = (i18n: i18n): ShowField<WorkloadModel> => {
+export const ImageField = (): ShowField<WorkloadModel> => {
   return {
     key: 'Image',
-    title: i18n.t('image'),
+    title: i18n.t('dovetail.image'),
     path: ['imageNames'],
     render(value) {
       return <ImageNames value={value as string[]} />;
@@ -29,10 +29,10 @@ export const ImageField = (i18n: i18n): ShowField<WorkloadModel> => {
   };
 };
 
-export const ReplicaField = (i18n: i18n): ShowField<WorkloadModel> => {
+export const ReplicaField = (): ShowField<WorkloadModel> => {
   return {
     key: 'Replicas',
-    title: i18n.t('replicas'),
+    title: i18n.t('dovetail.replicas'),
     path: ['status', 'replicas'],
     render: (_, record) => {
       return <WorkloadReplicas record={record} />;
@@ -40,10 +40,10 @@ export const ReplicaField = (i18n: i18n): ShowField<WorkloadModel> => {
   };
 };
 
-export const ConditionsField = (i18n: i18n): ShowField<ResourceModel> => {
+export const ConditionsField = (): ShowField<ResourceModel> => {
   return {
     key: 'Conditions',
-    title: i18n.t('condition'),
+    title: i18n.t('dovetail.condition'),
     path: ['status', 'conditions'],
     render: value => {
       return <ConditionsTable conditions={value as Condition[]} />;
@@ -51,7 +51,7 @@ export const ConditionsField = (i18n: i18n): ShowField<ResourceModel> => {
   };
 };
 
-export const PodsField = (_: i18n): ShowField<WorkloadModel> => {
+export const PodsField = (): ShowField<WorkloadModel> => {
   return {
     key: 'pods',
     title: 'Pods',
@@ -70,7 +70,7 @@ export const PodsField = (_: i18n): ShowField<WorkloadModel> => {
   };
 };
 
-export const JobsField = (_: i18n): ShowField<WorkloadModel> => {
+export const JobsField = (): ShowField<WorkloadModel> => {
   return {
     key: 'jobs',
     title: 'Jobs',
@@ -91,10 +91,10 @@ export const JobsField = (_: i18n): ShowField<WorkloadModel> => {
   };
 };
 
-export const DataField = (i18n: i18n): ShowField<ResourceModel> => {
+export const DataField = (): ShowField<ResourceModel> => {
   return {
     key: 'data',
-    title: i18n.t('data'),
+    title: i18n.t('dovetail.data'),
     path: ['rawYaml', 'data'],
     render: val => {
       return <KeyValue value={val as Record<string, string>} />;
@@ -102,10 +102,10 @@ export const DataField = (i18n: i18n): ShowField<ResourceModel> => {
   };
 };
 
-export const SecretDataField = (i18n: i18n): ShowField<ResourceModel> => {
+export const SecretDataField = (): ShowField<ResourceModel> => {
   return {
     key: 'data',
-    title: i18n.t('data'),
+    title: i18n.t('dovetail.data'),
     path: ['rawYaml', 'data'],
     render: val => {
       const decodeVal: Record<string, string> = {};
@@ -117,10 +117,10 @@ export const SecretDataField = (i18n: i18n): ShowField<ResourceModel> => {
   };
 };
 
-export const StartTimeField = (i18n: i18n): ShowField<JobModel> => {
+export const StartTimeField = (): ShowField<JobModel> => {
   return {
     key: 'started',
-    title: i18n.t('started'),
+    title: i18n.t('dovetail.started'),
     path: ['status', 'startTime'],
     render(value) {
       return <Time date={value as string} />;
@@ -128,7 +128,7 @@ export const StartTimeField = (i18n: i18n): ShowField<JobModel> => {
   };
 };
 
-export const ServiceTypeField = (i18n: i18n): ShowField<ResourceModel> => {
+export const ServiceTypeField = (): ShowField<ResourceModel> => {
   return {
     key: 'type',
     title: i18n.t('dovetail.type'),
@@ -136,7 +136,7 @@ export const ServiceTypeField = (i18n: i18n): ShowField<ResourceModel> => {
   };
 };
 
-export const ClusterIpField = (i18n: i18n): ShowField<ResourceModel> => {
+export const ClusterIpField = (): ShowField<ResourceModel> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.clusterIp'),
@@ -144,7 +144,7 @@ export const ClusterIpField = (i18n: i18n): ShowField<ResourceModel> => {
   };
 };
 
-export const SessionAffinityField = (i18n: i18n): ShowField<ResourceModel> => {
+export const SessionAffinityField = (): ShowField<ResourceModel> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.sessionAffinity'),
@@ -152,7 +152,7 @@ export const SessionAffinityField = (i18n: i18n): ShowField<ResourceModel> => {
   };
 };
 
-export const ServicePodsField = (_: i18n): ShowField<ResourceModel> => {
+export const ServicePodsField = (): ShowField<ResourceModel> => {
   return {
     key: 'pods',
     title: 'Pods',

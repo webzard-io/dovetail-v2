@@ -20,8 +20,8 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
     <PageShow<WithId<Deployment>, WorkloadModel>
       fieldGroups={[
         [],
-        [ImageField(i18n), ReplicaField(i18n)],
-        [PodsField(i18n), ConditionsField(i18n)],
+        [ImageField(), ReplicaField()],
+        [PodsField(), ConditionsField()],
       ]}
       formatter={d => new WorkloadModel(d)}
       Dropdown={WorkloadDropdown}
