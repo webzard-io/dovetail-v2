@@ -59,7 +59,6 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   }
 
   const model = data.data;
-  console.log('model', model);
 
   const record = formatter ? formatter(model) : data?.data;
 

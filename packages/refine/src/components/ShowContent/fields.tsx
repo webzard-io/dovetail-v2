@@ -109,8 +109,7 @@ export const SecretDataField = (i18n: i18n): ShowField<ResourceModel> => {
     key: 'data',
     title: i18n.t('data'),
     path: ['rawYaml', 'data'],
-    render: (val, data) => {
-      console.log('screateData', data);
+    render: (val) => {
       const decodeVal: Record<string, string> = {};
       for (const key in val as Record<string, string>) {
         decodeVal[key] = atob((val as Record<string, string>)[key]);
