@@ -30,10 +30,11 @@ export type Column<Data extends ResourceModel> = RequiredColumnProps<Data> & {
 };
 
 export type TableProps<Data extends ResourceModel> = {
+  tableKey: string;
   className?: string;
   loading: boolean;
   error: boolean;
-  dataSource: Data[];
+  data: Data[];
   refetch: () => void;
   rowKey: (string & keyof Data) | ((record: Data) => string);
   columns: Array<Column<Data>>;
@@ -44,6 +45,7 @@ export type TableProps<Data extends ResourceModel> = {
   onSelect?: (keys: React.Key[], rows: Data[]) => void;
   onPageChange: (page: number) => void;
   onSizeChange?: (size: number) => void;
+  RowMenu?: React.FC<{ record: Data; }>;
 };
 
 function Table<Data extends ResourceModel>(props: TableProps<Data>) {
@@ -52,12 +54,13 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
   const {
     loading,
     error,
-    dataSource,
+    data: dataSource,
     rowKey,
     columns,
     scroll,
     currentPage,
     currentSize,
+    RowMenu,
     refetch,
     onSelect,
     onPageChange,
@@ -74,6 +77,26 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
     }),
     [currentPage, currentSize, onPageChange]
   );
+  const finalColumns = useMemo(()=> {
+    if (RowMenu) {
+      const actionColumn: Column<Data> = {
+        key: '_action_',
+        display: true,
+        dataIndex: [],
+        title: '',
+        render: (_: unknown, record) => {
+          return <RowMenu record={record} />;
+        },
+      };
+
+      return [
+        ...columns,
+        actionColumn
+      ];
+    }
+
+    return columns;
+  }, [columns, RowMenu])
 
   if (loading) {
     return <kit.loading />;
@@ -105,7 +128,7 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
               }
             : undefined
         }
-        columns={columns}
+        columns={finalColumns}
         dataSource={dataSource}
         pagination={pagination}
         error={error}

@@ -56,8 +56,9 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
     >
       <TableToolBar title="" selectedKeys={selectedKeys} hideCreate />
       <Table
+        tableKey='pods'
         loading={!dataSource}
-        dataSource={dataSource || []}
+        data={dataSource || []}
         columns={columns}
         onSelect={keys => setSelectedKeys(keys as string[])}
         rowKey="id"

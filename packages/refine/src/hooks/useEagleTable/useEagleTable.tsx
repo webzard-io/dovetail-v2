@@ -1,6 +1,6 @@
 import { Icon } from '@cloudtower/eagle';
 import { SettingsGear16GradientGrayIcon } from '@cloudtower/icons-react';
-import { useTable } from '@refinedev/core';
+import { useTable, useResource } from '@refinedev/core';
 import { merge } from 'lodash-es';
 import React, { useCallback, useMemo, useState } from 'react';
 import K8sDropdown from '../../components/K8sDropdown';
@@ -14,7 +14,7 @@ type Params<Raw extends Resource, Model extends ResourceModel> = {
   columns: Column<Model>[];
   tableProps?: Partial<TableProps<Model>>;
   formatter: (d: Raw) => Model;
-  Dropdown?: React.FC<{ data: Model }>;
+  Dropdown?: React.FC<{ record: Model }>;
 };
 
 export enum ColumnKeys {
@@ -33,6 +33,7 @@ export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>
   const { columns, tableProps, formatter, Dropdown = K8sDropdown } = params;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
+  const { resource } = useResource();
 
   const { value: nsFilter } = useNamespacesFilter();
 
@@ -61,22 +62,13 @@ export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>
     [setCurrentPage]
   );
 
-  const actionColumn: Column<Model> = {
-    key: 'action',
-    display: true,
-    dataIndex: [],
-    title: () => <Icon src={SettingsGear16GradientGrayIcon} />,
-    render: (_: unknown, record: Model) => {
-      return <Dropdown data={record} />;
-    },
-  };
-
   const finalDataSource = table.tableQueryResult.data?.data.map(formatter);
 
   const finalProps: TableProps<Model> = {
+    tableKey: resource?.name || 'table',
     loading: table.tableQueryResult.isLoading,
-    dataSource: finalDataSource || [],
-    columns: [...columns, actionColumn],
+    data: finalDataSource || [],
+    columns,
     refetch: () => null,
     error: false,
     rowKey: 'id',
@@ -86,6 +78,7 @@ export const useEagleTable = <Raw extends Resource, Model extends ResourceModel>
     onSelect: keys => {
       setSelectedKeys(keys as string[]);
     },
+    RowMenu: Dropdown
   };
   return { tableProps: finalProps, selectedKeys, ...table };
 };
