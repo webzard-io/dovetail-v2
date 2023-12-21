@@ -1,9 +1,10 @@
 import { css } from '@linaria/core';
-import React from 'react';
-import Table from 'src/components/Table';
+import BaseTable from 'src/components/Table';
 import { TableProps } from 'src/components/Table';
 import { TableToolBar } from 'src/components/Table/TableToolBar';
 import { ResourceModel } from 'src/model';
+import ComponentContext from 'src/contexts/component';
+import React, { useContext } from 'react';
 
 const ListPageStyle = css`
   width: 100%;
@@ -28,6 +29,8 @@ interface ListPageProps<T extends ResourceModel> {
 
 export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
   const { title, selectedKeys, tableProps } = props;
+  const { Table: TableComponent } = useContext(ComponentContext);
+  const Table = TableComponent || BaseTable;
 
   return (
     <div className={ListPageStyle}>

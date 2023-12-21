@@ -15,7 +15,7 @@ import { Column } from '../../Table';
 type Props<Model extends ResourceModel> = IResourceComponentsProps & {
   formatter: (v: Resource) => Model;
   columns: Column<Model>[];
-  Dropdown?: React.FC<{ data: Model }>;
+  Dropdown?: React.FC<{ record: Model }>;
 };
 
 export function ResourceList<Raw extends Resource, Model extends ResourceModel>(

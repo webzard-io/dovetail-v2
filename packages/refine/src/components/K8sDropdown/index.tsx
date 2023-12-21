@@ -14,11 +14,11 @@ import { useEdit } from 'src/hooks/useEdit';
 import { ResourceModel } from '../../model';
 
 interface K8sDropdownProps {
-  data: ResourceModel;
+  record: ResourceModel;
 }
 
 function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
-  const { data } = props;
+  const { record } = props;
   const kit = useUIKit();
   const useResourceResult = useResource();
   const resource = useResourceResult.resource;
@@ -36,8 +36,8 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
           <kit.menu>
             <kit.menuItem
               onClick={() => {
-                if (data.id) {
-                  edit(data.id);
+                if (record.id) {
+                  edit(record.id);
                 }
               }}
             >
@@ -46,17 +46,17 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
             <kit.menuItem
               danger={true}
               onClick={() => {
-                openDeleteConfirmModal(data.id);
+                openDeleteConfirmModal(record.id);
               }}
             >
               <Icon src={TrashBinDelete16Icon}>{t('dovetail.delete')}</Icon>
             </kit.menuItem>
             <kit.menu.Item
               onClick={() => {
-                if (data.id) {
+                if (record.id) {
                   download({
-                    name: data.metadata?.name || data.kind || '',
-                    item: data,
+                    name: record.metadata?.name || record.kind || '',
+                    item: record,
                   });
                 }
               }}

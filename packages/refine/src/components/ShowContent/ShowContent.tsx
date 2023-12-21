@@ -36,7 +36,7 @@ const EditorStyle = css`
 type Props<Raw extends Resource, Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
   formatter: (r: Raw) => Model;
-  Dropdown?: React.FC<{ data: Model }>;
+  Dropdown?: React.FC<{ record: Model }>;
 };
 
 enum Mode {
@@ -135,7 +135,7 @@ export const ShowContent = <Raw extends Resource, Model extends ResourceModel>(
           <kit.radioButton value="detail">{t('dovetail.detail')}</kit.radioButton>
           <kit.radioButton value="yaml">YAML</kit.radioButton>
         </kit.radioGroup>
-        <Dropdown data={record} />
+        <Dropdown record={record} />
       </kit.space>
     </kit.space>
   );

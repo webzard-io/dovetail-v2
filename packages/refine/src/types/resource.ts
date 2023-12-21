@@ -40,6 +40,6 @@ export type ResourceConfig<
   initValue?: Record<string, unknown>;
   columns?: (i18n: i18n) => Column<Model>[];
   showFields?: (i18n: i18n) => ShowField<Model>[][];
-  Dropdown?: React.FC<{ data: Model }>;
+  Dropdown?: React.FC<{ record: Model }>;
   isCustom?: boolean;
 };

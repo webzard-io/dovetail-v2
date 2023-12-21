@@ -8,21 +8,21 @@ import { pruneBeforeEdit } from '../../utils/k8s';
 import K8sDropdown from '../K8sDropdown';
 
 type Props<Model extends WorkloadModel> = {
-  data: Model;
+  record: Model;
 };
 
 export function WorkloadDropdown<Model extends WorkloadModel>(props: Props<Model>) {
-  const { data } = props;
+  const { record } = props;
   const kit = useUIKit();
   const { resource } = useResource();
   const { mutate } = useUpdate();
   const { t } = useTranslation();
 
   return (
-    <K8sDropdown data={data}>
+    <K8sDropdown record={record}>
       <kit.menu.Item
         onClick={() => {
-          const v = data.redeploy();
+          const v = record.redeploy();
           const id = v.id;
           pruneBeforeEdit(v);
           mutate({

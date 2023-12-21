@@ -11,23 +11,23 @@ import { pruneBeforeEdit } from '../../utils/k8s';
 import K8sDropdown from '../K8sDropdown';
 
 type Props<Model extends CronJobModel> = {
-  data: Model;
+  record: Model;
 };
 
 export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>) {
-  const { data } = props;
+  const { record } = props;
   const kit = useUIKit();
   const { resource } = useResource();
   const { mutate } = useUpdate();
   const { t } = useTranslation();
 
-  const suspended = Boolean(data.spec?.suspend);
+  const suspended = Boolean(record.spec?.suspend);
 
   return (
-    <K8sDropdown data={data}>
+    <K8sDropdown record={record}>
       <kit.menu.Item
         onClick={() => {
-          const v = suspended ? data.resume() : data.suspend();
+          const v = suspended ? record.resume() : record.suspend();
           const id = v.id;
           pruneBeforeEdit(v);
           mutate({
