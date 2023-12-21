@@ -277,7 +277,7 @@ const useEagleForm = <
     },
   };
   const initialValues = queryResult?.data?.data
-    ? (queryResult.data.data as any).rawYaml
+    ? (queryResult.data.data as any).restore()
     : undefined;
 
   if (initialValues) {

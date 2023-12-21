@@ -179,7 +179,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
     [Mode.Yaml]: (
       <MonacoYamlEditor
         className={EditorStyle}
-        defaultValue={yaml.dump(model.rawYaml)}
+        defaultValue={yaml.dump(model.restore())}
         schema={{}}
         onEditorCreate={editor => {
           fold(editor);
