@@ -23,7 +23,6 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const useResourceResult = useResource();
   const resource = useResourceResult.resource;
   const { edit } = useEdit();
-  console.log('resource', resource);
   const { modalProps, visible, openDeleteConfirmModal } = useDeleteModal(
     resource?.name || ''
   );
@@ -47,7 +46,6 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
             <kit.menuItem
               danger={true}
               onClick={() => {
-                console.log('openDeleteConfirmModal', data);
                 openDeleteConfirmModal(data.id);
               }}
             >
@@ -58,7 +56,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 if (data.id) {
                   download({
                     name: data.metadata?.name || data.kind || '',
-                    item: data,
+                    item: data.rawYaml,
                   });
                 }
               }}
