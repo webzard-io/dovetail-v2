@@ -56,7 +56,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 if (data.id) {
                   download({
                     name: data.metadata?.name || data.kind || '',
-                    item: data.rawYaml,
+                    item: data.restore(),
                   });
                 }
               }}
