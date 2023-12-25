@@ -20,10 +20,10 @@ export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps, selectedKeys } = useEagleTable<WithId<DaemonSet>, WorkloadModel>({
     useTableParams: {},
     columns: [
-      PhaseColumnRenderer(i18n),
-      NameColumnRenderer(i18n),
-      NameSpaceColumnRenderer(i18n),
-      WorkloadImageColumnRenderer(i18n),
+      PhaseColumnRenderer(),
+      NameColumnRenderer(),
+      NameSpaceColumnRenderer(),
+      WorkloadImageColumnRenderer(),
       {
         key: 'ready',
         display: true,
@@ -31,7 +31,7 @@ export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
         title: 'Ready',
         sortable: true,
       },
-      AgeColumnRenderer(i18n),
+      AgeColumnRenderer(),
     ],
     tableProps: {
       currentSize: 10,

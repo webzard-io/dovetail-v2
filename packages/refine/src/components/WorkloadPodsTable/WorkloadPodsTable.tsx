@@ -40,11 +40,11 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
   }, [data?.data, selector]);
 
   const columns: Column<PodModel>[] = [
-    PhaseColumnRenderer(i18n),
-    NameColumnRenderer(i18n, 'pods'),
-    NodeNameColumnRenderer(i18n),
-    WorkloadImageColumnRenderer(i18n),
-    RestartCountColumnRenderer(i18n),
+    PhaseColumnRenderer(),
+    NameColumnRenderer('pods'),
+    NodeNameColumnRenderer(),
+    WorkloadImageColumnRenderer(),
+    RestartCountColumnRenderer(),
   ];
 
   return (

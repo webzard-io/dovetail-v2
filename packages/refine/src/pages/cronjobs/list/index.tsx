@@ -21,10 +21,10 @@ export const CronJobList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps, selectedKeys } = useEagleTable<WithId<CronJob>, CronJobModel>({
     useTableParams: {},
     columns: [
-      PhaseColumnRenderer(i18n),
-      NameColumnRenderer(i18n),
-      NameSpaceColumnRenderer(i18n),
-      WorkloadImageColumnRenderer(i18n),
+      PhaseColumnRenderer(),
+      NameColumnRenderer(),
+      NameSpaceColumnRenderer(),
+      WorkloadImageColumnRenderer(),
       {
         key: 'schedule',
         display: true,
@@ -42,7 +42,7 @@ export const CronJobList: React.FC<IResourceComponentsProps> = () => {
           return <Time date={value} />;
         },
       },
-      AgeColumnRenderer(i18n),
+      AgeColumnRenderer(),
     ],
     tableProps: {
       currentSize: 10,

@@ -10,13 +10,13 @@ export const useDeleteModal = (resource: string) => {
   const [id, setId] = useState<BaseKey>('');
   const { t } = useTranslation();
   const modalProps: ModalProps = {
-    title: t('delete'),
-    okText: t('delete'),
+    title: t('dovetail.delete'),
+    okText: t('dovetail.delete'),
     okButtonProps: {
       danger: true,
     },
-    cancelText: t('cancel'),
-    children: t('confirm_delete_text', {
+    cancelText: t('dovetail.cancel'),
+    children: t('dovetail.confirm_delete_text', {
       target: id,
       interpolation: { escapeValue: false },
     }),

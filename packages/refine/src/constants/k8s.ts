@@ -49,7 +49,7 @@ export const DEPLOYMENT_INIT_VALUE = {
 };
 
 export const CRONJOB_INIT_VALUE = {
-  apiVersion: 'batch/v1beta1',
+  apiVersion: 'batch/v1',
   kind: 'CronJob',
   ...BASE_INIT_VALUE,
   spec: {
@@ -153,5 +153,25 @@ export const POD_INIT_VALUE = {
     containers: [BASE_CONTAINER_INIT_VALUE],
   },
 };
+
+export const SERVICE_INIT_VALUE = {
+  "apiVersion": "v1",
+  "kind": "Service",
+  ...BASE_INIT_VALUE,
+  "spec": {
+    "selector": {},
+    "clusterIP": null,
+    "ports": [
+      {
+        "name": "",
+        "port": null,
+        "protocol": "TCP",
+        "targetPort": null
+      }
+    ],
+    "sessionAffinity": "None",
+    "type": "ClusterIP"
+  }
+}
 
 export const TIMESTAMP_LABEL = 'sks.user.kubesmart.smtx.io/timestamp';

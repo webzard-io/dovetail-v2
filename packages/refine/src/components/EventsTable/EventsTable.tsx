@@ -33,12 +33,12 @@ export const EventsTable: React.FC<Props> = ({}) => {
   });
   const columns = useMemo(
     () => [
-      NameSpaceColumnRenderer(i18n),
+      NameSpaceColumnRenderer(),
       {
         key: 'type',
         display: true,
         dataIndex: ['rawYaml', 'type'],
-        title: i18n.t('type'),
+        title: i18n.t('dovetail.type'),
         sortable: true,
         sorter: CommonSorter(['rawYaml', 'type']),
       },
@@ -46,7 +46,7 @@ export const EventsTable: React.FC<Props> = ({}) => {
         key: 'reason',
         display: true,
         dataIndex: ['rawYaml', 'reason'],
-        title: i18n.t('reason'),
+        title: i18n.t('dovetail.reason'),
         sortable: true,
         sorter: CommonSorter(['rawYaml', 'reason']),
       },
@@ -54,7 +54,7 @@ export const EventsTable: React.FC<Props> = ({}) => {
         key: 'object',
         display: true,
         dataIndex: ['rawYaml', 'regarding', 'name'],
-        title: i18n.t('object'),
+        title: i18n.t('dovetail.object'),
         sortable: true,
         sorter: CommonSorter(['rawYaml', 'regarding', 'name']),
       },
@@ -62,11 +62,11 @@ export const EventsTable: React.FC<Props> = ({}) => {
         key: 'note',
         display: true,
         dataIndex: ['rawYaml', 'note'],
-        title: i18n.t('note'),
+        title: i18n.t('dovetail.note'),
         sortable: true,
         sorter: CommonSorter(['rawYaml', 'note']),
       },
-      AgeColumnRenderer(i18n),
+      AgeColumnRenderer(),
     ],
     [i18n]
   );

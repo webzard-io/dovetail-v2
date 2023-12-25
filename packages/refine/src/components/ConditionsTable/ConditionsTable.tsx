@@ -21,28 +21,28 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       key: 'type',
       display: true,
       dataIndex: 'type',
-      title: t('condition'),
+      title: t('dovetail.condition'),
       sortable: true,
     },
     {
       key: 'status',
       display: true,
       dataIndex: 'status',
-      title: t('status'),
+      title: t('dovetail.status'),
       sortable: true,
     },
     {
       key: 'reason',
       display: true,
       dataIndex: 'reason',
-      title: t('reason'),
+      title: t('dovetail.reason'),
       sortable: true,
     },
     {
       key: 'lastUpdateTime',
       display: true,
       dataIndex: 'lastUpdateTime',
-      title: t('updated_time'),
+      title: t('dovetail.updated_time'),
       sortable: true,
       render: (value: string, record: Condition) => {
         const time = value || record.lastTransitionTime;
@@ -53,7 +53,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       key: 'message',
       display: true,
       dataIndex: 'message',
-      title: t('message'),
+      title: t('dovetail.message'),
       sortable: true,
     },
   ];
