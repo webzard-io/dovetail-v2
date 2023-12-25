@@ -60,13 +60,13 @@ export const CronjobJobsTable: React.FC<{
   }, [data?.data, owner]);
 
   const columns: Column<JobModel>[] = [
-    PhaseColumnRenderer(i18n),
-    NameColumnRenderer(i18n, 'jobs'),
-    NameSpaceColumnRenderer(i18n),
-    WorkloadImageColumnRenderer(i18n),
-    CompletionsCountColumnRenderer(i18n),
-    DurationColumnRenderer(i18n),
-    AgeColumnRenderer(i18n),
+    PhaseColumnRenderer(),
+    NameColumnRenderer('jobs'),
+    NameSpaceColumnRenderer(),
+    WorkloadImageColumnRenderer(),
+    CompletionsCountColumnRenderer(),
+    DurationColumnRenderer(),
+    AgeColumnRenderer(),
   ];
 
   return (

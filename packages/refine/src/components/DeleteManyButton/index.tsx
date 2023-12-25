@@ -20,7 +20,7 @@ export const DeleteManyButton: React.FC<{ ids: string[] }> = props => {
   return (
     <>
       <kit.button type="primary" danger onClick={onClick}>
-        {t('delete')}
+        {t('dovetail.delete')}
       </kit.button>
       {visible ? <kit.modal {...modalProps} /> : null}
     </>

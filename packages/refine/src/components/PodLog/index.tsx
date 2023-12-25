@@ -160,7 +160,7 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
           }}
         >
           <kit.option value="" disabled>
-            {t('select_container')}
+            {t('dovetail.select_container')}
           </kit.option>
           {(pod.spec?.containers || []).map(container => (
             <kit.option key={container.name} value={container.name}>
@@ -170,14 +170,14 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
         </kit.select>
 
         <kit.checkbox checked={wrap} onChange={e => setWrap(e.target.checked)}>
-          {t('wrap')}
+          {t('dovetail.wrap')}
         </kit.checkbox>
 
         <kit.button
           onClick={() => setPaused(prev => !prev)}
           prefixIcon={paused ? <Resume24Icon /> : <SuspendedPause24GradientOrangeIcon />}
         >
-          {paused ? t('resume_log') : t('suspend')}
+          {paused ? t('dovetail.resume_log') : t('dovetail.suspend')}
         </kit.button>
       </div>
 
@@ -197,8 +197,8 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
               }}
               onClick={() => setPaused(false)}
             >
-              {t('resume_log')}
-              {linesBehind === 0 ? null : t('log_new_lines', { count: linesBehind })}
+              {t('dovetail.resume_log')}
+              {linesBehind === 0 ? null : t('dovetail.log_new_lines', { count: linesBehind })}
             </kit.button>
           )
         }

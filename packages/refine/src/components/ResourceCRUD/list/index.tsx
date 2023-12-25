@@ -26,9 +26,9 @@ export function ResourceList<Raw extends Resource, Model extends ResourceModel>(
   const { tableProps, selectedKeys } = useEagleTable<WithId<Raw>, Model>({
     useTableParams: {},
     columns: [
-      PhaseColumnRenderer(i18n),
-      NameColumnRenderer(i18n),
-      NameSpaceColumnRenderer(i18n),
+      NameColumnRenderer(),
+      PhaseColumnRenderer(),
+      NameSpaceColumnRenderer(),
       ...columns,
     ],
     tableProps: {

@@ -45,10 +45,10 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps, selectedKeys } = useEagleTable<WithId<Pod>, PodModel>({
     useTableParams: {},
     columns: compact([
-      PhaseColumnRenderer(i18n),
-      NameColumnRenderer(i18n),
-      NameSpaceColumnRenderer(i18n),
-      WorkloadImageColumnRenderer(i18n),
+      PhaseColumnRenderer(),
+      NameColumnRenderer(),
+      NameSpaceColumnRenderer(),
+      WorkloadImageColumnRenderer(),
       {
         key: 'readyDisplay',
         display: true,
@@ -57,8 +57,8 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
         sortable: true,
         sorter: CommonSorter(['readyDisplay']),
       },
-      RestartCountColumnRenderer(i18n),
-      NodeNameColumnRenderer(i18n),
+      RestartCountColumnRenderer(),
+      NodeNameColumnRenderer(),
       supportMetrics && {
         key: 'memory_usage',
         display: true,
@@ -89,7 +89,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
         sortable: true,
         sorter: CommonSorter(['status', 'podIP']),
       },
-      AgeColumnRenderer(i18n),
+      AgeColumnRenderer(),
     ]),
     tableProps: {
       currentSize: 10,

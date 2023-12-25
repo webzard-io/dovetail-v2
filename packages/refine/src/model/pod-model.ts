@@ -74,4 +74,12 @@ export class PodModel extends WorkloadModel<Pod> {
     return `${this.rawYaml.status?.containerStatuses?.filter(c => c.ready).length}/${this
       .rawYaml.spec?.containers.length}`;
   }
+
+  get readyContainerCount() {
+    return this.rawYaml.status?.containerStatuses?.filter(c => c.ready).length;
+  }
+
+  get containerCount() {
+    return this.rawYaml.spec?.containers.length;
+  }
 }

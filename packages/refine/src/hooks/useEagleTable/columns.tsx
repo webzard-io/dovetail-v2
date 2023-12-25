@@ -1,6 +1,5 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
-import { i18n } from 'i18next';
 import { get } from 'lodash';
 import React from 'react';
 import { ImageNames } from '../../components/ImageNames';
@@ -10,6 +9,7 @@ import Time from '../../components/Time';
 import { WorkloadReplicas } from '../../components/WorkloadReplicas';
 import { JobModel, PodModel, ResourceModel } from '../../model';
 import { WorkloadModel } from '../../model/workload-model';
+import i18n from '../../i18n';
 
 const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
   const { name, id, resource } = props;
@@ -47,7 +47,6 @@ export const CommonSorter = (dataIndex: string[]) => (a: unknown, b: unknown) =>
 };
 
 export const NameColumnRenderer = <Model extends ResourceModel>(
-  i18n: i18n,
   resource = ''
 ): Column<Model> => {
   const dataIndex = ['metadata', 'name'];
@@ -55,7 +54,7 @@ export const NameColumnRenderer = <Model extends ResourceModel>(
     key: 'name',
     display: true,
     dataIndex,
-    title: i18n.t('name'),
+    title: i18n.t('dovetail.name'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (v: string, record: Model) => {
@@ -65,28 +64,26 @@ export const NameColumnRenderer = <Model extends ResourceModel>(
 };
 
 export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
-  i18n: i18n
 ): Column<Model> => {
   const dataIndex = ['metadata', 'namespace'];
   return {
     key: 'namespace',
     display: true,
     dataIndex,
-    title: i18n.t('namespace'),
+    title: i18n.t('dovetail.namespace'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
   };
 };
 
 export const PhaseColumnRenderer = <Model extends ResourceModel>(
-  i18n: i18n
 ): Column<Model> => {
   const dataIndex = ['status', 'phase'];
   return {
     key: 'phase',
     display: true,
     dataIndex: dataIndex,
-    title: i18n.t('phase'),
+    title: i18n.t('dovetail.phase'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: v => <StateTag state={v} />,
@@ -94,14 +91,13 @@ export const PhaseColumnRenderer = <Model extends ResourceModel>(
 };
 
 export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
-  i18n: i18n
 ): Column<Model> => {
   const dataIndex = ['imageNames'];
   return {
     key: 'image',
     display: true,
     dataIndex,
-    title: i18n.t('image'),
+    title: i18n.t('dovetail.image'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render(value) {
@@ -111,14 +107,13 @@ export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
 };
 
 export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
-  i18n: i18n
 ): Column<Model> => {
   const dataIndex = ['status', 'replicas'];
   return {
     key: 'replicas',
     display: true,
     dataIndex,
-    title: i18n.t('replicas'),
+    title: i18n.t('dovetail.replicas'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (_, record: Model) => {
@@ -128,14 +123,13 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
 };
 
 export const AgeColumnRenderer = <Model extends ResourceModel>(
-  i18n: i18n
 ): Column<Model> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
   return {
     key: 'creationTimestamp',
     display: true,
     dataIndex,
-    title: i18n.t('created_time'),
+    title: i18n.t('dovetail.created_time'),
     sortable: true,
     sorter: (a: ResourceModel, b: ResourceModel) => {
       const valA = new Date(get(a, dataIndex));
@@ -150,36 +144,33 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
   };
 };
 
-export const NodeNameColumnRenderer = <Model extends PodModel>(
-  i18n: i18n
-): Column<Model> => {
+export const NodeNameColumnRenderer = <Model extends PodModel>(options?: Partial<Column<Model>>): Column<Model> => {
   const dataIndex = ['spec', 'nodeName'];
+
   return {
     key: 'node',
     display: true,
     dataIndex,
-    title: i18n.t('node_name'),
+    title: i18n.t('dovetail.node_name'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
+    ...options,
   };
 };
 
-export const RestartCountColumnRenderer = <Model extends PodModel>(
-  i18n: i18n
-): Column<Model> => {
+export const RestartCountColumnRenderer = <Model extends PodModel>(): Column<Model> => {
   const dataIndex = ['restartCount'];
   return {
     key: 'restartCount',
     display: true,
     dataIndex,
-    title: i18n.t('restarts'),
+    title: i18n.t('dovetail.restarts'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
   };
 };
 
 export const CompletionsCountColumnRenderer = <Model extends JobModel>(
-  i18n: i18n
 ): Column<Model> => {
   const dataIndex = ['completionsDisplay'];
   return {
@@ -193,21 +184,19 @@ export const CompletionsCountColumnRenderer = <Model extends JobModel>(
 };
 
 export const DurationColumnRenderer = <Model extends JobModel>(
-  i18n: i18n
 ): Column<Model> => {
   const dataIndex = ['durationDisplay'];
   return {
     key: 'duration',
     display: true,
     dataIndex,
-    title: i18n.t('duration'),
+    title: i18n.t('dovetail.duration'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
   };
 };
 
 export const ServiceTypeColumnRenderer = <Model extends ResourceModel>(
-  i18n: i18n
 ): Column<Model> => {
   const dataIndex = ['rawYaml', 'spec', 'type'];
   return {
