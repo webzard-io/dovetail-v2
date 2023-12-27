@@ -84,8 +84,9 @@ export const EventsTable: React.FC<Props> = ({}) => {
 
   return (
     <Table
+      tableKey='events'
       loading={isLoading}
-      dataSource={dataSource || []}
+      data={dataSource || []}
       columns={columns}
       rowKey="id"
       error={false}
