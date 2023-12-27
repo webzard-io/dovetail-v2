@@ -11,7 +11,7 @@ type Props<
 > = IResourceComponentsProps & {
   formatter: (v: Raw) => Model;
   filedGroups: ShowField<Model>[][];
-  Dropdown?: React.FC<{ data: Model }>;
+  Dropdown?: React.FC<{ record: Model }>;
 };
 
 export function ResourceShow<Raw extends Resource, Model extends ResourceModel>(

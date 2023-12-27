@@ -78,8 +78,9 @@ export const CronjobJobsTable: React.FC<{
     >
       <TableToolBar title="Jobs" selectedKeys={selectedKeys} hideCreate />
       <Table
+        tableKey='cronjobs'
         loading={!dataSource}
-        dataSource={dataSource || []}
+        data={dataSource || []}
         columns={columns}
         onSelect={keys => setSelectedKeys(keys as string[])}
         rowKey="id"
