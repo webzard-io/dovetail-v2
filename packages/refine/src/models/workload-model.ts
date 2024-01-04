@@ -9,11 +9,10 @@ import { cloneDeep, get, set, sumBy } from 'lodash';
 import { matchSelector } from '../utils/match-selector';
 import { PodModel } from './pod-model';
 import { WorkloadBaseModel } from './workload-base-model';
+import { TIMESTAMP_LABEL } from '../constants';
 
 type WorkloadTypes = Required<Deployment | StatefulSet | DaemonSet> &
   Unstructured;
-
-export const TIMESTAMP_LABEL = 'sks.user.kubesmart.smtx.io/timestamp';
 
 export class WorkloadModel extends WorkloadBaseModel {
   public restarts = 0;
