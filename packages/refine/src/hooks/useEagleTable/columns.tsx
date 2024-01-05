@@ -216,7 +216,7 @@ export const DurationColumnRenderer = <Model extends JobModel>(): Column<Model> 
 export const ServiceTypeColumnRenderer = <
   Model extends ResourceModel,
 >(): Column<Model> => {
-  const dataIndex = ['rawYaml', 'spec', 'type'];
+  const dataIndex = ['spec', 'type'];
   return {
     key: 'type',
     title: i18n.t('dovetail.type'),

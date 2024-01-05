@@ -101,7 +101,7 @@ export const DataField = (): ShowField<ResourceModel> => {
   return {
     key: 'data',
     title: i18n.t('dovetail.data'),
-    path: ['rawYaml', 'data'],
+    path: ['data'],
     render: val => {
       return <KeyValue value={val as Record<string, string>} />;
     },
@@ -112,7 +112,7 @@ export const SecretDataField = (): ShowField<ResourceModel> => {
   return {
     key: 'data',
     title: i18n.t('dovetail.data'),
-    path: ['rawYaml', 'data'],
+    path: ['data'],
     render: val => {
       const decodeVal: Record<string, string> = {};
       for (const key in val as Record<string, string>) {
@@ -138,7 +138,7 @@ export const ServiceTypeField = (): ShowField<ResourceModel> => {
   return {
     key: 'type',
     title: i18n.t('dovetail.type'),
-    path: ['rawYaml', 'spec', 'type'],
+    path: ['spec', 'type'],
   };
 };
 
@@ -146,7 +146,7 @@ export const ClusterIpField = (): ShowField<ResourceModel> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.clusterIp'),
-    path: ['rawYaml', 'spec', 'clusterIP'],
+    path: ['spec', 'clusterIP'],
   };
 };
 
@@ -154,7 +154,7 @@ export const SessionAffinityField = (): ShowField<ResourceModel> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.sessionAffinity'),
-    path: ['rawYaml', 'spec', 'sessionAffinity'],
+    path: ['spec', 'sessionAffinity'],
   };
 };
 
