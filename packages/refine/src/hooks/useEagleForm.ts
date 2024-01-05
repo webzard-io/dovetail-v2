@@ -151,7 +151,7 @@ const useEagleForm = <
     unknown
   > | null>(null);
   const useResourceResult = useResource();
-  const {globalStore} = useGlobalStore();
+  const { globalStore } = useGlobalStore();
   const kit = useUIKit();
   const {
     schema,
@@ -209,20 +209,15 @@ const useEagleForm = <
     warnWhenUnsavedChangesProp ?? warnWhenUnsavedChangesRefine;
 
   React.useEffect(() => {
-    form.resetFields();
-
     if (editor.current) {
-      const editorValue = yaml.dump(form.getFieldsValue(true));
       const editorInstance = editor.current.getEditorInstance();
 
-      editor.current.setEditorValue(editorValue);
-      editor.current.setValue(editorValue);
       if (queryResult?.data?.data && editorInstance && !isFoldRef.current) {
         fold(editorInstance);
         isFoldRef.current = true;
       }
     }
-  }, [queryResult?.data?.data, id, form, fold]);
+  }, [queryResult?.data?.data, id, fold]);
 
   React.useEffect(() => {
     const response = useFormCoreResult.mutationResult.error?.response;
@@ -278,6 +273,7 @@ const useEagleForm = <
       }
     },
   };
+
   const initialValues = queryResult?.data?.data
     ? globalStore?.restoreItem(queryResult.data.data)
     : undefined;
