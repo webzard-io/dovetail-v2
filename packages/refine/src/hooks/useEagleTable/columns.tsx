@@ -14,6 +14,7 @@ import {
   ResourceModel,
   WorkloadModel,
   WorkloadBaseModel,
+  CronJobModel,
 } from '../../models';
 
 const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
@@ -188,7 +189,7 @@ export const RestartCountColumnRenderer = <Model extends PodModel>(): Column<Mod
 };
 
 export const CompletionsCountColumnRenderer = <
-  Model extends JobModel,
+  Model extends JobModel | CronJobModel,
 >(): Column<Model> => {
   const dataIndex = ['completionsDisplay'];
   return {
@@ -201,7 +202,9 @@ export const CompletionsCountColumnRenderer = <
   };
 };
 
-export const DurationColumnRenderer = <Model extends JobModel>(): Column<Model> => {
+export const DurationColumnRenderer = <
+  Model extends JobModel | CronJobModel,
+>(): Column<Model> => {
   const dataIndex = ['durationDisplay'];
   return {
     key: 'duration',
