@@ -1,9 +1,8 @@
-import React, { createContext } from 'react';
-import Table, { TableProps } from 'src/components/Table';
-import { ResourceModel } from 'src/model/resource-model';
+import { createContext } from 'react';
+import Table from 'src/components/Table';
 
 const ComponentContext = createContext<{
-  Table?: typeof Table
+  Table?: typeof Table;
 }>({});
 
 export default ComponentContext;

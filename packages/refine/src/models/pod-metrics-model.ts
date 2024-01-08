@@ -1,16 +1,20 @@
-import { PodMetrics, ResourceQuantity } from 'src/types/metric';
-import { formatSi, parseSi } from 'src/utils/unit';
+import { GlobalStore } from 'k8s-api-provider';
+import { formatSi, parseSi } from '../utils/unit';
 import { ResourceModel } from './resource-model';
+import { PodMetrics, ResourceQuantity } from './types/metric';
 
-export class PodMetricsModel extends ResourceModel {
+export class PodMetricsModel extends ResourceModel<PodMetrics> {
   public usage: ResourceQuantity;
 
-  constructor(public data: PodMetrics) {
-    super(data);
+  constructor(
+    public _rawYaml: PodMetrics,
+    public _globalStore: GlobalStore
+  ) {
+    super(_rawYaml, _globalStore);
 
     let cpuUsageNum = 0;
     let memoryUsageNum = 0;
-    for (const container of data.containers) {
+    for (const container of _rawYaml.containers) {
       cpuUsageNum += parseSi(container.usage.cpu || '0');
       memoryUsageNum += parseSi(container.usage.memory || '0');
     }

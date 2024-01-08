@@ -1,4 +1,4 @@
-import { Resource } from './resource';
+import { Unstructured } from 'k8s-api-provider';
 
 type Quantity = string;
 
@@ -14,7 +14,7 @@ export type PodMetrics = {
   timestamp: string;
   window: string;
   containers: ContainerMetrics[];
-} & Resource;
+} & Unstructured;
 
 export type ResourceQuantity = {
   cpu: {

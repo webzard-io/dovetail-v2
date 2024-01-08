@@ -2,17 +2,16 @@ import { useUIKit } from '@cloudtower/eagle';
 import { useNavigation, useParsed, useShow } from '@refinedev/core';
 import { Drawer } from 'antd';
 import React from 'react';
-import { ResourceModel } from '../../model';
-import { Resource } from '../../types';
+import { ResourceModel } from '../../models';
 import { ShowField, ShowContent } from '../ShowContent';
 
-type Props<Raw extends Resource, Model extends ResourceModel> = {
+type Props<Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
-  formatter: (r: Raw) => Model;
+  formatter?: (r: Model) => Model;
 };
 
-export const DrawerShow = <Raw extends Resource, Model extends ResourceModel>(
-  props: Props<Raw, Model>
+export const DrawerShow = <Model extends ResourceModel>(
+  props: Props<Model>
 ) => {
   const kit = useUIKit();
   const parsed = useParsed();

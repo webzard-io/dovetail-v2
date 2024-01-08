@@ -9,6 +9,8 @@ import {
 import React, { useMemo } from 'react';
 import { Router } from 'react-router-dom';
 import { ResourceCRUD } from './components/ResourceCRUD';
+import GlobalStoreContext from './contexts/global-store';
+import { ProviderPlugins } from './plugins';
 import { routerProvider } from './providers/router-provider';
 import './i18n';
 
@@ -29,17 +31,10 @@ type Props = {
 };
 
 export const Dovetail: React.FC<Props> = props => {
-  const {
-    resourcesConfig,
-    urlPrefix = '',
-    useHashUrl,
-    Layout,
-    history,
-    globalStoreParams,
-  } = props;
+  const { resourcesConfig, urlPrefix = '', Layout, history, globalStoreParams } = props;
 
   const globalStore = useMemo(() => {
-    return new GlobalStore(globalStoreParams);
+    return new GlobalStore(globalStoreParams, ProviderPlugins);
   }, [globalStoreParams]);
 
   const notCustomResources = useMemo(() => {
@@ -61,34 +56,36 @@ export const Dovetail: React.FC<Props> = props => {
 
   return (
     <Router history={history}>
-      <Refine
-        dataProvider={{
-          default: dataProvider(globalStore),
-        }}
-        routerProvider={routerProvider}
-        liveProvider={liveProvider(globalStore)}
-        options={{
-          warnWhenUnsavedChanges: true,
-          liveMode: 'auto',
-        }}
-        resources={resourcesConfig.map(c => {
-          return {
-            name: c.name,
-            meta: {
-              resourceBasePath: c.basePath,
-              kind: c.kind,
-              parent: c.parent,
-              label: `${c.kind}s`,
-            },
-            list: `${urlPrefix}/${c.name}`,
-            show: `${urlPrefix}/${c.name}/show`,
-            create: `${urlPrefix}/${c.name}/create`,
-            edit: `${urlPrefix}/${c.name}/edit`,
-          };
-        })}
-      >
-        {content}
-      </Refine>
+      <GlobalStoreContext.Provider value={{ globalStore }}>
+        <Refine
+          dataProvider={{
+            default: dataProvider(globalStore),
+          }}
+          routerProvider={routerProvider}
+          liveProvider={liveProvider(globalStore)}
+          options={{
+            warnWhenUnsavedChanges: true,
+            liveMode: 'auto',
+          }}
+          resources={resourcesConfig.map(c => {
+            return {
+              name: c.name,
+              meta: {
+                resourceBasePath: c.basePath,
+                kind: c.kind,
+                parent: c.parent,
+                label: `${c.kind}s`,
+              },
+              list: `${urlPrefix}/${c.name}`,
+              show: `${urlPrefix}/${c.name}/show`,
+              create: `${urlPrefix}/${c.name}/create`,
+              edit: `${urlPrefix}/${c.name}/edit`,
+            };
+          })}
+        >
+          {content}
+        </Refine>
+      </GlobalStoreContext.Provider>
     </Router>
   );
 };

@@ -1,13 +1,13 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
 import FormLayout from 'src/components/FormLayout';
 import { YamlEditorComponent } from 'src/components/YamlEditor/YamlEditorComponent';
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
 import useEagleForm from 'src/hooks/useEagleForm';
 import { getCommonErrors } from 'src/utils/error';
-import ErrorContent from 'src/components/ErrorContent';
 
 const FormStyle = css`
   height: 100%;
@@ -20,7 +20,7 @@ const EditorStyle = css`
 export enum SchemaStrategy {
   Required = 'Required',
   Optional = 'Optional',
-  None = 'None'
+  None = 'None',
 }
 
 interface YamlFormProps {
@@ -38,17 +38,21 @@ function YamlForm(props: YamlFormProps) {
     mutationResult,
     isLoadingSchema,
     fetchSchema,
-  } =
-    useEagleForm({
-      editorOptions: {
-        isSkipSchema: schemaStrategy === SchemaStrategy.None,
-      }
-    });
+  } = useEagleForm({
+    editorOptions: {
+      isSkipSchema: schemaStrategy === SchemaStrategy.None,
+    },
+  });
   const kit = useUIKit();
   const { t, i18n } = useTranslation();
   const responseErrors = errorResponseBody
     ? getCommonErrors(errorResponseBody, i18n)
     : [];
+
+  // use useMemo to keep {} the same
+  const schema = useMemo(() => {
+    return editorProps.schema || {};
+  }, [editorProps.schema]);
 
   return (
     <FormLayout>
@@ -58,7 +62,7 @@ function YamlForm(props: YamlFormProps) {
         layout="horizontal"
         className={FormStyle}
       >
-        {(()=> {
+        {(() => {
           if (isLoadingSchema) {
             return <kit.loading />;
           }
@@ -69,7 +73,7 @@ function YamlForm(props: YamlFormProps) {
                 <YamlEditorComponent
                   {...editorProps}
                   className={EditorStyle}
-                  schema={editorProps.schema || {}}
+                  schema={schema}
                   collapsable={false}
                 />
               </kit.form.Item>
@@ -100,7 +104,10 @@ function YamlForm(props: YamlFormProps) {
               </kit.form.Item>
             </>
           ) : (
-            <ErrorContent errorText={t('dovetail.fetch_schema_fail')} refetch={fetchSchema}></ErrorContent>
+            <ErrorContent
+              errorText={t('dovetail.fetch_schema_fail')}
+              refetch={fetchSchema}
+            ></ErrorContent>
           );
         })()}
       </kit.form>
