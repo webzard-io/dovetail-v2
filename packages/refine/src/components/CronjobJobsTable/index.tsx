@@ -12,12 +12,12 @@ import {
   PhaseColumnRenderer,
   WorkloadImageColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { JobModel, ResourceModel } from '../../models';
+import { CronJobModel } from '../../models';
 import Table, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
 function matchOwner(
-  job: JobModel,
+  job: CronJobModel,
   owner: OwnerReference & { namespace: string }
 ): boolean {
   let match = false;
@@ -42,7 +42,7 @@ export const CronjobJobsTable: React.FC<{
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { data } = useList<JobModel>({
+  const { data } = useList<CronJobModel>({
     resource: 'jobs',
     meta: { resourceBasePath: '/apis/batch/v1', kind: 'Job' },
   });
@@ -53,7 +53,7 @@ export const CronjobJobsTable: React.FC<{
     });
   }, [data?.data, owner]);
 
-  const columns = [
+  const columns: Column<CronJobModel>[] = [
     PhaseColumnRenderer(),
     NameColumnRenderer('jobs'),
     NameSpaceColumnRenderer(),
@@ -61,7 +61,7 @@ export const CronjobJobsTable: React.FC<{
     CompletionsCountColumnRenderer(),
     DurationColumnRenderer(),
     AgeColumnRenderer(),
-  ] as Column<ResourceModel>[];
+  ];
 
   return (
     <kit.space
