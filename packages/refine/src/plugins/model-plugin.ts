@@ -7,6 +7,7 @@ import {
 } from 'k8s-api-provider';
 import {
   CronJobModel,
+  EventModel,
   JobModel,
   PodModel,
   ResourceModel,
@@ -20,6 +21,7 @@ const ModelMap = {
   CronJob: CronJobModel,
   Job: JobModel,
   Pod: PodModel,
+  Event: EventModel,
 };
 
 class ModelPlugin implements IProviderPlugin<ResourceModel> {

@@ -6,3 +6,4 @@ export * from './pod-metrics-model';
 export * from './resource-model';
 export * from './workload-model';
 export * from './cronjob-model';
+export * from './event-model';

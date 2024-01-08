@@ -6,15 +6,14 @@ import {
   CommonSorter,
   NameSpaceColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { ResourceModel } from '../../models';
-import { addId } from '../../utils/addId';
+import { EventModel } from '../../models';
 import Table from '../Table';
 
 export const EventsTable: React.FC = ({}) => {
   const { i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { data, isLoading } = useList<ResourceModel>({
+  const { data, isLoading } = useList<EventModel>({
     resource: 'events',
     meta: { resourceBasePath: '/apis/events.k8s.io/v1', kind: 'Event' },
   });
@@ -60,18 +59,17 @@ export const EventsTable: React.FC = ({}) => {
     [i18n]
   );
 
-  const dataSource = useMemo<ResourceModel[]>(
-    () =>
-      addId(data?.data || [], 'metadata.uid' as any).filter((d: any) => {
-        const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
-        return objectId === parsed.id;
-      }) as ResourceModel[],
-    [data?.data, parsed]
-  );
+  const dataSource = useMemo<EventModel[]>(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return data?.data.filter((d: any) => {
+      const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
+      return objectId === parsed.id;
+    }) as EventModel[];
+  }, [data?.data, parsed]);
 
   return (
     <Table
-      tableKey='events'
+      tableKey="events"
       loading={isLoading}
       data={dataSource || []}
       columns={columns}
