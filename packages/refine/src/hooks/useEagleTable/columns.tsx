@@ -7,9 +7,15 @@ import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
 import Time from '../../components/Time';
 import { WorkloadReplicas } from '../../components/WorkloadReplicas';
-import { JobModel, PodModel, ResourceModel } from '../../model';
-import { WorkloadModel } from '../../model/workload-model';
 import i18n from '../../i18n';
+import {
+  JobModel,
+  PodModel,
+  ResourceModel,
+  WorkloadModel,
+  WorkloadBaseModel,
+  CronJobModel,
+} from '../../models';
 
 const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
   const { name, id, resource } = props;
@@ -63,8 +69,7 @@ export const NameColumnRenderer = <Model extends ResourceModel>(
   };
 };
 
-export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
-): Column<Model> => {
+export const NameSpaceColumnRenderer = <Model extends ResourceModel>(): Column<Model> => {
   const dataIndex = ['metadata', 'namespace'];
   return {
     key: 'namespace',
@@ -76,8 +81,7 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
   };
 };
 
-export const PhaseColumnRenderer = <Model extends ResourceModel>(
-): Column<Model> => {
+export const PhaseColumnRenderer = <Model extends ResourceModel>(): Column<Model> => {
   const dataIndex = ['status', 'phase'];
   return {
     key: 'phase',
@@ -90,8 +94,9 @@ export const PhaseColumnRenderer = <Model extends ResourceModel>(
   };
 };
 
-export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
-): Column<Model> => {
+export const WorkloadImageColumnRenderer = <
+  Model extends WorkloadBaseModel,
+>(): Column<Model> => {
   const dataIndex = ['imageNames'];
   return {
     key: 'image',
@@ -100,14 +105,26 @@ export const WorkloadImageColumnRenderer = <Model extends ResourceModel>(
     title: i18n.t('dovetail.image'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
-    render(value) {
-      return <ImageNames value={value} />;
+    render(value, record) {
+      return <ImageNames value={record.imageNames} />;
     },
   };
 };
 
-export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
-): Column<Model> => {
+export const WorkloadRestartsColumnRenderer = <
+  Model extends WorkloadModel,
+>(): Column<Model> => {
+  const dataIndex = ['restarts'];
+  return {
+    key: 'restarts',
+    display: true,
+    dataIndex,
+    title: i18n.t('dovetail.restarts'),
+    sortable: false,
+  };
+};
+
+export const ReplicasColumnRenderer = <Model extends WorkloadModel>(): Column<Model> => {
   const dataIndex = ['status', 'replicas'];
   return {
     key: 'replicas',
@@ -122,8 +139,7 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
   };
 };
 
-export const AgeColumnRenderer = <Model extends ResourceModel>(
-): Column<Model> => {
+export const AgeColumnRenderer = <Model extends ResourceModel>(): Column<Model> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
   return {
     key: 'creationTimestamp',
@@ -144,7 +160,9 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
   };
 };
 
-export const NodeNameColumnRenderer = <Model extends PodModel>(options?: Partial<Column<Model>>): Column<Model> => {
+export const NodeNameColumnRenderer = <Model extends PodModel>(
+  options?: Partial<Column<Model>>
+): Column<Model> => {
   const dataIndex = ['spec', 'nodeName'];
 
   return {
@@ -170,8 +188,9 @@ export const RestartCountColumnRenderer = <Model extends PodModel>(): Column<Mod
   };
 };
 
-export const CompletionsCountColumnRenderer = <Model extends JobModel>(
-): Column<Model> => {
+export const CompletionsCountColumnRenderer = <
+  Model extends JobModel | CronJobModel,
+>(): Column<Model> => {
   const dataIndex = ['completionsDisplay'];
   return {
     key: 'completions',
@@ -183,8 +202,9 @@ export const CompletionsCountColumnRenderer = <Model extends JobModel>(
   };
 };
 
-export const DurationColumnRenderer = <Model extends JobModel>(
-): Column<Model> => {
+export const DurationColumnRenderer = <
+  Model extends JobModel | CronJobModel,
+>(): Column<Model> => {
   const dataIndex = ['durationDisplay'];
   return {
     key: 'duration',
@@ -196,9 +216,10 @@ export const DurationColumnRenderer = <Model extends JobModel>(
   };
 };
 
-export const ServiceTypeColumnRenderer = <Model extends ResourceModel>(
-): Column<Model> => {
-  const dataIndex = ['rawYaml', 'spec', 'type'];
+export const ServiceTypeColumnRenderer = <
+  Model extends ResourceModel,
+>(): Column<Model> => {
+  const dataIndex = ['spec', 'type'];
   return {
     key: 'type',
     title: i18n.t('dovetail.type'),

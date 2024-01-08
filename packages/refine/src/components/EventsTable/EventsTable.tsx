@@ -1,9 +1,4 @@
-import { Icon, RequiredColumnProps, useUIKit } from '@cloudtower/eagle';
-import {
-  CheckmarkDoneSuccessCorrect16BoldGreenIcon,
-  XmarkFailed16BoldRedIcon,
-} from '@cloudtower/icons-react';
-import { Event } from 'kubernetes-types/core/v1';
+import { useList, useParsed } from '@refinedev/core';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,80 +6,70 @@ import {
   CommonSorter,
   NameSpaceColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { WithId } from '../../types';
-import { addId } from '../../utils/addId';
-import { StateTag } from '../StateTag';
-import Time from '../Time';
-import { useList, useParsed, useShow } from '@refinedev/core';
-import { ResourceModel } from '../../model';
+import { EventModel } from '../../models';
 import Table from '../Table';
 
-type Props = {};
-
-export const EventsTable: React.FC<Props> = ({}) => {
-  const kit = useUIKit();
+export const EventsTable: React.FC = ({}) => {
   const { i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const parsed = useParsed();
 
-  const { data, isLoading } = useList({
+  const { data, isLoading } = useList<EventModel>({
     resource: 'events',
     meta: { resourceBasePath: '/apis/events.k8s.io/v1', kind: 'Event' },
   });
+  const parsed = useParsed();
+
   const columns = useMemo(
     () => [
       NameSpaceColumnRenderer(),
       {
         key: 'type',
         display: true,
-        dataIndex: ['rawYaml', 'type'],
+        dataIndex: ['type'],
         title: i18n.t('dovetail.type'),
         sortable: true,
-        sorter: CommonSorter(['rawYaml', 'type']),
+        sorter: CommonSorter(['type']),
       },
       {
         key: 'reason',
         display: true,
-        dataIndex: ['rawYaml', 'reason'],
+        dataIndex: ['reason'],
         title: i18n.t('dovetail.reason'),
         sortable: true,
-        sorter: CommonSorter(['rawYaml', 'reason']),
+        sorter: CommonSorter(['reason']),
       },
       {
         key: 'object',
         display: true,
-        dataIndex: ['rawYaml', 'regarding', 'name'],
+        dataIndex: ['regarding', 'name'],
         title: i18n.t('dovetail.object'),
         sortable: true,
-        sorter: CommonSorter(['rawYaml', 'regarding', 'name']),
+        sorter: CommonSorter(['regarding', 'name']),
       },
       {
         key: 'note',
         display: true,
-        dataIndex: ['rawYaml', 'note'],
+        dataIndex: ['note'],
         title: i18n.t('dovetail.note'),
         sortable: true,
-        sorter: CommonSorter(['rawYaml', 'note']),
+        sorter: CommonSorter(['note']),
       },
       AgeColumnRenderer(),
     ],
     [i18n]
   );
 
-  const dataSource = useMemo(
-    () =>
-      addId(data?.data || [], 'metadata.uid')
-        .filter(d => {
-          const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
-          return objectId === parsed.id;
-        })
-        .map(d => new ResourceModel(d)),
-    [data?.data, parsed]
-  );
+  const dataSource = useMemo<EventModel[]>(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return data?.data.filter((d: any) => {
+      const objectId = `${d.regarding.namespace}/${d.regarding.name}`;
+      return objectId === parsed.id;
+    }) as EventModel[];
+  }, [data?.data, parsed]);
 
   return (
     <Table
-      tableKey='events'
+      tableKey="events"
       loading={isLoading}
       data={dataSource || []}
       columns={columns}

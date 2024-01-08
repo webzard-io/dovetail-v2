@@ -1,7 +1,5 @@
 import { IResourceComponentsProps } from '@refinedev/core';
-import { DaemonSet } from 'kubernetes-types/apps/v1';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { ListPage } from 'src/components/ListPage';
 import { WorkloadDropdown } from 'src/components/WorkloadDropdown';
 import { useEagleTable } from 'src/hooks/useEagleTable';
@@ -12,12 +10,10 @@ import {
   NameSpaceColumnRenderer,
   PhaseColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { WorkloadModel } from '../../../model/workload-model';
-import { WithId } from '../../../types';
+import { WorkloadModel } from '../../../models';
 
 export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
-  const { i18n } = useTranslation();
-  const { tableProps, selectedKeys } = useEagleTable<WithId<DaemonSet>, WorkloadModel>({
+  const { tableProps, selectedKeys } = useEagleTable<WorkloadModel>({
     useTableParams: {},
     columns: [
       PhaseColumnRenderer(),
@@ -36,7 +32,6 @@ export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
     tableProps: {
       currentSize: 10,
     },
-    formatter: d => new WorkloadModel(d),
     Dropdown: WorkloadDropdown,
   });
 

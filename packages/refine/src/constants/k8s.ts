@@ -155,23 +155,23 @@ export const POD_INIT_VALUE = {
 };
 
 export const SERVICE_INIT_VALUE = {
-  "apiVersion": "v1",
-  "kind": "Service",
+  'apiVersion': 'v1',
+  'kind': 'Service',
   ...BASE_INIT_VALUE,
-  "spec": {
-    "selector": {},
-    "clusterIP": null,
-    "ports": [
+  'spec': {
+    'selector': {},
+    'clusterIP': null,
+    'ports': [
       {
-        "name": "",
-        "port": null,
-        "protocol": "TCP",
-        "targetPort": null
+        'name': '',
+        'port': null,
+        'protocol': 'TCP',
+        'targetPort': null
       }
     ],
-    "sessionAffinity": "None",
-    "type": "ClusterIP"
+    'sessionAffinity': 'None',
+    'type': 'ClusterIP'
   }
-}
+};
 
 export const TIMESTAMP_LABEL = 'sks.user.kubesmart.smtx.io/timestamp';

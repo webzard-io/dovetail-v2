@@ -3,7 +3,7 @@ import { css } from '@linaria/core';
 import { useResource, useUpdate } from '@refinedev/core';
 import { get } from 'lodash-es';
 import React from 'react';
-import { WorkloadModel } from '../../model/workload-model';
+import { WorkloadModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
 
 const MinusButtonStyle = css`
@@ -30,7 +30,7 @@ export const WorkloadReplicas: React.FC<{ record: WorkloadModel }> = ({ record }
 
   const scale = (delta: number) => {
     const v = record.scale(currentReplicas + delta);
-    const id = v.id;
+    const id = record.id;
     pruneBeforeEdit(v);
     mutate({
       id,

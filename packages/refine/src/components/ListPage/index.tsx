@@ -1,10 +1,10 @@
 import { css } from '@linaria/core';
+import React, { useContext } from 'react';
 import BaseTable from 'src/components/Table';
 import { TableProps } from 'src/components/Table';
 import { TableToolBar } from 'src/components/Table/TableToolBar';
-import { ResourceModel } from 'src/model';
 import ComponentContext from 'src/contexts/component';
-import React, { useContext } from 'react';
+import { ResourceModel } from '../../models';
 
 const ListPageStyle = css`
   width: 100%;
