@@ -15,8 +15,6 @@ import { routerProvider } from './providers/router-provider';
 import './i18n';
 
 import './styles.css';
-import 'antd/dist/antd.css';
-import '@cloudtower/eagle/dist/style.css';
 
 import { ResourceConfig } from './types';
 
