@@ -5,6 +5,9 @@ import { render } from 'react-dom';
 
 import App from './App';
 import './i18n';
+import 'antd/dist/antd.css';
+import '@cloudtower/eagle/dist/style.css';
+
 initParrotI18n();
 
 const container = document.getElementById('root') as HTMLElement;
