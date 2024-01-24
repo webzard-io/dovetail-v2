@@ -208,16 +208,22 @@ const useEagleForm = <
   const warnWhenUnsavedChanges =
     warnWhenUnsavedChangesProp ?? warnWhenUnsavedChangesRefine;
 
+  // Init the editor after the resource value is fetched
   React.useEffect(() => {
+    form.resetFields();
+
     if (editor.current) {
+      const editorValue = yaml.dump(form.getFieldsValue(true));
       const editorInstance = editor.current.getEditorInstance();
 
+      editor.current.setEditorValue(editorValue);
+      editor.current.setValue(editorValue);
       if (queryResult?.data?.data && editorInstance && !isFoldRef.current) {
         fold(editorInstance);
         isFoldRef.current = true;
       }
     }
-  }, [queryResult?.data?.data, id, fold]);
+  }, [queryResult?.data?.data, id, form, fold]);
 
   React.useEffect(() => {
     const response = useFormCoreResult.mutationResult.error?.response;

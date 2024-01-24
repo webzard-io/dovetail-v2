@@ -42,6 +42,7 @@ function YamlForm(props: YamlFormProps) {
     editorOptions: {
       isSkipSchema: schemaStrategy === SchemaStrategy.None,
     },
+    liveMode: 'off'
   });
   const kit = useUIKit();
   const { t, i18n } = useTranslation();
