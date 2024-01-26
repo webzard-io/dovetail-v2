@@ -2,7 +2,7 @@ import { Typo, useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useParsed, useResource, useShow } from '@refinedev/core';
 import yaml from 'js-yaml';
-import { get } from 'lodash-es';
+import { get, omit } from 'lodash-es';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
@@ -181,7 +181,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
     [Mode.Yaml]: (
       <MonacoYamlEditor
         className={EditorStyle}
-        defaultValue={yaml.dump(globalStore?.restoreItem(model))}
+        defaultValue={yaml.dump(omit(globalStore?.restoreItem(model), 'id'))}
         schema={{}}
         onEditorCreate={editor => {
           fold(editor);
