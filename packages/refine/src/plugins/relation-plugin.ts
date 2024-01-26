@@ -33,10 +33,10 @@ class RelationPlugin {
     const items = await Promise.all(
       res.items.map(item =>
         this.processItem({
-          ...item,
           // TODO: unify this with data-provider getOne method
           kind: kind.replace(/List$/g, ''),
           apiVersion,
+          ...omit(item, ['apiVersion', 'kind']),
         })
       )
     );
