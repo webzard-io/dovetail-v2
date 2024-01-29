@@ -1,4 +1,5 @@
 import { createBrowserHistory } from 'history';
+import { GlobalStore } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Router } from 'react-router-dom';
@@ -14,6 +15,7 @@ import { SecretsConfig } from './pages/secrets';
 import { ServicesConfig } from './pages/services';
 import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulsets';
 
+import { ProviderPlugins } from './plugins';
 import { RESOURCE_GROUP, ResourceConfig } from './types';
 
 function App() {
@@ -89,18 +91,23 @@ function App() {
       },
     ];
   }, [t]);
-
+  const globalStore = useMemo(() => {
+    return new GlobalStore(
+      {
+        apiUrl: '/api/k8s',
+        watchWsApiUrl: 'api/sks-ws/k8s',
+        prefix: 'default',
+      },
+      ProviderPlugins
+    );
+  }, []);
   return (
     <Dovetail
       resourcesConfig={resourcesConfig as ResourceConfig[]}
       refineResources={refineResources}
       Layout={Layout}
       history={histroy}
-      globalStoreParams={{
-        apiUrl: '/api/k8s',
-        watchWsApiUrl: 'api/sks-ws/k8s',
-        prefix: 'default',
-      }}
+      globalStore={globalStore}
     >
       <Router history={histroy}>
         <Route path="/cronjobs" exact>
