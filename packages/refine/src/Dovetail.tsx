@@ -4,13 +4,11 @@ import {
   dataProvider,
   liveProvider,
   GlobalStore,
-  GlobalStoreInitParams,
 } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { Router } from 'react-router-dom';
 import { ResourceCRUD } from './components/ResourceCRUD';
 import GlobalStoreContext from './contexts/global-store';
-import { ProviderPlugins } from './plugins';
 import { routerProvider } from './providers/router-provider';
 import './i18n';
 
@@ -25,15 +23,11 @@ type Props = {
   refineResources?: ResourceProps[];
   Layout?: React.FC<unknown>;
   history: History;
-  globalStoreParams: GlobalStoreInitParams;
+  globalStore: GlobalStore;
 };
 
 export const Dovetail: React.FC<Props> = props => {
-  const { resourcesConfig, urlPrefix = '', Layout, history, globalStoreParams } = props;
-
-  const globalStore = useMemo(() => {
-    return new GlobalStore(globalStoreParams, ProviderPlugins);
-  }, [globalStoreParams]);
+  const { resourcesConfig, urlPrefix = '', Layout, history, globalStore } = props;
 
   const notCustomResources = useMemo(() => {
     return resourcesConfig.filter(c => !c.isCustom);

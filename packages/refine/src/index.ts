@@ -7,4 +7,4 @@ export * from './Dovetail';
 export * from './types';
 export * from './contexts';
 export * from './models';
-
+export * from './plugins';
