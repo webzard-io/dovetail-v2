@@ -1,4 +1,4 @@
-import { css } from '@linaria/core';
+import { css, cx } from '@linaria/core';
 import React, { useContext } from 'react';
 import BaseTable from 'src/components/Table';
 import { TableProps } from 'src/components/Table';
@@ -35,7 +35,11 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
   return (
     <div className={ListPageStyle}>
       <TableToolBar title={title} selectedKeys={selectedKeys} />
-      <Table {...tableProps} className={TableStyle} scroll={{ y: 'calc(100% - 48px)' }} />
+      <Table
+        {...tableProps}
+        className={cx(tableProps.className, TableStyle)}
+        scroll={{ y: 'calc(100% - 48px)' }}
+      />
     </div>
   );
 }
