@@ -2,8 +2,8 @@ import { Typo, useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useParsed, useResource, useShow } from '@refinedev/core';
 import yaml from 'js-yaml';
-import { get } from 'lodash-es';
-import React, { useState } from 'react';
+import { get, omit } from 'lodash-es';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
@@ -49,18 +49,32 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   const { globalStore } = useGlobalStore();
   const parsed = useParsed();
   const { resource } = useResource();
+  const [mode, setMode] = useState<Mode>(Mode.Detail);
   const { queryResult } = useShow<Model>({
     id: parsed?.params?.id,
+    liveMode: mode === Mode.Yaml ? 'off' : 'auto',
   });
-  const [mode, setMode] = useState<Mode>(Mode.Detail);
   const { t } = useTranslation();
   const { fold } = useK8sYamlEditor();
   const { data } = queryResult;
+
+  const schema = useMemo(() => ({}), []);
+  const defaultEditorValue = useMemo(() => data?.data ?
+    yaml.dump(omit(globalStore?.restoreItem(data.data), 'id'))
+    : '',
+    [globalStore, data]
+  );
+
+  const onEditorCreate = useCallback(editor => {
+    fold(editor);
+  }, [fold]);
+
   if (!data?.data) {
     return null;
   }
 
   const model = data.data;
+
 
   const record = formatter ? formatter(model) : data?.data;
 
@@ -181,11 +195,9 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
     [Mode.Yaml]: (
       <MonacoYamlEditor
         className={EditorStyle}
-        defaultValue={yaml.dump(globalStore?.restoreItem(model))}
-        schema={{}}
-        onEditorCreate={editor => {
-          fold(editor);
-        }}
+        defaultValue={defaultEditorValue}
+        schema={schema}
+        onEditorCreate={onEditorCreate}
         readOnly
       />
     ),
