@@ -1,22 +1,27 @@
 import { TagColor, useUIKit } from '@cloudtower/eagle';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { WorkloadState } from '../../constants';
 
 type Props = {
-  state?: string;
+  state?: WorkloadState;
 };
 
-export const StateTag: React.FC<Props> = ({ state }) => {
+export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATEING }) => {
   const kit = useUIKit();
-  const colorMap: Record<string, TagColor> = {
-    running: 'green',
-    active: 'green',
-    succeeded: 'blue',
-    terminated: 'red',
+  const { t } = useTranslation();
+  const colorMap: Record<WorkloadState, TagColor> = {
+    updating: 'blue',
+    ready: 'green',
+    completed: 'green',
+    failed: 'red',
+    suspended: 'gray',
+    running: 'blue',
+    succeeded: 'green',
+    unknown: 'gray',
+    terminating: 'gray',
     pending: 'gray',
+    waiting: 'gray',
   };
-  return (
-    <kit.tag color={colorMap[state?.toLowerCase() || ''] || 'green'}>
-      {state || 'Active'}
-    </kit.tag>
-  );
+  return <kit.tag color={colorMap[state]}>{t(`dovetail.${state || 'updaing'}`)}</kit.tag>;
 };

@@ -9,7 +9,7 @@ import {
   DurationColumnRenderer,
   NameColumnRenderer,
   NameSpaceColumnRenderer,
-  PhaseColumnRenderer,
+  StateDisplayColumnRenderer,
   WorkloadImageColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { CronJobModel } from '../../models';
@@ -54,8 +54,8 @@ export const CronjobJobsTable: React.FC<{
   }, [data?.data, owner]);
 
   const columns: Column<CronJobModel>[] = [
-    PhaseColumnRenderer(),
     NameColumnRenderer('jobs'),
+    StateDisplayColumnRenderer(),
     NameSpaceColumnRenderer(),
     WorkloadImageColumnRenderer(),
     CompletionsCountColumnRenderer(),
@@ -72,7 +72,7 @@ export const CronjobJobsTable: React.FC<{
     >
       <TableToolBar title="Jobs" selectedKeys={selectedKeys} hideCreate />
       <Table
-        tableKey='cronjobs'
+        tableKey="cronjobs"
         loading={!dataSource}
         data={dataSource || []}
         columns={columns}

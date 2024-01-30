@@ -1,5 +1,6 @@
- import { GlobalStore, Unstructured } from 'k8s-api-provider';
+import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import type { Pod } from 'kubernetes-types/core/v1';
+import { WorkloadState } from '../constants';
 import { shortenedImage } from '../utils/string';
 import { formatSi, parseSi } from '../utils/unit';
 import { ResourceQuantity } from './types/metric';
@@ -10,10 +11,13 @@ type RequiredPod = Required<Pod> & Unstructured;
 export class PodModel extends WorkloadBaseModel {
   public request: ResourceQuantity;
   public limit: ResourceQuantity;
-  declare public spec?: RequiredPod['spec'];
-  declare public status?: RequiredPod['status'];
+  public declare spec?: RequiredPod['spec'];
+  public declare status?: RequiredPod['status'];
 
-  constructor(public _rawYaml: RequiredPod, public _globalStore: GlobalStore) {
+  constructor(
+    public _rawYaml: RequiredPod,
+    public _globalStore: GlobalStore
+  ) {
     super(_rawYaml, _globalStore);
 
     let cpuRequestNum = 0;
@@ -75,9 +79,8 @@ export class PodModel extends WorkloadBaseModel {
   }
 
   get readyDisplay() {
-    return `${
-      this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length
-    }/${this._rawYaml.spec?.containers.length}`;
+    return `${this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length}/${this
+      ._rawYaml.spec?.containers.length}`;
   }
   get readyContainerCount() {
     return this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length;
@@ -85,5 +88,12 @@ export class PodModel extends WorkloadBaseModel {
 
   get containerCount() {
     return this._rawYaml.spec?.containers.length;
+  }
+
+  get stateDisplay() {
+    if (this.metadata.deletionTimestamp) {
+      return WorkloadState.TERMINATING;
+    }
+    return this.status?.phase?.toLowerCase() || WorkloadState.UNKNOWN;
   }
 }

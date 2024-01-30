@@ -13,6 +13,7 @@ import {
   WorkloadImageColumnRenderer,
   DurationColumnRenderer,
   CompletionsCountColumnRenderer,
+  StateDisplayColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { JobModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig } from '../../types';
@@ -26,6 +27,7 @@ export const JobConfig: ResourceConfig<JobModel> = {
   parent: RESOURCE_GROUP.WORKLOAD,
   columns: () =>
     [
+      StateDisplayColumnRenderer(),
       WorkloadImageColumnRenderer(),
       CompletionsCountColumnRenderer(),
       DurationColumnRenderer(),

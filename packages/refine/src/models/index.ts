@@ -7,3 +7,6 @@ export * from './resource-model';
 export * from './workload-model';
 export * from './cronjob-model';
 export * from './event-model';
+export * from './deployment-model';
+export * from './daemonset-model';
+export * from './statefulset-model';
