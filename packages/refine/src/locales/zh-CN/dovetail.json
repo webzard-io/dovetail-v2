@@ -46,7 +46,6 @@
   "duration": "持续时间",
   "completions": "完成 Job 历史数",
   "started": "开始时间",
-  "ready": "就绪",
   "init_container": "初始化容器",
   "container": "容器",
   "redeploy": "重新部署",
@@ -65,5 +64,16 @@
   "log_new_lines": "，并展示 {{ count }} 行新日志",
   "fetch_schema_fail": "获取 schema 失败。",
   "obtain_data_error": "获取数据时遇到问题。",
-  "retry": "重试"
+  "retry": "重试",
+  "ready": "就绪",
+  "updating": "更新中",
+  "completed": "完成",
+  "failed": "异常",
+  "suspended": "挂起",
+  "running": "运行中",
+  "terminating": "终止",
+  "succeeded": "成功终止",
+  "unknown": "未知",
+  "pending": "待处理",
+  "waiting": "等待中"
 }

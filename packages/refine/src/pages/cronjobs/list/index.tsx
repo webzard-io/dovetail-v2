@@ -9,7 +9,7 @@ import {
   WorkloadImageColumnRenderer,
   NameColumnRenderer,
   NameSpaceColumnRenderer,
-  PhaseColumnRenderer,
+  StateDisplayColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import i18n from '../../../i18n';
 import { CronJobModel } from '../../../models';
@@ -18,7 +18,7 @@ export const CronJobList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps, selectedKeys } = useEagleTable<CronJobModel>({
     useTableParams: {},
     columns: [
-      PhaseColumnRenderer(),
+      StateDisplayColumnRenderer(),
       NameColumnRenderer(),
       NameSpaceColumnRenderer(),
       WorkloadImageColumnRenderer(),

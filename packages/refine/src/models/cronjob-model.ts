@@ -1,6 +1,7 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import { CronJob } from 'kubernetes-types/batch/v1';
 import { set, cloneDeep } from 'lodash';
+import { WorkloadState } from '../constants';
 import { WorkloadBaseModel } from './workload-base-model';
 
 type RequiredCronJob = Required<CronJob> & Unstructured;
@@ -14,6 +15,13 @@ export class CronJobModel extends WorkloadBaseModel {
     public _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
+  }
+
+  get stateDisplay() {
+    if (!this.spec?.suspend) {
+      return WorkloadState.SUSPENDED;
+    }
+    return WorkloadState.RUNNING;
   }
 
   suspend() {

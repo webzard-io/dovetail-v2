@@ -81,13 +81,15 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(): Column<M
   };
 };
 
-export const PhaseColumnRenderer = <Model extends ResourceModel>(): Column<Model> => {
-  const dataIndex = ['status', 'phase'];
+export const StateDisplayColumnRenderer = <
+  Model extends WorkloadModel | CronJobModel | PodModel,
+>(): Column<Model> => {
+  const dataIndex = ['stateDisplay'];
   return {
-    key: 'phase',
+    key: 'stateDisplay',
     display: true,
     dataIndex: dataIndex,
-    title: i18n.t('dovetail.phase'),
+    title: i18n.t('dovetail.state'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: v => <StateTag state={v} />,
