@@ -1,3 +1,4 @@
+import { FormType } from 'src/types';
 import { Column } from '../../components';
 import K8sDropdown from '../../components/K8sDropdown';
 import {
@@ -39,4 +40,5 @@ export const JobConfig: ResourceConfig<JobModel> = {
     ] as ShowField<JobModel>[][],
   initValue: JOB_INIT_VALUE,
   Dropdown: K8sDropdown,
+  formType: FormType.MODAL
 };

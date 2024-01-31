@@ -12,6 +12,7 @@ import {
   ReplicasColumnRenderer,
   WorkloadRestartsColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
+import { FormType } from 'src/types';
 import { WorkloadModel } from '../../../models';
 
 export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
@@ -30,9 +31,10 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
       currentSize: 10,
     },
     Dropdown: WorkloadDropdown,
+    formType: FormType.MODAL,
   });
 
   return (
-    <ListPage title="Deployments" selectedKeys={selectedKeys} tableProps={tableProps} />
+    <ListPage title="Deployments" selectedKeys={selectedKeys} tableProps={tableProps} formType={FormType.MODAL} />
   );
 };

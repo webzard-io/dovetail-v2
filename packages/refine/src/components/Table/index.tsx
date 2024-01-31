@@ -3,6 +3,7 @@ import { RequiredColumnProps } from '@cloudtower/eagle/dist/spec/base';
 import { css, cx } from '@linaria/core';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FormType } from 'src/types';
 import { ResourceModel } from '../../models';
 import ErrorContent from './ErrorContent';
 import { AuxiliaryLine } from './TableWidgets';
@@ -45,7 +46,8 @@ export type TableProps<Data extends ResourceModel> = {
   onSelect?: (keys: React.Key[], rows: Data[]) => void;
   onPageChange: (page: number) => void;
   onSizeChange?: (size: number) => void;
-  RowMenu?: React.FC<{ record: Data; }>;
+  RowMenu?: React.FC<{ record: Data; formType?: FormType; }>;
+  formType?: FormType;
 };
 
 function Table<Data extends ResourceModel>(props: TableProps<Data>) {
@@ -61,6 +63,7 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
     currentPage,
     currentSize,
     RowMenu,
+    formType,
     refetch,
     onSelect,
     onPageChange,
@@ -85,7 +88,7 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
         dataIndex: [],
         title: '',
         render: (_: unknown, record) => {
-          return <RowMenu record={record} />;
+          return <RowMenu record={record} formType={formType} />;
         },
       };
 
@@ -96,7 +99,7 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
     }
 
     return columns;
-  }, [columns, RowMenu])
+  }, [columns, RowMenu, formType]);
 
   if (loading) {
     return <kit.loading />;

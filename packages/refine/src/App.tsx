@@ -140,12 +140,7 @@ function App() {
         <Route path="/deployments/show">
           <DeploymentShow />
         </Route>
-        <Route path="/deployments/create">
-          <DeploymentForm />
-        </Route>
-        <Route path="/deployments/edit">
-          <DeploymentForm />
-        </Route>
+        <DeploymentForm />
         <Route path="/statefulsets" exact>
           <StatefulSetList />
         </Route>
