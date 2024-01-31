@@ -7,16 +7,18 @@ import { useResource, useUpdate } from '@refinedev/core';
 import { CronJob } from 'kubernetes-types/batch/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { FormType } from 'src/types';
 import { CronJobModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
 import K8sDropdown from '../K8sDropdown';
 
 type Props<Model extends CronJobModel> = {
   record: Model;
+  formType?: FormType;
 };
 
 export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>) {
-  const { record } = props;
+  const { record, formType } = props;
   const { spec } = record as CronJob;
   const kit = useUIKit();
   const { resource } = useResource();
@@ -26,7 +28,7 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
   const suspended = Boolean(spec?.suspend);
 
   return (
-    <K8sDropdown record={record}>
+    <K8sDropdown record={record} formType={formType}>
       <kit.menu.Item
         onClick={() => {
           const v = suspended ? record.resume() : record.suspend();

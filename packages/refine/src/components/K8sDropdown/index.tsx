@@ -1,4 +1,4 @@
-import { Icon, useUIKit } from '@cloudtower/eagle';
+import { Icon, useUIKit, pushModal } from '@cloudtower/eagle';
 import {
   EditPen16PrimaryIcon,
   MoreEllipsis316BoldBlueIcon,
@@ -6,22 +6,27 @@ import {
   Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
 import { useResource } from '@refinedev/core';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import FormModal from 'src/components/FormModal';
+import { ModalContext } from 'src/components/ModalContextProvider';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useEdit } from 'src/hooks/useEdit';
+import { FormType } from 'src/types';
 import { useGlobalStore } from '../../hooks';
 import { ResourceModel } from '../../models';
 
+
 interface K8sDropdownProps {
   record: ResourceModel;
+  formType?: FormType;
 }
 
 function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
-  const { record } = props;
+  const { record, formType } = props;
   const kit = useUIKit();
-  const {globalStore} = useGlobalStore();
+  const { globalStore } = useGlobalStore();
   const useResourceResult = useResource();
   const resource = useResourceResult.resource;
   const { edit } = useEdit();
@@ -29,6 +34,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
     resource?.name || ''
   );
   const download = useDownloadYAML();
+  const modal = useContext(ModalContext);
   const { t } = useTranslation();
 
   return (
@@ -38,8 +44,23 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
           <kit.menu>
             <kit.menuItem
               onClick={() => {
-                if (record.id) {
-                  edit(record.id);
+                if (record.id && resource?.name) {
+                  if (formType === FormType.MODAL) {
+                    modal.open({
+                      resource: resource.name,
+                      id: record.id,
+                    });
+                    pushModal({
+                      // @ts-ignore
+                      component: FormModal,
+                      props: {
+                        resource: resource.name,
+                        id: record.id,
+                      }
+                    });
+                  } else {
+                    edit(record.id);
+                  }
                 }
               }}
             >

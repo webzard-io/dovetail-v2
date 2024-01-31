@@ -1,6 +1,7 @@
 import { useUIKit, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React from 'react';
+import { FormType } from 'src/types';
 import { CreateButton } from '../CreateButton';
 import { DeleteManyButton } from '../DeleteManyButton';
 
@@ -8,6 +9,7 @@ type Props = {
   title: string;
   selectedKeys: string[];
   hideCreate?: boolean;
+  formType?: FormType;
 };
 
 const ToolbarStyle = css`
@@ -16,7 +18,7 @@ const ToolbarStyle = css`
   margin-bottom: 16px;
 `;
 
-export const TableToolBar: React.FC<Props> = ({ title, selectedKeys, hideCreate }) => {
+export const TableToolBar: React.FC<Props> = ({ title, selectedKeys, hideCreate, formType }) => {
   const kit = useUIKit();
 
   return (
@@ -24,7 +26,7 @@ export const TableToolBar: React.FC<Props> = ({ title, selectedKeys, hideCreate 
       <span className={Typo.Display.d2_bold_title}>{title}</span>
       <kit.space>
         {selectedKeys.length > 0 ? <DeleteManyButton ids={selectedKeys} /> : undefined}
-        {!hideCreate ? <CreateButton /> : null}
+        {!hideCreate ? <CreateButton type={formType} /> : null}
       </kit.space>
     </kit.space>
   );

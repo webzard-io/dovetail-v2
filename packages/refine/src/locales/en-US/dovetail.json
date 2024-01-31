@@ -11,5 +11,7 @@
   "already_reset": "Already reset",
   "fetch_schema_fail": "Failed to fetch schema.",
   "obtain_data_error": "Having trouble getting data.",
-  "retry": "Retry"
+  "retry": "Retry",
+  "create_resource": "Create {{resource}}",
+  "edit_resource": "Edit {{resource}}"
 }

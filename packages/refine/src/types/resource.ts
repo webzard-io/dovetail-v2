@@ -9,6 +9,11 @@ export enum RESOURCE_GROUP {
   CLUSTER = 'CLUSTER',
 }
 
+export enum FormType {
+  PAGE = 'PAGE',
+  MODAL = 'MODAL'
+}
+
 export type WithId<T> = T & { id: string };
 
 export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
@@ -24,4 +29,5 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   showFields?: () => ShowField<Model>[][];
   Dropdown?: React.FC<{ record: Model }>;
   isCustom?: boolean;
+  formType?: FormType;
 };

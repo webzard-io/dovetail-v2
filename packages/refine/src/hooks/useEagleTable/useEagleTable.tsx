@@ -1,6 +1,7 @@
 import { useTable, useResource } from '@refinedev/core';
 import { merge } from 'lodash-es';
 import React, { useCallback, useMemo, useState } from 'react';
+import { FormType } from 'src/types';
 import K8sDropdown from '../../components/K8sDropdown';
 import { useNamespacesFilter, ALL_NS } from '../../components/NamespacesFilter';
 import { Column, TableProps } from '../../components/Table';
@@ -12,6 +13,7 @@ type Params<Model extends ResourceModel> = {
   tableProps?: Partial<TableProps<Model>>;
   formatter?: (d: Model) => Model;
   Dropdown?: React.FC<{ record: Model }>;
+  formType?: FormType;
 };
 
 export enum ColumnKeys {
@@ -25,7 +27,7 @@ export enum ColumnKeys {
 }
 
 export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>) => {
-  const { columns, tableProps, formatter, Dropdown = K8sDropdown } = params;
+  const { columns, tableProps, formatter, Dropdown = K8sDropdown, formType } = params;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
   const { resource } = useResource();
@@ -72,6 +74,7 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     rowKey: 'id',
     currentPage,
     currentSize: tableProps?.currentSize || 5,
+    formType,
     onPageChange: onPageChange,
     onSelect: keys => {
       setSelectedKeys(keys as string[]);

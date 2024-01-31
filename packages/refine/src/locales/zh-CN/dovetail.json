@@ -65,5 +65,7 @@
   "log_new_lines": "，并展示 {{ count }} 行新日志",
   "fetch_schema_fail": "获取 schema 失败。",
   "obtain_data_error": "获取数据时遇到问题。",
-  "retry": "重试"
+  "retry": "重试",
+  "create_resource": "创建 {{resource}}",
+  "edit_resource": "编辑 {{resource}}"
 }
