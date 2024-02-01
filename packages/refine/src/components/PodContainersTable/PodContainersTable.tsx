@@ -11,6 +11,7 @@ import { WithId } from '../../types';
 import { addId } from '../../utils/addId';
 import { StateTag } from '../StateTag';
 import Time from '../Time';
+import { WorkloadState } from '../../constants';
 
 type Props = {
   containerStatuses: ContainerStatus[];
@@ -32,7 +33,7 @@ export const PodContainersTable: React.FC<Props> = ({
         title: i18n.t('dovetail.state'),
         sortable: true,
         sorter: CommonSorter(['state']),
-        render: v => <StateTag state={Object.keys(v)[0]} />,
+        render: v => <StateTag state={Object.keys(v)[0] as WorkloadState} />,
       },
       {
         key: 'ready',

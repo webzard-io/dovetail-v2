@@ -1,15 +1,19 @@
- import { GlobalStore, Unstructured } from 'k8s-api-provider';
+import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import { Job } from 'kubernetes-types/batch/v1';
+import { WorkloadState } from '../constants';
 import { elapsedTime, getSecondsDiff } from '../utils/time';
 import { WorkloadBaseModel } from './workload-base-model';
 
 type RequiredJob = Required<Job> & Unstructured;
 
 export class JobModel extends WorkloadBaseModel {
-  declare public spec?: RequiredJob['spec'];
-  declare public status?: RequiredJob['status'];
+  public declare spec?: RequiredJob['spec'];
+  public declare status?: RequiredJob['status'];
 
-  constructor(public _rawYaml: RequiredJob, public _globalStore: GlobalStore) {
+  constructor(
+    public _rawYaml: RequiredJob,
+    public _globalStore: GlobalStore
+  ) {
     super(_rawYaml, _globalStore);
   }
 
@@ -31,9 +35,26 @@ export class JobModel extends WorkloadBaseModel {
   get durationDisplay() {
     return elapsedTime(this.duration).label;
   }
+
   get completionsDisplay() {
-    return `${this._rawYaml.status?.succeeded || 0}/${
-      this._rawYaml.spec?.completions
-    }`;
+    return `${this._rawYaml.status?.succeeded || 0}/${this._rawYaml.spec?.completions}`;
+  }
+
+  get stateDisplay() {
+    if (!this.spec?.completions && !this.status?.succeeded) {
+      return WorkloadState.RUNNING;
+    }
+    if (this.spec?.completions === this.status?.succeeded) {
+      return WorkloadState.COMPLETED;
+    }
+    if (this.status?.conditions?.some(c => c.type === 'Failed' && c.status === 'True')) {
+      return WorkloadState.FAILED;
+    }
+    if (
+      this.status?.conditions?.some(c => c.type === 'Suspended' && c.status === 'True')
+    ) {
+      return WorkloadState.SUSPENDED;
+    }
+    return WorkloadState.RUNNING;
   }
 }
