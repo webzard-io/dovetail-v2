@@ -12,4 +12,8 @@ export const SecretsConfig: ResourceConfig<ResourceModel> = {
   label: 'Secrets',
   columns: () => [AgeColumnRenderer()],
   showFields: () => [[], [], [SecretDataField()]],
+  isDrawerShowMode: true,
+  drawerProps: {
+    width: '70%',
+  },
 };

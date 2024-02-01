@@ -12,4 +12,5 @@ export const ConfigMapConfig: ResourceConfig<ResourceModel> = {
   label: 'ConfigMaps',
   columns: () => [AgeColumnRenderer()],
   showFields: () => [[], [], [DataField()]],
+  isDrawerShowMode: true,
 };

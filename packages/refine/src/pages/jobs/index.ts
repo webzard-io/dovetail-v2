@@ -41,4 +41,5 @@ export const JobConfig: ResourceConfig<JobModel> = {
     ] as ShowField<JobModel>[][],
   initValue: JOB_INIT_VALUE,
   Dropdown: K8sDropdown,
+  isDrawerShowMode: true,
 };

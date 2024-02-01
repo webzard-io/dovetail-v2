@@ -1,10 +1,6 @@
 import { Refine, ResourceProps } from '@refinedev/core';
 import { History } from 'history';
-import {
-  dataProvider,
-  liveProvider,
-  GlobalStore,
-} from 'k8s-api-provider';
+import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { Router } from 'react-router-dom';
 import { ResourceCRUD } from './components/ResourceCRUD';

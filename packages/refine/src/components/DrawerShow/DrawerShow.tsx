@@ -1,6 +1,5 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { useUIKit, AntdDrawerProps } from '@cloudtower/eagle';
 import { useNavigation, useParsed, useShow } from '@refinedev/core';
-import { Drawer } from 'antd';
 import React from 'react';
 import { ResourceModel } from '../../models';
 import { ShowField, ShowContent } from '../ShowContent';
@@ -8,11 +7,10 @@ import { ShowField, ShowContent } from '../ShowContent';
 type Props<Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
   formatter?: (r: Model) => Model;
+  drawerProps?: AntdDrawerProps;
 };
 
-export const DrawerShow = <Model extends ResourceModel>(
-  props: Props<Model>
-) => {
+export const DrawerShow = <Model extends ResourceModel>(props: Props<Model>) => {
   const kit = useUIKit();
   const parsed = useParsed();
   const nav = useNavigation();
@@ -20,14 +18,14 @@ export const DrawerShow = <Model extends ResourceModel>(
   const { isLoading } = queryResult;
 
   return (
-    <Drawer
-      title="Show Drawer"
+    <kit.antdDrawer
       placement="right"
       onClose={() => nav.goBack()}
-      width="50%"
+      width={'50%'}
       visible={!!parsed?.params?.id}
+      {...props.drawerProps}
     >
       {isLoading ? <kit.loading /> : <ShowContent {...props} />}
-    </Drawer>
+    </kit.antdDrawer>
   );
 };

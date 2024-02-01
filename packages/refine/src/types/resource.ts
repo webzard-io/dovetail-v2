@@ -1,3 +1,4 @@
+import { AntdDrawerProps } from '@cloudtower/eagle';
 import { ShowField } from '../components/ShowContent';
 import { Column } from '../components/Table';
 import { ResourceModel } from '../models';
@@ -23,5 +24,10 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   columns?: () => Column<Model>[];
   showFields?: () => ShowField<Model>[][];
   Dropdown?: React.FC<{ record: Model }>;
+  // If true, dovetail will not automatically render its router elements.
+  // You should add its router elements manually.
   isCustom?: boolean;
+  // If true, the show page will display in a drawer, not a new page.
+  isDrawerShowMode?: boolean;
+  drawerProps?: AntdDrawerProps;
 };
