@@ -7518,10 +7518,10 @@ jsprim@^1.2.2:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
-k8s-api-provider@0.0.15-beta.4:
-  version "0.0.15-beta.4"
-  resolved "https://registry.npmmirror.com/k8s-api-provider/-/k8s-api-provider-0.0.15-beta.4.tgz#130f40d8937792eb5e1c9b4a5605ceebe99b1bc1"
-  integrity sha512-YuQ2GH0+2QqvU2TJ6hbN9oX0pE/KEeU2JpBO8+I3Uo/XBuCi4/p003Z9zXChpWCRfHJxJzlylEV6+k/3wl26Dw==
+k8s-api-provider@0.0.15:
+  version "0.0.15"
+  resolved "https://registry.npmmirror.com/k8s-api-provider/-/k8s-api-provider-0.0.15.tgz#5bc2eca597e2b6dc9e537a541f5326a747f32a61"
+  integrity sha512-mN4Iuc3cvfdaLPABO4HFmJeu4OWnpsdh23QDYHjiBAvw9hz0QGsBziqwFA5LKsvWRA36yX+zd7+em9BfWjQPZg==
   dependencies:
     kubernetes-types "^1.26.0"
     ky "^0.33.3"

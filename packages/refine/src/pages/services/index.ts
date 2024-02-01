@@ -27,4 +27,5 @@ export const ServicesConfig: ResourceConfig<ResourceModel> = {
     [ServicePodsField(), ConditionsField()],
   ],
   initValue: SERVICE_INIT_VALUE,
+  isDrawerShowMode: true,
 };

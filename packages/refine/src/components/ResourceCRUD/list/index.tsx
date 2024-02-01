@@ -12,7 +12,9 @@ type Props<Model extends ResourceModel> = IResourceComponentsProps & {
   Dropdown?: React.FC<{ record: Model }>;
 };
 
-export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
+export function ResourceList<Model extends ResourceModel>(
+  props: React.PropsWithChildren<Props<Model>>
+) {
   const { formatter, name, columns, Dropdown } = props;
   const { tableProps, selectedKeys } = useEagleTable<Model>({
     useTableParams: {},
@@ -25,6 +27,9 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
   });
 
   return (
-    <ListPage title={name || ''} selectedKeys={selectedKeys} tableProps={tableProps} />
+    <>
+      <ListPage title={name || ''} selectedKeys={selectedKeys} tableProps={tableProps} />
+      {props.children}
+    </>
   );
 }
