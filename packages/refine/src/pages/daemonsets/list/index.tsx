@@ -8,7 +8,7 @@ import {
   WorkloadImageColumnRenderer,
   NameColumnRenderer,
   NameSpaceColumnRenderer,
-  PhaseColumnRenderer,
+  StateDisplayColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import { WorkloadModel } from '../../../models';
 
@@ -16,7 +16,7 @@ export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps, selectedKeys } = useEagleTable<WorkloadModel>({
     useTableParams: {},
     columns: [
-      PhaseColumnRenderer(),
+      StateDisplayColumnRenderer(),
       NameColumnRenderer(),
       NameSpaceColumnRenderer(),
       WorkloadImageColumnRenderer(),

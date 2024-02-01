@@ -7,8 +7,8 @@ import { matchSelector } from 'src/utils/selector';
 import {
   NameColumnRenderer,
   NodeNameColumnRenderer,
-  PhaseColumnRenderer,
   RestartCountColumnRenderer,
+  StateDisplayColumnRenderer,
   WorkloadImageColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { PodModel } from '../../models';
@@ -34,7 +34,7 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
   }, [data?.data, selector]);
 
   const columns: Column<PodModel>[] = [
-    PhaseColumnRenderer(),
+    StateDisplayColumnRenderer(),
     NameColumnRenderer('pods'),
     NodeNameColumnRenderer(),
     WorkloadImageColumnRenderer(),

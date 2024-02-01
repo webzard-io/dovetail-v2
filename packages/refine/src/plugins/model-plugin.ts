@@ -7,17 +7,19 @@ import {
 } from 'k8s-api-provider';
 import {
   CronJobModel,
+  DaemonSetModel,
+  DeploymentModel,
   EventModel,
   JobModel,
   PodModel,
   ResourceModel,
-  WorkloadModel,
+  StatefulSetModel,
 } from '../models';
 
 const ModelMap = {
-  Deployment: WorkloadModel,
-  DaemonSet: WorkloadModel,
-  StatefulSet: WorkloadModel,
+  Deployment: DeploymentModel,
+  DaemonSet: DaemonSetModel,
+  StatefulSet: StatefulSetModel,
   CronJob: CronJobModel,
   Job: JobModel,
   Pod: PodModel,

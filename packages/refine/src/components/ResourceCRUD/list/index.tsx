@@ -1,11 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useEagleTable } from '../../../hooks/useEagleTable';
-import {
-  NameColumnRenderer,
-  NameSpaceColumnRenderer,
-  PhaseColumnRenderer,
-} from '../../../hooks/useEagleTable/columns';
+import { NameColumnRenderer } from '../../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../../models';
 import { ListPage } from '../../ListPage';
 import { Column } from '../../Table';
@@ -20,12 +16,7 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
   const { formatter, name, columns, Dropdown } = props;
   const { tableProps, selectedKeys } = useEagleTable<Model>({
     useTableParams: {},
-    columns: [
-      NameColumnRenderer(),
-      PhaseColumnRenderer(),
-      NameSpaceColumnRenderer(),
-      ...columns,
-    ],
+    columns: [NameColumnRenderer(), ...columns],
     tableProps: {
       currentSize: 10,
     },

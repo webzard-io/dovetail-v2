@@ -8,10 +8,10 @@ import {
   WorkloadImageColumnRenderer,
   NameColumnRenderer,
   NameSpaceColumnRenderer,
-  PhaseColumnRenderer,
   CommonSorter,
   RestartCountColumnRenderer,
   NodeNameColumnRenderer,
+  StateDisplayColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import { Column } from '../../../components';
 import { PodMetricsModel, PodModel } from '../../../models';
@@ -41,7 +41,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps, selectedKeys } = useEagleTable<PodModel>({
     useTableParams: {},
     columns: compact([
-      PhaseColumnRenderer(),
+      StateDisplayColumnRenderer(),
       NameColumnRenderer(),
       NameSpaceColumnRenderer(),
       WorkloadImageColumnRenderer(),
