@@ -32,3 +32,4 @@ export * from './EditButton';
 export * from './NamespacesFilter';
 export * from './Tags';
 export * from './PodLog';
+export * from './FormModal';
