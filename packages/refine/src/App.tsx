@@ -3,6 +3,8 @@ import { GlobalStore } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Router } from 'react-router-dom';
+import { DEPLOYMENT_INIT_VALUE } from 'src/constants/k8s';
+import { FormType } from 'src/types';
 import { Layout } from './components';
 import { Dovetail } from './Dovetail';
 import { ConfigMapConfig } from './pages/configmaps';
@@ -14,7 +16,6 @@ import { PodShow, PodList, PodForm } from './pages/pods';
 import { SecretsConfig } from './pages/secrets';
 import { ServicesConfig } from './pages/services';
 import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulsets';
-
 import { ProviderPlugins } from './plugins';
 import { RESOURCE_GROUP, ResourceConfig } from './types';
 
@@ -46,6 +47,8 @@ function App() {
         kind: 'Deployment',
         parent: RESOURCE_GROUP.WORKLOAD,
         label: 'Deployments',
+        formType: FormType.MODAL,
+        FormModal: DeploymentForm,
         isCustom: true,
       },
       {
@@ -139,12 +142,6 @@ function App() {
         </Route>
         <Route path="/deployments/show">
           <DeploymentShow />
-        </Route>
-        <Route path="/deployments/create">
-          <DeploymentForm />
-        </Route>
-        <Route path="/deployments/edit">
-          <DeploymentForm />
         </Route>
         <Route path="/statefulsets" exact>
           <StatefulSetList />

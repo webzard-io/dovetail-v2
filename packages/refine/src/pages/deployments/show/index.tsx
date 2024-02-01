@@ -1,5 +1,6 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
+import { FormType } from 'src/types';
 import { PageShow } from '../../../components/PageShow';
 import {
   ConditionsField,
@@ -20,6 +21,7 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
         [PodsField(), ConditionsField()],
       ]}
       Dropdown={WorkloadDropdown}
+      formType={FormType.MODAL}
     />
   );
 };

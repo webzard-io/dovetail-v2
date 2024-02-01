@@ -1,5 +1,6 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
+import { FormType } from 'src/types';
 import { useEagleTable } from '../../../hooks/useEagleTable';
 import { NameColumnRenderer } from '../../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../../models';
@@ -10,10 +11,11 @@ type Props<Model extends ResourceModel> = IResourceComponentsProps & {
   formatter?: (v: Model) => Model;
   columns: Column<Model>[];
   Dropdown?: React.FC<{ record: Model }>;
+  formType?: FormType;
 };
 
 export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
-  const { formatter, name, columns, Dropdown } = props;
+  const { formatter, name, columns, Dropdown, formType } = props;
   const { tableProps, selectedKeys } = useEagleTable<Model>({
     useTableParams: {},
     columns: [NameColumnRenderer(), ...columns],
@@ -22,9 +24,15 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
     },
     formatter,
     Dropdown,
+    formType,
   });
 
   return (
-    <ListPage title={name || ''} selectedKeys={selectedKeys} tableProps={tableProps} />
+    <ListPage
+      title={name || ''}
+      selectedKeys={selectedKeys}
+      tableProps={tableProps}
+      formType={formType}
+    />
   );
 }
