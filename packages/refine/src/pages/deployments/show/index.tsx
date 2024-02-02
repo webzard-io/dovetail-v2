@@ -21,7 +21,6 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
         [PodsField(), ConditionsField()],
       ]}
       Dropdown={WorkloadDropdown}
-      formType={FormType.MODAL}
     />
   );
 };

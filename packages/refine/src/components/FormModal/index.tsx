@@ -1,6 +1,7 @@
 import { CloseCircleFilled } from '@ant-design/icons';
 import { useUIKit, popModal } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
+import { useResource } from '@refinedev/core';
 import React, { useContext, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import YamlForm, { YamlFormProps, YamlFormHandler } from 'src/components/YamlForm';
@@ -23,23 +24,25 @@ const FullscreenModalStyle = css`
 `;
 
 export type FormModalProps = {
-  resource: string;
+  resource?: string;
   id?: string;
-  formProps: YamlFormProps;
+  formProps?: YamlFormProps;
   renderForm?: (props: YamlFormProps & { ref: React.MutableRefObject<YamlFormHandler | null> }) => React.ReactNode;
 };
 
-function FormModal(props: FormModalProps) {
-  const { resource, id, formProps, renderForm } = props;
+export function FormModal(props: FormModalProps) {
+  const { resource: resourceFromProps, id, formProps, renderForm } = props;
   const { i18n } = useTranslation();
+  const { resource } = useResource();
   const formRef = useRef<YamlFormHandler | null>(null);
   const configs = useContext(ConfigsContext);
   const kit = useUIKit();
 
+  const config = useMemo(() => configs[resourceFromProps || resource?.name || ''], [configs, resourceFromProps, resource]);
   const title = useMemo(() => i18n.t(
     id ? 'dovetail.edit_resource' : 'dovetail.create_resource',
-    { resource: configs[resource].kind }
-  ), [id, i18n, configs, resource]);
+    { resource: config?.kind }
+  ), [id, i18n, config]);
 
   const onCancel = useCallback(() => {
     popModal();
@@ -64,9 +67,16 @@ function FormModal(props: FormModalProps) {
       fullscreen
     >
       {
-        renderForm ? renderForm({ ...formProps, id, ref: formRef, onFinish }) : (
+        renderForm ? renderForm({
+          ...formProps,
+          initialValues: formProps?.initialValues || config?.initValue,
+          id,
+          ref: formRef,
+          onFinish
+        }) : (
           <YamlForm
             {...formProps}
+            initialValues={formProps?.initialValues || config?.initValue}
             ref={formRef}
             id={id}
             isShowLayout={false}

@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import YamlForm from 'src/components/YamlForm';
-import { FormType } from 'src/types';
 import { getInitialValues } from 'src/utils/form';
 import { ResourceModel } from '../../../models';
 import { ResourceConfig } from '../../../types';
@@ -17,10 +16,7 @@ export function ResourceForm<Model extends ResourceModel>(props: Props<Model>) {
     };
   }, [config]);
 
-  // the modals would render in ModalStack
-  return config.formType === FormType.MODAL ? (
-    null
-  ) : (
+  return (
     <YamlForm
       {...formProps}
     />

@@ -33,7 +33,7 @@ function FormLayout(props: React.PropsWithChildren<FormLayoutProps>) {
       <kit.divider />
       {props.children}
       <kit.form.Item>
-        <kit.button type="primary" style={{ marginTop: 16 }} {...saveButtonProps}>
+        <kit.button type="primary" {...saveButtonProps}>
           {t('dovetail.save')}
         </kit.button>
       </kit.form.Item>
