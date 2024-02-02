@@ -46,7 +46,6 @@ export type TableProps<Data extends ResourceModel> = {
   onPageChange: (page: number) => void;
   onSizeChange?: (size: number) => void;
   RowMenu?: React.FC<{ record: Data; formType?: FormType; }>;
-  formType?: FormType;
 };
 
 function Table<Data extends ResourceModel>(props: TableProps<Data>) {
@@ -62,7 +61,6 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
     currentPage,
     currentSize,
     RowMenu,
-    formType,
     refetch,
     onSelect,
     onPageChange,
@@ -87,7 +85,7 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
         dataIndex: [],
         title: '',
         render: (_: unknown, record) => {
-          return <RowMenu record={record} formType={formType} />;
+          return <RowMenu record={record} />;
         },
       };
 
@@ -98,7 +96,7 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
     }
 
     return columns;
-  }, [columns, RowMenu, formType]);
+  }, [columns, RowMenu]);
 
   if (loading) {
     return <kit.loading />;

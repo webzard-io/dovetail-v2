@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
-import { FormType } from 'src/types';
 import { useGlobalStore } from '../../hooks';
 import { ResourceModel } from '../../models';
 import { EventsTable } from '../EventsTable';
@@ -37,7 +36,6 @@ type Props<Model extends ResourceModel> = {
   fieldGroups: ShowField<Model>[][];
   formatter?: (r: Model) => Model;
   Dropdown?: React.FC<{ record: Model }>;
-  formType?: FormType;
 };
 
 enum Mode {
@@ -46,7 +44,7 @@ enum Mode {
 }
 
 export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) => {
-  const { fieldGroups, formatter, Dropdown = K8sDropdown, formType } = props;
+  const { fieldGroups, formatter, Dropdown = K8sDropdown } = props;
   const kit = useUIKit();
   const { globalStore } = useGlobalStore();
   const parsed = useParsed();
@@ -151,7 +149,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           <kit.radioButton value="detail">{t('dovetail.detail')}</kit.radioButton>
           <kit.radioButton value="yaml">YAML</kit.radioButton>
         </kit.radioGroup>
-        <Dropdown record={record} formType={formType} />
+        <Dropdown record={record} />
       </kit.space>
     </kit.space>
   );

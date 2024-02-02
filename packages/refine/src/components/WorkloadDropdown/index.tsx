@@ -21,7 +21,7 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: Props<Model
   const { t } = useTranslation();
 
   return (
-    <K8sDropdown record={record} formType={formType}>
+    <K8sDropdown record={record}>
       <kit.menu.Item
         onClick={() => {
           const v = record.redeploy();

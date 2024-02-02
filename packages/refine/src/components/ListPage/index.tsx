@@ -4,7 +4,6 @@ import BaseTable from 'src/components/Table';
 import { TableProps } from 'src/components/Table';
 import { TableToolBar } from 'src/components/Table/TableToolBar';
 import ComponentContext from 'src/contexts/component';
-import { FormType } from 'src/types';
 import { ResourceModel } from '../../models';
 
 const ListPageStyle = css`
@@ -26,17 +25,16 @@ interface ListPageProps<T extends ResourceModel> {
   title: string;
   selectedKeys: string[];
   tableProps: TableProps<T>;
-  formType?: FormType;
 }
 
 export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
-  const { title, selectedKeys, tableProps, formType } = props;
+  const { title, selectedKeys, tableProps } = props;
   const { Table: TableComponent } = useContext(ComponentContext);
   const Table = TableComponent || BaseTable;
 
   return (
     <div className={ListPageStyle}>
-      <TableToolBar title={title} selectedKeys={selectedKeys} formType={formType} />
+      <TableToolBar title={title} selectedKeys={selectedKeys} />
       <Table
         {...tableProps}
         className={cx(tableProps.className, TableStyle)}

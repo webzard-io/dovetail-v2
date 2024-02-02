@@ -21,7 +21,6 @@ export function ResourceCRUD(props: Props) {
                 formatter={config.formatter}
                 columns={config.columns?.() || []}
                 Dropdown={config.Dropdown}
-                formType={config.formType}
               />
             </Route>
             <Route path={`${urlPrefix}/${config.name}/show`}>
@@ -29,12 +28,12 @@ export function ResourceCRUD(props: Props) {
                 formatter={config.formatter}
                 filedGroups={config.showFields?.() || []}
                 Dropdown={config.Dropdown}
-                formType={config.formType}
               />
             </Route>
             {
+              // the modals would render in ModalStack
               config.formType === FormType.MODAL ? (
-                <ResourceForm config={config} />
+                null
               ) :
                 (
                   <>

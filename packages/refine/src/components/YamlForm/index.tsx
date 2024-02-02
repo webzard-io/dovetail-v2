@@ -14,6 +14,7 @@ const FormStyle = css`
 const EditorStyle = css`
   flex: 1;
   height: 100%;
+  margin-bottom: 16px;
 `;
 
 export enum SchemaStrategy {
@@ -119,7 +120,7 @@ const YamlForm = React.forwardRef<YamlFormHandler, YamlFormProps>(function YamlF
                       )
                     }
                     type="error"
-                    style={{ marginTop: 16 }}
+                    style={{ marginBottom: 16 }}
                   />
                 )}
               </kit.form.Item>
