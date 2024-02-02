@@ -3,16 +3,18 @@ import { DynamicResourceSchedule16BlueIcon } from '@cloudtower/icons-react';
 import { useResource, useUpdate } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { FormType } from 'src/types';
 import { WorkloadModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
 import K8sDropdown from '../K8sDropdown';
 
 type Props<Model extends WorkloadModel> = {
   record: Model;
+  formType?: FormType;
 };
 
 export function WorkloadDropdown<Model extends WorkloadModel>(props: Props<Model>) {
-  const { record } = props;
+  const { record, formType } = props;
   const kit = useUIKit();
   const { resource } = useResource();
   const { mutate } = useUpdate();

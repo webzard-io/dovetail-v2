@@ -1,5 +1,6 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
+import { FormType } from 'src/types';
 import { PageShow } from '../../../components/PageShow';
 import {
   ConditionsField,

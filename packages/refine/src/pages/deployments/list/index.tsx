@@ -33,6 +33,10 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
   });
 
   return (
-    <ListPage title="Deployments" selectedKeys={selectedKeys} tableProps={tableProps} />
+    <ListPage
+      title="Deployments"
+      selectedKeys={selectedKeys}
+      tableProps={tableProps}
+    />
   );
 };

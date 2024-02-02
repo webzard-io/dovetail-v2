@@ -1,13 +1,15 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { ResourceConfig } from '../../types';
+import { ResourceConfig, FormType } from 'src/types';
 import { ResourceForm } from './create';
 import { ResourceList } from './list';
 import { ResourceShow } from './show';
 
 type Props = { configs: ResourceConfig[]; urlPrefix?: string };
-export const ResourceCRUD: React.FC<Props> = props => {
+
+export function ResourceCRUD(props: Props) {
   const { configs, urlPrefix } = props;
+
   return (
     <>
       {configs.map(config => {
@@ -28,15 +30,25 @@ export const ResourceCRUD: React.FC<Props> = props => {
                 Dropdown={config.Dropdown}
               />
             </Route>
-            <Route path={`${urlPrefix}/${config.name}/create`}>
-              <ResourceForm config={config} />
-            </Route>
-            <Route path={`${urlPrefix}/${config.name}/edit`}>
-              <ResourceForm config={config} />
-            </Route>
+            {
+              // the modals would render in ModalStack
+              config.formType === FormType.MODAL ? (
+                null
+              ) :
+                (
+                  <>
+                    <Route path={`${urlPrefix}/${config.name}/create`}>
+                      <ResourceForm config={config} />
+                    </Route>
+                    <Route path={`${urlPrefix}/${config.name}/edit`}>
+                      <ResourceForm config={config} />
+                    </Route>
+                  </>
+                )
+            }
           </React.Fragment>
         );
       })}
     </>
   );
-};
+}

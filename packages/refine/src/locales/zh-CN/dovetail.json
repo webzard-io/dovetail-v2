@@ -75,5 +75,7 @@
   "succeeded": "成功终止",
   "unknown": "未知",
   "pending": "待处理",
-  "waiting": "等待中"
+  "waiting": "等待中",
+  "create_resource": "创建 {{resource}}",
+  "edit_resource": "编辑 {{resource}}"
 }

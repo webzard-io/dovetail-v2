@@ -1,4 +1,4 @@
-import { useUIKit, Typo } from '@cloudtower/eagle';
+import { useUIKit, Typo, ButtonProps } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useResource } from '@refinedev/core';
 import React from 'react';
@@ -14,7 +14,12 @@ const TitleStyle = css`
   line-height: 32px !important;
 `;
 
-function FormLayout(props: React.PropsWithChildren<Record<string, unknown>>) {
+type FormLayoutProps = {
+  saveButtonProps?: ButtonProps;
+}
+
+function FormLayout(props: React.PropsWithChildren<FormLayoutProps>) {
+  const { saveButtonProps } = props;
   const kit = useUIKit();
   const { resource, action } = useResource();
   const { t } = useTranslation();
@@ -27,6 +32,11 @@ function FormLayout(props: React.PropsWithChildren<Record<string, unknown>>) {
       </span>
       <kit.divider />
       {props.children}
+      <kit.form.Item>
+        <kit.button type="primary" {...saveButtonProps}>
+          {t('dovetail.save')}
+        </kit.button>
+      </kit.form.Item>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
 import FormLayout from 'src/components/FormLayout';
@@ -10,11 +10,11 @@ import useEagleForm from 'src/hooks/useEagleForm';
 import { getCommonErrors } from 'src/utils/error';
 
 const FormStyle = css`
-  height: 100%;
 `;
 const EditorStyle = css`
   flex: 1;
   height: 100%;
+  margin-bottom: 16px;
 `;
 
 export enum SchemaStrategy {
@@ -23,13 +23,23 @@ export enum SchemaStrategy {
   None = 'None',
 }
 
-interface YamlFormProps {
+export interface YamlFormProps {
+  id?: string;
   initialValues?: Record<string, unknown>;
   schemaStrategy?: SchemaStrategy;
+  isShowLayout?: boolean;
+  onFinish?: () => void;
 }
 
-function YamlForm(props: YamlFormProps) {
-  const { schemaStrategy = SchemaStrategy.Optional } = props;
+export interface YamlFormHandler {
+  saveButtonProps: {
+    disabled?: boolean;
+    onClick: () => void;
+  }
+}
+
+const YamlForm = React.forwardRef<YamlFormHandler, YamlFormProps>(function YamlForm(props: YamlFormProps, ref) {
+  const { id, schemaStrategy = SchemaStrategy.Optional, isShowLayout = true } = props;
   const {
     formProps,
     saveButtonProps,
@@ -39,10 +49,13 @@ function YamlForm(props: YamlFormProps) {
     isLoadingSchema,
     fetchSchema,
   } = useEagleForm({
+    id,
+    action: id ? 'edit' : 'create',
     editorOptions: {
       isSkipSchema: schemaStrategy === SchemaStrategy.None,
     },
-    liveMode: 'off'
+    liveMode: 'off',
+    initialValuesForCreate: props.initialValues ?? BASE_INIT_VALUE
   });
   const kit = useUIKit();
   const { t, i18n } = useTranslation();
@@ -50,18 +63,29 @@ function YamlForm(props: YamlFormProps) {
     ? getCommonErrors(errorResponseBody, i18n)
     : [];
 
+  const FormWrapper = isShowLayout ? FormLayout : React.Fragment;
   // use useMemo to keep {} the same
   const schema = useMemo(() => {
     return editorProps.schema || {};
   }, [editorProps.schema]);
 
+  const onFinish = useCallback(async (store) => {
+    await formProps.onFinish?.(store);
+    props.onFinish?.();
+  }, [formProps, props]);
+
+  useImperativeHandle(ref, () => ({
+    saveButtonProps,
+  }), [saveButtonProps]);
+
   return (
-    <FormLayout>
+    <FormWrapper saveButtonProps={saveButtonProps}>
       <kit.form
         {...formProps}
-        initialValues={formProps.initialValues ?? props.initialValues ?? BASE_INIT_VALUE}
+        initialValues={formProps.initialValues}
         layout="horizontal"
         className={FormStyle}
+        onFinish={onFinish}
       >
         {(() => {
           if (isLoadingSchema) {
@@ -96,12 +120,9 @@ function YamlForm(props: YamlFormProps) {
                       )
                     }
                     type="error"
-                    style={{ marginTop: 16 }}
+                    style={{ marginBottom: 16 }}
                   />
                 )}
-                <kit.button {...saveButtonProps} type="primary" style={{ marginTop: 16 }}>
-                  {t('dovetail.save')}
-                </kit.button>
               </kit.form.Item>
             </>
           ) : (
@@ -112,8 +133,8 @@ function YamlForm(props: YamlFormProps) {
           );
         })()}
       </kit.form>
-    </FormLayout>
+    </FormWrapper>
   );
-}
+});
 
 export default YamlForm;
