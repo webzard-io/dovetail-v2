@@ -1,6 +1,7 @@
 import { useTable, useResource } from '@refinedev/core';
 import { merge } from 'lodash-es';
 import React, { useCallback, useMemo, useState } from 'react';
+import { FormType } from 'src/types';
 import K8sDropdown from '../../components/K8sDropdown';
 import { useNamespacesFilter, ALL_NS } from '../../components/NamespacesFilter';
 import { Column, TableProps } from '../../components/Table';

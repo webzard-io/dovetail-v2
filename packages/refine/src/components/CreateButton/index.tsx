@@ -1,28 +1,15 @@
 import { useUIKit } from '@cloudtower/eagle';
-import { useResource, useNavigation, useGo } from '@refinedev/core';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useOpenForm } from 'src/hooks/useOpenForm';
 
 export function CreateButton() {
-  const { resource } = useResource();
-  const navigation = useNavigation();
-  const go = useGo();
   const kit = useUIKit();
   const { t } = useTranslation();
-
-  const onClick = useCallback(() => {
-    if (resource?.name) {
-      go({
-        to: navigation.createUrl(resource.name),
-        options: {
-          keepQuery: true,
-        },
-      });
-    }
-  }, [resource?.name]);
+  const openForm = useOpenForm();
 
   return (
-    <kit.button type="primary" onClick={onClick}>
+    <kit.button type="primary" onClick={openForm}>
       {t('dovetail.create')}
     </kit.button>
   );

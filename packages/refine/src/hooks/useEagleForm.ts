@@ -16,7 +16,7 @@ import { FormInstance, FormProps } from 'antd/lib/form';
 import yaml from 'js-yaml';
 import { JSONSchema7 } from 'json-schema';
 import { Unstructured } from 'k8s-api-provider';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type YamlEditorHandle, type YamlEditorProps } from 'src/components/YamlEditor';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
@@ -55,6 +55,7 @@ export type UseFormProps<
     isGenerateAnnotations?: boolean;
     isSkipSchema?: boolean;
   };
+  initialValuesForCreate?: Record<string, unknown>;
 };
 
 export type UseFormReturnType<
@@ -124,6 +125,7 @@ const useEagleForm = <
   id: idFromProps,
   overtimeOptions,
   editorOptions,
+  initialValuesForCreate,
 }: UseFormProps<
   TQueryFnData,
   TError,
@@ -208,12 +210,23 @@ const useEagleForm = <
   const warnWhenUnsavedChanges =
     warnWhenUnsavedChangesProp ?? warnWhenUnsavedChangesRefine;
 
+  const initialValues = useMemo(() => {
+    const initialValues = queryResult?.data?.data
+      ? globalStore?.restoreItem(queryResult.data.data)
+      : initialValuesForCreate;
+
+    if (initialValues) {
+      pruneBeforeEdit(initialValues);
+    }
+    return initialValues;
+  }, [queryResult, globalStore, initialValuesForCreate]);
+
   // Init the editor after the resource value is fetched
   React.useEffect(() => {
     form.resetFields();
 
     if (editor.current) {
-      const editorValue = yaml.dump(form.getFieldsValue(true));
+      const editorValue = yaml.dump(initialValues);
       const editorInstance = editor.current.getEditorInstance();
 
       editor.current.setEditorValue(editorValue);
@@ -223,7 +236,7 @@ const useEagleForm = <
         isFoldRef.current = true;
       }
     }
-  }, [queryResult?.data?.data, id, form, fold]);
+  }, [initialValues, queryResult?.data?.data, id, form, fold]);
 
   React.useEffect(() => {
     const response = useFormCoreResult.mutationResult.error?.response;
@@ -259,8 +272,8 @@ const useEagleForm = <
     ref: editor,
     defaultValue:
       schema && editorOptions?.isGenerateAnnotations
-        ? generateYamlBySchema(form?.getFieldsValue(true) || {}, schema)
-        : yaml.dump(form.getFieldsValue(true)),
+        ? generateYamlBySchema(initialValues || {}, schema)
+        : yaml.dump(initialValues),
     schema: schema,
     id: useResourceResult.resource?.name || '',
     errorMsgs: editorErrors,
@@ -279,14 +292,6 @@ const useEagleForm = <
       }
     },
   };
-
-  const initialValues = queryResult?.data?.data
-    ? globalStore?.restoreItem(queryResult.data.data)
-    : undefined;
-
-  if (initialValues) {
-    pruneBeforeEdit(initialValues);
-  }
 
   return {
     form: formSF.form,
@@ -307,7 +312,7 @@ const useEagleForm = <
           ? (yaml.load(editor.current?.getEditorValue() || '') as TVariables)
           : values;
 
-        return onFinish(finalValues as TVariables).catch(error => error);
+        return onFinish(finalValues as TVariables);
       },
       onKeyUp,
       onValuesChange,

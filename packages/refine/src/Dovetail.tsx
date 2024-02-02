@@ -1,3 +1,4 @@
+import { KitStoreProvider, ModalStack } from '@cloudtower/eagle';
 import { Refine, ResourceProps } from '@refinedev/core';
 import { History } from 'history';
 import {
@@ -5,8 +6,10 @@ import {
   liveProvider,
   GlobalStore,
 } from 'k8s-api-provider';
+import { keyBy } from 'lodash-es';
 import React, { useMemo } from 'react';
 import { Router } from 'react-router-dom';
+import ConfigsContext from 'src/contexts/configs';
 import { ResourceCRUD } from './components/ResourceCRUD';
 import GlobalStoreContext from './contexts/global-store';
 import { routerProvider } from './providers/router-provider';
@@ -36,6 +39,7 @@ export const Dovetail: React.FC<Props> = props => {
   const content = useMemo(() => {
     const _content = (
       <>
+        <ModalStack />
         <ResourceCRUD configs={notCustomResources} urlPrefix={urlPrefix} />
         {props.children}
       </>
@@ -48,36 +52,40 @@ export const Dovetail: React.FC<Props> = props => {
 
   return (
     <Router history={history}>
-      <GlobalStoreContext.Provider value={{ globalStore }}>
-        <Refine
-          dataProvider={{
-            default: dataProvider(globalStore),
-          }}
-          routerProvider={routerProvider}
-          liveProvider={liveProvider(globalStore)}
-          options={{
-            warnWhenUnsavedChanges: true,
-            liveMode: 'auto',
-          }}
-          resources={resourcesConfig.map(c => {
-            return {
-              name: c.name,
-              meta: {
-                resourceBasePath: c.basePath,
-                kind: c.kind,
-                parent: c.parent,
-                label: `${c.kind}s`,
-              },
-              list: `${urlPrefix}/${c.name}`,
-              show: `${urlPrefix}/${c.name}/show`,
-              create: `${urlPrefix}/${c.name}/create`,
-              edit: `${urlPrefix}/${c.name}/edit`,
-            };
-          })}
-        >
-          {content}
-        </Refine>
-      </GlobalStoreContext.Provider>
+      <KitStoreProvider>
+        <GlobalStoreContext.Provider value={{ globalStore }}>
+          <ConfigsContext.Provider value={keyBy(resourcesConfig, 'name')}>
+            <Refine
+              dataProvider={{
+                default: dataProvider(globalStore),
+              }}
+              routerProvider={routerProvider}
+              liveProvider={liveProvider(globalStore)}
+              options={{
+                warnWhenUnsavedChanges: true,
+                liveMode: 'auto',
+              }}
+              resources={resourcesConfig.map(c => {
+                return {
+                  name: c.name,
+                  meta: {
+                    resourceBasePath: c.basePath,
+                    kind: c.kind,
+                    parent: c.parent,
+                    label: `${c.kind}s`,
+                  },
+                  list: `${urlPrefix}/${c.name}`,
+                  show: `${urlPrefix}/${c.name}/show`,
+                  create: `${urlPrefix}/${c.name}/create`,
+                  edit: `${urlPrefix}/${c.name}/edit`,
+                };
+              })}
+            >
+              {content}
+            </Refine>
+          </ConfigsContext.Provider>
+        </GlobalStoreContext.Provider>
+      </KitStoreProvider>
     </Router>
   );
 };
