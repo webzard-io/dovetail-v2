@@ -6,7 +6,6 @@ import { ImageNames } from '../../components/ImageNames';
 import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
 import Time from '../../components/Time';
-import { WorkloadReplicas } from '../../components/WorkloadReplicas';
 import i18n from '../../i18n';
 import {
   JobModel,
@@ -136,7 +135,11 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(): Column<Mo
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (_, record: Model) => {
-      return <WorkloadReplicas record={record} />;
+      return (
+        <span>
+          {record.readyReplicas}/{record.replicas}
+        </span>
+      );
     },
   };
 };

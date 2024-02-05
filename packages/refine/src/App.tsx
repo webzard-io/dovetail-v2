@@ -3,14 +3,13 @@ import { GlobalStore } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Router } from 'react-router-dom';
+import { Layout } from './components';
 import {
   CRONJOB_INIT_VALUE,
   DAEMONSET_INIT_VALUE,
   STATEFULSET_INIT_VALUE,
   POD_INIT_VALUE,
-} from 'src/constants/k8s';
-import { FormType } from 'src/types';
-import { Layout } from './components';
+} from './constants/k8s';
 import { Dovetail } from './Dovetail';
 import { ConfigMapConfig } from './pages/configmaps';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
@@ -22,7 +21,7 @@ import { SecretsConfig } from './pages/secrets';
 import { ServicesConfig } from './pages/services';
 import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulsets';
 import { ProviderPlugins } from './plugins';
-import { RESOURCE_GROUP, ResourceConfig } from './types';
+import { RESOURCE_GROUP, ResourceConfig, FormType } from './types';
 
 function App() {
   const { t } = useTranslation();
