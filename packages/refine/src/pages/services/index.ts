@@ -21,10 +21,11 @@ export const ServicesConfig: ResourceConfig<ResourceModel> = {
   label: 'Services',
   parent: RESOURCE_GROUP.NETWORK,
   columns: () => [ServiceTypeColumnRenderer(), AgeColumnRenderer()],
-  showFields: () => [
-    [],
-    [ServiceTypeField(), ClusterIpField(), SessionAffinityField()],
-    [ServicePodsField(), ConditionsField()],
-  ],
+  showConfig: () => ({
+    groups: [{
+      fields: [ServiceTypeField(), ClusterIpField(), SessionAffinityField()],
+    }],
+    tabs: [ServicePodsField(), ConditionsField()],
+  }),
   initValue: SERVICE_INIT_VALUE,
 };

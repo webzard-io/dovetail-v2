@@ -2,10 +2,10 @@ import { useUIKit } from '@cloudtower/eagle';
 import { useParsed, useShow } from '@refinedev/core';
 import React from 'react';
 import { ResourceModel } from '../../models';
-import { ShowContent, ShowField } from '../ShowContent';
+import { ShowContent, ShowConfig } from '../ShowContent';
 
 type Props<Model extends ResourceModel> = {
-  fieldGroups: ShowField<Model>[][];
+  showConfig: ShowConfig<Model>;
   formatter?: (r: Model) => Model;
   Dropdown?: React.FC<{ record: Model }>;
 };

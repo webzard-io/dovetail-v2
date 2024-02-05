@@ -8,7 +8,12 @@ import { CronJobModel } from '../../../models';
 export const CronJobShow: React.FC<IResourceComponentsProps> = () => {
   return (
     <PageShow<CronJobModel>
-      fieldGroups={[[], [ImageField()], [JobsField()]]}
+      showConfig={{
+        groups: [{
+          fields: [ImageField()]
+        }],
+        tabs: [JobsField()],
+      }}
       Dropdown={CronJobDropdown}
     />
   );

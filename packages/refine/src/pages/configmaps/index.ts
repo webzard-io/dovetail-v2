@@ -11,5 +11,7 @@ export const ConfigMapConfig: ResourceConfig<ResourceModel> = {
   parent: RESOURCE_GROUP.STORAGE,
   label: 'ConfigMaps',
   columns: () => [AgeColumnRenderer()],
-  showFields: () => [[], [], [DataField()]],
+  showConfig: () => ({
+    tabs: [DataField()],
+  }),
 };

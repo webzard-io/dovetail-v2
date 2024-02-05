@@ -5,7 +5,6 @@ import {
   ConditionsField,
   ImageField,
   PodsField,
-  ShowField,
   StartTimeField,
 } from '../../components/ShowContent';
 import { JOB_INIT_VALUE } from '../../constants/k8s';
@@ -34,12 +33,13 @@ export const JobConfig: ResourceConfig<JobModel> = {
       DurationColumnRenderer(),
       AgeColumnRenderer(),
     ] as Column<JobModel>[],
-  showFields: () =>
-    [
-      [],
-      [StartTimeField(), ImageField()],
-      [PodsField(), ConditionsField()],
-    ] as ShowField<JobModel>[][],
+  showConfig: () => ({
+    descriptions: [],
+    groups: [{
+      fields: [StartTimeField(), ImageField()],
+    }],
+    tabs: [PodsField(), ConditionsField()]
+  }),
   initValue: JOB_INIT_VALUE,
   Dropdown: K8sDropdown,
   formType: FormType.MODAL

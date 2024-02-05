@@ -4,7 +4,6 @@ import { useResource, useUpdate } from '@refinedev/core';
 import { get } from 'lodash-es';
 import React, { useState, useCallback, useImperativeHandle, useRef } from 'react';
 import { EditField } from 'src/components/EditField';
-import { ShowField } from 'src/components/ShowContent';
 import { WorkloadModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
 
@@ -66,11 +65,11 @@ const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, Workl
 
 export interface WorkloadReplicasProps {
   record: WorkloadModel;
-  field: ShowField<WorkloadModel>;
+  label?: string;
   editable?: boolean;
 }
 
-export function WorkloadReplicas({ record, field, editable }: WorkloadReplicasProps) {
+export function WorkloadReplicas({ record, label, editable }: WorkloadReplicasProps) {
   const formRef = useRef<WorkloadReplicasFormHandler | null>(null);
 
   const readyReplicas =
@@ -94,7 +93,7 @@ export function WorkloadReplicas({ record, field, editable }: WorkloadReplicasPr
                     ref={formRef}
                     defaultValue={currentReplicas}
                     record={record}
-                    label={field.title}
+                    label={label || ''}
                   />
                 );
               }
