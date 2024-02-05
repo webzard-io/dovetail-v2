@@ -12,36 +12,37 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <PageShow<PodModel>
-      fieldGroups={[
-        [],
-        [
-          {
-            key: 'podIp',
-            title: 'Pod IP',
-            path: ['status', 'podIP'],
-          },
-          {
-            key: 'Workload',
-            title: i18n.t('dovetail.workload'),
-            path: ['metadata', 'ownerReferences', '0', 'name'],
-          },
-          {
-            key: 'Node',
-            title: i18n.t('dovetail.node_name'),
-            path: ['spec', 'nodeName'],
-          },
-          {
-            key: 'readyDisplay',
-            title: 'Ready',
-            path: ['readyDisplay'],
-          },
-        ],
-        [
+      showConfig={{
+        groups: [{
+          fields: [
+            {
+              key: 'podIp',
+              title: 'Pod IP',
+              path: ['status', 'podIP'],
+            },
+            {
+              key: 'Workload',
+              title: i18n.t('dovetail.workload'),
+              path: ['metadata', 'ownerReferences', '0', 'name'],
+            },
+            {
+              key: 'Node',
+              title: i18n.t('dovetail.node_name'),
+              path: ['spec', 'nodeName'],
+            },
+            {
+              key: 'readyDisplay',
+              title: 'Ready',
+              path: ['readyDisplay'],
+            },
+          ]
+        }],
+        tabs: [
           {
             key: 'container',
             title: i18n.t('dovetail.container'),
             path: [],
-            render: (_, record) => {
+            renderContent: (_, record) => {
               return (
                 <PodContainersTable
                   containerStatuses={record.status?.containerStatuses || []}
@@ -55,12 +56,12 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
             key: 'log',
             title: i18n.t('dovetail.log'),
             path: [],
-            render: (_, record) => {
+            renderContent: (_, record) => {
               return <PodLog pod={record} />;
             },
           },
         ],
-      ]}
+      }}
     />
   );
 };

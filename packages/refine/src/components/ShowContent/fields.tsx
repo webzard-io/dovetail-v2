@@ -21,15 +21,35 @@ export type ShowField<Model extends ResourceModel> = {
   key: string;
   title: string;
   path: string[];
+  labelWidth?: string;
+  col?: number;
   render?: (val: unknown, record: Model, field: ShowField<Model>) => React.ReactElement | undefined;
+  renderContent?: (val: unknown, record: Model, field: ShowField<Model>) => React.ReactElement | undefined;
 };
 
-export const ImageField = (): ShowField<WorkloadBaseModel> => {
+export type ShowTabField<Model extends ResourceModel> = {
+  key: string;
+  title: string;
+  path: string[];
+  renderContent?: (val: unknown, record: Model, field: ShowTabField<Model>) => React.ReactElement | undefined;
+};
+
+export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
+  title?: string;
+  descriptions?: ShowField<Model>[];
+  groups?: {
+    fields: ShowField<Model>[];
+  }[];
+  tabs?: ShowTabField<Model>[];
+}
+
+export const ImageField = <Model extends WorkloadBaseModel>(): ShowField<Model> => {
   return {
     key: 'Image',
     title: i18n.t('dovetail.image'),
     path: ['imageNames'],
-    render(value) {
+    col: 12,
+    renderContent(value) {
       return <ImageNames value={value as string[]} />;
     },
   };
@@ -40,29 +60,29 @@ export const ReplicaField = (): ShowField<WorkloadModel> => {
     key: 'Replicas',
     title: i18n.t('dovetail.replicas'),
     path: ['status', 'replicas'],
-    render: (_, record, field) => {
-      return <WorkloadReplicas record={record} field={field} editable />;
+    renderContent: (_, record, field) => {
+      return <WorkloadReplicas record={record} label={field.title} editable />;
     },
   };
 };
 
-export const ConditionsField = (): ShowField<ResourceModel> => {
+export const ConditionsField = <Model extends ResourceModel>(): ShowTabField<Model> => {
   return {
     key: 'Conditions',
     title: i18n.t('dovetail.condition'),
     path: ['status', 'conditions'],
-    render: value => {
+    renderContent: value => {
       return <ConditionsTable conditions={value as Condition[]} />;
     },
   };
 };
 
-export const PodsField = (): ShowField<WorkloadModel> => {
+export const PodsField = <Model extends WorkloadBaseModel>(): ShowTabField<Model> => {
   return {
     key: 'pods',
     title: 'Pods',
     path: [],
-    render: (_, record) => {
+    renderContent: (_, record) => {
       return (
         <WorkloadPodsTable
           selector={
@@ -76,12 +96,12 @@ export const PodsField = (): ShowField<WorkloadModel> => {
   };
 };
 
-export const JobsField = (): ShowField<JobModel | CronJobModel> => {
+export const JobsField = <Model extends JobModel | CronJobModel>(): ShowTabField<Model> => {
   return {
     key: 'jobs',
     title: 'Jobs',
     path: [],
-    render: (_, record) => {
+    renderContent: (_, record) => {
       return (
         <CronjobJobsTable
           owner={{
@@ -102,7 +122,7 @@ export const DataField = (): ShowField<ResourceModel> => {
     key: 'data',
     title: i18n.t('dovetail.data'),
     path: ['data'],
-    render: val => {
+    renderContent: val => {
       return <KeyValue value={val as Record<string, string>} />;
     },
   };
@@ -113,7 +133,7 @@ export const SecretDataField = (): ShowField<ResourceModel> => {
     key: 'data',
     title: i18n.t('dovetail.data'),
     path: ['data'],
-    render: val => {
+    renderContent: val => {
       const decodeVal: Record<string, string> = {};
       for (const key in val as Record<string, string>) {
         decodeVal[key] = atob((val as Record<string, string>)[key]);
@@ -128,7 +148,8 @@ export const StartTimeField = (): ShowField<JobModel> => {
     key: 'started',
     title: i18n.t('dovetail.started'),
     path: ['status', 'startTime'],
-    render(value) {
+    col: 12,
+    renderContent(value) {
       return <Time date={value as string} />;
     },
   };
@@ -158,12 +179,12 @@ export const SessionAffinityField = (): ShowField<ResourceModel> => {
   };
 };
 
-export const ServicePodsField = (): ShowField<ResourceModel> => {
+export const ServicePodsField = <Model extends ResourceModel>(): ShowTabField<Model> => {
   return {
     key: 'pods',
     title: 'Pods',
     path: [],
-    render: (_, record) => {
+    renderContent: (_, record) => {
       return (
         <WorkloadPodsTable
           selector={

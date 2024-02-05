@@ -12,8 +12,8 @@ export const ImageNames: React.FC<{ value: string[] }> = ({ value }) => {
   const { t } = useTranslation();
 
   return (
-    <div>
-      <div>{value[0]}</div>
+    <span>
+      <span>{value[0]}</span>
       {value.length > 1 && (
         <kit.tooltip
           title={
@@ -29,6 +29,6 @@ export const ImageNames: React.FC<{ value: string[] }> = ({ value }) => {
           </div>
         </kit.tooltip>
       )}
-    </div>
+    </span>
   );
 };

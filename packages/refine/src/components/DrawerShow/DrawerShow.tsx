@@ -3,10 +3,10 @@ import { useNavigation, useParsed, useShow } from '@refinedev/core';
 import { Drawer } from 'antd';
 import React from 'react';
 import { ResourceModel } from '../../models';
-import { ShowField, ShowContent } from '../ShowContent';
+import { ShowConfig, ShowContent } from '../ShowContent';
 
 type Props<Model extends ResourceModel> = {
-  fieldGroups: ShowField<Model>[][];
+  showConfig: ShowConfig<Model>;
   formatter?: (r: Model) => Model;
 };
 
