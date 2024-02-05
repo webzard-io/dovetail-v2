@@ -32,19 +32,17 @@ export function ResourceCRUD(props: Props) {
             </Route>
             {
               // the modals would render in ModalStack
-              config.formType === FormType.MODAL ? (
-                null
-              ) :
-                (
-                  <>
-                    <Route path={`${urlPrefix}/${config.name}/create`}>
-                      <ResourceForm config={config} />
-                    </Route>
-                    <Route path={`${urlPrefix}/${config.name}/edit`}>
-                      <ResourceForm config={config} />
-                    </Route>
-                  </>
-                )
+              config.formType === FormType.PAGE ? (
+                <>
+                  <Route path={`${urlPrefix}/${config.name}/create`}>
+                    <ResourceForm config={config} />
+                  </Route>
+                  <Route path={`${urlPrefix}/${config.name}/edit`}>
+                    <ResourceForm config={config} />
+                  </Route>
+                </>
+              ) : null
+
             }
           </React.Fragment>
         );

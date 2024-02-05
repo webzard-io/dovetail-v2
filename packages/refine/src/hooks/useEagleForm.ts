@@ -261,14 +261,14 @@ const useEagleForm = <
     return changeValues;
   };
 
-  const saveButtonProps = {
-    disabled: formLoading,
+  const saveButtonProps = useMemo(() => ({
+    loading: formLoading,
     onClick: () => {
       form.submit();
     },
-  };
+  }), [formLoading, form]);
 
-  const editorProps: EditorProps = {
+  const editorProps: EditorProps = useMemo(() => ({
     ref: editor,
     defaultValue:
       schema && editorOptions?.isGenerateAnnotations
@@ -291,7 +291,7 @@ const useEagleForm = <
         isFoldRef.current = true;
       }
     },
-  };
+  }), [editorErrors, editorOptions, fold, initialValues, queryResult?.data?.data, schema, useResourceResult.resource?.name]);
 
   return {
     form: formSF.form,

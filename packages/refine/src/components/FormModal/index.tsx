@@ -2,9 +2,9 @@ import { CloseCircleFilled } from '@ant-design/icons';
 import { useUIKit, popModal } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useResource } from '@refinedev/core';
-import React, { useContext, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useContext, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import YamlForm, { YamlFormProps, YamlFormHandler } from 'src/components/YamlForm';
+import YamlForm, { YamlFormProps } from 'src/components/YamlForm';
 import ConfigsContext from 'src/contexts/configs';
 
 const FullscreenModalStyle = css`
@@ -27,15 +27,15 @@ export type FormModalProps = {
   resource?: string;
   id?: string;
   formProps?: YamlFormProps;
-  renderForm?: (props: YamlFormProps & { ref: React.MutableRefObject<YamlFormHandler | null> }) => React.ReactNode;
+  renderForm?: (props: YamlFormProps) => React.ReactNode;
 };
 
 export function FormModal(props: FormModalProps) {
   const { resource: resourceFromProps, id, formProps, renderForm } = props;
   const { i18n } = useTranslation();
   const { resource } = useResource();
-  const formRef = useRef<YamlFormHandler | null>(null);
   const configs = useContext(ConfigsContext);
+  const [saveButtonProps, setSaveButtonProps] = useState<{ loading?: boolean; onClick?: ()=> void; }>({});
   const kit = useUIKit();
 
   const config = useMemo(() => configs[resourceFromProps || resource?.name || ''], [configs, resourceFromProps, resource]);
@@ -48,8 +48,8 @@ export function FormModal(props: FormModalProps) {
     popModal();
   }, []);
   const onOk = useCallback(() => {
-    formRef.current?.saveButtonProps.onClick();
-  }, []);
+    saveButtonProps.onClick?.();
+  }, [saveButtonProps]);
   const onFinish = useCallback(() => {
     popModal();
   }, []);
@@ -59,7 +59,7 @@ export function FormModal(props: FormModalProps) {
       className={FullscreenModalStyle}
       width="calc(100vw - 16px)"
       title={title}
-      okButtonProps={formRef.current?.saveButtonProps}
+      okButtonProps={saveButtonProps}
       closeIcon={<CloseCircleFilled />}
       onOk={onOk}
       onCancel={onCancel}
@@ -71,15 +71,15 @@ export function FormModal(props: FormModalProps) {
           ...formProps,
           initialValues: formProps?.initialValues || config?.initValue,
           id,
-          ref: formRef,
+          onSaveButtonPropsChange: setSaveButtonProps,
           onFinish
         }) : (
           <YamlForm
             {...formProps}
             initialValues={formProps?.initialValues || config?.initValue}
-            ref={formRef}
             id={id}
             isShowLayout={false}
+            onSaveButtonPropsChange={setSaveButtonProps}
             onFinish={onFinish}
           />
         )
