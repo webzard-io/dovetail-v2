@@ -3,7 +3,12 @@ import { GlobalStore } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Router } from 'react-router-dom';
-import { DEPLOYMENT_INIT_VALUE } from 'src/constants/k8s';
+import {
+  CRONJOB_INIT_VALUE,
+  DAEMONSET_INIT_VALUE,
+  STATEFULSET_INIT_VALUE,
+  POD_INIT_VALUE,
+} from 'src/constants/k8s';
 import { FormType } from 'src/types';
 import { Layout } from './components';
 import { Dovetail } from './Dovetail';
@@ -31,6 +36,7 @@ function App() {
         kind: 'CronJob',
         parent: RESOURCE_GROUP.WORKLOAD,
         label: 'CronJobs',
+        initValue: CRONJOB_INIT_VALUE,
         isCustom: true,
       },
       {
@@ -39,6 +45,7 @@ function App() {
         kind: 'DaemonSet',
         parent: RESOURCE_GROUP.WORKLOAD,
         label: 'DaemonSets',
+        initValue: DAEMONSET_INIT_VALUE,
         isCustom: true,
       },
       {
@@ -57,6 +64,7 @@ function App() {
         kind: 'StatefulSet',
         parent: RESOURCE_GROUP.WORKLOAD,
         label: 'StatefulSets',
+        initValue: STATEFULSET_INIT_VALUE,
         isCustom: true,
       },
       {
@@ -65,6 +73,7 @@ function App() {
         kind: 'Pod',
         parent: RESOURCE_GROUP.WORKLOAD,
         label: 'Pods',
+        initValue: POD_INIT_VALUE,
         isCustom: true,
       },
       JobConfig,
