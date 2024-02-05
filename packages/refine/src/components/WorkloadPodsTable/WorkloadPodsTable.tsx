@@ -3,7 +3,7 @@ import { css } from '@linaria/core';
 import { useList } from '@refinedev/core';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useMemo, useState } from 'react';
-import { matchSelector } from 'src/utils/selector';
+import { matchSelector } from 'src/utils/match-selector';
 import {
   NameColumnRenderer,
   NodeNameColumnRenderer,
@@ -25,6 +25,9 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
   const { data } = useList<PodModel>({
     resource: 'pods',
     meta: { resourceBasePath: '/api/v1', kind: 'Pod' },
+    pagination: {
+      mode: 'off',
+    },
   });
 
   const dataSource = useMemo(() => {
@@ -50,7 +53,7 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
     >
       <TableToolBar title="" selectedKeys={selectedKeys} hideCreate />
       <Table
-        tableKey='pods'
+        tableKey="pods"
         loading={!dataSource}
         data={dataSource || []}
         columns={columns}

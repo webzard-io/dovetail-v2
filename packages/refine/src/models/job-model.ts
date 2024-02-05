@@ -1,12 +1,17 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import { Job } from 'kubernetes-types/batch/v1';
+import { PodList } from 'kubernetes-types/core/v1';
+import { sumBy } from 'lodash';
 import { WorkloadState } from '../constants';
+import { matchSelector } from '../utils/match-selector';
 import { elapsedTime, getSecondsDiff } from '../utils/time';
+import { PodModel } from './pod-model';
 import { WorkloadBaseModel } from './workload-base-model';
 
 type RequiredJob = Required<Job> & Unstructured;
 
 export class JobModel extends WorkloadBaseModel {
+  public restarts = 0;
   public declare spec?: RequiredJob['spec'];
   public declare status?: RequiredJob['status'];
 
@@ -15,6 +20,22 @@ export class JobModel extends WorkloadBaseModel {
     public _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
+  }
+
+  override async init() {
+    await this.getRestarts();
+  }
+
+  private async getRestarts() {
+    const pods = (await this._globalStore.get('pods', {
+      resourceBasePath: '/api/v1',
+      kind: 'Pod',
+    })) as PodList;
+    const myPods = pods.items.filter(p =>
+      this.spec?.selector ? matchSelector(p as PodModel, this.spec?.selector) : false
+    );
+    const result = sumBy(myPods, 'restartCount');
+    this.restarts = result;
   }
 
   get duration() {
@@ -33,7 +54,7 @@ export class JobModel extends WorkloadBaseModel {
   }
 
   get durationDisplay() {
-    return elapsedTime(this.duration).label;
+    return elapsedTime(this.duration).label || '-';
   }
 
   get completionsDisplay() {
