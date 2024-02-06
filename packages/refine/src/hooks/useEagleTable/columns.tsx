@@ -1,8 +1,10 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
+import type { OwnerReference } from 'kubernetes-types/meta/v1';
 import { get } from 'lodash';
 import React from 'react';
 import { ImageNames } from '../../components/ImageNames';
+import { ReferenceLink } from '../../components/ReferenceLink';
 import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
 import Time from '../../components/Time';
@@ -232,5 +234,25 @@ export const ServiceTypeColumnRenderer = <
     dataIndex,
     sortable: true,
     sorter: CommonSorter(dataIndex),
+  };
+};
+export const PodWorkloadColumnRenderer = <Model extends PodModel>(): Column<Model> => {
+  const dataIndex = ['metadata', 'ownerReferences'];
+  return {
+    key: 'type',
+    title: i18n.t('dovetail.workload'),
+    display: true,
+    dataIndex,
+    sortable: true,
+    sorter: CommonSorter(dataIndex),
+    render(value: OwnerReference[], record) {
+      return value.map(o => (
+        <ReferenceLink
+          key={o.name}
+          ownerReference={o}
+          namespace={record.metadata.namespace || 'default'}
+        />
+      ));
+    },
   };
 };
