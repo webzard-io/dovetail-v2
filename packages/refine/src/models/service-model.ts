@@ -22,14 +22,14 @@ export class ServiceModel extends ResourceModel<ServiceType> {
     return this._rawYaml.spec.externalName;
   }
 
-  outClusterAccess() {
-    switch (this._rawYaml.spec.type) {
-      case 'NodePort':
-        return this._rawYaml.spec.port;
-      case 'LoadBalancer':
-        return this._rawYaml.spec.externalIPs;
-      default:
-        return undefined;
-    }
-  }
+  // outClusterAccess() {
+  //   switch (this._rawYaml.spec.type) {
+  //     case 'NodePort':
+  //       return this._rawYaml.spec.port;
+  //     case 'LoadBalancer':
+  //       return this._rawYaml.spec.externalIPs;
+  //     default:
+  //       return undefined;
+  //   }
+  // }
 }

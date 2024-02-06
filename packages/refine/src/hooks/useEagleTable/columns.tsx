@@ -17,6 +17,7 @@ import {
   WorkloadBaseModel,
   CronJobModel,
 } from '../../models';
+import { elapsedTime } from '../../utils/time';
 
 const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
   const { name, id, resource } = props;
@@ -212,7 +213,7 @@ export const CompletionsCountColumnRenderer = <
 export const DurationColumnRenderer = <
   Model extends JobModel | CronJobModel,
 >(): Column<Model> => {
-  const dataIndex = ['durationDisplay'];
+  const dataIndex = ['duration'];
   return {
     key: 'duration',
     display: true,
@@ -220,6 +221,15 @@ export const DurationColumnRenderer = <
     title: i18n.t('dovetail.duration'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
+    render: v => {
+      const i18nMap = {
+        sec: i18n.t('dovetail.sec'),
+        day: i18n.t('dovetail.day'),
+        min: i18n.t('dovetail.min'),
+        hr: i18n.t('dovetail.hr'),
+      };
+      return <span>{elapsedTime(v, i18nMap).label || '-'}</span>;
+    },
   };
 };
 
