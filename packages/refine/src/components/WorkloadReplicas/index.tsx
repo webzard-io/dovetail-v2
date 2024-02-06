@@ -1,67 +1,107 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { useUIKit } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
 import { useResource, useUpdate } from '@refinedev/core';
 import { get } from 'lodash-es';
-import React from 'react';
+import React, { useState, useCallback, useImperativeHandle, useRef } from 'react';
+import { EditField } from 'src/components/EditField';
+import { ShowField } from 'src/components/ShowContent';
 import { WorkloadModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
 
-const MinusButtonStyle = css`
-  margin-right: 8px;
-`;
+interface WorkloadReplicasFormProps {
+  defaultValue: number;
+  record: WorkloadModel;
+  label: string;
+}
 
-const PlusButtonStyle = css`
-  margin-left: 8px;
-`;
+interface WorkloadReplicasFormHandler {
+  submit: ()=> Promise<unknown> | undefined;
+}
 
-export const WorkloadReplicas: React.FC<{ record: WorkloadModel }> = ({ record }) => {
+const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, WorkloadReplicasFormProps>(function WorkloadReplicasForm(props, ref) {
+  const { defaultValue, record, label } = props;
   const kit = useUIKit();
-
   const { resource } = useResource();
-  const { mutate } = useUpdate();
+  const { mutateAsync } = useUpdate();
 
-  const readyReplicas =
-    record.status && 'readyReplicas' in record.status ? record.status.readyReplicas : 0;
-  const replicas =
-    record.status && 'replicas' in record.status ? record.status.replicas : 0;
+  const [replicas, setReplicas] = useState(defaultValue);
 
-  const canScale = record.kind === 'Deployment' || record.kind === 'StatefulSet';
-  const currentReplicas = get(record, 'spec.replicas', 0);
-
-  const scale = (delta: number) => {
-    const v = record.scale(currentReplicas + delta);
+  const submit = useCallback(() => {
+    const v = record.scale(replicas);
     const id = record.id;
+
     pruneBeforeEdit(v);
-    mutate({
+
+    return mutateAsync({
       id,
       resource: resource?.name || '',
       values: v,
     });
-  };
+  }, [record, replicas, resource?.name, mutateAsync]);
+
+  useImperativeHandle(ref, () => ({
+    submit,
+  }), [submit]);
+
+  return (
+    <kit.form.Item
+      label={label}
+    >
+      <kit.fields.Integer
+        input={{
+          name: 'replicas',
+          value: replicas,
+          onChange: (value) => {
+            setReplicas(Number(value));
+          },
+          onBlur: () => { },
+          onFocus: () => { },
+        }}
+        meta={{}}
+        controls
+      />
+    </kit.form.Item>
+  );
+});
+
+export interface WorkloadReplicasProps {
+  record: WorkloadModel;
+  field: ShowField<WorkloadModel>;
+  editable?: boolean;
+}
+
+export function WorkloadReplicas({ record, field, editable }: WorkloadReplicasProps) {
+  const formRef = useRef<WorkloadReplicasFormHandler | null>(null);
+
+  const readyReplicas =
+    record.status && 'readyReplicas' in record.status ? record.status.readyReplicas : 0;
+  const replicas = record.spec && 'replicas' in record.spec ? record.spec.replicas : 0;
+
+  const canScale = record.kind === 'Deployment' || record.kind === 'StatefulSet';
+  const currentReplicas = get(record, 'spec.replicas', 0);
 
   return (
     <span>
-      {canScale && (
-        <kit.button
-          className={MinusButtonStyle}
-          type="ordinary"
-          size="small"
-          onClick={() => scale(-1)}
-        >
-          -
-        </kit.button>
-      )}
       {readyReplicas}/{replicas}
-      {canScale && (
-        <kit.button
-          className={PlusButtonStyle}
-          type="ordinary"
-          size="small"
-          onClick={() => scale(1)}
-        >
-          +
-        </kit.button>
-      )}
+      {
+        editable && canScale && (
+          <EditField
+            modalProps={{
+              formRef,
+              renderContent() {
+                return (
+                  <WorkloadReplicasForm
+                    ref={formRef}
+                    defaultValue={currentReplicas}
+                    record={record}
+                    label={field.title}
+                  />
+                );
+              }
+            }}
+          />
+        )
+      }
     </span>
   );
-};
+}

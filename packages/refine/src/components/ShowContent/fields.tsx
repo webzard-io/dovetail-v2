@@ -21,7 +21,7 @@ export type ShowField<Model extends ResourceModel> = {
   key: string;
   title: string;
   path: string[];
-  render?: (val: unknown, record: Model) => React.ReactElement | undefined;
+  render?: (val: unknown, record: Model, field: ShowField<Model>) => React.ReactElement | undefined;
 };
 
 export const ImageField = (): ShowField<WorkloadBaseModel> => {
@@ -40,8 +40,8 @@ export const ReplicaField = (): ShowField<WorkloadModel> => {
     key: 'Replicas',
     title: i18n.t('dovetail.replicas'),
     path: ['status', 'replicas'],
-    render: (_, record) => {
-      return <WorkloadReplicas record={record} />;
+    render: (_, record, field) => {
+      return <WorkloadReplicas record={record} field={field} editable />;
     },
   };
 };
