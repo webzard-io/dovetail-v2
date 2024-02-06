@@ -1,6 +1,6 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
-import React, { useMemo, useCallback, useImperativeHandle } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
 import FormLayout from 'src/components/FormLayout';
@@ -28,18 +28,15 @@ export interface YamlFormProps {
   initialValues?: Record<string, unknown>;
   schemaStrategy?: SchemaStrategy;
   isShowLayout?: boolean;
+  onSaveButtonPropsChange?: (saveButtonProps: {
+    disabled?: boolean;
+    onClick: () => void;
+  })=> void;
   onFinish?: () => void;
 }
 
-export interface YamlFormHandler {
-  saveButtonProps: {
-    disabled?: boolean;
-    onClick: () => void;
-  }
-}
-
-const YamlForm = React.forwardRef<YamlFormHandler, YamlFormProps>(function YamlForm(props: YamlFormProps, ref) {
-  const { id, schemaStrategy = SchemaStrategy.Optional, isShowLayout = true } = props;
+function YamlForm(props: YamlFormProps) {
+  const { id, schemaStrategy = SchemaStrategy.Optional, isShowLayout = true, onSaveButtonPropsChange } = props;
   const {
     formProps,
     saveButtonProps,
@@ -74,9 +71,9 @@ const YamlForm = React.forwardRef<YamlFormHandler, YamlFormProps>(function YamlF
     props.onFinish?.();
   }, [formProps, props]);
 
-  useImperativeHandle(ref, () => ({
-    saveButtonProps,
-  }), [saveButtonProps]);
+  useEffect(()=> {
+    onSaveButtonPropsChange?.(saveButtonProps);
+  }, [saveButtonProps, onSaveButtonPropsChange]);
 
   return (
     <FormWrapper saveButtonProps={saveButtonProps}>
@@ -135,6 +132,6 @@ const YamlForm = React.forwardRef<YamlFormHandler, YamlFormProps>(function YamlF
       </kit.form>
     </FormWrapper>
   );
-});
+}
 
 export default YamlForm;
