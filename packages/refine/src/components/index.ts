@@ -29,6 +29,7 @@ export * from './DrawerShow';
 export * from './Menu';
 export * from './Table';
 export * from './EditButton';
+export * from './ReferenceLink';
 export * from './NamespacesFilter';
 export * from './Tags';
 export * from './PodLog';

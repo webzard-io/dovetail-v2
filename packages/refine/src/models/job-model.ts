@@ -4,7 +4,7 @@ import { PodList } from 'kubernetes-types/core/v1';
 import { sumBy } from 'lodash';
 import { WorkloadState } from '../constants';
 import { matchSelector } from '../utils/match-selector';
-import { elapsedTime, getSecondsDiff } from '../utils/time';
+import { getSecondsDiff } from '../utils/time';
 import { PodModel } from './pod-model';
 import { WorkloadBaseModel } from './workload-base-model';
 
@@ -51,10 +51,6 @@ export class JobModel extends WorkloadBaseModel {
     }
 
     return 0;
-  }
-
-  get durationDisplay() {
-    return elapsedTime(this.duration).label || '-';
   }
 
   get completionsDisplay() {
