@@ -3,6 +3,7 @@ import { css } from '@linaria/core';
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
+import { FormErrorAlert } from 'src/components/FormErrorAlert';
 import FormLayout from 'src/components/FormLayout';
 import { YamlEditorComponent } from 'src/components/YamlEditor/YamlEditorComponent';
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
@@ -101,22 +102,8 @@ function YamlForm(props: YamlFormProps) {
               </kit.form.Item>
               <kit.form.Item>
                 {mutationResult.error && (
-                  <kit.alert
-                    message={
-                      errorResponseBody ? (
-                        <ul>
-                          {responseErrors.map((error, index) => (
-                            <li key={error}>
-                              {responseErrors.length > 1 ? index + 1 + '. ' : ''}
-                              {error}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        mutationResult.error.message
-                      )
-                    }
-                    type="error"
+                  <FormErrorAlert
+                    errorMsgs={errorResponseBody ? responseErrors : [mutationResult.error.message]}
                     style={{ marginBottom: 16 }}
                   />
                 )}
