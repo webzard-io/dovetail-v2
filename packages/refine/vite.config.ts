@@ -8,7 +8,6 @@ import commonjs from 'vite-plugin-commonjs';
 export default defineConfig({
   plugins: [commonjs(), react(), linaria()],
   server: {
-    force: true,
     host: '0.0.0.0',
     proxy: {
       // '/proxy-k8s': getProxyConfig(),
@@ -20,6 +19,9 @@ export default defineConfig({
         },
       },
     },
+  },
+  optimizeDeps: {
+    exclude: ['monaco-yaml/yaml.worker.js']
   },
   build: {
     minify: false,
@@ -51,6 +53,7 @@ export default defineConfig({
     },
   },
   resolve: {
+    preserveSymlinks: true,
     alias: {
       src: path.resolve(__dirname, 'src'),
     },
