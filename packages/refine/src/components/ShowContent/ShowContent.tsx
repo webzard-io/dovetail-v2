@@ -124,7 +124,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
     return fields.map(field => {
       let content;
       if (field.render) {
-        content = field.render(get(record, field.path), record);
+        content = field.render(get(record, field.path), record, field);
       } else {
         content = <span>{get(record, field.path)}</span>;
       }

@@ -7,7 +7,7 @@ type Cause = {
   field?: string;
 };
 
-type ErrorResponse = {
+export type ErrorResponseBody = {
   message?: string;
   code?: number;
   reason?: string;
@@ -26,27 +26,27 @@ export function isNetworkError(errors?: Cause[]) {
 }
 
 export function getSubmitError(
-  errorResponse: ErrorResponse | undefined,
+  errorResponse: ErrorResponseBody | undefined,
   text: string,
   i18n: I18n
 ) {
   return !errorResponse ? i18n.t('dovetail.network_error') : text;
 }
 
-export function getCommonErrors(response: ErrorResponse, i18n: I18n) {
+export function getCommonErrors(responseBody: ErrorResponseBody, i18n: I18n) {
   if (
     !(
-      response?.message ||
-      response?.code ||
-      response?.reason ||
-      response?.details ||
-      response?.graphQLErrors
+      responseBody?.message ||
+      responseBody?.code ||
+      responseBody?.reason ||
+      responseBody?.details ||
+      responseBody?.graphQLErrors
     )
   ) {
     return [];
   }
 
-  const causes: Cause[] = response.details?.causes || response.graphQLErrors || [];
+  const causes: Cause[] = responseBody.details?.causes || responseBody.graphQLErrors || [];
 
   if (causes.length) {
     return causes.map(cause => {
@@ -88,7 +88,7 @@ export function getCommonErrors(response: ErrorResponse, i18n: I18n) {
 
   return [
     i18n.t(
-      [`error.${response.code}`, `error.${response.reason}`, response.message || ''],
+      [`error.${responseBody.code}`, `error.${responseBody.reason}`, responseBody.message || ''],
       { fallbackLng: '' }
     ),
   ];
