@@ -38,7 +38,7 @@ export class WorkloadModel extends WorkloadBaseModel {
   }
 
   get replicas() {
-    return this.status && 'replicas' in this.status ? this.status.replicas : 0;
+    return this.spec && 'replicas' in this.spec ? this.spec.replicas : 0;
   }
 
   get readyReplicas() {
