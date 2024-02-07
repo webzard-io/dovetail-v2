@@ -13,7 +13,12 @@ import { WorkloadModel } from '../../../models';
 export const StatefulSetShow: React.FC<IResourceComponentsProps> = () => {
   return (
     <PageShow<WorkloadModel>
-      fieldGroups={[[], [ImageField(), ReplicaField()], [PodsField(), ConditionsField()]]}
+      showConfig={{
+        groups: [{
+          fields: [ImageField(), ReplicaField()]
+        }],
+        tabs: [PodsField(), ConditionsField()]
+      }}
       Dropdown={WorkloadDropdown}
     />
   );

@@ -11,5 +11,7 @@ export const SecretsConfig: ResourceConfig<ResourceModel> = {
   parent: RESOURCE_GROUP.STORAGE,
   label: 'Secrets',
   columns: () => [AgeColumnRenderer()],
-  showFields: () => [[], [], [SecretDataField()]],
+  showConfig: () => ({
+    tabs: [SecretDataField()]
+  }),
 };

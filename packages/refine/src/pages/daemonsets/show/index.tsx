@@ -12,7 +12,12 @@ import { WorkloadModel } from '../../../models';
 export const DaemonSetShow: React.FC<IResourceComponentsProps> = () => {
   return (
     <PageShow<WorkloadModel>
-      fieldGroups={[[], [ImageField()], [PodsField(), ConditionsField()]]}
+      showConfig={{
+        groups: [{
+          fields: [ImageField()]
+        }],
+        tabs: [PodsField(), ConditionsField()],
+      }}
       Dropdown={WorkloadDropdown}
     />
   );

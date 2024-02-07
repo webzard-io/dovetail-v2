@@ -26,7 +26,7 @@ export function ResourceCRUD(props: Props) {
             <Route path={`${urlPrefix}/${config.name}/show`}>
               <ResourceShow
                 formatter={config.formatter}
-                filedGroups={config.showFields?.() || []}
+                showConfig={config.showConfig?.() || {}}
                 Dropdown={config.Dropdown}
               />
             </Route>

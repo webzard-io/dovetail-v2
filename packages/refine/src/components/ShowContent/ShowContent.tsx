@@ -14,26 +14,28 @@ import { EventsTable } from '../EventsTable';
 import { StateTag } from '../StateTag';
 import { Tags } from '../Tags';
 import Time from '../Time';
-import { ShowField } from './fields';
+import { ShowConfig, ShowField } from './fields';
 
 const TopBarStyle = css`
   justify-content: space-between;
   width: 100%;
 `;
-
 const ShowContentStyle = css`
   width: 100%;
   overflow: auto;
   height: 100%;
   width: 100%;
 `;
-
 const EditorStyle = css`
   margin-top: 16px;
 `;
+const FieldWrapperStyle = css`
+  display: flex;
+  flex-wrap: nowrap;
+`;
 
 type Props<Model extends ResourceModel> = {
-  fieldGroups: ShowField<Model>[][];
+  showConfig: ShowConfig<Model>;
   formatter?: (r: Model) => Model;
   Dropdown?: React.FC<{ record: Model }>;
 };
@@ -44,7 +46,7 @@ enum Mode {
 }
 
 export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) => {
-  const { fieldGroups, formatter, Dropdown = K8sDropdown } = props;
+  const { showConfig, formatter, Dropdown = K8sDropdown } = props;
   const kit = useUIKit();
   const { globalStore } = useGlobalStore();
   const parsed = useParsed();
@@ -74,11 +76,40 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   }
 
   const model = data.data;
-
-
   const record = formatter ? formatter(model) : data?.data;
 
-  const FirstLineFields: ShowField<Model>[] = [
+  function renderFields(fields: ShowField<Model>[]) {
+    if (!record) return null;
+
+    return fields.map(field => {
+      let content;
+      const value = get(record, field.path);
+
+      if (field.renderContent) {
+        content = field.renderContent(value, record, field);
+      } else {
+        content = <span>{get(record, field.path)}</span>;
+      }
+
+      return (
+        <kit.col span={field.col} key={field.path.join()}>
+          {
+            field.render ? field.render(value, record, field) : (
+              <div className={FieldWrapperStyle}>
+                <span
+                  className={Typo.Label.l3_regular}
+                  style={{ width: field.labelWidth || '64px' }}
+                >{field.title}: </span>
+                {content}
+              </div>
+            )
+          }
+        </kit.col>
+      );
+    });
+  }
+
+  const DESCRIPTION_DEFAULT_FIELDS: ShowField<Model>[] = [
     {
       key: 'NameSpace',
       title: t('dovetail.namespace'),
@@ -88,18 +119,18 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       key: 'Age',
       title: t('dovetail.created_time'),
       path: ['metadata', 'creationTimestamp'],
-      render(value) {
+      renderContent(value) {
         return <Time date={new Date(value as string)} />;
       },
     },
   ];
-
-  const SecondLineFields: ShowField<Model>[] = [
+  const LABELS_ANNOTATIONS_GROUP_FIELDS: ShowField<Model>[] = [
     {
       key: 'Labels',
       title: t('dovetail.label'),
       path: ['metadata', 'labels'],
-      render: value => {
+      col: 24,
+      renderContent: value => {
         if (!value) {
           return undefined;
         }
@@ -110,7 +141,8 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       key: 'Annotations',
       title: t('dovetail.annotation'),
       path: ['metadata', 'annotations'],
-      render: value => {
+      col: 24,
+      renderContent: value => {
         if (!value) {
           return undefined;
         }
@@ -118,24 +150,6 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       },
     },
   ];
-
-  function renderFields(fields: ShowField<Model>[]) {
-    if (!record) return null;
-    return fields.map(field => {
-      let content;
-      if (field.render) {
-        content = field.render(get(record, field.path), record, field);
-      } else {
-        content = <span>{get(record, field.path)}</span>;
-      }
-      return (
-        <kit.space key={field.path.join()}>
-          <span className={Typo.Label.l3_regular}>{field.title}: </span>
-          {content}
-        </kit.space>
-      );
-    });
-  }
 
   const topBar = (
     <kit.space className={TopBarStyle}>
@@ -153,22 +167,20 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       </kit.space>
     </kit.space>
   );
-
-  const firstLine = (
-    <kit.space size={8}>
-      {renderFields([...FirstLineFields, ...(fieldGroups[0] || [])])}
-    </kit.space>
-  );
-  const secondLine = <kit.space size={8}>{renderFields(fieldGroups[1])}</kit.space>;
-  const labelAnnotations = (
-    <kit.space direction="vertical">{renderFields(SecondLineFields)}</kit.space>
-  );
+  const descriptions = (<kit.row gutter={24}>
+    {renderFields([...DESCRIPTION_DEFAULT_FIELDS, ...(showConfig.descriptions || [])])}
+  </kit.row>);
+  const groups = (showConfig.groups || []).concat([{
+    fields: LABELS_ANNOTATIONS_GROUP_FIELDS
+  }]).map((group, index) => (
+    <kit.row gutter={[24, 16]} key={index}>{renderFields(group.fields)}</kit.row>
+  ));
   const tabs = (
     <kit.tabs>
-      {fieldGroups[2].map(field => {
+      {(showConfig.tabs || []).map(field => {
         let content;
-        if (field.render) {
-          content = field.render(get(record, field.path), record);
+        if (field.renderContent) {
+          content = field.renderContent(get(record, field.path), record, field);
         } else {
           content = <span>{get(record, field.path)}</span>;
         }
@@ -183,11 +195,11 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       </kit.tabsTabPane>
     </kit.tabs>
   );
+
   const modeMap = {
     [Mode.Detail]: (
       <>
-        {secondLine}
-        {labelAnnotations}
+        {groups}
         <kit.divider />
         {tabs}
       </>
@@ -204,11 +216,13 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   };
 
   return (
-    <kit.space direction="vertical" className={ShowContentStyle}>
-      {topBar}
-      {firstLine}
+    <div>
+      <kit.space direction="vertical" className={ShowContentStyle}>
+        {topBar}
+        {descriptions}
+      </kit.space>
       <kit.divider />
       {modeMap[mode]}
-    </kit.space>
+    </div>
   );
 };

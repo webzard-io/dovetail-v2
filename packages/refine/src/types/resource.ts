@@ -1,5 +1,5 @@
 import { FormModalProps } from 'src/components/FormModal';
-import { ShowField } from '../components/ShowContent';
+import { ShowConfig } from '../components/ShowContent';
 import { Column } from '../components/Table';
 import { ResourceModel } from '../models';
 
@@ -27,7 +27,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   formatter?: (v: Model) => Model;
   initValue?: Record<string, unknown>;
   columns?: () => Column<Model>[];
-  showFields?: () => ShowField<Model>[][];
+  showConfig?: () => ShowConfig<Model>;
   Dropdown?: React.FC<{ record: Model }>;
   formType?: FormType;
   FormModal?: React.FC<FormModalProps>;
