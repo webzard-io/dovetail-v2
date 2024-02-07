@@ -8,7 +8,6 @@ const TagWrapper = css`
 `;
 
 const TagStyle = css`
-  max-width: 256px;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
@@ -22,11 +21,17 @@ export const Tags: React.FC<Props> = props => {
   const kit = useUIKit();
   const tags = Object.keys(value).map(key => {
     return (
-      <kit.tag className={TagStyle} title={`${key}:${value[key]}`} key={key}>
-        {key}:{value[key]}
-      </kit.tag>
+      <kit.tag.SplitTag
+        className={TagStyle}
+        primaryContent={key}
+        secondaryContent={value[key]}
+        title={`${key}:${value[key]}`}
+        color="gray"
+        key={key}
+      />
     );
   });
+
   return (
     <kit.space className={TagWrapper} size={8}>
       {tags}
