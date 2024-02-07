@@ -7,11 +7,14 @@ import {
   WorkloadModel,
   WorkloadBaseModel,
   CronJobModel,
+  IngressModel,
 } from '../../models';
 import { ExtendObjectMeta } from '../../plugins/relation-plugin';
 import { ConditionsTable } from '../ConditionsTable';
 import { CronjobJobsTable } from '../CronjobJobsTable';
+import { EventsTable } from '../EventsTable';
 import { ImageNames } from '../ImageNames';
+import { IngressRulesTable } from '../IngressRulesTable';
 import { KeyValue } from '../KeyValue';
 import Time from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
@@ -23,15 +26,27 @@ export type ShowField<Model extends ResourceModel> = {
   path: string[];
   labelWidth?: string;
   col?: number;
-  render?: (val: unknown, record: Model, field: ShowField<Model>) => React.ReactElement | undefined;
-  renderContent?: (val: unknown, record: Model, field: ShowField<Model>) => React.ReactElement | undefined;
+  render?: (
+    val: unknown,
+    record: Model,
+    field: ShowField<Model>
+  ) => React.ReactElement | undefined;
+  renderContent?: (
+    val: unknown,
+    record: Model,
+    field: ShowField<Model>
+  ) => React.ReactElement | undefined;
 };
 
 export type ShowTabField<Model extends ResourceModel> = {
   key: string;
   title: string;
   path: string[];
-  renderContent?: (val: unknown, record: Model, field: ShowTabField<Model>) => React.ReactElement | undefined;
+  renderContent?: (
+    val: unknown,
+    record: Model,
+    field: ShowTabField<Model>
+  ) => React.ReactElement | undefined;
 };
 
 export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
@@ -96,7 +111,9 @@ export const PodsField = <Model extends WorkloadBaseModel>(): ShowTabField<Model
   };
 };
 
-export const JobsField = <Model extends JobModel | CronJobModel>(): ShowTabField<Model> => {
+export const JobsField = <
+  Model extends JobModel | CronJobModel,
+>(): ShowTabField<Model> => {
   return {
     key: 'jobs',
     title: 'Jobs',
@@ -194,6 +211,32 @@ export const ServicePodsField = <Model extends ResourceModel>(): ShowTabField<Mo
           }
         />
       );
+    },
+  };
+};
+
+export const IngressRulesTableTabField = <
+  Model extends IngressModel,
+>(): ShowTabField<Model> => {
+  return {
+    key: 'rules',
+    title: i18n.t('dovetail.rule'),
+    path: ['spec', 'rules'],
+    renderContent: (_, record) => {
+      return <IngressRulesTable ingress={record} />;
+    },
+  };
+};
+
+export const EventsTableTabField = <
+  Model extends ResourceModel,
+>(): ShowTabField<Model> => {
+  return {
+    key: 'event',
+    title: i18n.t('dovetail.event'),
+    path: [],
+    renderContent: () => {
+      return <EventsTable />;
     },
   };
 };

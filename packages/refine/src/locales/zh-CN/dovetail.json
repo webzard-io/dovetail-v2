@@ -85,5 +85,7 @@
   "expand": "展开",
   "fold": "收起",
   "rule": "规则",
-  "default_backend": "默认后端"
+  "default_backend": "默认后端",
+  "ingress_rule_type": "规则类型",
+  "port": "端口"
 }

@@ -6,7 +6,7 @@ import { get } from 'lodash';
 import React from 'react';
 import { ResourceLink } from '../../components';
 import { ImageNames } from '../../components/ImageNames';
-import { IngressRulesComponent } from '../../components/IngressRules';
+import { IngressRulesComponent } from '../../components/IngressRulesComponent';
 import { ReferenceLink } from '../../components/ReferenceLink';
 import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
@@ -282,13 +282,8 @@ export const IngressRulesColumnRenderer = <
     dataIndex,
     sortable: true,
     sorter: CommonSorter(dataIndex),
-    render(value, record) {
-      return (
-        <IngressRulesComponent
-          rules={value}
-          namespace={record.metadata.namespace || 'default'}
-        />
-      );
+    render(_, record) {
+      return <IngressRulesComponent ingress={record} />;
     },
   };
 };

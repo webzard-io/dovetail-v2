@@ -3,6 +3,7 @@ import React from 'react';
 import { PageShow } from '../../../components/PageShow';
 import {
   ConditionsField,
+  EventsTableTabField,
   ImageField,
   PodsField,
   ReplicaField,
@@ -17,7 +18,7 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
         groups: [{
           fields: [ImageField(), ReplicaField()]
         }],
-        tabs: [PodsField(), ConditionsField()],
+        tabs: [PodsField(), ConditionsField(), EventsTableTabField()],
       }}
       Dropdown={WorkloadDropdown}
     />

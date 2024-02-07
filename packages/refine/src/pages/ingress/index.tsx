@@ -1,6 +1,6 @@
-import { Column } from '../../components';
+import { Column, IngressRulesTableTabField } from '../../components';
 import K8sDropdown from '../../components/K8sDropdown';
-import { JOB_INIT_VALUE } from '../../constants/k8s';
+import { INGRESS_INIT_VALUE } from '../../constants/k8s';
 import {
   AgeColumnRenderer,
   IngressDefaultBackendColumnRenderer,
@@ -22,16 +22,12 @@ export const IngressConfig: ResourceConfig<IngressModel> = {
       IngressRulesColumnRenderer(),
       AgeColumnRenderer(),
     ] as Column<IngressModel>[],
-  // showConfig: () => ({
-  //   descriptions: [],
-  //   groups: [
-  //     {
-  //       fields: [StartTimeField(), ImageField()],
-  //     },
-  //   ],
-  //   tabs: [PodsField(), ConditionsField()],
-  // }),
-  initValue: JOB_INIT_VALUE,
+  showConfig: () => ({
+    descriptions: [],
+    groups: [],
+    tabs: [IngressRulesTableTabField()],
+  }),
+  initValue: INGRESS_INIT_VALUE,
   Dropdown: K8sDropdown,
   formType: FormType.MODAL,
 };
