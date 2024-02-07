@@ -1,12 +1,13 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
+import type { OwnerReference } from 'kubernetes-types/meta/v1';
 import { get } from 'lodash';
 import React from 'react';
 import { ImageNames } from '../../components/ImageNames';
+import { ReferenceLink } from '../../components/ReferenceLink';
 import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
 import Time from '../../components/Time';
-import { WorkloadReplicas } from '../../components/WorkloadReplicas';
 import i18n from '../../i18n';
 import {
   JobModel,
@@ -16,6 +17,7 @@ import {
   WorkloadBaseModel,
   CronJobModel,
 } from '../../models';
+import { elapsedTime } from '../../utils/time';
 
 const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
   const { name, id, resource } = props;
@@ -136,7 +138,11 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(): Column<Mo
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (_, record: Model) => {
-      return <WorkloadReplicas record={record} />;
+      return (
+        <span>
+          {record.readyReplicas}/{record.replicas}
+        </span>
+      );
     },
   };
 };
@@ -207,7 +213,7 @@ export const CompletionsCountColumnRenderer = <
 export const DurationColumnRenderer = <
   Model extends JobModel | CronJobModel,
 >(): Column<Model> => {
-  const dataIndex = ['durationDisplay'];
+  const dataIndex = ['duration'];
   return {
     key: 'duration',
     display: true,
@@ -215,6 +221,15 @@ export const DurationColumnRenderer = <
     title: i18n.t('dovetail.duration'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
+    render: v => {
+      const i18nMap = {
+        sec: i18n.t('dovetail.sec'),
+        day: i18n.t('dovetail.day'),
+        min: i18n.t('dovetail.min'),
+        hr: i18n.t('dovetail.hr'),
+      };
+      return <span>{elapsedTime(v, i18nMap).label || '-'}</span>;
+    },
   };
 };
 
@@ -229,5 +244,25 @@ export const ServiceTypeColumnRenderer = <
     dataIndex,
     sortable: true,
     sorter: CommonSorter(dataIndex),
+  };
+};
+export const PodWorkloadColumnRenderer = <Model extends PodModel>(): Column<Model> => {
+  const dataIndex = ['metadata', 'ownerReferences'];
+  return {
+    key: 'type',
+    title: i18n.t('dovetail.workload'),
+    display: true,
+    dataIndex,
+    sortable: true,
+    sorter: CommonSorter(dataIndex),
+    render(value: OwnerReference[], record) {
+      return value.map(o => (
+        <ReferenceLink
+          key={o.name}
+          ownerReference={o}
+          namespace={record.metadata.namespace || 'default'}
+        />
+      ));
+    },
   };
 };

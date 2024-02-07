@@ -20,7 +20,7 @@
     "dayjs": "^1.11.10",
     "i18next": "^23.2.3",
     "js-yaml": "^4.1.0",
-    "k8s-api-provider": "0.0.15-beta.6",
+    "k8s-api-provider": "0.0.16",
     "ky": "^0.33.3",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.1",

@@ -1,8 +1,9 @@
 import { IResourceComponentsProps, useList } from '@refinedev/core';
 import { compact } from 'lodash-es';
 import React, { useMemo } from 'react';
-import { ListPage } from 'src/components/ListPage';
-import { useEagleTable } from 'src/hooks/useEagleTable';
+import { Column } from '../../../components';
+import { ListPage } from '../../../components/ListPage';
+import { useEagleTable } from '../../../hooks/useEagleTable';
 import {
   AgeColumnRenderer,
   WorkloadImageColumnRenderer,
@@ -12,12 +13,11 @@ import {
   RestartCountColumnRenderer,
   NodeNameColumnRenderer,
   StateDisplayColumnRenderer,
-} from 'src/hooks/useEagleTable/columns';
-import { Column } from '../../../components';
+  PodWorkloadColumnRenderer,
+} from '../../../hooks/useEagleTable/columns';
 import { PodMetricsModel, PodModel } from '../../../models';
 
 export const PodList: React.FC<IResourceComponentsProps> = () => {
-
   const { data: metricsData } = useList<PodMetricsModel>({
     resource: 'podMetrics',
     meta: {
@@ -55,6 +55,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
       },
       RestartCountColumnRenderer(),
       NodeNameColumnRenderer(),
+      PodWorkloadColumnRenderer(),
       supportMetrics && {
         key: 'memory_usage',
         display: true,
