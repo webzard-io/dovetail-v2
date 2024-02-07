@@ -37,6 +37,14 @@ export class WorkloadModel extends WorkloadBaseModel {
     this.restarts = result;
   }
 
+  get replicas() {
+    return this.spec && 'replicas' in this.spec ? this.spec.replicas : 0;
+  }
+
+  get readyReplicas() {
+    return this.status && 'readyReplicas' in this.status ? this.status.readyReplicas : 0;
+  }
+
   redeploy(): WorkloadTypes {
     const rawYaml = this._globalStore.restoreItem(this);
     const newOne = cloneDeep(rawYaml);

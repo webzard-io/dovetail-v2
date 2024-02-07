@@ -77,5 +77,9 @@
   "pending": "待处理",
   "waiting": "等待中",
   "create_resource": "创建 {{resource}}",
-  "edit_resource": "编辑 {{resource}}"
+  "edit_resource": "编辑 {{resource}}",
+  "sec": "秒",
+  "min": "分",
+  "hr": "小时",
+  "day": "天"
 }
