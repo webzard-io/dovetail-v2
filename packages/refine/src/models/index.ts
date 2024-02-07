@@ -1,3 +1,4 @@
+export * from './ingress-model';
 export * from './job-model';
 export * from './workload-model';
 export * from './workload-base-model';
