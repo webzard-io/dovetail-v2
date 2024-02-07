@@ -14,6 +14,12 @@ const EditFieldModalStyle = css`
   border-radius: 16px 16px 0 0;
 }
 `;
+const EditButtonStyle = css`
+  &.ant-btn.ant-btn-link {
+    height: 22px;
+    margin-left: 8px;
+  }
+`;
 
 export interface EditFieldModalProps {
   title?: string;
@@ -74,6 +80,7 @@ export function EditField(props: EditField) {
 
   return (
     <kit.button
+      className={EditButtonStyle}
       type="link"
       onClick={() => {
         pushModal({
