@@ -2,7 +2,8 @@ import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation } from '@refinedev/core';
 import type { OwnerReference } from 'kubernetes-types/meta/v1';
 
-import React from 'react';
+import React, { useContext } from 'react';
+import { ConfigsContext } from '../../contexts';
 
 type Props = {
   ownerReference: OwnerReference;
@@ -14,10 +15,18 @@ export const ReferenceLink: React.FC<Props> = props => {
   const kit = useUIKit();
   const navigation = useNavigation();
   const go = useGo();
+  const configs = useContext(ConfigsContext);
+
+  // no ReplicaSet page, show plain text
+  if (ownerReference.kind === 'ReplicaSet') {
+    return <span>{ownerReference.name}</span>;
+  }
+
+  const resource = Object.values(configs).find(c => c.kind === ownerReference.kind);
 
   const onClick = () => {
     go({
-      to: navigation.showUrl(`${ownerReference.kind.toLowerCase()}s`, ''),
+      to: navigation.showUrl(resource?.name || '', ''),
       query: {
         id: `${namespace}/${ownerReference.name}`,
       },
@@ -26,6 +35,10 @@ export const ReferenceLink: React.FC<Props> = props => {
       },
     });
   };
+
+  if (!resource) {
+    return <span>-</span>;
+  }
 
   return (
     <kit.button type="link" onClick={onClick}>
