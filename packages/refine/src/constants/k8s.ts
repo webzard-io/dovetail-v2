@@ -201,5 +201,14 @@ export const INGRESS_INIT_VALUE = {
     ],
   },
 };
+export const NETWORK_POLICY_INIT_VALUE = {
+  apiVersion: 'networking.k8s.io/v1',
+  kind: 'NetworkPolicy',
+  ...BASE_INIT_VALUE,
+  spec: {
+    podSelector: {},
+    policyTypes: [],
+  },
+};
 
 export const TIMESTAMP_LABEL = 'sks.user.kubesmart.smtx.io/timestamp';
