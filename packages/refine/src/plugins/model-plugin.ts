@@ -10,6 +10,7 @@ import {
   DaemonSetModel,
   DeploymentModel,
   EventModel,
+  IngressModel,
   JobModel,
   PodModel,
   ResourceModel,
@@ -24,6 +25,7 @@ const ModelMap = {
   Job: JobModel,
   Pod: PodModel,
   Event: EventModel,
+  Ingress: IngressModel,
 };
 
 class ModelPlugin implements IProviderPlugin<ResourceModel> {
