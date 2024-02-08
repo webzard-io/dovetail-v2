@@ -105,6 +105,7 @@ export const PodsField = <Model extends WorkloadBaseModel>(): ShowTabField<Model
               return r.kind === 'Pod' && r.type === 'creates';
             })?.selector
           }
+          hideToolbar
         />
       );
     },
