@@ -6,6 +6,7 @@ import { get, omit } from 'lodash-es';
 import React, { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
+import { KeyValueData } from 'src/components/KeyValueData';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
 import { useGlobalStore } from '../../hooks';
@@ -146,7 +147,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
         if (!value) {
           return undefined;
         }
-        return <Tags value={value as Record<string, string>} />;
+        return <KeyValueData datas={value as Record<string, string>} expandable />;
       },
     },
   ];
