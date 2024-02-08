@@ -1,9 +1,12 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import type { OwnerReference } from 'kubernetes-types/meta/v1';
+import type { IngressBackend } from 'kubernetes-types/networking/v1';
 import { get } from 'lodash';
 import React from 'react';
+import { ResourceLink } from '../../components';
 import { ImageNames } from '../../components/ImageNames';
+import { IngressRulesComponent } from '../../components/IngressRulesComponent';
 import { ReferenceLink } from '../../components/ReferenceLink';
 import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
@@ -16,6 +19,7 @@ import {
   WorkloadModel,
   WorkloadBaseModel,
   CronJobModel,
+  IngressModel,
 } from '../../models';
 import { elapsedTime } from '../../utils/time';
 
@@ -263,6 +267,51 @@ export const PodWorkloadColumnRenderer = <Model extends PodModel>(): Column<Mode
           namespace={record.metadata.namespace || 'default'}
         />
       ));
+    },
+  };
+};
+
+export const IngressRulesColumnRenderer = <
+  Model extends IngressModel,
+>(): Column<Model> => {
+  const dataIndex = ['spec', 'rules'];
+  return {
+    key: 'type',
+    title: i18n.t('dovetail.rule'),
+    display: true,
+    dataIndex,
+    sortable: true,
+    sorter: CommonSorter(dataIndex),
+    render(_, record) {
+      return <IngressRulesComponent ingress={record} />;
+    },
+  };
+};
+
+export const IngressDefaultBackendColumnRenderer = <
+  Model extends IngressModel,
+>(): Column<Model> => {
+  const dataIndex = ['spec', 'defaultBackend'];
+  return {
+    key: 'defaultBackend',
+    display: true,
+    dataIndex,
+    title: i18n.t('dovetail.default_backend'),
+    sortable: true,
+    sorter: CommonSorter(['spec', 'defaultBackend']),
+    render: (defaultBackend: IngressBackend, record) => {
+      if (!defaultBackend?.service?.name) return <span>-</span>;
+      const divider = 'Default > ';
+      return (
+        <span>
+          {divider}
+          <ResourceLink
+            name="services"
+            namespace={record.metadata.namespace || 'default'}
+            resourceId={defaultBackend.service?.name || ''}
+          />
+        </span>
+      );
     },
   };
 };
