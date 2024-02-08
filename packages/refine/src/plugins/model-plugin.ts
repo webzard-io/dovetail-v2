@@ -15,6 +15,7 @@ import {
   PodModel,
   ResourceModel,
   StatefulSetModel,
+  NetworkPolicyModel,
 } from '../models';
 
 const ModelMap = {
@@ -26,6 +27,7 @@ const ModelMap = {
   Pod: PodModel,
   Event: EventModel,
   Ingress: IngressModel,
+  NetworkPolicy: NetworkPolicyModel,
 };
 
 class ModelPlugin implements IProviderPlugin<ResourceModel> {

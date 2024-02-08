@@ -13,12 +13,16 @@ const TagStyle = css`
 `;
 
 type Props = {
-  value: Record<string, string>;
+  value?: Record<string, string>;
 };
 
 export const Tags: React.FC<Props> = props => {
   const { value } = props;
   const kit = useUIKit();
+
+  if (!value || Object.keys(value).length === 0) {
+    return <span>-</span>;
+  }
   const tags = Object.keys(value).map(key => {
     return (
       <kit.tag.SplitTag
