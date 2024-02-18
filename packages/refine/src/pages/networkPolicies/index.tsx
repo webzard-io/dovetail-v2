@@ -43,8 +43,8 @@ export const NetworkPolicyConfig: ResourceConfig<NetworkPolicyModel> = {
             title: 'Pod Selector',
             path: ['spec', 'podSelector'],
             col: 12,
-            renderContent: (podSelector: LabelSelector) => {
-              return <Tags value={podSelector.matchLabels} />;
+            renderContent: podSelector => {
+              return <Tags value={(podSelector as LabelSelector).matchLabels} />;
             },
           },
         ],
