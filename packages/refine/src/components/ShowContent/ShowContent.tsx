@@ -16,15 +16,18 @@ import { Tags } from '../Tags';
 import Time from '../Time';
 import { ShowConfig, ShowField } from './fields';
 
+const ShowContentWrapperStyle = css`
+  .ant-row {
+    margin-right: 0 !important;
+  }
+`;
 const TopBarStyle = css`
   justify-content: space-between;
   width: 100%;
 `;
-const ShowContentStyle = css`
+const ShowContentHeaderStyle = css`
   width: 100%;
-  overflow: auto;
   height: 100%;
-  width: 100%;
 `;
 const EditorStyle = css`
   margin-top: 16px;
@@ -32,6 +35,16 @@ const EditorStyle = css`
 const FieldWrapperStyle = css`
   display: flex;
   flex-wrap: nowrap;
+`;
+const TabsStyle = css`
+  &.ant-tabs {
+    .ant-tabs-nav {
+      margin-bottom: 0;
+    }
+  }
+`;
+const StateTagStyle = css`
+  margin-left: 8px;
 `;
 
 type Props<Model extends ResourceModel> = {
@@ -161,7 +174,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       <div>
         <span className={Typo.Display.d2_bold_title}>{resource?.meta?.kind}: </span>
         <span className={Typo.Label.l1_regular}>{record?.metadata?.name}</span>
-        {state ? <StateTag state={state} /> : undefined}
+        {state ? <StateTag className={StateTagStyle} state={state} /> : undefined}
       </div>
       <kit.space>
         <kit.radioGroup value={mode} onChange={e => setMode(e.target.value)}>
@@ -189,7 +202,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       </kit.row>
     ));
   const tabs = (
-    <kit.tabs>
+    <kit.tabs className={TabsStyle}>
       {(showConfig.tabs || []).map(field => {
         let content;
         if (field.renderContent) {
@@ -226,8 +239,8 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   };
 
   return (
-    <div>
-      <kit.space direction="vertical" className={ShowContentStyle}>
+    <div className={ShowContentWrapperStyle}>
+      <kit.space direction="vertical" className={ShowContentHeaderStyle}>
         {topBar}
         {descriptions}
       </kit.space>
