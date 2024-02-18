@@ -9,6 +9,7 @@ import K8sDropdown from 'src/components/K8sDropdown';
 import { KeyValueData } from 'src/components/KeyValueData';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
+import { WorkloadState } from '../../constants';
 import { useGlobalStore } from '../../hooks';
 import { ResourceModel } from '../../models';
 import { StateTag } from '../StateTag';
@@ -168,13 +169,15 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
     },
   ];
 
-  const state = get(record, ['status', 'phase']);
+  const stateDisplay = get(record, 'stateDisplay') as WorkloadState;
   const topBar = (
     <kit.space className={TopBarStyle}>
       <div>
         <span className={Typo.Display.d2_bold_title}>{resource?.meta?.kind}: </span>
         <span className={Typo.Label.l1_regular}>{record?.metadata?.name}</span>
-        {state ? <StateTag className={StateTagStyle} state={state} /> : undefined}
+        {stateDisplay ? (
+          <StateTag className={StateTagStyle} state={stateDisplay} />
+        ) : undefined}
       </div>
       <kit.space>
         <kit.radioGroup value={mode} onChange={e => setMode(e.target.value)}>
