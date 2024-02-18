@@ -15,8 +15,14 @@ import { PodModel } from '../../models';
 import Table, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
-export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
+interface WorkloadPodsTableProps {
+  selector?: LabelSelector;
+  hideToolbar?: boolean;
+}
+
+export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   selector,
+  hideToolbar,
 }) => {
   const kit = useUIKit();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -49,9 +55,14 @@ export const WorkloadPodsTable: React.FC<{ selector?: LabelSelector }> = ({
       direction="vertical"
       className={css`
         width: 100%;
+        vertical-align: top;
       `}
     >
-      <TableToolBar title="" selectedKeys={selectedKeys} hideCreate />
+      {
+        hideToolbar ? null : (
+          <TableToolBar title="" selectedKeys={selectedKeys} hideCreate />
+        )
+      }
       <Table
         tableKey="pods"
         loading={!dataSource}

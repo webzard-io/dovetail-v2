@@ -5,9 +5,10 @@ import { WorkloadState } from '../../constants';
 
 type Props = {
   state?: WorkloadState;
+  className?: string;
 };
 
-export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATEING }) => {
+export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATEING, className }) => {
   const kit = useUIKit();
   const { t } = useTranslation();
   const colorMap: Record<WorkloadState, TagColor> = {
@@ -23,5 +24,6 @@ export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATEING }) =
     pending: 'gray',
     waiting: 'gray',
   };
-  return <kit.tag color={colorMap[state]}>{t(`dovetail.${state || 'updaing'}`)}</kit.tag>;
+
+  return <kit.tag className={className} color={colorMap[state]}>{t(`dovetail.${state || 'updaing'}`)}</kit.tag>;
 };
