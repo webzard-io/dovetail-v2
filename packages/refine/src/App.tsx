@@ -15,8 +15,9 @@ import { ConfigMapConfig } from './pages/configmaps';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
 import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
-import { IngressConfig } from './pages/ingress';
+import { IngressConfig } from './pages/ingresses';
 import { JobConfig } from './pages/jobs';
+import { NetworkPolicyConfig } from './pages/networkPolicies';
 import { PodShow, PodList, PodForm } from './pages/pods';
 import { SecretsConfig } from './pages/secrets';
 import { ServicesConfig } from './pages/services';
@@ -78,6 +79,7 @@ function App() {
       },
       JobConfig,
       IngressConfig,
+      NetworkPolicyConfig,
       ConfigMapConfig,
       SecretsConfig,
       ServicesConfig,

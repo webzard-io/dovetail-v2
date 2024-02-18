@@ -1,4 +1,5 @@
 export * from './ingress-model';
+export * from './network-policy-model';
 export * from './job-model';
 export * from './workload-model';
 export * from './workload-base-model';
