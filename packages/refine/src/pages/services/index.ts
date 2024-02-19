@@ -1,3 +1,4 @@
+import { i18n } from 'i18next';
 import {
   ConditionsField,
   ServiceTypeField,
@@ -13,19 +14,25 @@ import {
 import { ResourceModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig } from '../../types';
 
-export const ServicesConfig: ResourceConfig<ResourceModel> = {
+export const ServicesConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
   name: 'services',
   kind: 'Service',
   basePath: '/api/v1',
   apiVersion: 'v1',
   label: 'Services',
   parent: RESOURCE_GROUP.NETWORK,
-  columns: () => [ServiceTypeColumnRenderer(), AgeColumnRenderer()],
+  columns: () => [ServiceTypeColumnRenderer(i18n), AgeColumnRenderer(i18n)],
   showConfig: () => ({
-    groups: [{
-      fields: [ServiceTypeField(), ClusterIpField(), SessionAffinityField()],
-    }],
-    tabs: [ServicePodsField(), ConditionsField()],
+    groups: [
+      {
+        fields: [
+          ServiceTypeField(i18n),
+          ClusterIpField(i18n),
+          SessionAffinityField(i18n),
+        ],
+      },
+    ],
+    tabs: [ServicePodsField(), ConditionsField(i18n)],
   }),
   initValue: SERVICE_INIT_VALUE,
-};
+});

@@ -1,5 +1,6 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ListPage } from 'src/components/ListPage';
 import { WorkloadDropdown } from 'src/components/WorkloadDropdown';
 import { useEagleTable } from 'src/hooks/useEagleTable';
@@ -14,13 +15,14 @@ import {
 import { WorkloadModel } from '../../../models';
 
 export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
+  const { i18n } = useTranslation();
   const { tableProps, selectedKeys } = useEagleTable<WorkloadModel>({
     useTableParams: {},
     columns: [
-      StateDisplayColumnRenderer(),
-      NameColumnRenderer(),
-      NameSpaceColumnRenderer(),
-      WorkloadImageColumnRenderer(),
+      StateDisplayColumnRenderer(i18n),
+      NameColumnRenderer(i18n),
+      NameSpaceColumnRenderer(i18n),
+      WorkloadImageColumnRenderer(i18n),
       {
         key: 'ready',
         display: true,
@@ -28,8 +30,8 @@ export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
         title: 'Ready',
         sortable: true,
       },
-      WorkloadRestartsColumnRenderer(),
-      AgeColumnRenderer(),
+      WorkloadRestartsColumnRenderer(i18n),
+      AgeColumnRenderer(i18n),
     ],
     tableProps: {
       currentSize: 10,

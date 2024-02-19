@@ -1,6 +1,6 @@
+import { i18n as I18nType } from 'i18next';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
-import i18n from '../../i18n';
 import {
   JobModel,
   ResourceModel,
@@ -58,7 +58,9 @@ export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
   tabs?: ShowTabField<Model>[];
 }
 
-export const ImageField = <Model extends WorkloadBaseModel>(): ShowField<Model> => {
+export const ImageField = <Model extends WorkloadBaseModel>(
+  i18n: I18nType
+): ShowField<Model> => {
   return {
     key: 'Image',
     title: i18n.t('dovetail.image'),
@@ -70,7 +72,7 @@ export const ImageField = <Model extends WorkloadBaseModel>(): ShowField<Model> 
   };
 };
 
-export const ReplicaField = (): ShowField<WorkloadModel> => {
+export const ReplicaField = (i18n: I18nType): ShowField<WorkloadModel> => {
   return {
     key: 'Replicas',
     title: i18n.t('dovetail.replicas'),
@@ -81,7 +83,9 @@ export const ReplicaField = (): ShowField<WorkloadModel> => {
   };
 };
 
-export const ConditionsField = <Model extends ResourceModel>(): ShowTabField<Model> => {
+export const ConditionsField = <Model extends ResourceModel>(
+  i18n: I18nType
+): ShowTabField<Model> => {
   return {
     key: 'Conditions',
     title: i18n.t('dovetail.condition'),
@@ -135,7 +139,7 @@ export const JobsField = <
   };
 };
 
-export const DataField = (): ShowField<ResourceModel> => {
+export const DataField = (i18n: I18nType): ShowField<ResourceModel> => {
   return {
     key: 'data',
     title: i18n.t('dovetail.data'),
@@ -146,7 +150,7 @@ export const DataField = (): ShowField<ResourceModel> => {
   };
 };
 
-export const SecretDataField = (): ShowField<ResourceModel> => {
+export const SecretDataField = (i18n: I18nType): ShowField<ResourceModel> => {
   return {
     key: 'data',
     title: i18n.t('dovetail.data'),
@@ -161,7 +165,7 @@ export const SecretDataField = (): ShowField<ResourceModel> => {
   };
 };
 
-export const StartTimeField = (): ShowField<JobModel> => {
+export const StartTimeField = (i18n: I18nType): ShowField<JobModel> => {
   return {
     key: 'started',
     title: i18n.t('dovetail.started'),
@@ -173,7 +177,7 @@ export const StartTimeField = (): ShowField<JobModel> => {
   };
 };
 
-export const ServiceTypeField = (): ShowField<ResourceModel> => {
+export const ServiceTypeField = (i18n: I18nType): ShowField<ResourceModel> => {
   return {
     key: 'type',
     title: i18n.t('dovetail.type'),
@@ -181,7 +185,7 @@ export const ServiceTypeField = (): ShowField<ResourceModel> => {
   };
 };
 
-export const ClusterIpField = (): ShowField<ResourceModel> => {
+export const ClusterIpField = (i18n: I18nType): ShowField<ResourceModel> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.clusterIp'),
@@ -189,7 +193,7 @@ export const ClusterIpField = (): ShowField<ResourceModel> => {
   };
 };
 
-export const SessionAffinityField = (): ShowField<ResourceModel> => {
+export const SessionAffinityField = (i18n: I18nType): ShowField<ResourceModel> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.sessionAffinity'),
@@ -216,9 +220,9 @@ export const ServicePodsField = <Model extends ResourceModel>(): ShowTabField<Mo
   };
 };
 
-export const IngressRulesTableTabField = <
-  Model extends IngressModel,
->(): ShowTabField<Model> => {
+export const IngressRulesTableTabField = <Model extends IngressModel>(
+  i18n: I18nType
+): ShowTabField<Model> => {
   return {
     key: 'rules',
     title: i18n.t('dovetail.rule'),
@@ -229,9 +233,9 @@ export const IngressRulesTableTabField = <
   };
 };
 
-export const EventsTableTabField = <
-  Model extends ResourceModel,
->(): ShowTabField<Model> => {
+export const EventsTableTabField = <Model extends ResourceModel>(
+  i18n: I18nType
+): ShowTabField<Model> => {
   return {
     key: 'event',
     title: i18n.t('dovetail.event'),
