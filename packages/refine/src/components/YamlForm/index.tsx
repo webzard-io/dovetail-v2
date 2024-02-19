@@ -68,8 +68,11 @@ function YamlForm(props: YamlFormProps) {
   }, [editorProps.schema]);
 
   const onFinish = useCallback(async (store) => {
-    await formProps.onFinish?.(store);
-    props.onFinish?.();
+    const result = await formProps.onFinish?.(store);
+
+    if (result) {
+      props.onFinish?.();
+    }
   }, [formProps, props]);
 
   useEffect(()=> {
