@@ -29,6 +29,7 @@ export interface YamlFormProps {
   initialValues?: Record<string, unknown>;
   schemaStrategy?: SchemaStrategy;
   isShowLayout?: boolean;
+  useFormProps?: Parameters<typeof useEagleForm>[0];
   onSaveButtonPropsChange?: (saveButtonProps: {
     disabled?: boolean;
     onClick: () => void;
@@ -37,7 +38,7 @@ export interface YamlFormProps {
 }
 
 function YamlForm(props: YamlFormProps) {
-  const { id, schemaStrategy = SchemaStrategy.Optional, isShowLayout = true, onSaveButtonPropsChange } = props;
+  const { id, schemaStrategy = SchemaStrategy.Optional, isShowLayout = true, useFormProps, onSaveButtonPropsChange } = props;
   const {
     formProps,
     saveButtonProps,
@@ -53,7 +54,8 @@ function YamlForm(props: YamlFormProps) {
       isSkipSchema: schemaStrategy === SchemaStrategy.None,
     },
     liveMode: 'off',
-    initialValuesForCreate: props.initialValues ?? BASE_INIT_VALUE
+    initialValuesForCreate: props.initialValues ?? BASE_INIT_VALUE,
+    ...useFormProps,
   });
   const kit = useUIKit();
   const { t, i18n } = useTranslation();
