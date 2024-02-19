@@ -31,11 +31,11 @@ export type FormModalProps = {
 };
 
 export function FormModal(props: FormModalProps) {
-  const { resource: resourceFromProps, id, formProps, renderForm } = props;
+  const { resource: resourceFromProps, id, renderForm } = props;
   const { i18n } = useTranslation();
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
-  const [saveButtonProps, setSaveButtonProps] = useState<{ loading?: boolean; onClick?: ()=> void; }>({});
+  const [saveButtonProps, setSaveButtonProps] = useState<{ loading?: boolean; onClick?: () => void; }>({});
   const kit = useUIKit();
 
   const config = useMemo(() => configs[resourceFromProps || resource?.name || ''], [configs, resourceFromProps, resource]);
@@ -43,6 +43,17 @@ export function FormModal(props: FormModalProps) {
     id ? 'dovetail.edit_resource' : 'dovetail.create_resource',
     { resource: config?.kind }
   ), [id, i18n, config]);
+  const formProps: YamlFormProps = useMemo(() => ({
+    ...props.formProps,
+    initialValues: props.formProps?.initialValues || config?.initValue,
+    id,
+    isShowLayout: false,
+    useFormProps: {
+      redirect: false,
+    },
+    onSaveButtonPropsChange: setSaveButtonProps,
+    onFinish: popModal
+  }), [props.formProps, setSaveButtonProps, config.initValue, id]);
 
   const onCancel = useCallback(() => {
     popModal();
@@ -50,9 +61,6 @@ export function FormModal(props: FormModalProps) {
   const onOk = useCallback(() => {
     saveButtonProps.onClick?.();
   }, [saveButtonProps]);
-  const onFinish = useCallback(() => {
-    popModal();
-  }, []);
 
   return (
     <kit.modal
@@ -69,18 +77,9 @@ export function FormModal(props: FormModalProps) {
       {
         renderForm ? renderForm({
           ...formProps,
-          initialValues: formProps?.initialValues || config?.initValue,
-          id,
-          onSaveButtonPropsChange: setSaveButtonProps,
-          onFinish
         }) : (
           <YamlForm
             {...formProps}
-            initialValues={formProps?.initialValues || config?.initValue}
-            id={id}
-            isShowLayout={false}
-            onSaveButtonPropsChange={setSaveButtonProps}
-            onFinish={onFinish}
           />
         )
       }
