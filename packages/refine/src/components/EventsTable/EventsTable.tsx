@@ -21,7 +21,7 @@ export const EventsTable: React.FC = ({}) => {
 
   const columns = useMemo(
     () => [
-      NameSpaceColumnRenderer(),
+      NameSpaceColumnRenderer(i18n),
       {
         key: 'type',
         display: true,
@@ -54,7 +54,7 @@ export const EventsTable: React.FC = ({}) => {
         sortable: true,
         sorter: CommonSorter(['note']),
       },
-      AgeColumnRenderer(),
+      AgeColumnRenderer(i18n),
     ],
     [i18n]
   );
