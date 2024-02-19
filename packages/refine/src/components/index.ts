@@ -35,3 +35,4 @@ export * from './NamespacesFilter';
 export * from './Tags';
 export * from './PodLog';
 export * from './FormModal';
+export * from './NetworkPolicyRulesTable';
