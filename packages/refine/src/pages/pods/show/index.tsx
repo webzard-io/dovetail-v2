@@ -51,7 +51,7 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
               );
             },
           },
-          ConditionsField(),
+          ConditionsField(i18n),
           {
             key: 'log',
             title: i18n.t('dovetail.log'),

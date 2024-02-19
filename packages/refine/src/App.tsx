@@ -1,7 +1,7 @@
 import { createBrowserHistory } from 'history';
 import { GlobalStore } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { I18nextProvider } from 'react-i18next';
 import { Route, Router } from 'react-router-dom';
 import { Layout } from './components';
 import {
@@ -11,6 +11,7 @@ import {
   POD_INIT_VALUE,
 } from './constants/k8s';
 import { Dovetail } from './Dovetail';
+import i18n from './i18n';
 import { ConfigMapConfig } from './pages/configmaps';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
@@ -26,7 +27,6 @@ import { ProviderPlugins } from './plugins';
 import { RESOURCE_GROUP, ResourceConfig, FormType } from './types';
 
 function App() {
-  const { t } = useTranslation();
   const histroy = createBrowserHistory();
 
   const resourcesConfig = useMemo(() => {
@@ -86,26 +86,6 @@ function App() {
     ];
   }, []);
 
-  const refineResources = useMemo(() => {
-    return [
-      {
-        name: t('dovetail.cluster'),
-        identifier: RESOURCE_GROUP.CLUSTER,
-      },
-      {
-        name: t('dovetail.workload'),
-        identifier: RESOURCE_GROUP.WORKLOAD,
-      },
-      {
-        name: t('dovetail.network'),
-        identifier: RESOURCE_GROUP.NETWORK,
-      },
-      {
-        name: t('dovetail.storage'),
-        identifier: RESOURCE_GROUP.STORAGE,
-      },
-    ];
-  }, [t]);
   const globalStore = useMemo(() => {
     return new GlobalStore(
       {
@@ -117,70 +97,71 @@ function App() {
     );
   }, []);
   return (
-    <Dovetail
-      resourcesConfig={resourcesConfig as ResourceConfig[]}
-      refineResources={refineResources}
-      Layout={Layout}
-      history={histroy}
-      globalStore={globalStore}
-    >
-      <Router history={histroy}>
-        <Route path="/cronjobs" exact>
-          <CronJobList />
-        </Route>
-        <Route path="/cronjobs/show">
-          <CronJobShow />
-        </Route>
-        <Route path="/cronjobs/create">
-          <CronJobForm />
-        </Route>
-        <Route path="/cronjobs/edit">
-          <CronJobForm />
-        </Route>
-        <Route path="/daemonsets" exact>
-          <DaemonSetList />
-        </Route>
-        <Route path="/daemonsets/show">
-          <DaemonSetShow />
-        </Route>
-        <Route path="/daemonsets/create">
-          <DaemonSetForm />
-        </Route>
-        <Route path="/daemonsets/edit">
-          <DaemonSetForm />
-        </Route>
-        <Route path="/deployments" exact>
-          <DeploymentList />
-        </Route>
-        <Route path="/deployments/show">
-          <DeploymentShow />
-        </Route>
-        <Route path="/statefulsets" exact>
-          <StatefulSetList />
-        </Route>
-        <Route path="/statefulsets/show">
-          <StatefulSetShow />
-        </Route>
-        <Route path="/statefulsets/create">
-          <StatefulSetForm />
-        </Route>
-        <Route path="/statefulsets/edit">
-          <StatefulSetForm />
-        </Route>
-        <Route path="/pods" exact>
-          <PodList />
-        </Route>
-        <Route path="/pods/show">
-          <PodShow />
-        </Route>
-        <Route path="/pods/create">
-          <PodForm />
-        </Route>
-        <Route path="/pods/edit">
-          <PodForm />
-        </Route>
-      </Router>
-    </Dovetail>
+    <I18nextProvider i18n={i18n}>
+      <Dovetail
+        resourcesConfig={resourcesConfig as ResourceConfig[]}
+        Layout={Layout}
+        history={histroy}
+        globalStore={globalStore}
+      >
+        <Router history={histroy}>
+          <Route path="/cronjobs" exact>
+            <CronJobList />
+          </Route>
+          <Route path="/cronjobs/show">
+            <CronJobShow />
+          </Route>
+          <Route path="/cronjobs/create">
+            <CronJobForm />
+          </Route>
+          <Route path="/cronjobs/edit">
+            <CronJobForm />
+          </Route>
+          <Route path="/daemonsets" exact>
+            <DaemonSetList />
+          </Route>
+          <Route path="/daemonsets/show">
+            <DaemonSetShow />
+          </Route>
+          <Route path="/daemonsets/create">
+            <DaemonSetForm />
+          </Route>
+          <Route path="/daemonsets/edit">
+            <DaemonSetForm />
+          </Route>
+          <Route path="/deployments" exact>
+            <DeploymentList />
+          </Route>
+          <Route path="/deployments/show">
+            <DeploymentShow />
+          </Route>
+          <Route path="/statefulsets" exact>
+            <StatefulSetList />
+          </Route>
+          <Route path="/statefulsets/show">
+            <StatefulSetShow />
+          </Route>
+          <Route path="/statefulsets/create">
+            <StatefulSetForm />
+          </Route>
+          <Route path="/statefulsets/edit">
+            <StatefulSetForm />
+          </Route>
+          <Route path="/pods" exact>
+            <PodList />
+          </Route>
+          <Route path="/pods/show">
+            <PodShow />
+          </Route>
+          <Route path="/pods/create">
+            <PodForm />
+          </Route>
+          <Route path="/pods/edit">
+            <PodForm />
+          </Route>
+        </Router>
+      </Dovetail>
+    </I18nextProvider>
   );
 }
 

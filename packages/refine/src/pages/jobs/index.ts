@@ -1,3 +1,4 @@
+import { i18n } from 'i18next';
 import { FormType } from 'src/types';
 import { Column } from '../../components';
 import K8sDropdown from '../../components/K8sDropdown';
@@ -19,7 +20,7 @@ import {
 import { JobModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig } from '../../types';
 
-export const JobConfig: ResourceConfig<JobModel> = {
+export const JobConfig = (i18n: i18n): ResourceConfig<JobModel> => ({
   name: 'jobs',
   kind: 'Job',
   basePath: '/apis/batch/v1',
@@ -28,21 +29,23 @@ export const JobConfig: ResourceConfig<JobModel> = {
   parent: RESOURCE_GROUP.WORKLOAD,
   columns: () =>
     [
-      StateDisplayColumnRenderer(),
-      WorkloadImageColumnRenderer(),
-      CompletionsCountColumnRenderer(),
-      WorkloadRestartsColumnRenderer(),
-      DurationColumnRenderer(),
-      AgeColumnRenderer(),
+      StateDisplayColumnRenderer(i18n),
+      WorkloadImageColumnRenderer(i18n),
+      CompletionsCountColumnRenderer(i18n),
+      WorkloadRestartsColumnRenderer(i18n),
+      DurationColumnRenderer(i18n),
+      AgeColumnRenderer(i18n),
     ] as Column<JobModel>[],
   showConfig: () => ({
     descriptions: [],
-    groups: [{
-      fields: [StartTimeField(), ImageField()],
-    }],
-    tabs: [PodsField(), ConditionsField()]
+    groups: [
+      {
+        fields: [StartTimeField(i18n), ImageField(i18n)],
+      },
+    ],
+    tabs: [PodsField(), ConditionsField(i18n)],
   }),
   initValue: JOB_INIT_VALUE,
   Dropdown: K8sDropdown,
-  formType: FormType.MODAL
-};
+  formType: FormType.MODAL,
+});

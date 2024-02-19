@@ -1,11 +1,7 @@
 import { KitStoreProvider, ModalStack } from '@cloudtower/eagle';
-import { Refine, ResourceProps } from '@refinedev/core';
+import { Refine } from '@refinedev/core';
 import { History } from 'history';
-import {
-  dataProvider,
-  liveProvider,
-  GlobalStore,
-} from 'k8s-api-provider';
+import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import { keyBy } from 'lodash-es';
 import React, { useMemo } from 'react';
 import { Router } from 'react-router-dom';
@@ -13,17 +9,14 @@ import ConfigsContext from 'src/contexts/configs';
 import { ResourceCRUD } from './components/ResourceCRUD';
 import GlobalStoreContext from './contexts/global-store';
 import { routerProvider } from './providers/router-provider';
-import './i18n';
+import { ResourceConfig } from './types';
 
 import './styles.css';
-
-import { ResourceConfig } from './types';
 
 type Props = {
   resourcesConfig: ResourceConfig[];
   useHashUrl?: boolean;
   urlPrefix?: string;
-  refineResources?: ResourceProps[];
   Layout?: React.FC<unknown>;
   history: History;
   globalStore: GlobalStore;

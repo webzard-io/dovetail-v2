@@ -1,3 +1,4 @@
+import { i18n } from 'i18next';
 import type { LabelSelector } from 'kubernetes-types/meta/v1';
 import type {
   NetworkPolicyIngressRule,
@@ -12,7 +13,7 @@ import { AgeColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { NetworkPolicyModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig, FormType } from '../../types';
 
-export const NetworkPolicyConfig: ResourceConfig<NetworkPolicyModel> = {
+export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyModel> => ({
   name: 'networkpolicies',
   kind: 'NetworkPolicy',
   basePath: '/apis/networking.k8s.io/v1',
@@ -31,7 +32,7 @@ export const NetworkPolicyConfig: ResourceConfig<NetworkPolicyModel> = {
           return <Tags value={matchLabels} />;
         },
       },
-      AgeColumnRenderer(),
+      AgeColumnRenderer(i18n),
     ] as Column<NetworkPolicyModel>[],
   showConfig: () => ({
     descriptions: [],
@@ -80,4 +81,4 @@ export const NetworkPolicyConfig: ResourceConfig<NetworkPolicyModel> = {
   initValue: NETWORK_POLICY_INIT_VALUE,
   Dropdown: K8sDropdown,
   formType: FormType.MODAL,
-};
+});

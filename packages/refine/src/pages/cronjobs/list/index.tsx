@@ -1,5 +1,6 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { CronJobDropdown } from 'src/components/CronJobDropdown';
 import { ListPage } from 'src/components/ListPage';
 import Time from 'src/components/Time';
@@ -11,17 +12,17 @@ import {
   NameSpaceColumnRenderer,
   StateDisplayColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import i18n from '../../../i18n';
 import { CronJobModel } from '../../../models';
 
 export const CronJobList: React.FC<IResourceComponentsProps> = () => {
+  const { i18n } = useTranslation();
   const { tableProps, selectedKeys } = useEagleTable<CronJobModel>({
     useTableParams: {},
     columns: [
-      StateDisplayColumnRenderer(),
-      NameColumnRenderer(),
-      NameSpaceColumnRenderer(),
-      WorkloadImageColumnRenderer(),
+      StateDisplayColumnRenderer(i18n),
+      NameColumnRenderer(i18n),
+      NameSpaceColumnRenderer(i18n),
+      WorkloadImageColumnRenderer(i18n),
       {
         key: 'schedule',
         display: true,
@@ -39,7 +40,7 @@ export const CronJobList: React.FC<IResourceComponentsProps> = () => {
           return <Time date={value} />;
         },
       },
-      AgeColumnRenderer(),
+      AgeColumnRenderer(i18n),
     ],
     tableProps: {
       currentSize: 10,

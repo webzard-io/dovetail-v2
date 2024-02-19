@@ -1,5 +1,6 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useEagleTable } from '../../../hooks/useEagleTable';
 import { NameColumnRenderer } from '../../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../../models';
@@ -14,9 +15,10 @@ type Props<Model extends ResourceModel> = IResourceComponentsProps & {
 
 export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
   const { formatter, name, columns, Dropdown } = props;
+  const { i18n } = useTranslation();
   const { tableProps, selectedKeys } = useEagleTable<Model>({
     useTableParams: {},
-    columns: [NameColumnRenderer(), ...columns],
+    columns: [NameColumnRenderer(i18n), ...columns],
     tableProps: {
       currentSize: 10,
     },
@@ -25,10 +27,6 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
   });
 
   return (
-    <ListPage
-      title={name || ''}
-      selectedKeys={selectedKeys}
-      tableProps={tableProps}
-    />
+    <ListPage title={name || ''} selectedKeys={selectedKeys} tableProps={tableProps} />
   );
 }
