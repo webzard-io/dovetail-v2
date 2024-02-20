@@ -1,5 +1,6 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
+import { i18n as I18nType } from 'i18next';
 import type { OwnerReference } from 'kubernetes-types/meta/v1';
 import type { IngressBackend } from 'kubernetes-types/networking/v1';
 import { get } from 'lodash';
@@ -11,7 +12,6 @@ import { ReferenceLink } from '../../components/ReferenceLink';
 import { StateTag } from '../../components/StateTag';
 import { Column } from '../../components/Table';
 import Time from '../../components/Time';
-import i18n from '../../i18n';
 import {
   JobModel,
   PodModel,
@@ -59,6 +59,7 @@ export const CommonSorter = (dataIndex: string[]) => (a: unknown, b: unknown) =>
 };
 
 export const NameColumnRenderer = <Model extends ResourceModel>(
+  i18n: I18nType,
   resource = ''
 ): Column<Model> => {
   const dataIndex = ['metadata', 'name'];
@@ -75,7 +76,9 @@ export const NameColumnRenderer = <Model extends ResourceModel>(
   };
 };
 
-export const NameSpaceColumnRenderer = <Model extends ResourceModel>(): Column<Model> => {
+export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['metadata', 'namespace'];
   return {
     key: 'namespace',
@@ -89,7 +92,9 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(): Column<M
 
 export const StateDisplayColumnRenderer = <
   Model extends WorkloadModel | CronJobModel | PodModel,
->(): Column<Model> => {
+>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['stateDisplay'];
   return {
     key: 'stateDisplay',
@@ -102,9 +107,9 @@ export const StateDisplayColumnRenderer = <
   };
 };
 
-export const WorkloadImageColumnRenderer = <
-  Model extends WorkloadBaseModel,
->(): Column<Model> => {
+export const WorkloadImageColumnRenderer = <Model extends WorkloadBaseModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['imageNames'];
   return {
     key: 'image',
@@ -119,9 +124,9 @@ export const WorkloadImageColumnRenderer = <
   };
 };
 
-export const WorkloadRestartsColumnRenderer = <
-  Model extends WorkloadModel,
->(): Column<Model> => {
+export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['restarts'];
   return {
     key: 'restarts',
@@ -132,7 +137,9 @@ export const WorkloadRestartsColumnRenderer = <
   };
 };
 
-export const ReplicasColumnRenderer = <Model extends WorkloadModel>(): Column<Model> => {
+export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['status', 'replicas'];
   return {
     key: 'replicas',
@@ -151,7 +158,9 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(): Column<Mo
   };
 };
 
-export const AgeColumnRenderer = <Model extends ResourceModel>(): Column<Model> => {
+export const AgeColumnRenderer = <Model extends ResourceModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
   return {
     key: 'creationTimestamp',
@@ -173,6 +182,7 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(): Column<Model> 
 };
 
 export const NodeNameColumnRenderer = <Model extends PodModel>(
+  i18n: I18nType,
   options?: Partial<Column<Model>>
 ): Column<Model> => {
   const dataIndex = ['spec', 'nodeName'];
@@ -188,7 +198,9 @@ export const NodeNameColumnRenderer = <Model extends PodModel>(
   };
 };
 
-export const RestartCountColumnRenderer = <Model extends PodModel>(): Column<Model> => {
+export const RestartCountColumnRenderer = <Model extends PodModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['restartCount'];
   return {
     key: 'restartCount',
@@ -200,9 +212,9 @@ export const RestartCountColumnRenderer = <Model extends PodModel>(): Column<Mod
   };
 };
 
-export const CompletionsCountColumnRenderer = <
-  Model extends JobModel | CronJobModel,
->(): Column<Model> => {
+export const CompletionsCountColumnRenderer = <Model extends JobModel | CronJobModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['completionsDisplay'];
   return {
     key: 'completions',
@@ -214,9 +226,9 @@ export const CompletionsCountColumnRenderer = <
   };
 };
 
-export const DurationColumnRenderer = <
-  Model extends JobModel | CronJobModel,
->(): Column<Model> => {
+export const DurationColumnRenderer = <Model extends JobModel | CronJobModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['duration'];
   return {
     key: 'duration',
@@ -237,9 +249,9 @@ export const DurationColumnRenderer = <
   };
 };
 
-export const ServiceTypeColumnRenderer = <
-  Model extends ResourceModel,
->(): Column<Model> => {
+export const ServiceTypeColumnRenderer = <Model extends ResourceModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['spec', 'type'];
   return {
     key: 'type',
@@ -250,7 +262,9 @@ export const ServiceTypeColumnRenderer = <
     sorter: CommonSorter(dataIndex),
   };
 };
-export const PodWorkloadColumnRenderer = <Model extends PodModel>(): Column<Model> => {
+export const PodWorkloadColumnRenderer = <Model extends PodModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['metadata', 'ownerReferences'];
   return {
     key: 'type',
@@ -271,9 +285,9 @@ export const PodWorkloadColumnRenderer = <Model extends PodModel>(): Column<Mode
   };
 };
 
-export const IngressRulesColumnRenderer = <
-  Model extends IngressModel,
->(): Column<Model> => {
+export const IngressRulesColumnRenderer = <Model extends IngressModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['spec', 'rules'];
   return {
     key: 'type',
@@ -288,9 +302,9 @@ export const IngressRulesColumnRenderer = <
   };
 };
 
-export const IngressDefaultBackendColumnRenderer = <
-  Model extends IngressModel,
->(): Column<Model> => {
+export const IngressDefaultBackendColumnRenderer = <Model extends IngressModel>(
+  i18n: I18nType
+): Column<Model> => {
   const dataIndex = ['spec', 'defaultBackend'];
   return {
     key: 'defaultBackend',

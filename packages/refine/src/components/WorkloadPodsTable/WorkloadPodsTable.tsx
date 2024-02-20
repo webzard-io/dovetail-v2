@@ -3,6 +3,7 @@ import { css } from '@linaria/core';
 import { useList } from '@refinedev/core';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { matchSelector } from 'src/utils/match-selector';
 import {
   NameColumnRenderer,
@@ -24,6 +25,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   selector,
   hideToolbar,
 }) => {
+  const { i18n } = useTranslation();
   const kit = useUIKit();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -43,11 +45,11 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   }, [data?.data, selector]);
 
   const columns: Column<PodModel>[] = [
-    StateDisplayColumnRenderer(),
-    NameColumnRenderer('pods'),
-    NodeNameColumnRenderer(),
-    WorkloadImageColumnRenderer(),
-    RestartCountColumnRenderer(),
+    StateDisplayColumnRenderer(i18n),
+    NameColumnRenderer(i18n, 'pods'),
+    NodeNameColumnRenderer(i18n),
+    WorkloadImageColumnRenderer(i18n),
+    RestartCountColumnRenderer(i18n),
   ];
 
   return (
@@ -58,11 +60,9 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
         vertical-align: top;
       `}
     >
-      {
-        hideToolbar ? null : (
-          <TableToolBar title="" selectedKeys={selectedKeys} hideCreate />
-        )
-      }
+      {hideToolbar ? null : (
+        <TableToolBar title="" selectedKeys={selectedKeys} hideCreate />
+      )}
       <Table
         tableKey="pods"
         loading={!dataSource}

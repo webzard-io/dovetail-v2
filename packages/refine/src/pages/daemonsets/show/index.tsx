@@ -8,15 +8,19 @@ import {
   PodsField,
 } from '../../../components/ShowContent/fields';
 import { WorkloadModel } from '../../../models';
+import { useTranslation } from 'react-i18next';
 
 export const DaemonSetShow: React.FC<IResourceComponentsProps> = () => {
+  const { i18n } = useTranslation();
   return (
     <PageShow<WorkloadModel>
       showConfig={{
-        groups: [{
-          fields: [ImageField()]
-        }],
-        tabs: [PodsField(), ConditionsField()],
+        groups: [
+          {
+            fields: [ImageField(i18n)],
+          },
+        ],
+        tabs: [PodsField(), ConditionsField(i18n)],
       }}
       Dropdown={WorkloadDropdown}
     />
