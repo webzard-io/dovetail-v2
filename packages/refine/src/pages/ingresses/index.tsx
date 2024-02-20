@@ -1,3 +1,4 @@
+import { i18n } from 'i18next';
 import { Column, IngressRulesTableTabField } from '../../components';
 import K8sDropdown from '../../components/K8sDropdown';
 import { INGRESS_INIT_VALUE } from '../../constants/k8s';
@@ -9,7 +10,7 @@ import {
 import { IngressModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig, FormType } from '../../types';
 
-export const IngressConfig: ResourceConfig<IngressModel> = {
+export const IngressConfig = (i18n: i18n): ResourceConfig<IngressModel> => ({
   name: 'ingresses',
   kind: 'Ingress',
   basePath: '/apis/networking.k8s.io/v1',
@@ -18,16 +19,16 @@ export const IngressConfig: ResourceConfig<IngressModel> = {
   parent: RESOURCE_GROUP.NETWORK,
   columns: () =>
     [
-      IngressDefaultBackendColumnRenderer(),
-      IngressRulesColumnRenderer(),
-      AgeColumnRenderer(),
+      IngressDefaultBackendColumnRenderer(i18n),
+      IngressRulesColumnRenderer(i18n),
+      AgeColumnRenderer(i18n),
     ] as Column<IngressModel>[],
   showConfig: () => ({
     descriptions: [],
     groups: [],
-    tabs: [IngressRulesTableTabField()],
+    tabs: [IngressRulesTableTabField(i18n)],
   }),
   initValue: INGRESS_INIT_VALUE,
   Dropdown: K8sDropdown,
   formType: FormType.MODAL,
-};
+});

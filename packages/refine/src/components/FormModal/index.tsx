@@ -2,7 +2,7 @@ import { CloseCircleFilled } from '@ant-design/icons';
 import { useUIKit, popModal } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useResource } from '@refinedev/core';
-import React, { useState, useContext, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import YamlForm, { YamlFormProps } from 'src/components/YamlForm';
 import ConfigsContext from 'src/contexts/configs';

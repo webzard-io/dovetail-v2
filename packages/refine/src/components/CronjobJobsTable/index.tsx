@@ -3,6 +3,7 @@ import { css } from '@linaria/core';
 import { useList } from '@refinedev/core';
 import { OwnerReference } from 'kubernetes-types/meta/v1';
 import React, { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   AgeColumnRenderer,
   CompletionsCountColumnRenderer,
@@ -38,6 +39,7 @@ function matchOwner(
 export const CronjobJobsTable: React.FC<{
   owner?: OwnerReference & { namespace: string };
 }> = ({ owner }) => {
+  const { i18n } = useTranslation();
   const kit = useUIKit();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -54,13 +56,13 @@ export const CronjobJobsTable: React.FC<{
   }, [data?.data, owner]);
 
   const columns: Column<CronJobModel>[] = [
-    NameColumnRenderer('jobs'),
-    StateDisplayColumnRenderer(),
-    NameSpaceColumnRenderer(),
-    WorkloadImageColumnRenderer(),
-    CompletionsCountColumnRenderer(),
-    DurationColumnRenderer(),
-    AgeColumnRenderer(),
+    NameColumnRenderer(i18n, 'jobs'),
+    StateDisplayColumnRenderer(i18n),
+    NameSpaceColumnRenderer(i18n),
+    WorkloadImageColumnRenderer(i18n),
+    CompletionsCountColumnRenderer(i18n),
+    DurationColumnRenderer(i18n),
+    AgeColumnRenderer(i18n),
   ];
 
   return (
