@@ -20,9 +20,6 @@ export default defineConfig({
       },
     },
   },
-  optimizeDeps: {
-    exclude: ['monaco-yaml/yaml.worker.js']
-  },
   build: {
     minify: false,
     lib: {
