@@ -72,8 +72,7 @@ class RelationPlugin {
       | Job
       | Service;
 
-    const selector = spec?.selector;
-    if (!selector) {
+    if (!spec?.selector) {
       return item;
     }
 
@@ -91,6 +90,8 @@ class RelationPlugin {
     ) {
       return item;
     }
+
+    const selector = { ...spec?.selector };
 
     // empty selector or legacy resources like Service
     if (!selector.matchLabels && !selector.matchExpressions) {
