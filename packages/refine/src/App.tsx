@@ -77,12 +77,12 @@ function App() {
         initValue: POD_INIT_VALUE,
         isCustom: true,
       },
-      JobConfig,
-      IngressConfig,
-      NetworkPolicyConfig,
-      ConfigMapConfig,
-      SecretsConfig,
-      ServicesConfig,
+      JobConfig(i18n),
+      IngressConfig(i18n),
+      NetworkPolicyConfig(i18n),
+      ConfigMapConfig(i18n),
+      SecretsConfig(i18n),
+      ServicesConfig(i18n),
     ];
   }, []);
 
