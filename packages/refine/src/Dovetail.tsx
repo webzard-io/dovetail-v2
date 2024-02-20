@@ -57,6 +57,7 @@ export const Dovetail: React.FC<Props> = props => {
               options={{
                 warnWhenUnsavedChanges: true,
                 liveMode: 'auto',
+                disableTelemetry: true,
               }}
               resources={resourcesConfig.map(c => {
                 return {
