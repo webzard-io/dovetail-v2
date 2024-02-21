@@ -4,8 +4,10 @@ import K8sDropdown from '../../components/K8sDropdown';
 import { INGRESS_INIT_VALUE } from '../../constants/k8s';
 import {
   AgeColumnRenderer,
+  IngressClassColumnRenderer,
   IngressDefaultBackendColumnRenderer,
   IngressRulesColumnRenderer,
+  IngressTlsColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { IngressModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig, FormType } from '../../types';
@@ -21,6 +23,8 @@ export const IngressConfig = (i18n: i18n): ResourceConfig<IngressModel> => ({
     [
       IngressDefaultBackendColumnRenderer(i18n),
       IngressRulesColumnRenderer(i18n),
+      IngressClassColumnRenderer(i18n),
+      IngressTlsColumnRenderer(i18n),
       AgeColumnRenderer(i18n),
     ] as Column<IngressModel>[],
   showConfig: () => ({
