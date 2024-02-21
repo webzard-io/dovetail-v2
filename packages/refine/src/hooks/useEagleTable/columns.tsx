@@ -5,7 +5,11 @@ import type { OwnerReference } from 'kubernetes-types/meta/v1';
 import type { IngressBackend } from 'kubernetes-types/networking/v1';
 import { get } from 'lodash';
 import React from 'react';
-import { ResourceLink } from '../../components';
+import {
+  ResourceLink,
+  ServiceInClusterAccessComponent,
+  ServiceOutClusterAccessComponent,
+} from '../../components';
 import { ImageNames } from '../../components/ImageNames';
 import { IngressRulesComponent } from '../../components/IngressRulesComponent';
 import { ReferenceLink } from '../../components/ReferenceLink';
@@ -20,6 +24,7 @@ import {
   WorkloadBaseModel,
   CronJobModel,
   IngressModel,
+  ServiceModel,
 } from '../../models';
 import { elapsedTime } from '../../utils/time';
 
@@ -252,16 +257,49 @@ export const DurationColumnRenderer = <Model extends JobModel | CronJobModel>(
 export const ServiceTypeColumnRenderer = <Model extends ResourceModel>(
   i18n: I18nType
 ): Column<Model> => {
-  const dataIndex = ['spec', 'type'];
+  const dataIndex = ['displayType'];
   return {
-    key: 'type',
+    key: 'displayType',
     title: i18n.t('dovetail.type'),
     display: true,
     dataIndex,
     sortable: true,
     sorter: CommonSorter(dataIndex),
+    render(value, record) {
+      console.log('record', record);
+      return value;
+    },
   };
 };
+
+export const ServiceInClusterAccessColumnRenderer = <Model extends ServiceModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'inClusterAccess',
+    title: i18n.t('dovetail.in_cluster_access'),
+    display: true,
+    dataIndex: [],
+    render(_, record) {
+      return <ServiceInClusterAccessComponent service={record} />;
+    },
+  };
+};
+
+export const ServiceOutClusterAccessColumnRenderer = <Model extends ServiceModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'outClusterAccess',
+    title: i18n.t('dovetail.out_cluster_access'),
+    display: true,
+    dataIndex: [],
+    render(_, record) {
+      return <ServiceOutClusterAccessComponent service={record} />;
+    },
+  };
+};
+
 export const PodWorkloadColumnRenderer = <Model extends PodModel>(
   i18n: I18nType
 ): Column<Model> => {

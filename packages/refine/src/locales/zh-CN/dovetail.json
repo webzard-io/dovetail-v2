@@ -90,5 +90,10 @@
   "port": "端口",
   "pod_ready_num": "Pod 就绪数量",
   "pod_replicas_num": "Pod 预期数量",
-  "edit_replicas": "编辑副本数"
+  "edit_replicas": "编辑副本数",
+  "dns_record": "DNS 记录",
+  "port_mapping": "端口映射",
+  "out_cluster_access": "集群外访问方式",
+  "in_cluster_access": "集群内访问方式",
+  "any_node_ip": "任意节点 IP"
 }
