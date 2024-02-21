@@ -4,6 +4,14 @@ import { ResourceModel } from './resource-model';
 
 export type ServiceType = Required<Unstructured & Service>;
 
+export enum ServiceTypeEnum {
+  ClusterIP = 'ClusterIP',
+  NodePort = 'NodePort',
+  LoadBalancer = 'LoadBalancer',
+  ExternalName = 'ExternalName',
+  Headless = 'Headless',
+}
+
 export class ServiceModel extends ResourceModel<ServiceType> {
   constructor(
     public _rawYaml: ServiceType,
@@ -12,24 +20,25 @@ export class ServiceModel extends ResourceModel<ServiceType> {
     super(_rawYaml, _globalStore);
   }
 
-  inClusterAccess() {
-    if (
-      this._rawYaml.spec.type &&
-      ['ClusterIP', 'NodePort', 'LoadBalancer'].includes(this._rawYaml.spec.type)
-    ) {
-      return this._rawYaml.spec.clusterIP;
+  get displayType() {
+    const type = this._rawYaml.spec.type;
+    if (type === ServiceTypeEnum.ClusterIP && !this._rawYaml.spec.clusterIP) {
+      return ServiceTypeEnum.Headless;
     }
-    return this._rawYaml.spec.externalName;
+    return type;
   }
 
-  // outClusterAccess() {
-  //   switch (this._rawYaml.spec.type) {
-  //     case 'NodePort':
-  //       return this._rawYaml.spec.port;
-  //     case 'LoadBalancer':
-  //       return this._rawYaml.spec.externalIPs;
-  //     default:
-  //       return undefined;
-  //   }
-  // }
+  get dnsRecord() {
+    return `${this._rawYaml.metadata.name}.${this._rawYaml.metadata.namespace}`;
+  }
+
+  get displayPortMapping() {
+    return this._rawYaml.spec.ports?.map(p => {
+      let servicePort = `${p.port}`;
+      if (this._rawYaml.spec.clusterIP) {
+        servicePort = `${this._rawYaml.spec.clusterIP}:${p.port}`;
+      }
+      return `${servicePort} -> ${p.targetPort}/${p.protocol}`;
+    });
+  }
 }
