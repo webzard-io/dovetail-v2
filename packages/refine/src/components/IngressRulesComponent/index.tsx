@@ -11,17 +11,22 @@ export const IngressRulesComponent: React.FC<{
   const result = ingress.flattenedRules.map(r => {
     const divider = ' > ';
 
+    const pre = r.fullPath.includes('http') ? (
+      <kit.Link href={r.fullPath}>{r.fullPath}</kit.Link>
+    ) : (
+      <span>{r.fullPath}</span>
+    );
+
     return (
       <div key={r.fullPath}>
-        <kit.Link disabled={!r.host} href={r.fullPath}>
-          {r.fullPath}
-        </kit.Link>
+        {pre}
         <span>{divider}</span>
         <ResourceLink
           name="services"
           namespace={ingress.metadata.namespace || 'default'}
           resourceId={r.serviceName}
         />
+        <span>:{r.servicePort}</span>
       </div>
     );
   });

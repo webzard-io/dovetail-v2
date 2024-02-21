@@ -2,11 +2,10 @@ import { useUIKit } from '@cloudtower/eagle';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
 import type { OwnerReference } from 'kubernetes-types/meta/v1';
-import type { IngressBackend } from 'kubernetes-types/networking/v1';
+import type { IngressBackend, IngressTLS } from 'kubernetes-types/networking/v1';
 import { get } from 'lodash';
 import React from 'react';
 import {
-  ResourceLink,
   ServiceInClusterAccessComponent,
   ServiceOutClusterAccessComponent,
 } from '../../components';
@@ -265,10 +264,6 @@ export const ServiceTypeColumnRenderer = <Model extends ResourceModel>(
     dataIndex,
     sortable: true,
     sorter: CommonSorter(dataIndex),
-    render(value, record) {
-      console.log('record', record);
-      return value;
-    },
   };
 };
 
@@ -333,6 +328,7 @@ export const IngressRulesColumnRenderer = <Model extends IngressModel>(
     display: true,
     dataIndex,
     sortable: true,
+    width: 300,
     sorter: CommonSorter(dataIndex),
     render(_, record) {
       return <IngressRulesComponent ingress={record} />;
@@ -351,18 +347,49 @@ export const IngressDefaultBackendColumnRenderer = <Model extends IngressModel>(
     title: i18n.t('dovetail.default_backend'),
     sortable: true,
     sorter: CommonSorter(['spec', 'defaultBackend']),
-    render: (defaultBackend: IngressBackend, record) => {
-      if (!defaultBackend?.service?.name) return <span>-</span>;
-      const divider = 'Default > ';
+    render: (defaultBackend: IngressBackend) => {
+      if (defaultBackend?.service?.name) return <span>√</span>;
+      return <span>x</span>;
+    },
+  };
+};
+
+export const IngressClassColumnRenderer = <Model extends IngressModel>(
+  i18n: I18nType
+): Column<Model> => {
+  const dataIndex = ['spec', 'ingressClassName'];
+  return {
+    key: 'ingressClassName',
+    display: true,
+    dataIndex,
+    title: i18n.t('dovetail.ingress_class'),
+    sortable: true,
+    sorter: CommonSorter(['spec', 'ingressClassName']),
+    render: (name: IngressBackend) => {
+      return <span>{name || '-'}</span>;
+    },
+  };
+};
+
+export const IngressTlsColumnRenderer = <Model extends IngressModel>(
+  i18n: I18nType
+): Column<Model> => {
+  const dataIndex = ['spec', 'tls'];
+  return {
+    key: 'cert',
+    display: true,
+    dataIndex,
+    title: i18n.t('dovetail.cert'),
+    sortable: true,
+    sorter: CommonSorter(['spec', 'ingressClassName']),
+    render: (tls: IngressTLS[]) => {
+      if (!tls) return '-';
       return (
-        <span>
-          {divider}
-          <ResourceLink
-            name="services"
-            namespace={record.metadata.namespace || 'default'}
-            resourceId={defaultBackend.service?.name || ''}
-          />
-        </span>
+        <ul>
+          {tls.map(t => (
+            <li key={t.secretName}>{t.secretName}</li>
+          ))}
+        </ul>
       );
     },
   };

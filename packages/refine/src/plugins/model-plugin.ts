@@ -57,7 +57,6 @@ class ModelPlugin implements IProviderPlugin<ResourceModel> {
 
   async processItem(item: Unstructured): Promise<ResourceModel> {
     const Model = ModelMap[item.kind as keyof typeof ModelMap] || ResourceModel;
-    console.log('Model', item.kind, Model);
     const result = new Model(item as never, this._globalStore!);
     await result.init();
     return result as ResourceModel;
