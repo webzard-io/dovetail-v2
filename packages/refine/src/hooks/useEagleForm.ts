@@ -142,7 +142,6 @@ const useEagleForm = <
   TResponseError
 > => {
   const editor = useRef<YamlEditorHandle>(null);
-  const isFoldRef = useRef<boolean>(false);
   const { t } = useTranslation();
   const [enableEditor, setEnableEditor] = useState(false);
   const [isYamlValid, setIsYamlValid] = useState(true);
@@ -231,9 +230,8 @@ const useEagleForm = <
 
       editor.current.setEditorValue(editorValue);
       editor.current.setValue(editorValue);
-      if (queryResult?.data?.data && editorInstance && !isFoldRef.current) {
+      if (queryResult?.data?.data && editorInstance) {
         fold(editorInstance);
-        isFoldRef.current = true;
       }
     }
   }, [initialValues, queryResult?.data?.data, id, form, fold]);
@@ -285,13 +283,7 @@ const useEagleForm = <
         setEditorErrors([]);
       }
     },
-    onEditorCreate(editor) {
-      if (queryResult?.data?.data && !isFoldRef.current) {
-        fold(editor);
-        isFoldRef.current = true;
-      }
-    },
-  }), [editorErrors, editorOptions, fold, initialValues, queryResult?.data?.data, schema, useResourceResult.resource?.name]);
+  }), [editorErrors, editorOptions, initialValues, schema, useResourceResult.resource?.name]);
 
   return {
     form: formSF.form,
