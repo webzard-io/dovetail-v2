@@ -10,8 +10,8 @@
   "module": "./dist/refine.js",
   "types": "./lib/src/index.d.ts",
   "dependencies": {
-    "@cloudtower/eagle": "^0.27.59",
-    "@cloudtower/icons-react": "^0.27.59",
+    "@cloudtower/eagle": "^0.27.73",
+    "@cloudtower/icons-react": "^0.27.73",
     "@patternfly/react-core": "^5.1.1",
     "@patternfly/react-log-viewer": "^5.0.0",
     "@refinedev/core": "^4.38.0",
@@ -67,8 +67,8 @@
     "vite-plugin-commonjs": "^0.10.0"
   },
   "peerDependencies": {
-    "@cloudtower/eagle": "^0.27.70",
-    "@cloudtower/icons-react": "^0.27.70",
+    "@cloudtower/eagle": "^0.27.73",
+    "@cloudtower/icons-react": "^0.27.73",
     "@refinedev/core": "^4.38.0",
     "antd": "4.5.0",
     "i18next": "^23.2.3",
