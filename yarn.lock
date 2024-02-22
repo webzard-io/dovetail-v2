@@ -1471,7 +1471,7 @@
 
 "@cloudtower/eagle@^0.27.73":
   version "0.27.73"
-  resolved "https://registry.yarnpkg.com/@cloudtower/eagle/-/eagle-0.27.73.tgz#c62f3b34fd0bdd2bc327ce1d8108caef40d6c1e5"
+  resolved "https://registry.npmjs.org/@cloudtower/eagle/-/eagle-0.27.73.tgz#c62f3b34fd0bdd2bc327ce1d8108caef40d6c1e5"
   integrity sha512-UiYXzcm5qqPzJYWG++UwICpN1HZVpfSF967w7bTyslZp7ZffClXTqned9YrGVNKx8OlIHrpBgFgJO06J1Rxqxw==
   dependencies:
     "@cloudtower/icons-react" "0.27.73"
@@ -1495,12 +1495,12 @@
 
 "@cloudtower/icons-react@0.27.73", "@cloudtower/icons-react@^0.27.73":
   version "0.27.73"
-  resolved "https://registry.yarnpkg.com/@cloudtower/icons-react/-/icons-react-0.27.73.tgz#3c4acc8ea5c8aa33a11da39574fab2c8b56a7fad"
+  resolved "https://registry.npmjs.org/@cloudtower/icons-react/-/icons-react-0.27.73.tgz#3c4acc8ea5c8aa33a11da39574fab2c8b56a7fad"
   integrity sha512-z9R1W3doGGz8QA++c3Plgae9YSrECXB03KNb2hF+PZxcTCw7r9hwo+H9LQfMsvma8U7PnPyGt10Tw+uDSWFqNA==
 
 "@cloudtower/parrot@0.27.73":
   version "0.27.73"
-  resolved "https://registry.yarnpkg.com/@cloudtower/parrot/-/parrot-0.27.73.tgz#de0184d09df55b1506022925835d6509c6d6fc8e"
+  resolved "https://registry.npmjs.org/@cloudtower/parrot/-/parrot-0.27.73.tgz#de0184d09df55b1506022925835d6509c6d6fc8e"
   integrity sha512-CjXFZ/mCCUFyCldWPsw4TiChfTYo7inlJzY8nOormyieMLB+8/HIOz2FfExxOggIqH1zgQ6lhyfTrUq0SddZbw==
   dependencies:
     i18next "^23.2.3"
