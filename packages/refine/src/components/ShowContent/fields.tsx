@@ -77,8 +77,8 @@ export const ReplicaField = (i18n: I18nType): ShowField<WorkloadModel> => {
     key: 'Replicas',
     title: i18n.t('dovetail.replicas'),
     path: ['status', 'replicas'],
-    renderContent: (_, record, field) => {
-      return <WorkloadReplicas record={record} label={field.title} editable />;
+    renderContent: (_, record) => {
+      return <WorkloadReplicas record={record} editable />;
     },
   };
 };
