@@ -12,3 +12,4 @@ export * from './event-model';
 export * from './deployment-model';
 export * from './daemonset-model';
 export * from './statefulset-model';
+export * from './service-model';

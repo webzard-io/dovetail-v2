@@ -8,6 +8,7 @@ import {
   WorkloadBaseModel,
   CronJobModel,
   IngressModel,
+  ServiceModel,
 } from '../../models';
 import { ExtendObjectMeta } from '../../plugins/relation-plugin';
 import { ConditionsTable } from '../ConditionsTable';
@@ -177,7 +178,7 @@ export const StartTimeField = (i18n: I18nType): ShowField<JobModel> => {
   };
 };
 
-export const ServiceTypeField = (i18n: I18nType): ShowField<ResourceModel> => {
+export const ServiceTypeField = (i18n: I18nType): ShowField<ServiceModel> => {
   return {
     key: 'type',
     title: i18n.t('dovetail.type'),
@@ -185,7 +186,7 @@ export const ServiceTypeField = (i18n: I18nType): ShowField<ResourceModel> => {
   };
 };
 
-export const ClusterIpField = (i18n: I18nType): ShowField<ResourceModel> => {
+export const ClusterIpField = (i18n: I18nType): ShowField<ServiceModel> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.clusterIp'),
@@ -193,7 +194,7 @@ export const ClusterIpField = (i18n: I18nType): ShowField<ResourceModel> => {
   };
 };
 
-export const SessionAffinityField = (i18n: I18nType): ShowField<ResourceModel> => {
+export const SessionAffinityField = (i18n: I18nType): ShowField<ServiceModel> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.sessionAffinity'),
