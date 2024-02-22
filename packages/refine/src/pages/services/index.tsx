@@ -9,7 +9,7 @@ import {
   ServicePodsGroup,
   ConditionsGroup,
 } from '../../components/ShowContent';
-import { SERVICE_INIT_VALUE } from '../../constants';
+import { SERVICE_CLUSTER_IP_INIT_VALUE } from '../../constants';
 import {
   AgeColumnRenderer,
   ServiceInClusterAccessColumnRenderer,
@@ -76,5 +76,5 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
       ]
     },],
   }),
-  initValue: SERVICE_INIT_VALUE,
+  initValue: SERVICE_CLUSTER_IP_INIT_VALUE,
 });
