@@ -1,11 +1,46 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { useUIKit } from '@cloudtower/eagle';
+import { useUIKit, Typo } from '@cloudtower/eagle';
+import { css, cx } from '@linaria/core';
 import { useResource, useUpdate } from '@refinedev/core';
 import { get } from 'lodash-es';
-import React, { useState, useCallback, useImperativeHandle, useRef } from 'react';
+import React, { useState, useMemo, useCallback, useImperativeHandle, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { EditField } from 'src/components/EditField';
 import { WorkloadModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
+
+const WorkloadReplicasWrapperStyle = css`
+  border-radius: 8px;
+  border: 1px solid rgba(211, 218, 235, 0.60);
+  padding: 16px;
+  display: flex;
+`;
+const DonutChartWrapperStyle = css`
+  width: 70px;
+  height: 70px;
+  margin-right: 16px;
+`;
+const DonutChartStyle = css`
+  width: 100%;
+`;
+const DonutChartCenterStyle = css`
+  position: absolute;
+  left: 35px;
+  top: 35px;
+  transform: translate(-50%, -50%);
+`;
+const ReadyValueStyle = css`
+  color: #00122E;
+`;
+const ReplicasValueStyle = css`
+  color: rgba(44, 56, 82, 0.60);
+`;
+const ContentWrapperStyle = css`
+  margin: auto 0;
+`;
+const LabelStyle = css`
+  margin-right: 40px;
+`;
 
 interface WorkloadReplicasFormProps {
   defaultValue: number;
@@ -14,7 +49,7 @@ interface WorkloadReplicasFormProps {
 }
 
 interface WorkloadReplicasFormHandler {
-  submit: ()=> Promise<unknown> | undefined;
+  submit: () => Promise<unknown> | undefined;
 }
 
 const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, WorkloadReplicasFormProps>(function WorkloadReplicasForm(props, ref) {
@@ -44,9 +79,10 @@ const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, Workl
 
   return (
     <kit.form.Item
-      label={label}
+      label={<span style={{ width: '134px' }}>{label}</span>}
     >
       <kit.fields.Integer
+        style={{ width: '142px' }}
         input={{
           name: 'replicas',
           value: replicas,
@@ -56,6 +92,7 @@ const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, Workl
           onBlur: () => { },
           onFocus: () => { },
         }}
+        min={1}
         meta={{}}
         controls
       />
@@ -65,42 +102,93 @@ const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, Workl
 
 export interface WorkloadReplicasProps {
   record: WorkloadModel;
-  label?: string;
   editable?: boolean;
 }
 
-export function WorkloadReplicas({ record, label, editable }: WorkloadReplicasProps) {
+export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
+  const kit = useUIKit();
+  const { t } = useTranslation();
   const formRef = useRef<WorkloadReplicasFormHandler | null>(null);
 
   const readyReplicas =
-    record.status && 'readyReplicas' in record.status ? record.status.readyReplicas : 0;
-  const replicas = record.spec && 'replicas' in record.spec ? record.spec.replicas : 0;
+    (record.status && 'readyReplicas' in record.status ? record.status.readyReplicas : 0) || 0;
+  const replicas = (record.spec && 'replicas' in record.spec ? record.spec.replicas : 0) || 0;
 
   const canScale = record.kind === 'Deployment' || record.kind === 'StatefulSet';
   const currentReplicas = get(record, 'spec.replicas', 0);
 
+  const donutData = useMemo(() => {
+    const data = [{
+      name: 'ready',
+      value: readyReplicas,
+      color: 'rgba(33, 190, 106, 1)'
+    }];
+    const remain = replicas - readyReplicas;
+
+    if (remain > 0) {
+      data.push({
+        name: 'remain',
+        value: remain,
+        color: 'rgba(162, 240, 213, 1)'
+      });
+    }
+
+    return data;
+  }, [replicas, readyReplicas]);
+
   return (
-    <span>
-      {readyReplicas}/{replicas}
-      {
-        editable && canScale && (
-          <EditField
-            modalProps={{
-              formRef,
-              renderContent() {
-                return (
-                  <WorkloadReplicasForm
-                    ref={formRef}
-                    defaultValue={currentReplicas}
-                    record={record}
-                    label={label || ''}
-                  />
-                );
-              }
-            }}
-          />
-        )
-      }
-    </span>
+    <span className={WorkloadReplicasWrapperStyle}>
+      <div className={DonutChartWrapperStyle}>
+        <kit.DonutChart
+          className={DonutChartStyle}
+          data={donutData}
+          width={70}
+          height={70}
+          innerRadius={26}
+          outerRadius={32}
+          centerRender={(
+            <div className={DonutChartCenterStyle}>
+              <span className={cx(ReadyValueStyle, Typo.Display.d2_bold_title)}>{readyReplicas}</span>
+              <span className={cx(ReplicasValueStyle, Typo.Label.l1_bold_title)}>/{replicas}</span>
+            </div>
+          )}
+          widthPadding={false}
+          showLegend={false}
+        >
+        </kit.DonutChart>
+      </div>
+      <div className={ContentWrapperStyle}>
+        <div>
+          <span className={LabelStyle}>{t('dovetail.pod_ready_num')}</span>
+          <span>{readyReplicas}</span>
+        </div>
+        <div>
+          <span className={LabelStyle}>{t('dovetail.pod_replicas_num')}</span>
+          <span>{replicas}</span>
+          <span>
+            {
+              editable && canScale && (
+                <EditField
+                  modalProps={{
+                    formRef,
+                    title: t('dovetail.edit_replicas'),
+                    renderContent() {
+                      return (
+                        <WorkloadReplicasForm
+                          ref={formRef}
+                          defaultValue={currentReplicas}
+                          record={record}
+                          label={t('dovetail.pod_replicas_num')}
+                        />
+                      );
+                    }
+                  }}
+                />
+              )
+            }
+          </span>
+        </div>
+      </div>
+    </span >
   );
 }
