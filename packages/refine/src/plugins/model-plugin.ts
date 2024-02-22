@@ -16,6 +16,7 @@ import {
   ResourceModel,
   StatefulSetModel,
   NetworkPolicyModel,
+  ServiceModel,
 } from '../models';
 
 const ModelMap = {
@@ -28,6 +29,7 @@ const ModelMap = {
   Event: EventModel,
   Ingress: IngressModel,
   NetworkPolicy: NetworkPolicyModel,
+  Service: ServiceModel,
 };
 
 class ModelPlugin implements IProviderPlugin<ResourceModel> {
