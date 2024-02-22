@@ -87,5 +87,8 @@
   "rule": "规则",
   "default_backend": "默认后端",
   "ingress_rule_type": "规则类型",
-  "port": "端口"
+  "port": "端口",
+  "pod_ready_num": "Pod 就绪数量",
+  "pod_replicas_num": "Pod 预期数量",
+  "edit_replicas": "编辑副本数"
 }
