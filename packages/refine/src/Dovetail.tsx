@@ -1,5 +1,5 @@
-import { KitStoreProvider, ModalStack } from '@cloudtower/eagle';
-import { Refine } from '@refinedev/core';
+import { KitStoreProvider, ModalStack, useMessage } from '@cloudtower/eagle';
+import { NotificationProvider, Refine } from '@refinedev/core';
 import { History } from 'history';
 import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import { keyBy } from 'lodash-es';
@@ -24,6 +24,7 @@ type Props = {
 
 export const Dovetail: React.FC<Props> = props => {
   const { resourcesConfig, urlPrefix = '', Layout, history, globalStore } = props;
+  const msg = useMessage();
 
   const notCustomResources = useMemo(() => {
     return resourcesConfig.filter(c => !c.isCustom);
@@ -43,6 +44,22 @@ export const Dovetail: React.FC<Props> = props => {
     return _content;
   }, [Layout, notCustomResources, props.children, urlPrefix]);
 
+  const notificationProvider = useMemo(() => {
+    type NoticeType = 'info' | 'success' | 'error' | 'warning' | 'loading';
+    const provider: NotificationProvider = {
+      open: ({ message, key, type }) => {
+        msg.open({
+          content: message,
+          key,
+          duration: 3000,
+          type: type as NoticeType,
+        });
+      },
+      close: () => undefined,
+    };
+    return provider;
+  }, [msg]);
+
   return (
     <Router history={history}>
       <KitStoreProvider>
@@ -54,6 +71,7 @@ export const Dovetail: React.FC<Props> = props => {
               }}
               routerProvider={routerProvider}
               liveProvider={liveProvider(globalStore)}
+              notificationProvider={notificationProvider}
               options={{
                 warnWhenUnsavedChanges: true,
                 liveMode: 'auto',
