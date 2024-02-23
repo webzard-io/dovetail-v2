@@ -1,8 +1,9 @@
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import EN from 'src/locales/en-US';
 import ZH from 'src/locales/zh-CN';
-
 export const resources = {
   'en-US': EN,
   'zh-CN': ZH,
@@ -16,6 +17,12 @@ i18n.use(initReactI18next).init({
   fallbackLng: ['en-US', 'zh-CN'],
   lng: 'zh-CN',
   nsSeparator: '.',
+});
+
+dayjs.locale('zh');
+
+i18n.on('languageChanged', lng => {
+  dayjs.locale(lng);
 });
 
 export default i18n;
