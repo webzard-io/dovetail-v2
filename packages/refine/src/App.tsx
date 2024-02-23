@@ -22,12 +22,12 @@ import { NetworkPolicyConfig } from './pages/networkPolicies';
 import { PodShow, PodList, PodForm } from './pages/pods';
 import { SecretsConfig } from './pages/secrets';
 import { ServicesConfig } from './pages/services';
-import { StatefulSetShow, StatefulSetList, StatefulSetForm } from './pages/statefulsets';
+import { StatefulSetConfig } from './pages/statefulsets';
 import { ProviderPlugins } from './plugins';
 import { RESOURCE_GROUP, ResourceConfig, FormType } from './types';
 
 function App() {
-  const histroy = createBrowserHistory();
+  const history = createBrowserHistory();
 
   const resourcesConfig = useMemo(() => {
     return [
@@ -59,15 +59,7 @@ function App() {
         FormModal: DeploymentForm,
         isCustom: true,
       },
-      {
-        name: 'statefulsets',
-        basePath: '/apis/apps/v1',
-        kind: 'StatefulSet',
-        parent: RESOURCE_GROUP.WORKLOAD,
-        label: 'StatefulSets',
-        initValue: STATEFULSET_INIT_VALUE,
-        isCustom: true,
-      },
+      StatefulSetConfig(i18n),
       {
         name: 'pods',
         basePath: '/api/v1',
@@ -101,10 +93,10 @@ function App() {
       <Dovetail
         resourcesConfig={resourcesConfig as ResourceConfig[]}
         Layout={Layout}
-        history={histroy}
+        history={history}
         globalStore={globalStore}
       >
-        <Router history={histroy}>
+        <Router history={history}>
           <Route path="/cronjobs" exact>
             <CronJobList />
           </Route>
@@ -134,18 +126,6 @@ function App() {
           </Route>
           <Route path="/deployments/show">
             <DeploymentShow />
-          </Route>
-          <Route path="/statefulsets" exact>
-            <StatefulSetList />
-          </Route>
-          <Route path="/statefulsets/show">
-            <StatefulSetShow />
-          </Route>
-          <Route path="/statefulsets/create">
-            <StatefulSetForm />
-          </Route>
-          <Route path="/statefulsets/edit">
-            <StatefulSetForm />
           </Route>
           <Route path="/pods" exact>
             <PodList />

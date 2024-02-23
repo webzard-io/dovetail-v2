@@ -13,7 +13,7 @@ const WorkloadReplicasWrapperStyle = css`
   border-radius: 8px;
   border: 1px solid rgba(211, 218, 235, 0.60);
   padding: 16px;
-  display: flex;
+  display: inline-flex;
 `;
 const DonutChartWrapperStyle = css`
   width: 70px;
@@ -37,6 +37,7 @@ const ReplicasValueStyle = css`
 `;
 const ContentWrapperStyle = css`
   margin: auto 0;
+  position: relative;
 `;
 const LabelStyle = css`
   margin-right: 40px;

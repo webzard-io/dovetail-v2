@@ -31,7 +31,6 @@ const SiderStyle = css`
 
 const ContentStyle = css`
   &.ant-layout-content {
-    padding: 16px;
     background: #fff;
   }
 `;

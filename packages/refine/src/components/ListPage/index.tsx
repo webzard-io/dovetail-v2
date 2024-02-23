@@ -11,6 +11,7 @@ const ListPageStyle = css`
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 16px;
 `;
 
 const TableStyle = css`
