@@ -2,11 +2,12 @@ import { i18n } from 'i18next';
 import React from 'react';
 import { TextTags } from '../../components';
 import {
-  ConditionsField,
   ServiceTypeField,
   ClusterIpField,
   SessionAffinityField,
-  ServicePodsField,
+  BasicGroup,
+  ServicePodsGroup,
+  ConditionsGroup,
 } from '../../components/ShowContent';
 import { SERVICE_INIT_VALUE } from '../../constants';
 import {
@@ -59,16 +60,21 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
     AgeColumnRenderer(i18n),
   ],
   showConfig: () => ({
-    groups: [
-      {
-        fields: [
-          ServiceTypeField(i18n),
-          ClusterIpField(i18n),
-          SessionAffinityField(i18n),
-        ],
-      },
-    ],
-    tabs: [ServicePodsField(), ConditionsField(i18n)],
+    tabs: [{
+      title: i18n.t('dovetail.detail'),
+      key: 'detail',
+      groups: [
+        BasicGroup(i18n, {
+          basicFields: [
+            ServiceTypeField(i18n),
+            ClusterIpField(i18n),
+            SessionAffinityField(i18n),
+          ]
+        }),
+        ServicePodsGroup(),
+        ConditionsGroup(i18n)
+      ]
+    },],
   }),
   initValue: SERVICE_INIT_VALUE,
 });

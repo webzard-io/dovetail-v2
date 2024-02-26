@@ -38,3 +38,4 @@ export * from './TextTags';
 export * from './PodLog';
 export * from './FormModal';
 export * from './NetworkPolicyRulesTable';
+export * from './Tabs';
