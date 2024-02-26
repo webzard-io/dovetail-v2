@@ -1,5 +1,5 @@
 import { i18n } from 'i18next';
-import { DataField } from '../../components/ShowContent';
+import { DataTab, BasicGroup, } from '../../components/ShowContent';
 import { AgeColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig } from '../../types';
@@ -13,6 +13,13 @@ export const ConfigMapConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
   label: 'ConfigMaps',
   columns: () => [AgeColumnRenderer(i18n)],
   showConfig: () => ({
-    tabs: [DataField(i18n)],
+    tabs: [
+      {
+        title: i18n.t('dovetail.detail'),
+        key: 'detail',
+        groups: [BasicGroup(i18n)]
+      },
+      DataTab(i18n)
+    ],
   }),
 });

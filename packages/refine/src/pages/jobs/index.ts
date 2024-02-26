@@ -3,10 +3,11 @@ import { FormType } from 'src/types';
 import { Column } from '../../components';
 import K8sDropdown from '../../components/K8sDropdown';
 import {
-  ConditionsField,
   ImageField,
-  PodsField,
   StartTimeField,
+  BasicGroup,
+  PodsGroup,
+  ConditionsGroup,
 } from '../../components/ShowContent';
 import { JOB_INIT_VALUE } from '../../constants/k8s';
 import {
@@ -37,13 +38,20 @@ export const JobConfig = (i18n: i18n): ResourceConfig<JobModel> => ({
       AgeColumnRenderer(i18n),
     ] as Column<JobModel>[],
   showConfig: () => ({
-    descriptions: [],
-    groups: [
-      {
-        fields: [StartTimeField(i18n), ImageField(i18n)],
-      },
-    ],
-    tabs: [PodsField(), ConditionsField(i18n)],
+    tabs: [{
+      title: i18n.t('dovetail.detail'),
+      key: 'detail',
+      groups: [
+        BasicGroup(i18n, {
+          basicFields: [
+            StartTimeField(i18n),
+            ImageField(i18n),
+          ]
+        }),
+        PodsGroup(),
+        ConditionsGroup(i18n)
+      ]
+    }],
   }),
   initValue: JOB_INIT_VALUE,
   Dropdown: K8sDropdown,

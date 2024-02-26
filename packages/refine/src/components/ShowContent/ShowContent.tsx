@@ -3,9 +3,11 @@ import { ArrowChevronLeft16SecondaryIcon } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useParsed, useResource, useShow, useNavigation, useGo } from '@refinedev/core';
 import { get } from 'lodash-es';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
+import { Tabs as BaseTabs } from 'src/components/Tabs';
+import ComponentContext from 'src/contexts/component';
 import { useOpenForm } from 'src/hooks/useOpenForm';
 import { WorkloadState } from '../../constants';
 import { ResourceModel } from '../../models';
@@ -26,7 +28,7 @@ const BackButton = css`
   color: rgba(0, 21, 64, 0.3);
   line-height: 18px;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   align-self: flex-start;
 `;
@@ -82,9 +84,6 @@ const TabsStyle = css`
     }
   }
 `;
-const StateTagStyle = css`
-  margin-left: 8px;
-`;
 
 type Props<Model extends ResourceModel> = {
   showConfig: ShowConfig<Model>;
@@ -117,6 +116,8 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   const navigation = useNavigation();
   const go = useGo();
   const openForm = useOpenForm({ id });
+  const Component = useContext(ComponentContext);
+  const Tabs = Component.Tabs || BaseTabs;
 
   if (!data?.data) {
     return null;
@@ -183,47 +184,46 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
         <span className="button-text">{resource?.meta?.kind}</span>
       </span>
       <kit.space className={TopBarStyle}>
-        <div>
+        <div style={{ display: 'flex' }}>
           <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>{record?.metadata?.name}</span>
           {stateDisplay ? (
-            <StateTag className={StateTagStyle} state={stateDisplay} />
+            <StateTag state={stateDisplay} />
           ) : undefined}
         </div>
         <kit.space>
           <kit.button style={{ marginRight: 8 }} onClick={openForm}>{t('dovetail.edit_yaml')}</kit.button>
-          <Dropdown record={record} />
+          <Dropdown record={record} size='large' />
         </kit.space>
       </kit.space>
     </div>
   );
   const tabs = (
-    <kit.tabs className={TabsStyle}>
-      {(showConfig.tabs || []).map(tab => {
-        return (
-          <kit.tabsTabPane tab={tab.title} key={tab.title}>
-            {
-              tab.groups?.map(group => {
-                const GroupContainer = group.title ? ShowGroup : React.Fragment;
+    <Tabs
+      tabs={(showConfig.tabs || []).map(tab => {
+        return {
+          title: tab.title,
+          key: tab.key,
+          children: tab.groups?.map(group => {
+            const GroupContainer = group.title ? ShowGroup : React.Fragment;
 
-                return (
-                  <GroupContainer key={group.title} title={group.title || ''}>
-                    {
-                      group.areas
-                        .map((area, index) => (
-                          <>
-                            <kit.row key={index} gutter={[24, 8]}>{renderFields(area.fields, area.type)}</kit.row>
-                            {index !== group.areas.length - 1 ? <kit.divider /> : null}
-                          </>
-                        ))
-                    }
-                  </GroupContainer>
-                );
-              })
-            }
-          </kit.tabsTabPane>
-        );
+            return (
+              <GroupContainer key={group.title} title={group.title || ''}>
+                {
+                  group.areas
+                    .map((area, index) => (
+                      <>
+                        <kit.row key={index} gutter={[24, 8]}>{renderFields(area.fields, area.type)}</kit.row>
+                        {index !== group.areas.length - 1 ? <kit.divider /> : null}
+                      </>
+                    ))
+                }
+              </GroupContainer>
+            );
+          })
+        };
       })}
-    </kit.tabs>
+      className={TabsStyle}
+    />
   );
 
   return (

@@ -9,14 +9,15 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CronJobModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
-import K8sDropdown from '../K8sDropdown';
+import K8sDropdown, { DropdownSize } from '../K8sDropdown';
 
 type Props<Model extends CronJobModel> = {
   record: Model;
+  size?: DropdownSize;
 };
 
 export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>) {
-  const { record } = props;
+  const { record, size } = props;
   const { spec } = record as CronJob;
   const kit = useUIKit();
   const { resource } = useResource();
@@ -26,7 +27,7 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
   const suspended = Boolean(spec?.suspend);
 
   return (
-    <K8sDropdown record={record}>
+    <K8sDropdown record={record} size={size}>
       <kit.menu.Item
         onClick={() => {
           const v = suspended ? record.resume() : record.suspend();

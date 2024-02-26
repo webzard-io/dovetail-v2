@@ -46,21 +46,24 @@ export enum AreaType {
   Grid = 'Grid'
 }
 
-export type ShowBlockField<Model extends ResourceModel> = {
-  title?: string;
-  areas: {
-    type?: AreaType;
-    fields: ShowField<Model>[];
-  }[];
+export type ShowArea<Model extends ResourceModel> = {
+  type?: AreaType;
+  fields: ShowField<Model>[];
 };
 
-export type ShowTabField<Model extends ResourceModel> = {
+export type ShowGroup<Model extends ResourceModel> = {
+  title?: string;
+  areas: ShowArea<Model>[];
+};
+
+export type ShowTab<Model extends ResourceModel> = {
   title: string;
-  groups: ShowBlockField<Model>[];
+  key: string;
+  groups: ShowGroup<Model>[];
 };
 
 export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
-  tabs?: ShowTabField<Model>[];
+  tabs?: ShowTab<Model>[];
 }
 
 export const ImageField = <Model extends WorkloadBaseModel>(
@@ -120,7 +123,6 @@ export const JobsField = <
 >(): ShowField<Model> => {
   return {
     key: 'jobs',
-    title: 'Jobs',
     path: [],
     renderContent: (_, record) => {
       return (
@@ -132,16 +134,16 @@ export const JobsField = <
             namespace: record.metadata?.namespace || '',
             uid: record.metadata?.uid || '',
           }}
+          hideToolBar
         />
       );
     },
   };
 };
 
-export const DataField = (i18n: I18nType): ShowField<ResourceModel> => {
+export const DataField = <Model extends ResourceModel>(): ShowField<Model> => {
   return {
     key: 'data',
-    title: i18n.t('dovetail.data'),
     path: ['data'],
     renderContent: val => {
       return <KeyValue value={val as Record<string, string>} />;
@@ -149,10 +151,9 @@ export const DataField = (i18n: I18nType): ShowField<ResourceModel> => {
   };
 };
 
-export const SecretDataField = (i18n: I18nType): ShowField<ResourceModel> => {
+export const SecretDataField = <Model extends ResourceModel>(): ShowField<Model> => {
   return {
     key: 'data',
-    title: i18n.t('dovetail.data'),
     path: ['data'],
     renderContent: val => {
       const decodeVal: Record<string, string> = {};
@@ -175,7 +176,7 @@ export const StartTimeField = (i18n: I18nType): ShowField<JobModel> => {
   };
 };
 
-export const ServiceTypeField = (i18n: I18nType): ShowField<ServiceModel> => {
+export const ServiceTypeField = <Model extends ServiceModel>(i18n: I18nType): ShowField<Model> => {
   return {
     key: 'type',
     title: i18n.t('dovetail.type'),
@@ -183,7 +184,7 @@ export const ServiceTypeField = (i18n: I18nType): ShowField<ServiceModel> => {
   };
 };
 
-export const ClusterIpField = (i18n: I18nType): ShowField<ServiceModel> => {
+export const ClusterIpField = <Model extends ServiceModel>(i18n: I18nType): ShowField<Model> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.clusterIp'),
@@ -191,7 +192,7 @@ export const ClusterIpField = (i18n: I18nType): ShowField<ServiceModel> => {
   };
 };
 
-export const SessionAffinityField = (i18n: I18nType): ShowField<ServiceModel> => {
+export const SessionAffinityField = <Model extends ServiceModel>(i18n: I18nType): ShowField<Model> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.sessionAffinity'),
@@ -218,12 +219,9 @@ export const ServicePodsField = <Model extends ResourceModel>(): ShowField<Model
   };
 };
 
-export const IngressRulesTableTabField = <Model extends IngressModel>(
-  i18n: I18nType
-): ShowField<Model> => {
+export const IngressRulesTableTabField = <Model extends IngressModel>(): ShowField<Model> => {
   return {
     key: 'rules',
-    title: i18n.t('dovetail.rule'),
     path: ['spec', 'rules'],
     renderContent: (_, record) => {
       return <IngressRulesTable ingress={record} />;

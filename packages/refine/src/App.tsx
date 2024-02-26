@@ -7,7 +7,6 @@ import { Layout } from './components';
 import {
   CRONJOB_INIT_VALUE,
   DAEMONSET_INIT_VALUE,
-  STATEFULSET_INIT_VALUE,
   POD_INIT_VALUE,
 } from './constants/k8s';
 import { Dovetail } from './Dovetail';

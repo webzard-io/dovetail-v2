@@ -1,19 +1,13 @@
-export * from './create';
-export * from './list';
-export * from './show';
 import { i18n } from 'i18next';
 import {
-  ConditionsField,
   ImageField,
-  PodsField,
   ReplicaField,
-  NamespaceField,
-  LabelsField,
-  AnnotationsField,
-  AgeField,
-  EventsTableTabField,
   AreaType,
-} from 'src/components/ShowContent/fields';
+  BasicGroup,
+  PodsGroup,
+  ConditionsGroup,
+  EventsTab,
+} from 'src/components/ShowContent';
 import { WorkloadDropdown } from 'src/components/WorkloadDropdown';
 import { STATEFULSET_INIT_VALUE } from 'src/constants/k8s';
 import {
@@ -47,41 +41,24 @@ export const StatefulSetConfig = (i18n: i18n): ResourceConfig<StatefulSetModel> 
     AgeColumnRenderer(i18n),
   ]),
   showConfig: () => ({
-    tabs: [{
-      title: i18n.t('dovetail.detail'),
-      groups: [{
-        title: i18n.t('dovetail.basic_info'),
-        areas: [{
-          type: AreaType.Inline,
-          fields: [ReplicaField(), ReplicaField()],
-        }, {
-          fields: [
-            NamespaceField(i18n),
-            ImageField(i18n),
-            LabelsField(i18n),
-            AnnotationsField(i18n),
-            AgeField(i18n),
-          ],
-        }]
-      }, {
-        title: 'Pods',
-        areas: [{
-          fields: [PodsField()]
-        }]
-      }, {
-        title: i18n.t('dovetail.condition'),
-        areas: [{
-          fields: [ConditionsField()]
-        }]
-      }]
-    }, {
-      title: i18n.t('dovetail.event'),
-      groups: [{
-        areas: [{
-          fields: [EventsTableTabField()]
-        }]
-      }]
-    }]
+    tabs: [
+      {
+        title: i18n.t('dovetail.detail'),
+        key: 'detail',
+        groups: [
+          BasicGroup(i18n, {
+            upAreas: [{
+              type: AreaType.Inline,
+              fields: [ReplicaField()],
+            }],
+            basicFields: [ImageField(i18n),]
+          }),
+          PodsGroup(),
+          ConditionsGroup(i18n)
+        ]
+      },
+      EventsTab(i18n)
+    ]
   }),
   Dropdown: WorkloadDropdown,
 });

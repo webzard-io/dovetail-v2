@@ -17,6 +17,13 @@ import { CronJobModel } from '../../models';
 import Table, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
+const WrapperStyle = css`
+  &.ant-space {
+    width: 100%;
+    display: flex;
+  }
+`;
+
 function matchOwner(
   job: CronJobModel,
   owner: OwnerReference & { namespace: string }
@@ -38,7 +45,8 @@ function matchOwner(
 
 export const CronjobJobsTable: React.FC<{
   owner?: OwnerReference & { namespace: string };
-}> = ({ owner }) => {
+  hideToolBar?: boolean;
+}> = ({ owner, hideToolBar }) => {
   const { i18n } = useTranslation();
   const kit = useUIKit();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -68,11 +76,9 @@ export const CronjobJobsTable: React.FC<{
   return (
     <kit.space
       direction="vertical"
-      className={css`
-        width: 100%;
-      `}
+      className={WrapperStyle}
     >
-      <TableToolBar title="Jobs" selectedKeys={selectedKeys} hideCreate />
+      {hideToolBar ? null : (<TableToolBar title="Jobs" selectedKeys={selectedKeys} hideCreate />)}
       <Table
         tableKey="cronjobs"
         loading={!dataSource}

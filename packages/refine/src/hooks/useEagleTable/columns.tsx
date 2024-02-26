@@ -107,7 +107,7 @@ export const StateDisplayColumnRenderer = <
     title: i18n.t('dovetail.state'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
-    render: v => <StateTag state={v} />,
+    render: v => <StateTag state={v} hideBackground />,
   };
 };
 
