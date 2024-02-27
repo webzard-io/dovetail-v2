@@ -1,5 +1,9 @@
 import { i18n } from 'i18next';
-import { Column, IngressRulesTableTabField } from '../../components';
+import {
+  Column,
+  BasicGroup,
+  IngressRulesTab,
+} from 'src/components';
 import K8sDropdown from '../../components/K8sDropdown';
 import { INGRESS_INIT_VALUE } from '../../constants/k8s';
 import {
@@ -28,9 +32,14 @@ export const IngressConfig = (i18n: i18n): ResourceConfig<IngressModel> => ({
       AgeColumnRenderer(i18n),
     ] as Column<IngressModel>[],
   showConfig: () => ({
-    descriptions: [],
-    groups: [],
-    tabs: [IngressRulesTableTabField(i18n)],
+    tabs: [
+      {
+        title: i18n.t('dovetail.detail'),
+        key: 'detail',
+        groups: [BasicGroup(i18n)]
+      },
+      IngressRulesTab(i18n)
+    ],
   }),
   initValue: INGRESS_INIT_VALUE,
   Dropdown: K8sDropdown,

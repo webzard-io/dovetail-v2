@@ -5,6 +5,11 @@ import type {
   NetworkPolicyEgressRule,
 } from 'kubernetes-types/networking/v1';
 import React from 'react';
+import {
+  BasicGroup,
+  NetworkPolicyIngressRulesTab,
+  NetworkPolicyEgressRulesTab,
+} from 'src/components/ShowContent';
 import { Column, Tags } from '../../components';
 import K8sDropdown from '../../components/K8sDropdown';
 import { NetworkPolicyRulesTable } from '../../components/NetworkPolicyRulesTable';
@@ -35,11 +40,12 @@ export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyMod
       AgeColumnRenderer(i18n),
     ] as Column<NetworkPolicyModel>[],
   showConfig: () => ({
-    descriptions: [],
-    groups: [
+    tabs: [
       {
-        fields: [
-          {
+        title: i18n.t('dovetail.detail'),
+        key: 'detail',
+        groups: [BasicGroup(i18n, {
+          basicFields: [{
             key: 'podSelector',
             title: 'Pod Selector',
             path: ['spec', 'podSelector'],
@@ -47,35 +53,11 @@ export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyMod
             renderContent: podSelector => {
               return <Tags value={(podSelector as LabelSelector).matchLabels} />;
             },
-          },
-        ],
+          }]
+        })]
       },
-    ],
-    tabs: [
-      {
-        key: 'Ingress',
-        title: 'Ingress Rules',
-        path: ['spec', 'ingress'],
-        renderContent: ingress => {
-          return (
-            <NetworkPolicyRulesTable
-              ingressOrEgress={ingress as NetworkPolicyIngressRule[]}
-            />
-          );
-        },
-      },
-      {
-        key: 'Egress',
-        title: 'Egress Rules',
-        path: ['spec', 'egress'],
-        renderContent: egress => {
-          return (
-            <NetworkPolicyRulesTable
-              ingressOrEgress={egress as NetworkPolicyEgressRule[]}
-            />
-          );
-        },
-      },
+      NetworkPolicyIngressRulesTab(),
+      NetworkPolicyEgressRulesTab(),
     ],
   }),
   initValue: NETWORK_POLICY_INIT_VALUE,

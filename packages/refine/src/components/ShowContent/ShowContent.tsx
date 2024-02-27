@@ -1,26 +1,43 @@
-import { Typo, useUIKit } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
-import { useParsed, useResource, useShow } from '@refinedev/core';
-import yaml from 'js-yaml';
-import { get, omit } from 'lodash-es';
-import React, { useState, useMemo, useCallback } from 'react';
+import { Typo, useUIKit, Icon } from '@cloudtower/eagle';
+import { ArrowChevronLeft16SecondaryIcon } from '@cloudtower/icons-react';
+import { css, cx } from '@linaria/core';
+import { useParsed, useResource, useShow, useNavigation, useGo } from '@refinedev/core';
+import { get } from 'lodash-es';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
-import { KeyValueData } from 'src/components/KeyValueData';
-import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
-import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
+import { Tabs as BaseTabs } from 'src/components/Tabs';
+import ComponentContext from 'src/contexts/component';
+import { useOpenForm } from 'src/hooks/useOpenForm';
 import { WorkloadState } from '../../constants';
-import { useGlobalStore } from '../../hooks';
 import { ResourceModel } from '../../models';
 import { StateTag } from '../StateTag';
-import { Tags } from '../Tags';
-import Time from '../Time';
-import { ShowConfig, ShowField } from './fields';
+import { ShowConfig, ShowField, AreaType } from './fields';
 
 const ShowContentWrapperStyle = css`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #FFF 0%, #EDF0F7 100%);
+
   .ant-row {
     margin-right: 0 !important;
   }
+`;
+const BackButton = css`
+  color: rgba(0, 21, 64, 0.3);
+  line-height: 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+`;
+const ToolBarWrapper = css`
+  padding: 16px 24px 8px 24px;
+  background-color: #fff;
+`;
+const NameStyle = css`
+  margin-right: 8px;
 `;
 const TopBarStyle = css`
   justify-content: space-between;
@@ -28,10 +45,22 @@ const TopBarStyle = css`
 `;
 const ShowContentHeaderStyle = css`
   width: 100%;
-  height: 100%;
 `;
-const EditorStyle = css`
-  margin-top: 16px;
+const GroupStyle = css`
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(211, 218, 235, 0.60);
+  box-shadow: 0px 0px 2.003px 0px rgba(107, 125, 153, 0.15), 0px 0px 16px 0px rgba(107, 125, 153, 0.08);
+  background-color: #fff;
+  margin: 16px 24px;
+
+  &:not(:last-of-type) {
+    margin-bottom: 24px;
+  }
+`;
+const GroupTitleStyle = css`
+  color: #1D326C;
+  margin-bottom: 12px;
 `;
 const FieldWrapperStyle = css`
   display: flex;
@@ -39,13 +68,21 @@ const FieldWrapperStyle = css`
 `;
 const TabsStyle = css`
   &.ant-tabs {
+    flex: 1;
+    min-height: 0;
+
     .ant-tabs-nav {
       margin-bottom: 0;
     }
+
+    .ant-tabs-nav-list {
+      margin-left: 24px;
+    }
+
+    .ant-tabs-content-holder {
+      overflow: auto;
+    }
   }
-`;
-const StateTagStyle = css`
-  margin-left: 8px;
 `;
 
 type Props<Model extends ResourceModel> = {
@@ -54,38 +91,33 @@ type Props<Model extends ResourceModel> = {
   Dropdown?: React.FC<{ record: Model }>;
 };
 
-enum Mode {
-  Detail = 'detail',
-  Yaml = 'yaml',
+function ShowGroup(props: React.PropsWithChildren<{ title: string; className?: string; }>) {
+  const { title, className, children } = props;
+
+  return (
+    <div className={cx(GroupStyle, className)}>
+      <div className={cx(Typo.Heading.h2_bold_title, GroupTitleStyle)}>{title}</div>
+      {children}
+    </div>
+  );
 }
 
 export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) => {
   const { showConfig, formatter, Dropdown = K8sDropdown } = props;
   const kit = useUIKit();
-  const { globalStore } = useGlobalStore();
   const parsed = useParsed();
   const { resource } = useResource();
-  const [mode, setMode] = useState<Mode>(Mode.Detail);
+  const id = parsed?.params?.id;
   const { queryResult } = useShow<Model>({
-    id: parsed?.params?.id,
-    liveMode: mode === Mode.Yaml ? 'off' : 'auto',
+    id,
   });
   const { t } = useTranslation();
-  const { fold } = useK8sYamlEditor();
   const { data } = queryResult;
-
-  const schema = useMemo(() => ({}), []);
-  const defaultEditorValue = useMemo(
-    () => (data?.data ? yaml.dump(omit(globalStore?.restoreItem(data.data), 'id')) : ''),
-    [globalStore, data]
-  );
-
-  const onEditorCreate = useCallback(
-    editor => {
-      fold(editor);
-    },
-    [fold]
-  );
+  const navigation = useNavigation();
+  const go = useGo();
+  const openForm = useOpenForm({ id });
+  const Component = useContext(ComponentContext);
+  const Tabs = Component.Tabs || BaseTabs;
 
   if (!data?.data) {
     return null;
@@ -94,7 +126,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   const model = data.data;
   const record = formatter ? formatter(model) : data?.data;
 
-  function renderFields(fields: ShowField<Model>[]) {
+  function renderFields(fields: ShowField<Model>[], areaType?: AreaType) {
     if (!record) return null;
 
     return fields.map(field => {
@@ -108,18 +140,28 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       }
 
       return (
-        <kit.col span={field.col} key={field.path.join()}>
+        <kit.col
+          flex={areaType === AreaType.Inline ? 'none' : ''}
+          span={field.col || 24}
+          key={field.path.join()}
+        >
           {field.render ? (
             field.render(value, record, field)
           ) : (
             <div className={FieldWrapperStyle}>
-              <span
-                className={Typo.Label.l3_regular}
-                style={{ width: field.labelWidth || '64px' }}
-              >
-                {field.title}:{' '}
+              {
+                field.title && (
+                  <span
+                    className={Typo.Label.l3_regular}
+                    style={{ width: field.labelWidth || '165px', marginRight: 8 }}
+                  >
+                    {field.title}
+                  </span>
+                )
+              }
+              <span style={{ flex: 1 }}>
+                {content}
               </span>
-              {content}
             </div>
           )}
         </kit.col>
@@ -127,128 +169,69 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
     });
   }
 
-  const DESCRIPTION_DEFAULT_FIELDS: ShowField<Model>[] = [
-    {
-      key: 'NameSpace',
-      title: t('dovetail.namespace'),
-      path: ['metadata', 'namespace'],
-    },
-    {
-      key: 'Age',
-      title: t('dovetail.created_time'),
-      path: ['metadata', 'creationTimestamp'],
-      renderContent(value) {
-        return <Time date={new Date(value as string)} />;
-      },
-    },
-  ];
-  const LABELS_ANNOTATIONS_GROUP_FIELDS: ShowField<Model>[] = [
-    {
-      key: 'Labels',
-      title: t('dovetail.label'),
-      path: ['metadata', 'labels'],
-      col: 24,
-      renderContent: value => {
-        if (!value) {
-          return undefined;
-        }
-        return <Tags value={value as Record<string, string>} />;
-      },
-    },
-    {
-      key: 'Annotations',
-      title: t('dovetail.annotation'),
-      path: ['metadata', 'annotations'],
-      col: 24,
-      renderContent: value => {
-        if (!value) {
-          return undefined;
-        }
-        return <KeyValueData datas={value as Record<string, string>} expandable />;
-      },
-    },
-  ];
-
   const stateDisplay = get(record, 'stateDisplay') as WorkloadState;
   const topBar = (
-    <kit.space className={TopBarStyle}>
-      <div>
-        <span className={Typo.Display.d2_bold_title}>{resource?.meta?.kind}: </span>
-        <span className={Typo.Label.l1_regular}>{record?.metadata?.name}</span>
-        {stateDisplay ? (
-          <StateTag className={StateTagStyle} state={stateDisplay} />
-        ) : undefined}
-      </div>
-      <kit.space>
-        <kit.radioGroup value={mode} onChange={e => setMode(e.target.value)}>
-          <kit.radioButton value="detail">{t('dovetail.detail')}</kit.radioButton>
-          <kit.radioButton value="yaml">YAML</kit.radioButton>
-        </kit.radioGroup>
-        <Dropdown record={record} />
+    <div className={ToolBarWrapper}>
+      <span
+        className={cx(Typo.Label.l4_bold, BackButton)}
+        onClick={() => {
+          go({
+            to: navigation.listUrl(resource?.name || '')
+          });
+        }}
+      >
+        <Icon src={ArrowChevronLeft16SecondaryIcon}></Icon>
+        <span className="button-text">{resource?.meta?.kind}</span>
+      </span>
+      <kit.space className={TopBarStyle}>
+        <div style={{ display: 'flex' }}>
+          <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>{record?.metadata?.name}</span>
+          {stateDisplay ? (
+            <StateTag state={stateDisplay} />
+          ) : undefined}
+        </div>
+        <kit.space>
+          <kit.button style={{ marginRight: 8 }} onClick={openForm}>{t('dovetail.edit_yaml')}</kit.button>
+          <Dropdown record={record} size='large' />
+        </kit.space>
       </kit.space>
-    </kit.space>
+    </div>
   );
-  const descriptions = (
-    <kit.row gutter={24}>
-      {renderFields([...DESCRIPTION_DEFAULT_FIELDS, ...(showConfig.descriptions || [])])}
-    </kit.row>
-  );
-  const groups = (showConfig.groups || [])
-    .concat([
-      {
-        fields: LABELS_ANNOTATIONS_GROUP_FIELDS,
-      },
-    ])
-    .map((group, index) => (
-      <kit.row gutter={[24, 16]} key={index}>
-        {renderFields(group.fields)}
-      </kit.row>
-    ));
   const tabs = (
-    <kit.tabs className={TabsStyle}>
-      {(showConfig.tabs || []).map(field => {
-        let content;
-        if (field.renderContent) {
-          content = field.renderContent(get(record, field.path), record, field);
-        } else {
-          content = <span>{get(record, field.path)}</span>;
-        }
-        return (
-          <kit.tabsTabPane tab={field.title} key={field.key}>
-            {content}
-          </kit.tabsTabPane>
-        );
-      })}
-    </kit.tabs>
-  );
+    <Tabs
+      tabs={(showConfig.tabs || []).map(tab => {
+        return {
+          title: tab.title,
+          key: tab.key,
+          children: tab.groups?.map(group => {
+            const GroupContainer = group.title ? ShowGroup : React.Fragment;
 
-  const modeMap = {
-    [Mode.Detail]: (
-      <>
-        {groups}
-        <kit.divider />
-        {tabs}
-      </>
-    ),
-    [Mode.Yaml]: (
-      <MonacoYamlEditor
-        className={EditorStyle}
-        defaultValue={defaultEditorValue}
-        schema={schema}
-        onEditorCreate={onEditorCreate}
-        readOnly
-      />
-    ),
-  };
+            return (
+              <GroupContainer key={group.title} title={group.title || ''}>
+                {
+                  group.areas
+                    .map((area, index) => (
+                      <>
+                        <kit.row key={index} gutter={[24, 8]}>{renderFields(area.fields, area.type)}</kit.row>
+                        {index !== group.areas.length - 1 ? <kit.divider /> : null}
+                      </>
+                    ))
+                }
+              </GroupContainer>
+            );
+          })
+        };
+      })}
+      className={TabsStyle}
+    />
+  );
 
   return (
     <div className={ShowContentWrapperStyle}>
       <kit.space direction="vertical" className={ShowContentHeaderStyle}>
         {topBar}
-        {descriptions}
       </kit.space>
-      <kit.divider />
-      {modeMap[mode]}
+      {tabs}
     </div>
   );
 };
