@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CronJobDropdown } from '../../../components/CronJobDropdown';
 import { PageShow } from '../../../components/PageShow';
-import { ImageField, JobsField } from '../../../components/ShowContent/fields';
+import { BasicGroup, ImageField, JobsTab } from '../../../components/ShowContent';
 import { CronJobModel } from '../../../models';
 
 export const CronJobShow: React.FC<IResourceComponentsProps> = () => {
@@ -11,12 +11,14 @@ export const CronJobShow: React.FC<IResourceComponentsProps> = () => {
   return (
     <PageShow<CronJobModel>
       showConfig={{
-        groups: [
+        tabs: [
           {
-            fields: [ImageField(i18n)],
+            title: i18n.t('dovetail.detail'),
+            key: 'detail',
+            groups: [BasicGroup(i18n, { basicFields: [ImageField(i18n)] })]
           },
+          JobsTab(),
         ],
-        tabs: [JobsField()],
       }}
       Dropdown={CronJobDropdown}
     />

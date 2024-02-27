@@ -1,7 +1,9 @@
 import { Icon, useUIKit } from '@cloudtower/eagle';
 import {
   EditPen16PrimaryIcon,
+  MoreEllipsis324BoldSecondaryIcon,
   MoreEllipsis316BoldBlueIcon,
+  MoreEllipsis324BoldBlueIcon,
   TrashBinDelete16Icon,
   Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
@@ -14,12 +16,15 @@ import { useOpenForm } from 'src/hooks/useOpenForm';
 import { useGlobalStore } from '../../hooks';
 import { ResourceModel } from '../../models';
 
+export type DropdownSize = 'normal' | 'large';
+
 interface K8sDropdownProps {
   record: ResourceModel;
+  size?: DropdownSize;
 }
 
 function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
-  const { record } = props;
+  const { record, size = 'normal' } = props;
   const kit = useUIKit();
   const { globalStore } = useGlobalStore();
   const useResourceResult = useResource();
@@ -65,8 +70,15 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
           </kit.menu>
         }
       >
-        <kit.button type="tertiary" size="small">
-          <Icon src={MoreEllipsis316BoldBlueIcon} />
+        <kit.button
+          type={size === 'large' ? 'quiet' : 'tertiary'}
+          prefixIcon={size === 'large' ? <Icon
+            src={MoreEllipsis324BoldSecondaryIcon}
+            hoverSrc={MoreEllipsis324BoldBlueIcon}
+            iconWidth={24}
+            iconHeight={24}
+          /> : <Icon src={MoreEllipsis316BoldBlueIcon} />}
+        >
         </kit.button>
       </kit.dropdown>
       {visible ? <kit.modal {...modalProps} /> : null}

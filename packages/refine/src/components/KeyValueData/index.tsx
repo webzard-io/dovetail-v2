@@ -9,16 +9,17 @@ const WrapperStyle = css`
 const HeaderStyle = css`
   width: 100%;
   display: flex;
-  justify-content: space-space-between;
   align-items: center;
   margin-bottom: 8px;
 `;
 const HeaderItemStyle = css`
-  flex: 1;
+  margin-right: 8px;
+  line-height: 18px;
 `;
 const ExpandButtonStyle = css`
   &.ant-btn.ant-btn-link {
-    height: 22px;
+    height: 18px;
+    line-height: 18px;
     font-size: 12px;
   }
 `;
@@ -46,7 +47,7 @@ export interface KeyValueDataProps {
 }
 
 export function KeyValueData(props: KeyValueDataProps) {
-  const { datas, expandable } = props;
+  const { datas = {}, expandable } = props;
   const [isExpand, setIsExpand] = useState(expandable ? false : true);
   const kit = useUIKit();
   const { t } = useTranslation();
@@ -55,15 +56,19 @@ export function KeyValueData(props: KeyValueDataProps) {
     <div className={WrapperStyle}>
       <div className={HeaderStyle}>
         <span className={HeaderItemStyle}>{Object.keys(datas).length}</span>
-        <kit.button
-          type="link"
-          className={ExpandButtonStyle}
-          onClick={()=> {
-            setIsExpand(!isExpand);
-          }}
-        >
-          {isExpand ? t('dovetail.fold') : t('dovetail.expand')}
-        </kit.button>
+        {
+          Object.keys(datas).length ? (
+            <kit.button
+              type="link"
+              className={ExpandButtonStyle}
+              onClick={() => {
+                setIsExpand(!isExpand);
+              }}
+            >
+              {isExpand ? t('dovetail.fold') : t('dovetail.expand')}
+            </kit.button>
+          ) : null
+        }
       </div>
       {
         isExpand ? (

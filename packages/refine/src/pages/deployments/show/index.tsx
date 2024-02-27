@@ -3,12 +3,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageShow } from '../../../components/PageShow';
 import {
-  ConditionsField,
-  EventsTableTabField,
   ImageField,
-  PodsField,
   ReplicaField,
-} from '../../../components/ShowContent/fields';
+  BasicGroup,
+  PodsGroup,
+  ConditionsGroup,
+  EventsTab
+} from '../../../components/ShowContent';
 import { WorkloadDropdown } from '../../../components/WorkloadDropdown';
 import { WorkloadModel } from '../../../models';
 
@@ -17,12 +18,18 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
   return (
     <PageShow<WorkloadModel>
       showConfig={{
-        groups: [
-          {
-            fields: [ImageField(i18n), ReplicaField(i18n)],
-          },
-        ],
-        tabs: [PodsField(), ConditionsField(i18n), EventsTableTabField(i18n)],
+        tabs: [{
+          title: i18n.t('dovetail.detail'),
+          key: 'detail',
+          groups: [
+            BasicGroup(i18n, {
+              upAreas: [{ fields: [ReplicaField(),] }],
+              basicFields: [ImageField(i18n),]
+            }),
+            PodsGroup(),
+            ConditionsGroup(i18n)
+          ]
+        }, EventsTab(i18n)],
       }}
       Dropdown={WorkloadDropdown}
     />
