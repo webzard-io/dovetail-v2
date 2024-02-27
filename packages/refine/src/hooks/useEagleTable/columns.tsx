@@ -24,6 +24,7 @@ import {
   CronJobModel,
   IngressModel,
   ServiceModel,
+  DaemonSetModel,
 } from '../../models';
 import { elapsedTime } from '../../utils/time';
 
@@ -95,7 +96,7 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 };
 
 export const StateDisplayColumnRenderer = <
-  Model extends WorkloadModel | CronJobModel | PodModel,
+  Model extends WorkloadModel | CronJobModel | PodModel | ServiceModel | DaemonSetModel | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {

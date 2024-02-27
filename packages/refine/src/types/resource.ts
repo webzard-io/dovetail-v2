@@ -8,6 +8,8 @@ export enum RESOURCE_GROUP {
   STORAGE = 'STORAGE',
   NETWORK = 'NETWORK',
   CLUSTER = 'CLUSTER',
+  SERVICE = 'SERVICE',
+  SERVICE_AND_NETWORK = 'SERVICE_AND_NETWORK',
 }
 
 export enum FormType {
