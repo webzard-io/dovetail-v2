@@ -40,6 +40,9 @@ const ContentBlockStyle = css`
 const KeyStyle = css`
   color: rgba(44, 56, 82, 0.60);
 `;
+const ValueStyle = css`
+  word-break: break-all;
+`;
 
 export interface KeyValueDataProps {
   datas: Record<string, string>;
@@ -75,7 +78,7 @@ export function KeyValueData(props: KeyValueDataProps) {
           Object.keys(datas).map(key => (
             <div key={key} className={ContentBlockStyle}>
               <span className={cx(KeyStyle, Typo.Label.l4_regular)}>{key}</span>
-              <span className={Typo.Label.l4_regular}>{datas[key]}</span>
+              <span className={cx(Typo.Label.l4_regular, ValueStyle)}>{datas[key]}</span>
             </div>
           ))
         ) : null

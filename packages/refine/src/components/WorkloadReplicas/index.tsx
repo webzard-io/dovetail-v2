@@ -81,6 +81,7 @@ const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, Workl
   return (
     <kit.form.Item
       label={<span style={{ width: '134px' }}>{label}</span>}
+      colon={false}
     >
       <kit.fields.Integer
         style={{ width: '142px' }}
