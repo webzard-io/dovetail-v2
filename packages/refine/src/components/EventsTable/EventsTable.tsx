@@ -9,7 +9,7 @@ import {
 import { EventModel } from '../../models';
 import Table from '../Table';
 
-export const EventsTable: React.FC = ({}) => {
+export const EventsTable: React.FC = ({ }) => {
   const { i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -54,7 +54,7 @@ export const EventsTable: React.FC = ({}) => {
         sortable: true,
         sorter: CommonSorter(['note']),
       },
-      AgeColumnRenderer(i18n),
+      AgeColumnRenderer(i18n, { title: i18n.t('dovetail.last_seen') }),
     ],
     [i18n]
   );
