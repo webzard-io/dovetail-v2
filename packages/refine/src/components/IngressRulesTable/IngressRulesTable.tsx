@@ -22,14 +22,14 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       key: 'pathType',
       display: true,
       dataIndex: 'pathType',
-      title: t('dovetail.ingress_rule_type'),
+      title: t('dovetail.path_type'),
       sortable: true,
     },
     {
       key: 'fullPath',
       display: true,
       dataIndex: 'fullPath',
-      title: t('dovetail.Path'),
+      title: t('dovetail.path'),
       sortable: true,
     },
     {

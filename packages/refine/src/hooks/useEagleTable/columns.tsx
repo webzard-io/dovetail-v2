@@ -150,7 +150,7 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
     key: 'replicas',
     display: true,
     dataIndex,
-    title: i18n.t('dovetail.replicas'),
+    title: i18n.t('dovetail.pod'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (_, record: Model) => {
@@ -164,7 +164,8 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
 };
 
 export const AgeColumnRenderer = <Model extends ResourceModel>(
-  i18n: I18nType
+  i18n: I18nType,
+  config?: { title?: string }
 ): Column<Model> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
   return {
@@ -183,6 +184,7 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
     render: (value: string) => {
       return <Time date={new Date(value)} />;
     },
+    ...config,
   };
 };
 
@@ -196,7 +198,7 @@ export const NodeNameColumnRenderer = <Model extends PodModel>(
     key: 'node',
     display: true,
     dataIndex,
-    title: i18n.t('dovetail.node_name'),
+    title: i18n.t('dovetail.belong_to_node'),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     ...options,

@@ -84,7 +84,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
         key: 'ip',
         display: true,
         dataIndex: ['status', 'podIP'],
-        title: 'IP',
+        title: i18n.t('dovetail.ip_address'),
         sortable: true,
         sorter: CommonSorter(['status', 'podIP']),
       },

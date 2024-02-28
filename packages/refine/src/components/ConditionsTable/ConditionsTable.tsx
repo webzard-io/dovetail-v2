@@ -21,14 +21,14 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       key: 'type',
       display: true,
       dataIndex: 'type',
-      title: t('dovetail.condition'),
+      title: t('dovetail.type'),
       sortable: true,
     },
     {
       key: 'status',
       display: true,
       dataIndex: 'status',
-      title: t('dovetail.status'),
+      title: t('dovetail.state'),
       sortable: true,
     },
     {

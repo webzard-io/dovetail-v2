@@ -30,7 +30,7 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
                   },
                   {
                     key: 'Node',
-                    title: i18n.t('dovetail.node_name'),
+                    title: i18n.t('dovetail.belong_to_node'),
                     path: ['spec', 'nodeName'],
                   },
                   {
