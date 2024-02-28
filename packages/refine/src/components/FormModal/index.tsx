@@ -47,6 +47,7 @@ export function FormModal(props: FormModalProps) {
     ...props.formProps,
     initialValues: props.formProps?.initialValues || config?.initValue,
     id,
+    action: id ? 'edit' : 'create',
     isShowLayout: false,
     useFormProps: {
       redirect: false,
