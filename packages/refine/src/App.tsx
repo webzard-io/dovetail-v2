@@ -8,6 +8,7 @@ import {
   CRONJOB_INIT_VALUE,
   DAEMONSET_INIT_VALUE,
   POD_INIT_VALUE,
+  SERVER_INSTANCE_INIT_VALUE,
 } from './constants/k8s';
 import { Dovetail } from './Dovetail';
 import i18n from './i18n';
@@ -67,6 +68,44 @@ function App() {
         label: 'Pods',
         initValue: POD_INIT_VALUE,
         isCustom: true,
+      },
+      {
+        name: 'serverinstances',
+        basePath: '/apis/kubesmart.smtx.io/v1alpha1',
+        kind: 'ServerInstance',
+        parent: RESOURCE_GROUP.NETWORK,
+        label: 'ServerInstanceList',
+        initValue: SERVER_INSTANCE_INIT_VALUE,
+        formConfig: {
+          fields: [
+            {
+              path: ['metadata', 'name'],
+              key: 'name',
+              label: 'Name',
+            },
+            {
+              path: ['spec', 'address', 'host'],
+              key: 'host',
+              label: 'Host',
+            },
+            {
+              path: ['spec', 'address', 'port'],
+              key: 'port',
+              label: 'Port',
+              type: 'number',
+            },
+            {
+              path: ['spec', 'address', 'credentials', 'ssh', 'username'],
+              key: 'username',
+              label: 'Username',
+            },
+            {
+              path: ['spec', 'address', 'credentials', 'ssh', 'password'],
+              key: 'password',
+              label: 'Password',
+            },
+          ],
+        },
       },
       JobConfig(i18n),
       IngressConfig(i18n),
