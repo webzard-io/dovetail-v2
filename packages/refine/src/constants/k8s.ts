@@ -440,6 +440,25 @@ export const CONFIG_MAP_INIT_VALUE = {
   'immutable': false
 };
 
+export const SERVER_INSTANCE_INIT_VALUE = {
+  apiVersion: 'kubesmart.smtx.io/v1alpha1',
+  kind: 'ServerInstance',
+  ...BASE_INIT_VALUE,
+  spec: {
+    address: {
+      host: '192.168.31.86',
+      port: 22,
+      protocol: 'SSH',
+      credentials: {
+        ssh: {
+          username: 'smartx',
+          password: 'HC!r0cks',
+        },
+      },
+    },
+  },
+};
+
 export const TIMESTAMP_LABEL = 'sks.user.kubesmart.smtx.io/timestamp';
 
 export const SECRET_OPAQUE_INIT_VALUE = {

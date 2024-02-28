@@ -32,6 +32,7 @@ export * from './EditButton';
 export * from './ReferenceLink';
 export * from './ResourceLink';
 export * from './NamespacesFilter';
+export * from './RefineForm';
 export * from './ServiceComponents';
 export * from './Tags';
 export * from './TextTags';

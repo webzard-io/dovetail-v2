@@ -1,4 +1,5 @@
 import { FormModalProps } from 'src/components/FormModal';
+import { RefineFormConfig } from '../components/RefineForm';
 import { ShowConfig } from '../components/ShowContent';
 import { Column } from '../components/Table';
 import { ResourceModel } from '../models';
@@ -14,7 +15,7 @@ export enum RESOURCE_GROUP {
 
 export enum FormType {
   PAGE = 'PAGE',
-  MODAL = 'MODAL'
+  MODAL = 'MODAL',
 }
 
 export type WithId<T> = T & { id: string };
@@ -35,4 +36,5 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   formType?: FormType;
   FormModal?: React.FC<FormModalProps>;
   isCustom?: boolean;
+  formConfig?: RefineFormConfig;
 };
