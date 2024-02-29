@@ -3,7 +3,7 @@ import YamlForm from 'src/components/YamlForm';
 import { getInitialValues } from 'src/utils/form';
 import { ResourceModel } from '../../../models';
 import { ResourceConfig } from '../../../types';
-import { RefineForm } from '../../RefineForm';
+import { RefineFormPage } from '../../RefineForm';
 
 type Props<Model extends ResourceModel> = {
   config: ResourceConfig<Model>;
@@ -18,12 +18,8 @@ export function ResourceForm<Model extends ResourceModel>(props: Props<Model>) {
   }, [config]);
 
   if (config.formConfig?.fields) {
-    return (<RefineForm config={config} action='create' />);
+    return <RefineFormPage config={config} />;
   }
 
-  return (
-    <YamlForm
-      {...formProps}
-    />
-  );
+  return <YamlForm {...formProps} />;
 }

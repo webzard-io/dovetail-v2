@@ -1,33 +1,32 @@
 import { Button, Space } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
-import { useForm } from '@refinedev/react-hook-form';
+import { useParsed } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ResourceModel } from '../../models';
 import { ResourceConfig } from '../../types';
 import { RefineFormContent } from './RefineFormContent';
+import { useRefineForm } from './useRefineForm';
 
-type Props<Model extends ResourceModel> = {
-  config: ResourceConfig<Model>;
-  action: 'create' | 'edit';
+type Props = {
+  config: ResourceConfig<any>;
 };
 
-export const RefineForm = <Model extends ResourceModel>(props: Props<Model>) => {
-  const { config, action } = props;
+export const RefineFormPage = (props: Props) => {
+  const { config } = props;
   const { t } = useTranslation();
+  const { id } = useParsed();
+  const { formResult } = useRefineForm({
+    config,
+    id: id as string,
+  });
+  const action = id ? 'edit' : 'create';
+
   const {
     refineCore: { onFinish },
     getValues,
     saveButtonProps,
     control,
-  } = useForm<Model>({
-    mode: 'onChange',
-    refineCoreProps: {
-      resource: config.name,
-      action,
-    },
-    defaultValues: config?.initValue,
-  });
+  } = formResult;
 
   const onClick = () => {
     const data = getValues();
