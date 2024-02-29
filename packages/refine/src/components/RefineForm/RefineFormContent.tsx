@@ -12,32 +12,52 @@ type Props<Model extends ResourceModel> = {
 
 export const RefineFormContent = <Model extends ResourceModel>(props: Props<Model>) => {
   const { config, control } = props;
+
   const fields = config?.formConfig?.fields.map(c => {
     return (
-      <Form.Item key={c.key} label={c.label} labelCol={{ flex: '0 0 216px' }}>
-        <Controller
-          control={control}
-          name={c.path.join('.')}
-          render={({ field: { onChange, onBlur, value, name } }) => {
-            switch (c.type) {
-              case 'number':
-                return (
-                  <Fields.Integer
-                    input={{ value, onChange, onBlur, name, onFocus: () => null }}
-                    meta={{}}
-                  />
-                );
-              default:
-                return (
-                  <Fields.String
-                    input={{ value, onChange, onBlur, name, onFocus: () => null }}
-                    meta={{}}
-                  />
-                );
+      <Controller
+        key={c.key}
+        control={control}
+        name={c.path.join('.')}
+        rules={{
+          validate(value, formValues) {
+            if (!c.validators || c.validators.length === 0) return true;
+            for (const func of c.validators) {
+              const { isValid, errorMsg } = func(value, formValues);
+              if (!isValid) return errorMsg;
             }
-          }}
-        />
-      </Form.Item>
+            return true;
+          },
+        }}
+        render={({ field: { onChange, onBlur, value, name }, fieldState, formState }) => {
+          let ele = (
+            <Fields.String
+              input={{ value, onChange, onBlur, name, onFocus: () => null }}
+              meta={{}}
+            />
+          );
+          switch (c.type) {
+            case 'number':
+              ele = (
+                <Fields.Integer
+                  input={{ value, onChange, onBlur, name, onFocus: () => null }}
+                  meta={{}}
+                />
+              );
+          }
+          return (
+            <Form.Item
+              key={c.key}
+              label={c.label}
+              labelCol={{ flex: '0 0 216px' }}
+              help={fieldState.error?.message}
+              validateStatus={fieldState.invalid ? 'error' : undefined}
+            >
+              {ele}
+            </Form.Item>
+          );
+        }}
+      />
     );
   });
 

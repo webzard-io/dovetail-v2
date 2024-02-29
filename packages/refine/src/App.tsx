@@ -81,28 +81,38 @@ function App() {
             {
               path: ['metadata', 'name'],
               key: 'name',
-              label: 'Name',
+              label: i18n.t('dovetail.name'),
+              validators: [
+                (value: string) => {
+                  if (!value)
+                    return {
+                      isValid: false,
+                      errorMsg: i18n.t('dovetail.name_can_not_be_empty'),
+                    };
+                  return { isValid: true, errorMsg: '' };
+                },
+              ],
             },
             {
               path: ['spec', 'address', 'host'],
               key: 'host',
-              label: 'Host',
+              label: i18n.t('dovetail.host'),
             },
             {
               path: ['spec', 'address', 'port'],
               key: 'port',
-              label: 'Port',
+              label: i18n.t('dovetail.port'),
               type: 'number',
             },
             {
               path: ['spec', 'address', 'credentials', 'ssh', 'username'],
               key: 'username',
-              label: 'Username',
+              label: i18n.t('dovetail.username'),
             },
             {
               path: ['spec', 'address', 'credentials', 'ssh', 'password'],
               key: 'password',
-              label: 'Password',
+              label: i18n.t('dovetail.password'),
             },
           ],
         },
