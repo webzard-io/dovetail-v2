@@ -2,6 +2,7 @@ import { CloseCircleFilled } from '@ant-design/icons';
 import { popModal, Modal } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useForm } from '@refinedev/react-hook-form';
+import { Unstructured } from 'k8s-api-provider';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResourceModel } from '../../models';
@@ -44,7 +45,21 @@ export function RefineFormModal<Model extends ResourceModel>(
     mode: 'onChange',
     refineCoreProps: {
       errorNotification: false,
-      successNotification: false,
+      successNotification: () => {
+        const formValue = getValues() as Unstructured;
+        return {
+          message: i18n.t(
+            id ? 'dovetail.edit_resource_success' : 'dovetail.create_resource_success',
+            {
+              resource: config.name,
+              name: formValue.metadata.name,
+              interpolation: { escapeValue: false },
+            }
+          ),
+          description: 'Success',
+          type: 'success',
+        };
+      },
       resource: config.name,
       action: id ? 'edit' : 'create',
       id,
