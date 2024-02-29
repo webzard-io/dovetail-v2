@@ -2,7 +2,7 @@ import { CloseCircleFilled } from '@ant-design/icons';
 import { popModal, Modal } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useForm } from '@refinedev/react-hook-form';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResourceModel } from '../../models';
 import { ResourceConfig } from '../../types';
@@ -34,14 +34,17 @@ export function RefineFormModal<Model extends ResourceModel>(
 ) {
   const { config, id } = props;
   const { i18n } = useTranslation();
+  const [responseErrorMsg, setResponseErrorMsg] = useState<string>('');
   const {
-    refineCore: { onFinish },
+    refineCore: { onFinish, mutationResult },
     getValues,
     saveButtonProps,
     control,
   } = useForm<Model>({
     mode: 'onChange',
     refineCoreProps: {
+      errorNotification: false,
+      successNotification: false,
       resource: config.name,
       action: id ? 'edit' : 'create',
       id,
@@ -51,6 +54,16 @@ export function RefineFormModal<Model extends ResourceModel>(
     },
     defaultValues: config?.initValue,
   });
+
+  // set request error message
+  React.useEffect(() => {
+    const response = mutationResult.error?.response;
+    if (response && !response?.bodyUsed) {
+      response.json?.().then((body: any) => {
+        setResponseErrorMsg(body.message);
+      });
+    }
+  }, [mutationResult.error?.response]);
 
   const title = useMemo(
     () =>
@@ -76,6 +89,7 @@ export function RefineFormModal<Model extends ResourceModel>(
       className={FullscreenModalStyle}
       width="calc(100vw - 16px)"
       title={title}
+      error={responseErrorMsg}
       okButtonProps={saveButtonProps}
       closeIcon={<CloseCircleFilled />}
       onOk={onOk}
