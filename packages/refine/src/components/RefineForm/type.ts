@@ -9,6 +9,11 @@ export type RefineFormField = {
   label: string;
   type?: 'number';
   validators?: RefineFormValidator[];
+  render?: React.FC<{
+    value: unknown;
+    onChange: (event: unknown) => void;
+    onBlur: () => void;
+  }>;
 };
 
 export type RefineFormConfig = {

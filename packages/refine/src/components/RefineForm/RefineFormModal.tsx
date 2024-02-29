@@ -1,13 +1,11 @@
 import { CloseCircleFilled } from '@ant-design/icons';
 import { popModal, Modal } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
-import { useForm } from '@refinedev/react-hook-form';
-import { Unstructured } from 'k8s-api-provider';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ResourceModel } from '../../models';
 import { ResourceConfig } from '../../types';
 import { RefineFormContent } from './RefineFormContent';
+import { useRefineForm } from './useRefineForm';
 
 const FullscreenModalStyle = css`
   &.ant-modal.fullscreen {
@@ -30,55 +28,25 @@ export type RefineFormModalProps = {
   id?: string;
 };
 
-export function RefineFormModal<Model extends ResourceModel>(
-  props: RefineFormModalProps
-) {
+export function RefineFormModal(props: RefineFormModalProps) {
   const { config, id } = props;
   const { i18n } = useTranslation();
-  const [responseErrorMsg, setResponseErrorMsg] = useState<string>('');
-  const {
-    refineCore: { onFinish, mutationResult },
-    getValues,
-    saveButtonProps,
-    control,
-  } = useForm<Model>({
-    mode: 'onChange',
-    refineCoreProps: {
-      errorNotification: false,
-      successNotification: () => {
-        const formValue = getValues() as Unstructured;
-        return {
-          message: i18n.t(
-            id ? 'dovetail.edit_resource_success' : 'dovetail.create_resource_success',
-            {
-              resource: config.name,
-              name: formValue.metadata.name,
-              interpolation: { escapeValue: false },
-            }
-          ),
-          description: 'Success',
-          type: 'success',
-        };
-      },
-      resource: config.name,
-      action: id ? 'edit' : 'create',
-      id,
+  const { formResult, responseErrorMsg } = useRefineForm({
+    config,
+    id,
+    refineProps: {
       onMutationSuccess: () => {
         popModal();
       },
     },
-    defaultValues: config?.initValue,
   });
 
-  // set request error message
-  React.useEffect(() => {
-    const response = mutationResult.error?.response;
-    if (response && !response?.bodyUsed) {
-      response.json?.().then((body: any) => {
-        setResponseErrorMsg(body.message);
-      });
-    }
-  }, [mutationResult.error?.response]);
+  const {
+    refineCore: { onFinish },
+    getValues,
+    saveButtonProps,
+    control,
+  } = formResult;
 
   const title = useMemo(
     () =>

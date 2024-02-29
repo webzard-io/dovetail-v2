@@ -1,3 +1,3 @@
-export * from './RefineForm';
+export * from './RefineFormPage';
 export * from './RefineFormModal';
 export * from './type';
