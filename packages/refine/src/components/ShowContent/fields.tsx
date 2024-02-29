@@ -203,7 +203,6 @@ export const SessionAffinityField = <Model extends ServiceModel>(i18n: I18nType)
 export const ServicePodsField = <Model extends ResourceModel>(): ShowField<Model> => {
   return {
     key: 'pods',
-    title: 'Pods',
     path: [],
     renderContent: (_, record) => {
       return (
@@ -213,6 +212,7 @@ export const ServicePodsField = <Model extends ResourceModel>(): ShowField<Model
               return r.kind === 'Pod' && r.type === 'selects';
             })?.selector
           }
+          hideToolbar
         />
       );
     },

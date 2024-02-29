@@ -6,12 +6,12 @@ import {
 import { ContainerStatus } from 'kubernetes-types/core/v1';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { WorkloadState } from '../../constants';
 import { CommonSorter } from '../../hooks/useEagleTable/columns';
 import { WithId } from '../../types';
 import { addId } from '../../utils/addId';
 import { StateTag } from '../StateTag';
 import Time from '../Time';
-import { WorkloadState } from '../../constants';
 
 type Props = {
   containerStatuses: ContainerStatus[];
@@ -87,7 +87,7 @@ export const PodContainersTable: React.FC<Props> = ({
       {
         key: 'started',
         dataIndex: ['state', 'running', 'startedAt'],
-        title: i18n.t('dovetail.started'),
+        title: i18n.t('dovetail.created_time'),
         sortable: true,
         sorter: CommonSorter(['state', 'running', 'startedAt']),
         render: (value: string) => {
