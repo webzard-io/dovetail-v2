@@ -53,6 +53,7 @@ const GroupStyle = css`
   box-shadow: 0px 0px 2.003px 0px rgba(107, 125, 153, 0.15), 0px 0px 16px 0px rgba(107, 125, 153, 0.08);
   background-color: #fff;
   margin: 16px 24px;
+  overflow: auto;
 
   &:not(:last-of-type) {
     margin-bottom: 24px;
@@ -153,13 +154,13 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
                 field.title && (
                   <span
                     className={Typo.Label.l3_regular}
-                    style={{ width: field.labelWidth || '165px', marginRight: 8 }}
+                    style={{ width: field.labelWidth || '165px', marginRight: 8, flexShrink: 0 }}
                   >
                     {field.title}
                   </span>
                 )
               }
-              <span style={{ flex: 1 }}>
+              <span style={{ flex: 1, minWidth: 0 }}>
                 {content}
               </span>
             </div>
@@ -180,7 +181,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           });
         }}
       >
-        <Icon src={ArrowChevronLeft16SecondaryIcon}></Icon>
+        <Icon src={ArrowChevronLeft16SecondaryIcon} style={{ marginRight: 4 }}></Icon>
         <span className="button-text">{resource?.meta?.kind}</span>
       </span>
       <kit.space className={TopBarStyle}>

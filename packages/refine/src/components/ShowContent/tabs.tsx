@@ -47,8 +47,8 @@ export const IngressRulesTab = <Model extends IngressModel>(i18n: I18nType): Sho
   }]
 });
 
-export const NetworkPolicyIngressRulesTab = <Model extends ResourceModel>(): ShowTab<Model> => ({
-  title: 'Ingress Rules',
+export const NetworkPolicyIngressRulesTab = <Model extends ResourceModel>(i18n: I18nType): ShowTab<Model> => ({
+  title: i18n.t('dovetail.ingress_rule'),
   key: 'network-policy-ingress-rule',
   groups: [{
     areas: [{
@@ -67,8 +67,8 @@ export const NetworkPolicyIngressRulesTab = <Model extends ResourceModel>(): Sho
   }]
 });
 
-export const NetworkPolicyEgressRulesTab = <Model extends ResourceModel>(): ShowTab<Model> => ({
-  title: 'Egress Rules',
+export const NetworkPolicyEgressRulesTab = <Model extends ResourceModel>(i18n: I18nType): ShowTab<Model> => ({
+  title: i18n.t('dovetail.egress_rule'),
   key: 'network-policy-egress-rule',
   groups: [{
     areas: [{

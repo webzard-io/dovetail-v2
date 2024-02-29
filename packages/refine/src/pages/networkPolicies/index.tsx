@@ -1,9 +1,5 @@
 import { i18n } from 'i18next';
 import type { LabelSelector } from 'kubernetes-types/meta/v1';
-import type {
-  NetworkPolicyIngressRule,
-  NetworkPolicyEgressRule,
-} from 'kubernetes-types/networking/v1';
 import React from 'react';
 import {
   BasicGroup,
@@ -12,7 +8,6 @@ import {
 } from 'src/components/ShowContent';
 import { Column, Tags } from '../../components';
 import K8sDropdown from '../../components/K8sDropdown';
-import { NetworkPolicyRulesTable } from '../../components/NetworkPolicyRulesTable';
 import { NETWORK_POLICY_INIT_VALUE } from '../../constants/k8s';
 import { AgeColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { NetworkPolicyModel } from '../../models';
@@ -31,7 +26,7 @@ export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyMod
         key: 'podSelector',
         display: true,
         dataIndex: ['spec', 'podSelector', 'matchLabels'],
-        title: 'Pod Selector',
+        title: i18n.t('dovetail.pod_selector'),
         sortable: false,
         render(matchLabels) {
           return <Tags value={matchLabels} />;
@@ -47,7 +42,7 @@ export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyMod
         groups: [BasicGroup(i18n, {
           basicFields: [{
             key: 'podSelector',
-            title: 'Pod Selector',
+            title: i18n.t('dovetail.pod_selector'),
             path: ['spec', 'podSelector'],
             col: 12,
             renderContent: podSelector => {
@@ -56,8 +51,8 @@ export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyMod
           }]
         })]
       },
-      NetworkPolicyIngressRulesTab(),
-      NetworkPolicyEgressRulesTab(),
+      NetworkPolicyIngressRulesTab(i18n),
+      NetworkPolicyEgressRulesTab(i18n),
     ],
   }),
   initValue: NETWORK_POLICY_INIT_VALUE,
