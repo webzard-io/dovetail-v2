@@ -40,6 +40,7 @@ export function RefineFormModal<Model extends ResourceModel>(
     saveButtonProps,
     control,
   } = useForm<Model>({
+    mode: 'onChange',
     refineCoreProps: {
       resource: config.name,
       action: id ? 'edit' : 'create',
@@ -65,9 +66,7 @@ export function RefineFormModal<Model extends ResourceModel>(
 
   const onOk = useCallback(() => {
     const data = getValues();
-    console.log(getValues());
-    onFinish(data).then(res => {
-      console.log('res', res);
+    onFinish(data).then(() => {
       popModal();
     });
   }, [getValues, onFinish]);
@@ -84,7 +83,7 @@ export function RefineFormModal<Model extends ResourceModel>(
       destroyOnClose
       fullscreen
     >
-      <RefineFormContent config={config} control={control} />;
+      <RefineFormContent config={config} control={control} />
     </Modal>
   );
 }
