@@ -29,7 +29,7 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
             return true;
           },
         }}
-        render={({ field: { onChange, onBlur, value, name }, fieldState, formState }) => {
+        render={({ field: { onChange, onBlur, value, name }, fieldState }) => {
           let ele = (
             <Fields.String
               input={{ value, onChange, onBlur, name, onFocus: () => null }}
