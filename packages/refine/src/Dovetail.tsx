@@ -51,7 +51,7 @@ export const Dovetail: React.FC<Props> = props => {
         msg.open({
           content: message,
           key,
-          duration: 3000,
+          duration: 3,
           type: type as NoticeType,
         });
       },
