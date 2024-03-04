@@ -95,5 +95,5 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
     },
   });
 
-  return <ListPage title="Pod" selectedKeys={selectedKeys} tableProps={tableProps} />;
+  return <ListPage resourceName="Pod" selectedKeys={selectedKeys} tableProps={tableProps} />;
 };

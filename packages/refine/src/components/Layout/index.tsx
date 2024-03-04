@@ -46,9 +46,6 @@ export const Layout: React.FC<PropsWithChildren<Record<string, unknown>>> = ({
     <kit.layout style={{ height: '100%' }}>
       <Header className={cx(HeaderStyle, Typo.Heading.h1_bold_title)}>
         Dovetail 2
-        <div style={{ width: 300 }}>
-          <NamespacesFilter />
-        </div>
       </Header>
       <kit.layout className={ContentLayoutStyle}>
         <Sider

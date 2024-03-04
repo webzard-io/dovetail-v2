@@ -61,7 +61,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
       `}
     >
       {hideToolbar ? null : (
-        <TableToolBar title="" selectedKeys={selectedKeys} hideCreate />
+        <TableToolBar resourceName="" selectedKeys={selectedKeys} hideCreate />
       )}
       <Table
         tableKey="pods"
