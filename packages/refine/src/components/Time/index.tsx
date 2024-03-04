@@ -5,7 +5,17 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-dayjs.extend(relativeTime);
+dayjs.extend(relativeTime, {
+  thresholds: [
+    { l: 's', r: 1 },
+    { l: 'm', r: 1 },
+    { l: 'mm', r: 59, d: 'minute' },
+    { l: 'h', r: 1 },
+    { l: 'hh', r: 23, d: 'hour' },
+    { l: 'd', r: 1 },
+    { l: 'dd', r: Infinity, d: 'day' },
+  ],
+});
 
 const Time: React.FunctionComponent<{
   className?: string;
