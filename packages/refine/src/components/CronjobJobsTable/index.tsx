@@ -78,7 +78,7 @@ export const CronjobJobsTable: React.FC<{
       direction="vertical"
       className={WrapperStyle}
     >
-      {hideToolBar ? null : (<TableToolBar title="Jobs" selectedKeys={selectedKeys} hideCreate />)}
+      {hideToolBar ? null : (<TableToolBar resourceName="Jobs" selectedKeys={selectedKeys} hideCreate />)}
       <Table
         tableKey="cronjobs"
         loading={!dataSource}

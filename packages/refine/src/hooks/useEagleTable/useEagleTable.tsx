@@ -30,7 +30,9 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
   const { resource } = useResource();
 
-  const { value: nsFilters } = useNamespacesFilter();
+  const { value: nsFilters = [] } = useNamespacesFilter();
+
+  console.log(nsFilters);
 
   const useTableParams = useMemo(() => {
     // TODO: check whether resource can be namespaced

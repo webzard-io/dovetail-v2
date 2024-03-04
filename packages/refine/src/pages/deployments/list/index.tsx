@@ -36,7 +36,7 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
 
   return (
     <ListPage
-      title="Deployments"
+      resourceName="Deployments"
       selectedKeys={selectedKeys}
       tableProps={tableProps}
     />

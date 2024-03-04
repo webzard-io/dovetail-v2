@@ -1,5 +1,5 @@
 import { useUIKit } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
+import { css, cx } from '@linaria/core';
 import { useList } from '@refinedev/core';
 import { last, debounce } from 'lodash-es';
 import React, { useState } from 'react';
@@ -81,14 +81,18 @@ export const NS_STORE_KEY = 'namespace-filter';
 export const ALL_NS = '_all';
 
 export const useNamespacesFilter = () => {
-  const [value] = useLocalStorage<string[]>(NS_STORE_KEY, ALL_NS);
+  const [value] = useLocalStorage<string[]>(NS_STORE_KEY, [ALL_NS]);
 
   return {
     value,
   };
 };
 
-export const NamespacesFilter: React.FC = () => {
+interface NamespaceFilterProps {
+  className?: string;
+}
+
+export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) => {
   const kit = useUIKit();
   const { t } = useTranslation();
   const [search, setSearch] = useState<string>('');
@@ -106,7 +110,7 @@ export const NamespacesFilter: React.FC = () => {
     <kit.select
       loading={isLoading}
       style={{ width: 256 }}
-      className={SelectStyle}
+      className={cx(SelectStyle, className)}
       searchValue={search}
       input={{
         value,
