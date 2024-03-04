@@ -40,6 +40,6 @@ export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
   });
 
   return (
-    <ListPage resourceName="DaemonSet" selectedKeys={selectedKeys} tableProps={tableProps} />
+    <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />
   );
 };
