@@ -31,6 +31,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   formatter?: (v: Model) => Model;
   initValue?: Record<string, unknown>;
   columns?: () => Column<Model>[];
+  noShow?: boolean;
   showConfig?: () => ShowConfig<Model>;
   Dropdown?: React.FC<{ record: Model }>;
   formType?: FormType;

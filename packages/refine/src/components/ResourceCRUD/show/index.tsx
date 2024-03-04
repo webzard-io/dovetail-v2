@@ -1,21 +1,19 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { ResourceModel } from '../../../models';
+import { ResourceConfig } from '../../../types';
 import { PageShow } from '../../PageShow';
-import { ShowConfig } from '../../ShowContent';
 
 type Props<Model extends ResourceModel> = IResourceComponentsProps & {
-  formatter?: (v: Model) => Model;
-  showConfig: ShowConfig<Model>;
-  Dropdown?: React.FC<{ record: Model }>;
+  config: ResourceConfig<Model>;
 };
 
 export function ResourceShow<Model extends ResourceModel>(props: Props<Model>) {
-  const { formatter, showConfig, Dropdown } = props;
+  const { formatter, showConfig, Dropdown } = props.config;
 
   return (
     <PageShow<Model>
-      showConfig={showConfig}
+      showConfig={showConfig?.() || {}}
       formatter={formatter}
       Dropdown={Dropdown}
     />
