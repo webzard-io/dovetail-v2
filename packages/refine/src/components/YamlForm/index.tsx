@@ -1,5 +1,6 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
+import { FormAction, useResource } from '@refinedev/core';
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
@@ -26,6 +27,7 @@ export enum SchemaStrategy {
 
 export interface YamlFormProps {
   id?: string;
+  action?: FormAction;
   initialValues?: Record<string, unknown>;
   schemaStrategy?: SchemaStrategy;
   isShowLayout?: boolean;
@@ -33,12 +35,21 @@ export interface YamlFormProps {
   onSaveButtonPropsChange?: (saveButtonProps: {
     disabled?: boolean;
     onClick: () => void;
-  })=> void;
+  }) => void;
   onFinish?: () => void;
 }
 
 function YamlForm(props: YamlFormProps) {
-  const { id, schemaStrategy = SchemaStrategy.Optional, isShowLayout = true, useFormProps, onSaveButtonPropsChange } = props;
+  const {
+    id,
+    action: actionFromProps,
+    schemaStrategy = SchemaStrategy.Optional,
+    isShowLayout = true,
+    useFormProps,
+    onSaveButtonPropsChange
+  } = props;
+  const { action: actionFromResource } = useResource();
+  const action = actionFromProps || actionFromResource;
   const {
     formProps,
     saveButtonProps,
@@ -46,10 +57,11 @@ function YamlForm(props: YamlFormProps) {
     errorResponseBody,
     mutationResult,
     isLoadingSchema,
+    queryResult,
     fetchSchema,
   } = useEagleForm({
     id,
-    action: id ? 'edit' : 'create',
+    action: actionFromProps,
     editorOptions: {
       isSkipSchema: schemaStrategy === SchemaStrategy.None,
     },
@@ -77,7 +89,7 @@ function YamlForm(props: YamlFormProps) {
     }
   }, [formProps, props]);
 
-  useEffect(()=> {
+  useEffect(() => {
     onSaveButtonPropsChange?.(saveButtonProps);
   }, [saveButtonProps, onSaveButtonPropsChange]);
 
@@ -91,7 +103,7 @@ function YamlForm(props: YamlFormProps) {
         onFinish={onFinish}
       >
         {(() => {
-          if (isLoadingSchema) {
+          if (isLoadingSchema || (queryResult?.isLoading && action === 'edit')) {
             return <kit.loading />;
           }
 

@@ -99,7 +99,7 @@ const useEagleForm = <
   TResponse extends BaseRecord = TData,
   TResponseError extends HttpError = TError,
 >({
-  action,
+  action: actionFromProps,
   resource,
   onMutationSuccess: onMutationSuccessProp,
   onMutationError,
@@ -180,7 +180,7 @@ const useEagleForm = <
     onMutationSuccess: onMutationSuccessProp ? onMutationSuccessProp : undefined,
     onMutationError,
     redirect,
-    action,
+    action: actionFromProps,
     resource,
     successNotification,
     errorNotification,
@@ -202,7 +202,7 @@ const useEagleForm = <
     overtimeOptions,
   });
 
-  const { formLoading, onFinish, queryResult, id } = useFormCoreResult;
+  const { formLoading, onFinish, queryResult } = useFormCoreResult;
 
   const { warnWhenUnsavedChanges: warnWhenUnsavedChangesRefine, setWarnWhen } =
     useWarnAboutChange();
@@ -219,22 +219,10 @@ const useEagleForm = <
     }
     return initialValues;
   }, [queryResult, globalStore, initialValuesForCreate]);
-
-  // Init the editor after the resource value is fetched
-  React.useEffect(() => {
-    form.resetFields();
-
-    if (editor.current) {
-      const editorValue = yaml.dump(initialValues);
-      const editorInstance = editor.current.getEditorInstance();
-
-      editor.current.setEditorValue(editorValue);
-      editor.current.setValue(editorValue);
-      if (queryResult?.data?.data && editorInstance) {
-        fold(editorInstance);
-      }
-    }
-  }, [initialValues, queryResult?.data?.data, id, form, fold]);
+  const action = useMemo(() =>
+    actionFromProps || useResourceResult.action,
+    [actionFromProps, useResourceResult.action]
+  );
 
   React.useEffect(() => {
     const response = useFormCoreResult.mutationResult.error?.response;
@@ -283,7 +271,16 @@ const useEagleForm = <
         setEditorErrors([]);
       }
     },
-  }), [editorErrors, editorOptions, initialValues, schema, useResourceResult.resource?.name]);
+    onEditorCreate(editorInstance) {
+      const editorValue = yaml.dump(initialValues);
+
+      editor.current?.setEditorValue(editorValue);
+      editor.current?.setValue(editorValue);
+      if (action === 'edit') {
+        fold(editorInstance);
+      }
+    },
+  }), [editorErrors, editorOptions, initialValues, schema, useResourceResult.resource?.name, action, fold]);
 
   return {
     form: formSF.form,
