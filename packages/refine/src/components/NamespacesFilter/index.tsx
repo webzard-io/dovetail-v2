@@ -124,7 +124,12 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
       }}
       dropdownRender={(menu) => (
         <div className={SelectContentStyle}>
-          <kit.searchInput style={{ width: '100%' }} className={SearchInputStyle} onChange={debouncedSetSearch} />
+          <kit.searchInput
+            style={{ width: '100%' }}
+            className={SearchInputStyle}
+            onChange={debouncedSetSearch}
+            placeholder={t('dovetail.please_input')}
+          />
           {menu}
           {isLoading ? <kit.loading /> : null}
         </div>
@@ -142,9 +147,6 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
             <kit.overflowTooltip content={isCountToken ? label.replace(/[\s\.]/g, '') : label} />
           </kit.token>
         );
-      }}
-      filterOption={(search, option) => {
-        return option?.value === ALL_NS || option?.value?.includes(search);
       }}
       maxTagCount={1}
       optionLabelProp='label'

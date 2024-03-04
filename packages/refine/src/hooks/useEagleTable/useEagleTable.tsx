@@ -32,8 +32,6 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
 
   const { value: nsFilters = [] } = useNamespacesFilter();
 
-  console.log(nsFilters);
-
   const useTableParams = useMemo(() => {
     // TODO: check whether resource can be namespaced
     const mergedParams = merge(params.useTableParams, {

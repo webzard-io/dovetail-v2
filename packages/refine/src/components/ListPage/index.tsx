@@ -32,19 +32,18 @@ const NamespaceFilterStyle = css`
 `;
 
 interface ListPageProps<T extends ResourceModel> {
-  resourceName: string;
   selectedKeys: string[];
   tableProps: TableProps<T>;
 }
 
 export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
-  const { resourceName, selectedKeys, tableProps } = props;
+  const { selectedKeys, tableProps } = props;
   const { Table: TableComponent } = useContext(ComponentContext);
   const Table = TableComponent || BaseTable;
 
   return (
     <div className={ListPageStyle}>
-      <TableToolBar resourceName={resourceName} selectedKeys={selectedKeys} />
+      <TableToolBar selectedKeys={selectedKeys} />
       <Divider style={{ margin: 0 }} />
       <div className={ListContentStyle}>
         <NamespacesFilter className={NamespaceFilterStyle} />
