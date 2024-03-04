@@ -2,23 +2,30 @@ import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useEagleTable } from '../../../hooks/useEagleTable';
-import { NameColumnRenderer } from '../../../hooks/useEagleTable/columns';
+import {
+  NameColumnRenderer,
+  PlainTextNameColumnRenderer,
+} from '../../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../../models';
+import { ResourceConfig } from '../../../types';
 import { ListPage } from '../../ListPage';
 import { Column } from '../../Table';
 
 type Props<Model extends ResourceModel> = IResourceComponentsProps & {
-  formatter?: (v: Model) => Model;
-  columns: Column<Model>[];
-  Dropdown?: React.FC<{ record: Model }>;
+  config: ResourceConfig<Model>;
 };
 
 export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
-  const { formatter, name, columns, Dropdown } = props;
+  const { formatter, name, columns, Dropdown, noShow } = props.config;
   const { i18n } = useTranslation();
+
+  const nameRenderer: Column<Model> = noShow
+    ? PlainTextNameColumnRenderer(i18n)
+    : NameColumnRenderer(i18n);
+
   const { tableProps, selectedKeys } = useEagleTable<Model>({
     useTableParams: {},
-    columns: [NameColumnRenderer(i18n), ...columns],
+    columns: [nameRenderer, ...(columns?.() || [])],
     tableProps: {
       currentSize: 10,
     },

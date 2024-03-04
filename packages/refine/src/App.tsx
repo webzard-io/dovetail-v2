@@ -116,6 +116,7 @@ function App() {
             },
           ],
         },
+        noShow: true,
       },
       JobConfig(i18n),
       IngressConfig(i18n),
