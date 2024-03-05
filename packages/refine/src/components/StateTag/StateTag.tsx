@@ -34,10 +34,11 @@ export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATING, hide
     suspended: 'warning',
     running: 'blue',
     succeeded: 'green',
-    unknown: 'gray',
-    terminating: 'gray',
+    unknown: 'warning',
+    terminating: 'red',
     pending: 'gray',
-    waiting: 'gray',
+    waiting: 'warning',
+    terminated: 'red'
   };
 
   return <kit.statusCapsule
