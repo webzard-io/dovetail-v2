@@ -156,7 +156,11 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
     key: 'replicas',
     display: true,
     dataIndex,
-    title: i18n.t('dovetail.pod'),
+    title: (
+      <Tooltip title={i18n.t('dovetail.completion_num_tooltip')}>
+        <span className={DashedTitleStyle}>{i18n.t('dovetail.pod')}</span>
+      </Tooltip>
+    ),
     sortable: true,
     sorter: CommonSorter(dataIndex),
     render: (_, record: Model) => {
@@ -408,3 +412,21 @@ export const IngressTlsColumnRenderer = <Model extends IngressModel>(
     },
   };
 };
+
+export const PodContainersNumColumnRenderer = <Model extends PodModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'readyDisplay',
+    display: true,
+    dataIndex: ['readyDisplay'],
+    title: (
+      <Tooltip title={i18n.t('dovetail.ready_num_tooltip')}>
+        <span className={DashedTitleStyle}>{i18n.t('dovetail.container')}</span>
+      </Tooltip>
+    ),
+    sortable: true,
+    sorter: CommonSorter(['readyDisplay']),
+  };
+};
+

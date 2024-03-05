@@ -35,14 +35,14 @@ export const BasicGroup = <Model extends ResourceModel>(
 });
 
 export const PodsGroup = <Model extends WorkloadBaseModel>(): ShowGroup<Model> => ({
-  title: 'Pods',
+  title: 'Pod',
   areas: [{
     fields: [PodsField()]
   }]
 });
 
 export const ServicePodsGroup = <Model extends ServiceModel>(): ShowGroup<Model> => ({
-  title: 'Pods',
+  title: 'Pod',
   areas: [{
     fields: [ServicePodsField()]
   }]

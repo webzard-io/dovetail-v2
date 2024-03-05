@@ -1,5 +1,5 @@
 export enum WorkloadState {
-  UPDATEING = 'updating',
+  UPDATING = 'updating',
   READY = 'ready',
   COMPLETED = 'completed',
   FAILED = 'failed',
