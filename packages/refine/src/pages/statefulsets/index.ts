@@ -1,4 +1,5 @@
 import { i18n } from 'i18next';
+import { ReplicasDropdown } from 'src/components/ReplicasDropdown';
 import {
   ImageField,
   ReplicaField,
@@ -8,12 +9,10 @@ import {
   ConditionsGroup,
   EventsTab,
 } from 'src/components/ShowContent';
-import { WorkloadDropdown } from 'src/components/WorkloadDropdown';
 import { STATEFULSET_INIT_VALUE } from 'src/constants/k8s';
 import {
   AgeColumnRenderer,
   WorkloadImageColumnRenderer,
-  NameColumnRenderer,
   NameSpaceColumnRenderer,
   StateDisplayColumnRenderer,
   ReplicasColumnRenderer,
@@ -33,7 +32,6 @@ export const StatefulSetConfig = (i18n: i18n): ResourceConfig<StatefulSetModel> 
   initValue: STATEFULSET_INIT_VALUE,
   columns: () => ([
     StateDisplayColumnRenderer(i18n),
-    NameColumnRenderer(i18n),
     NameSpaceColumnRenderer(i18n),
     WorkloadImageColumnRenderer(i18n),
     WorkloadRestartsColumnRenderer(i18n),
@@ -60,6 +58,6 @@ export const StatefulSetConfig = (i18n: i18n): ResourceConfig<StatefulSetModel> 
       EventsTab(i18n)
     ]
   }),
-  Dropdown: WorkloadDropdown,
+  Dropdown: ReplicasDropdown,
 });
 

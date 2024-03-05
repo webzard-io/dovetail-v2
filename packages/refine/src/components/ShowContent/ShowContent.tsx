@@ -198,7 +198,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
         </div>
         <kit.space>
           <kit.button style={{ marginRight: 8 }} onClick={openForm}>{t('dovetail.edit_yaml')}</kit.button>
-          <Dropdown record={record} size='large' hideEdit />
+          <Dropdown record={record} size='large' />
         </kit.space>
       </kit.space>
     </div>

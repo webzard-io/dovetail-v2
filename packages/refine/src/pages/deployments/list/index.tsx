@@ -1,7 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { DeploymentDropdown } from 'src/components/DeploymentDropdown';
+import { ReplicasDropdown } from 'src/components/ReplicasDropdown';
 import { ListPage } from 'src/components/ListPage';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
@@ -31,7 +31,7 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
     tableProps: {
       currentSize: 10,
     },
-    Dropdown: DeploymentDropdown,
+    Dropdown: ReplicasDropdown,
   });
 
   return (
