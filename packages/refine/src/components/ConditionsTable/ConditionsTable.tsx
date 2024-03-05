@@ -1,7 +1,9 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { useUIKit, StatusCapsuleColor } from '@cloudtower/eagle';
+import { cx } from '@linaria/core';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { StateTagStyle } from 'src/components/StateTag';
 import { addId } from '../../utils/addId';
 import ErrorContent from '../Table/ErrorContent';
 import Time from '../Time';
@@ -29,13 +31,19 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       display: true,
       dataIndex: 'status',
       title: t('dovetail.state'),
-      sortable: true,
-    },
-    {
-      key: 'reason',
-      display: true,
-      dataIndex: 'reason',
-      title: t('dovetail.reason'),
+      render(value: string) {
+        const colorMap: Record<string, StatusCapsuleColor> = {
+          'True': 'green',
+          'False': 'red',
+          'Unknown': 'warning',
+        };
+
+        return (
+          <kit.statusCapsule color={colorMap[value || 'Unknown']} className={cx(StateTagStyle, 'no-background')}>
+            {t(`dovetail.${value.toLowerCase()}`)}
+          </kit.statusCapsule>
+        );
+      },
       sortable: true,
     },
     {
@@ -48,6 +56,13 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
         const time = value || record.lastTransitionTime;
         return <Time date={new Date(time)} />;
       },
+    },
+    {
+      key: 'reason',
+      display: true,
+      dataIndex: 'reason',
+      title: t('dovetail.reason'),
+      sortable: true,
     },
     {
       key: 'message',

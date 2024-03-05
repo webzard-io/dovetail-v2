@@ -11,6 +11,7 @@ import {
   NameSpaceColumnRenderer,
   StateDisplayColumnRenderer,
   WorkloadRestartsColumnRenderer,
+  ReplicasColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import { WorkloadModel } from '../../../models';
 
@@ -23,13 +24,7 @@ export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
       NameColumnRenderer(i18n),
       NameSpaceColumnRenderer(i18n),
       WorkloadImageColumnRenderer(i18n),
-      {
-        key: 'ready',
-        display: true,
-        dataIndex: ['status', 'numberReady'],
-        title: 'Ready',
-        sortable: true,
-      },
+      ReplicasColumnRenderer(i18n),
       WorkloadRestartsColumnRenderer(i18n),
       AgeColumnRenderer(i18n),
     ],

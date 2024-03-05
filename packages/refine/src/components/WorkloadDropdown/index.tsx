@@ -1,5 +1,5 @@
 import { Icon, useUIKit } from '@cloudtower/eagle';
-import { DynamicResourceSchedule16BlueIcon } from '@cloudtower/icons-react';
+import { Retry16GradientBlueIcon } from '@cloudtower/icons-react';
 import { useResource, useUpdate } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,7 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: Props<Model
           });
         }}
       >
-        <Icon src={DynamicResourceSchedule16BlueIcon}>{t('dovetail.redeploy')}</Icon>
+        <Icon src={Retry16GradientBlueIcon}>{t('dovetail.redeploy')}</Icon>
       </kit.menu.Item>
     </K8sDropdown>
   );

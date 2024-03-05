@@ -15,6 +15,7 @@ import {
   NodeNameColumnRenderer,
   StateDisplayColumnRenderer,
   PodWorkloadColumnRenderer,
+  PodContainersNumColumnRenderer,
 } from '../../../hooks/useEagleTable/columns';
 import { PodMetricsModel, PodModel } from '../../../models';
 
@@ -47,14 +48,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
       NameColumnRenderer(i18n),
       NameSpaceColumnRenderer(i18n),
       WorkloadImageColumnRenderer(i18n),
-      {
-        key: 'readyDisplay',
-        display: true,
-        dataIndex: ['readyDisplay'],
-        title: 'Ready',
-        sortable: true,
-        sorter: CommonSorter(['readyDisplay']),
-      },
+      PodContainersNumColumnRenderer(i18n),
       RestartCountColumnRenderer(i18n),
       NodeNameColumnRenderer(i18n),
       PodWorkloadColumnRenderer(i18n),

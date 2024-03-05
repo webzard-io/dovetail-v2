@@ -112,12 +112,10 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
   const { t } = useTranslation();
   const formRef = useRef<WorkloadReplicasFormHandler | null>(null);
 
-  const readyReplicas =
-    (record.status && 'readyReplicas' in record.status ? record.status.readyReplicas : 0) || 0;
-  const replicas = (record.spec && 'replicas' in record.spec ? record.spec.replicas : 0) || 0;
+  const readyReplicas = (record.readyReplicas) || 0;
+  const replicas = record.replicas || 0;
 
   const canScale = record.kind === 'Deployment' || record.kind === 'StatefulSet';
-  const currentReplicas = get(record, 'spec.replicas', 0);
 
   const donutData = useMemo(() => {
     const data = [{
@@ -178,7 +176,7 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
                       return (
                         <WorkloadReplicasForm
                           ref={formRef}
-                          defaultValue={currentReplicas}
+                          defaultValue={replicas}
                           record={record}
                           label={t('dovetail.pod_replicas_num')}
                         />

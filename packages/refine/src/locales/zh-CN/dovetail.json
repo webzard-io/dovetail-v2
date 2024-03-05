@@ -28,7 +28,7 @@
   "reason": "原因",
   "object": "对象",
   "note": "事件信息",
-  "condition": "Condition",
+  "condition": "状况",
   "download_yaml": "下载 YAML",
   "detail": "详情",
   "restarts": "重启次数",
@@ -116,5 +116,10 @@
   "create_failed_tip": "请解决如下问题后，再创建：",
   "save_failed": "保存失败。",
   "save_failed_tip": "请解决如下问题后，再保存：",
-  "completion_num_tooltip": "已完成数量/预期数量"
+  "completion_num_tooltip": "已完成数量/预期数量",
+  "ready_num_tooltip": "就绪数量/预期数量",
+  "true": "是",
+  "false": "否",
+  "warning": "警告",
+  "normal": "正常"
 }

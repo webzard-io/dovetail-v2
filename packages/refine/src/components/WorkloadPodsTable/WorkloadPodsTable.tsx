@@ -11,6 +11,7 @@ import {
   RestartCountColumnRenderer,
   StateDisplayColumnRenderer,
   WorkloadImageColumnRenderer,
+  PodContainersNumColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { PodModel } from '../../models';
 import Table, { Column } from '../Table';
@@ -45,10 +46,18 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   }, [data?.data, selector]);
 
   const columns: Column<PodModel>[] = [
-    StateDisplayColumnRenderer(i18n),
     NameColumnRenderer(i18n, 'pods'),
+    StateDisplayColumnRenderer(i18n),
+    {
+      key: 'ip',
+      display: true,
+      dataIndex: ['status', 'podIP'],
+      title: i18n.t('dovetail.ip_address'),
+      sortable: true,
+    },
     NodeNameColumnRenderer(i18n),
     WorkloadImageColumnRenderer(i18n),
+    PodContainersNumColumnRenderer(i18n),
     RestartCountColumnRenderer(i18n),
   ];
 

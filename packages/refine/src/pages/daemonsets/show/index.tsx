@@ -7,7 +7,9 @@ import {
   ImageField,
   BasicGroup,
   PodsGroup,
-  ConditionsGroup
+  ConditionsGroup,
+  ReplicaField,
+  EventsTab
 } from '../../../components/ShowContent';
 import { WorkloadModel } from '../../../models';
 
@@ -20,11 +22,16 @@ export const DaemonSetShow: React.FC<IResourceComponentsProps> = () => {
           title: i18n.t('dovetail.detail'),
           key: 'detail',
           groups: [
-            BasicGroup(i18n, { basicFields: [ImageField(i18n)] }),
+            BasicGroup(i18n, {
+              basicFields: [ImageField(i18n)],
+              upAreas: [{
+                fields: [ReplicaField()]
+              }]
+            }),
             PodsGroup(),
             ConditionsGroup(i18n)
           ]
-        }],
+        }, EventsTab(i18n)],
       }}
       Dropdown={WorkloadDropdown}
     />
