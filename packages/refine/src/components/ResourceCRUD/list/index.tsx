@@ -27,6 +27,6 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
   });
 
   return (
-    <ListPage title={name || ''} selectedKeys={selectedKeys} tableProps={tableProps} />
+    <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />
   );
 }

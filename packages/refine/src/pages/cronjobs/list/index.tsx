@@ -48,5 +48,5 @@ export const CronJobList: React.FC<IResourceComponentsProps> = () => {
     Dropdown: CronJobDropdown,
   });
 
-  return <ListPage title="CronJob" selectedKeys={selectedKeys} tableProps={tableProps} />;
+  return <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />;
 };
