@@ -77,7 +77,7 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
     }),
     [currentPage, currentSize, onPageChange]
   );
-  const finalColumns = useMemo(()=> {
+  const finalColumns = useMemo(() => {
     if (RowMenu) {
       const actionColumn: Column<Data> = {
         key: '_action_',
@@ -119,15 +119,6 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
     >
       <kit.table
         tableLayout="fixed"
-        rowSelection={
-          onSelect
-            ? {
-                onChange: (keys, rows) => {
-                  onSelect?.(keys, rows);
-                },
-              }
-            : undefined
-        }
         columns={finalColumns}
         dataSource={dataSource}
         pagination={pagination}

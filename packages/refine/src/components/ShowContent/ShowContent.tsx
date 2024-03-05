@@ -1,5 +1,5 @@
 import { Typo, useUIKit, Icon } from '@cloudtower/eagle';
-import { ArrowChevronLeft16SecondaryIcon } from '@cloudtower/icons-react';
+import { ArrowChevronLeft16BoldTertiaryIcon, ArrowChevronLeftSmall16BoldBlueIcon, } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useParsed, useResource, useShow, useNavigation, useGo } from '@refinedev/core';
 import { get } from 'lodash-es';
@@ -31,6 +31,10 @@ const BackButton = css`
   display: inline-flex;
   align-items: center;
   align-self: flex-start;
+
+  &:hover {
+    color: #0080FF;
+  }
 `;
 const ToolBarWrapper = css`
   padding: 16px 24px 8px 24px;
@@ -181,8 +185,9 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           });
         }}
       >
-        <Icon src={ArrowChevronLeft16SecondaryIcon} style={{ marginRight: 4 }}></Icon>
-        <span className="button-text">{resource?.meta?.kind}</span>
+        <Icon src={ArrowChevronLeft16BoldTertiaryIcon} hoverSrc={ArrowChevronLeftSmall16BoldBlueIcon} style={{ marginRight: 4 }}>
+          <span className="button-text">{resource?.meta?.kind}</span>
+        </Icon>
       </span>
       <kit.space className={TopBarStyle}>
         <div style={{ display: 'flex' }}>
@@ -193,7 +198,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
         </div>
         <kit.space>
           <kit.button style={{ marginRight: 8 }} onClick={openForm}>{t('dovetail.edit_yaml')}</kit.button>
-          <Dropdown record={record} size='large' />
+          <Dropdown record={record} size='large' hideEdit />
         </kit.space>
       </kit.space>
     </div>

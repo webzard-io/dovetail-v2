@@ -74,7 +74,7 @@ export const ImageField = <Model extends WorkloadBaseModel>(
     title: i18n.t('dovetail.image'),
     path: ['imageNames'],
     renderContent(value) {
-      return <ImageNames value={value as string[]} />;
+      return <ImageNames value={value as string[]} separator=', ' />;
     },
   };
 };

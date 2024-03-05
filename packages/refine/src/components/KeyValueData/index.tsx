@@ -10,7 +10,10 @@ const HeaderStyle = css`
   width: 100%;
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+
+  &.expanded {
+    margin-bottom: 8px;
+  }
 `;
 const HeaderItemStyle = css`
   margin-right: 8px;
@@ -39,9 +42,12 @@ const ContentBlockStyle = css`
 `;
 const KeyStyle = css`
   color: rgba(44, 56, 82, 0.60);
+  width: calc(30% - 4px);
+  margin-right: 8px;
 `;
 const ValueStyle = css`
   word-break: break-all;
+  width: calc(70% - 4px);
 `;
 
 export interface KeyValueDataProps {
@@ -57,7 +63,7 @@ export function KeyValueData(props: KeyValueDataProps) {
 
   return (
     <div className={WrapperStyle}>
-      <div className={HeaderStyle}>
+      <div className={cx(HeaderStyle, isExpand && 'expanded')}>
         <span className={HeaderItemStyle}>{Object.keys(datas).length}</span>
         {
           Object.keys(datas).length ? (

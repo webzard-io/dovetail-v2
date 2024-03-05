@@ -49,7 +49,7 @@ export const CronjobJobsTable: React.FC<{
 }> = ({ owner, hideToolBar }) => {
   const { i18n } = useTranslation();
   const kit = useUIKit();
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [selectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const { data } = useList<CronJobModel>({
@@ -84,7 +84,6 @@ export const CronjobJobsTable: React.FC<{
         loading={!dataSource}
         data={dataSource || []}
         columns={columns}
-        onSelect={keys => setSelectedKeys(keys as string[])}
         rowKey="id"
         error={false}
         currentPage={currentPage}
