@@ -86,7 +86,7 @@
   "port": "端口",
   "pod_ready_num": "Pod 就绪数量",
   "pod_replicas_num": "Pod 预期数量",
-  "edit_replicas": "编辑副本数",
+  "edit_replicas": "编辑预期副本数",
   "cert": "证书",
   "dns_record": "DNS 记录",
   "port_mapping": "端口映射",

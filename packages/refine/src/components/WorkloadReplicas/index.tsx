@@ -53,7 +53,7 @@ interface WorkloadReplicasFormHandler {
   submit: () => Promise<unknown> | undefined;
 }
 
-const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, WorkloadReplicasFormProps>(function WorkloadReplicasForm(props, ref) {
+export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, WorkloadReplicasFormProps>(function WorkloadReplicasForm(props, ref) {
   const { defaultValue, record, label } = props;
   const kit = useUIKit();
   const { resource } = useResource();
@@ -94,7 +94,7 @@ const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, Workl
           onBlur: () => { },
           onFocus: () => { },
         }}
-        min={1}
+        min={0}
         meta={{}}
         controls
       />
