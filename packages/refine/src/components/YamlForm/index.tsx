@@ -36,6 +36,7 @@ export interface YamlFormProps {
     disabled?: boolean;
     onClick: () => void;
   }) => void;
+  onErrorsChange?: (errors: string[]) => void;
   onFinish?: () => void;
 }
 
@@ -46,7 +47,8 @@ function YamlForm(props: YamlFormProps) {
     schemaStrategy = SchemaStrategy.Optional,
     isShowLayout = true,
     useFormProps,
-    onSaveButtonPropsChange
+    onSaveButtonPropsChange,
+    onErrorsChange
   } = props;
   const { action: actionFromResource } = useResource();
   const action = actionFromProps || actionFromResource;
@@ -71,15 +73,17 @@ function YamlForm(props: YamlFormProps) {
   });
   const kit = useUIKit();
   const { t, i18n } = useTranslation();
-  const responseErrors = errorResponseBody
-    ? getCommonErrors(errorResponseBody, i18n)
-    : [];
 
   const FormWrapper = isShowLayout ? FormLayout : React.Fragment;
   // use useMemo to keep {} the same
   const schema = useMemo(() => {
     return editorProps.schema || {};
   }, [editorProps.schema]);
+  const responseErrors = useMemo(() => (
+    errorResponseBody
+      ? getCommonErrors(errorResponseBody, i18n)
+      : []
+  ), [errorResponseBody, i18n]);
 
   const onFinish = useCallback(async (store) => {
     const result = await formProps.onFinish?.(store);
@@ -92,6 +96,9 @@ function YamlForm(props: YamlFormProps) {
   useEffect(() => {
     onSaveButtonPropsChange?.(saveButtonProps);
   }, [saveButtonProps, onSaveButtonPropsChange]);
+  useEffect(() => {
+    onErrorsChange?.(responseErrors);
+  }, [responseErrors, onErrorsChange]);
 
   return (
     <FormWrapper saveButtonProps={saveButtonProps}>
@@ -122,6 +129,7 @@ function YamlForm(props: YamlFormProps) {
                   <FormErrorAlert
                     errorMsgs={errorResponseBody ? responseErrors : [mutationResult.error.message]}
                     style={{ marginBottom: 16 }}
+                    isEdit={action === 'edit'}
                   />
                 )}
               </kit.form.Item>

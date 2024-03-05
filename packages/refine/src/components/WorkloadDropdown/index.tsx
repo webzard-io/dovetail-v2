@@ -10,17 +10,18 @@ import K8sDropdown, { DropdownSize } from '../K8sDropdown';
 type Props<Model extends WorkloadModel> = {
   record: Model;
   size?: DropdownSize;
+  hideEdit?: boolean;
 };
 
 export function WorkloadDropdown<Model extends WorkloadModel>(props: Props<Model>) {
-  const { record, size } = props;
+  const { record, size, hideEdit } = props;
   const kit = useUIKit();
   const { resource } = useResource();
   const { mutate } = useUpdate();
   const { t } = useTranslation();
 
   return (
-    <K8sDropdown record={record} size={size}>
+    <K8sDropdown record={record} size={size} hideEdit={hideEdit}>
       <kit.menu.Item
         onClick={() => {
           const v = record.redeploy();

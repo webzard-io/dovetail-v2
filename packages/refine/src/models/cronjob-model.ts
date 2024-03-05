@@ -18,7 +18,7 @@ export class CronJobModel extends WorkloadBaseModel {
   }
 
   get stateDisplay() {
-    if (!this.spec?.suspend) {
+    if (this.spec?.suspend) {
       return WorkloadState.SUSPENDED;
     }
     return WorkloadState.RUNNING;

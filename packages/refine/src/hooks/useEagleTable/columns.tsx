@@ -1,4 +1,5 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { useUIKit, Tooltip } from '@cloudtower/eagle';
+import { css } from '@linaria/core';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
 import type { OwnerReference } from 'kubernetes-types/meta/v1';
@@ -27,6 +28,11 @@ import {
   DaemonSetModel,
 } from '../../models';
 import { elapsedTime } from '../../utils/time';
+
+const DashedTitleStyle = css`
+  border-bottom: 1px dashed rgba(107, 128, 167, 0.6);
+  padding-bottom: 3px;
+`;
 
 const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
   const { name, id, resource } = props;
@@ -223,11 +229,16 @@ export const CompletionsCountColumnRenderer = <Model extends JobModel | CronJobM
   i18n: I18nType
 ): Column<Model> => {
   const dataIndex = ['completionsDisplay'];
+
   return {
     key: 'completions',
     display: true,
     dataIndex,
-    title: i18n.t('completions'),
+    title: (
+      <Tooltip title={i18n.t('dovetail.completion_num_tooltip')}>
+        <span className={DashedTitleStyle}>Pod</span>
+      </Tooltip>
+    ),
     sortable: true,
     sorter: CommonSorter(dataIndex),
   };
