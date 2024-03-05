@@ -1,7 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import {
-  Resume24Icon,
-  SuspendedPause24GradientOrangeIcon,
+  SuspendedPause16GradientBlueIcon,
+  RecoverContinue16GradientBlueIcon
 } from '@cloudtower/icons-react';
 import { css } from '@linaria/core';
 import { LogViewer } from '@patternfly/react-log-viewer';
@@ -12,10 +12,15 @@ import { useTranslation } from 'react-i18next';
 import '@patternfly/react-core/dist/styles/base-no-reset.css';
 import { PodModel } from '../../models';
 
+const WrapperStyle = css`
+  padding: 0 24px;
+  height: 100%;
+`;
 const ToolbarStyle = css`
-  margin-bottom: 8px;
+  margin: 8px 0;
   align-items: center;
   display: flex;
+  justify-content: space-between;
 
   > * {
     margin-right: 8px !important;
@@ -25,15 +30,19 @@ const ToolbarStyle = css`
     width: 256px !important;
   }
 `;
+const ToolbarAreaStyle = css`
+  display: flex;
+  gap: 12px;
+  align-items: center;
+`;
 
 export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
   const kit = useUIKit();
   const [selectedContainer, setSelectedContainer] = useState(
     pod.spec?.containers[0]?.name || ''
   );
-  // const [follow, setFollow] = useState(true);
-  const follow = true;
   const [logs, setLogs] = useState<string[]>([]);
+  const [logType, setLogType] = useState<'realtime' | 'previous'>();
   const [currentItemCount, setCurrentItemCount] = useState(0);
   const [paused, setPaused] = useState(false);
   const [wrap, setWrap] = useState(false);
@@ -81,9 +90,12 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
     abortControllerRef.current = new AbortController();
     const { signal } = abortControllerRef.current;
 
-    let url = `${apiUrl}/api/v1/namespaces/${pod.metadata?.namespace}/pods/${pod.metadata?.name}/log?container=${selectedContainer}&tailLines=100&timestamps=true`;
-    if (follow) {
+    let url = `${apiUrl}/api/v1/namespaces/${pod.metadata?.namespace}/pods/${pod.metadata?.name}/log?container=${selectedContainer}&timestamps=true`;
+
+    if (logType === 'realtime') {
       url += '&follow=true';
+    } else if (logType === 'previous') {
+      url += '&previous=true';
     }
 
     fetch(url, { signal }).then(response => {
@@ -129,7 +141,7 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
       // Start reading the first chunk
       reader.read().then(processChunk);
     });
-  }, [follow, pod.metadata?.namespace, pod.metadata?.name, selectedContainer]);
+  }, [pod.metadata?.namespace, pod.metadata?.name, selectedContainer, logType, apiUrl]);
 
   const stopFetchingLogs = useCallback(() => {
     if (abortControllerRef.current) {
@@ -146,40 +158,63 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
   }, [fetchLogs, stopFetchingLogs]);
 
   return (
-    <div>
+    <div className={WrapperStyle}>
       <div className={ToolbarStyle}>
-        <kit.select
-          input={{
-            onChange: newValue => {
-              stopFetchingLogs();
-              setSelectedContainer(newValue as string);
+        <span className={ToolbarAreaStyle}>
+          <kit.SegmentedControl
+            options={[
+              {
+                label: t('dovetail.realtime_log'),
+                value: 'realtime'
+              },
+              {
+                label: t('dovetail.previous_log'),
+                value: 'previous'
+              },
+            ]}
+            value={logType}
+            onChange={(value) => {
+              setLogType(value as 'realtime' | 'previous');
               setLogs([]);
-              setPaused(false);
-              setLinesBehind(0);
-            },
-            value: selectedContainer,
-          }}
-        >
-          <kit.option value="" disabled>
-            {t('dovetail.select_container')}
-          </kit.option>
-          {(pod.spec?.containers || []).map(container => (
-            <kit.option key={container.name} value={container.name}>
-              {container.name}
+            }}
+          />
+          <kit.select
+            input={{
+              onChange: newValue => {
+                stopFetchingLogs();
+                setSelectedContainer(newValue as string);
+                setLogs([]);
+                setPaused(false);
+                setLinesBehind(0);
+              },
+              value: selectedContainer,
+            }}
+            style={{ width: 200 }}
+          >
+            <kit.option value="" disabled>
+              {t('dovetail.select_container')}
             </kit.option>
-          ))}
-        </kit.select>
+            {(pod.spec?.containers || []).map(container => (
+              <kit.option key={container.name} value={container.name}>
+                {container.name}
+              </kit.option>
+            ))}
+          </kit.select>
+        </span>
+        <span className={ToolbarAreaStyle}>
+          <kit.checkbox checked={wrap} onChange={e => setWrap(e.target.checked)}>
+            {t('dovetail.auto_wrap')}
+          </kit.checkbox>
 
-        <kit.checkbox checked={wrap} onChange={e => setWrap(e.target.checked)}>
-          {t('dovetail.wrap')}
-        </kit.checkbox>
+          <kit.button
+            onClick={() => setPaused(prev => !prev)}
+            prefixIcon={paused ? <RecoverContinue16GradientBlueIcon /> : <SuspendedPause16GradientBlueIcon />}
+            size="middle"
+          >
+            {paused ? t('dovetail.resume') : t('dovetail.suspend')}
+          </kit.button>
+        </span>
 
-        <kit.button
-          onClick={() => setPaused(prev => !prev)}
-          prefixIcon={paused ? <Resume24Icon /> : <SuspendedPause24GradientOrangeIcon />}
-        >
-          {paused ? t('dovetail.resume_log') : t('dovetail.suspend')}
-        </kit.button>
       </div>
 
       <LogViewer
@@ -198,7 +233,7 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
               }}
               onClick={() => setPaused(false)}
             >
-              {t('dovetail.resume_log')}
+              {t('dovetail.resume')}
               {linesBehind === 0 ? null : t('dovetail.log_new_lines', { count: linesBehind })}
             </kit.button>
           )

@@ -1,5 +1,7 @@
 import { i18n as I18nType } from 'i18next';
-import { ResourceModel, WorkloadBaseModel, ServiceModel, JobModel, CronJobModel } from 'src/models';
+import React from 'react';
+import { PodContainersTable } from 'src/components/PodContainersTable';
+import { ResourceModel, WorkloadBaseModel, ServiceModel, JobModel, CronJobModel, PodModel } from 'src/models';
 import {
   ShowField,
   ShowArea,
@@ -38,6 +40,24 @@ export const PodsGroup = <Model extends WorkloadBaseModel>(): ShowGroup<Model> =
   title: 'Pod',
   areas: [{
     fields: [PodsField()]
+  }]
+});
+
+export const PodContainersGroup = <Model extends PodModel>(i18n: I18nType): ShowGroup<Model> => ({
+  title: i18n.t('dovetail.container'),
+  areas: [{
+    fields: [{
+      key: 'container',
+      path: [],
+      renderContent: (_, record) => {
+        return (
+          <PodContainersTable
+            containerStatuses={record.status?.containerStatuses || []}
+            initContainerStatuses={record.status?.initContainerStatuses || []}
+          />
+        );
+      },
+    }]
   }]
 });
 
