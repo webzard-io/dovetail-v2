@@ -1,5 +1,7 @@
+import { Divider } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React, { useContext } from 'react';
+import { NamespacesFilter } from 'src/components/NamespacesFilter';
 import BaseTable from 'src/components/Table';
 import { TableProps } from 'src/components/Table';
 import { TableToolBar } from 'src/components/Table/TableToolBar';
@@ -11,9 +13,11 @@ const ListPageStyle = css`
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 16px;
 `;
 
+const ListContentStyle = css`
+  padding: 12px 24px;
+`;
 const TableStyle = css`
   &.table-wrapper {
     height: auto;
@@ -21,26 +25,35 @@ const TableStyle = css`
     min-height: 0;
   }
 `;
+const NamespaceFilterStyle = css`
+  &.ant-select {
+    margin-bottom: 12px;
+  }
+`;
 
 interface ListPageProps<T extends ResourceModel> {
-  title: string;
   selectedKeys: string[];
   tableProps: TableProps<T>;
 }
 
 export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
-  const { title, selectedKeys, tableProps } = props;
+  const { selectedKeys, tableProps } = props;
   const { Table: TableComponent } = useContext(ComponentContext);
   const Table = TableComponent || BaseTable;
 
   return (
     <div className={ListPageStyle}>
-      <TableToolBar title={title} selectedKeys={selectedKeys} />
-      <Table
-        {...tableProps}
-        className={cx(tableProps.className, TableStyle)}
-        scroll={{ y: 'calc(100% - 48px)' }}
-      />
+      <TableToolBar selectedKeys={selectedKeys} />
+      <Divider style={{ margin: 0 }} />
+      <div className={ListContentStyle}>
+        <NamespacesFilter className={NamespaceFilterStyle} />
+        <Table
+          {...tableProps}
+          className={cx(tableProps.className, TableStyle)}
+          scroll={{ y: 'calc(100% - 48px)' }}
+        />
+
+      </div>
     </div>
   );
 }

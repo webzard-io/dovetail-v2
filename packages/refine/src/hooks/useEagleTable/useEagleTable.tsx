@@ -30,7 +30,7 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
   const { resource } = useResource();
 
-  const { value: nsFilter } = useNamespacesFilter();
+  const { value: nsFilters = [] } = useNamespacesFilter();
 
   const useTableParams = useMemo(() => {
     // TODO: check whether resource can be namespaced
@@ -41,15 +41,18 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
       filters: {
         permanent: [
           {
-            field: 'metadata.namespace',
-            operator: 'eq',
-            value: nsFilter === ALL_NS ? null : nsFilter,
-          },
+            operator: 'or',
+            value: nsFilters.filter(filter => filter !== ALL_NS).map(filter => ({
+              field: 'metadata.namespace',
+              operator: 'eq',
+              value: filter,
+            }))
+          }
         ],
       },
     });
     return mergedParams;
-  }, [params.useTableParams, nsFilter]);
+  }, [params.useTableParams, nsFilters]);
 
   const table = useTable<Model>(useTableParams);
   const onPageChange = useCallback(
