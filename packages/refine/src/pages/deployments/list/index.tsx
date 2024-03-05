@@ -1,8 +1,8 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { DeploymentDropdown } from 'src/components/DeploymentDropdown';
 import { ListPage } from 'src/components/ListPage';
-import { WorkloadDropdown } from 'src/components/WorkloadDropdown';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,
@@ -13,11 +13,11 @@ import {
   WorkloadRestartsColumnRenderer,
   StateDisplayColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import { WorkloadModel } from '../../../models';
+import { DeploymentModel } from '../../../models';
 
 export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
-  const { tableProps, selectedKeys } = useEagleTable<WorkloadModel>({
+  const { tableProps, selectedKeys } = useEagleTable<DeploymentModel>({
     useTableParams: {},
     columns: [
       StateDisplayColumnRenderer(i18n),
@@ -31,7 +31,7 @@ export const DeploymentList: React.FC<IResourceComponentsProps> = () => {
     tableProps: {
       currentSize: 10,
     },
-    Dropdown: WorkloadDropdown,
+    Dropdown: DeploymentDropdown,
   });
 
   return (

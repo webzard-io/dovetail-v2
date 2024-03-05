@@ -13,8 +13,8 @@ type Props<Model extends WorkloadModel> = {
   hideEdit?: boolean;
 };
 
-export function WorkloadDropdown<Model extends WorkloadModel>(props: Props<Model>) {
-  const { record, size, hideEdit } = props;
+export function WorkloadDropdown<Model extends WorkloadModel>(props: React.PropsWithChildren<Props<Model>>) {
+  const { record, size, hideEdit, children } = props;
   const kit = useUIKit();
   const { resource } = useResource();
   const { mutate } = useUpdate();
@@ -36,6 +36,7 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: Props<Model
       >
         <Icon src={Retry16GradientBlueIcon}>{t('dovetail.redeploy')}</Icon>
       </kit.menu.Item>
+      {children}
     </K8sDropdown>
   );
 }

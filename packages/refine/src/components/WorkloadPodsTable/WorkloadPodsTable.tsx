@@ -12,6 +12,7 @@ import {
   StateDisplayColumnRenderer,
   WorkloadImageColumnRenderer,
   PodContainersNumColumnRenderer,
+  AgeColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { PodModel } from '../../models';
 import Table, { Column } from '../Table';
@@ -59,6 +60,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
     WorkloadImageColumnRenderer(i18n),
     PodContainersNumColumnRenderer(i18n),
     RestartCountColumnRenderer(i18n),
+    AgeColumnRenderer(i18n),
   ];
 
   return (
