@@ -266,6 +266,7 @@ export const DurationColumnRenderer = <Model extends JobModel | CronJobModel>(
         min: i18n.t('dovetail.min'),
         hr: i18n.t('dovetail.hr'),
       };
+
       return <span>{elapsedTime(v, i18nMap).label || '-'}</span>;
     },
   };
