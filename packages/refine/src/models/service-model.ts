@@ -38,7 +38,7 @@ export class ServiceModel extends ResourceModel<ServiceType> {
       if (this._rawYaml.spec.clusterIP) {
         servicePort = `${this._rawYaml.spec.clusterIP}:${p.port}`;
       }
-      return `${servicePort} -> ${p.targetPort}/${p.protocol}`;
+      return `${servicePort} > ${p.targetPort}/${p.protocol}`;
     });
   }
 }

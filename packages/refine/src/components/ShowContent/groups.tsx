@@ -1,4 +1,6 @@
 import { i18n as I18nType } from 'i18next';
+import { Unstructured } from 'k8s-api-provider';
+import { NetworkPolicy } from 'kubernetes-types/networking/v1';
 import React from 'react';
 import { PodContainersTable } from 'src/components/PodContainersTable';
 import {
@@ -9,6 +11,7 @@ import {
   CronJobModel,
   PodModel,
   IngressModel,
+  ServiceType
 } from 'src/models';
 import {
   ShowField,
@@ -24,6 +27,8 @@ import {
   JobsField,
   SecretDataField,
   IngressRulesTableTabField,
+  PodSelectorField,
+  PortsTableField,
 } from './fields';
 
 export const BasicGroup = <Model extends ResourceModel>(
@@ -128,5 +133,19 @@ export const IngressRulesGroup = <Model extends IngressModel>(i18n: I18nType): S
   title: i18n.t('dovetail.rule'),
   areas: [{
     fields: [IngressRulesTableTabField()],
+  }]
+});
+
+export const PodSelectorGroup = <Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>>(i18n: I18nType): ShowGroup<Model> => ({
+  title: i18n.t('dovetail.pod_selector'),
+  areas: [{
+    fields: [PodSelectorField()],
+  }]
+});
+
+export const PortsGroup = <Model extends ServiceModel>(i18n: I18nType): ShowGroup<Model> => ({
+  title: i18n.t('dovetail.port'),
+  areas: [{
+    fields: [PortsTableField()],
   }]
 });
