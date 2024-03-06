@@ -1,6 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { RuleItem } from 'src/models/ingress-model';
 import { IngressModel } from '../../models';
 import { addId } from '../../utils/addId';
 import { ResourceLink } from '../ResourceLink';
@@ -36,16 +37,16 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       key: 'serviceName',
       display: true,
       dataIndex: 'serviceName',
-      title: t('dovetail.service'),
+      title: t('dovetail.backend'),
       sortable: true,
-      render: (serviceName: string) => {
-        return (
+      render: (serviceName: string, record: RuleItem) => {
+        return record.serviceName ? (
           <ResourceLink
             name="services"
             namespace={ingress.metadata.namespace || 'default'}
             resourceId={serviceName}
           />
-        );
+        ) : record.resourceName;
       },
     },
     {

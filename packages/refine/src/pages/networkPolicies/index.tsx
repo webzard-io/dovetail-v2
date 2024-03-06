@@ -57,5 +57,7 @@ export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyMod
   }),
   initValue: NETWORK_POLICY_INIT_VALUE,
   Dropdown: K8sDropdown,
-  formType: FormType.MODAL,
+  formConfig: {
+    formType: FormType.MODAL,
+  },
 });

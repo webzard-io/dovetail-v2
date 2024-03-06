@@ -20,12 +20,18 @@ export const IngressRulesComponent: React.FC<{
       <div key={r.fullPath}>
         {pre}
         <span>{divider}</span>
-        <ResourceLink
-          name="services"
-          namespace={ingress.metadata.namespace || 'default'}
-          resourceId={r.serviceName}
-        />
-        <span>:{r.servicePort}</span>
+        {
+          r.serviceName ? (
+            <>
+              <ResourceLink
+                name="services"
+                namespace={ingress.metadata.namespace || 'default'}
+                resourceId={r.serviceName}
+              />
+              <span>:{r.servicePort}</span>
+            </>
+          ) : r.resourceName
+        }
       </div>
     );
   });

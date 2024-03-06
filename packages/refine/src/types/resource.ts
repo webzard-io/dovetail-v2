@@ -36,7 +36,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   Dropdown?: React.FC<{ record: Model }>;
   isCustom?: boolean;
   formConfig?: {
-    fields: RefineFormField[];
+    fields?: RefineFormField[];
     renderForm?: (props: YamlFormProps) => React.ReactNode;
     formType?: FormType;
   };

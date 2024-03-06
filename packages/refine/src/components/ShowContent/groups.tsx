@@ -8,6 +8,7 @@ import {
   JobModel,
   CronJobModel,
   PodModel,
+  IngressModel,
 } from 'src/models';
 import {
   ShowField,
@@ -22,6 +23,7 @@ import {
   ServicePodsField,
   JobsField,
   SecretDataField,
+  IngressRulesTableTabField,
 } from './fields';
 
 export const BasicGroup = <Model extends ResourceModel>(
@@ -120,4 +122,11 @@ export const JobsGroup = <Model extends JobModel | CronJobModel>(): ShowGroup<Mo
       fields: [JobsField()],
     },
   ],
+});
+
+export const IngressRulesGroup = <Model extends IngressModel>(i18n: I18nType): ShowGroup<Model> => ({
+  title: i18n.t('dovetail.rule'),
+  areas: [{
+    fields: [IngressRulesTableTabField()],
+  }]
 });
