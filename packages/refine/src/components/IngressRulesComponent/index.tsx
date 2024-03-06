@@ -11,11 +11,10 @@ export const IngressRulesComponent: React.FC<{
   const result = ingress.flattenedRules.map(r => {
     const divider = ' > ';
 
-    const pre = r.fullPath.includes('http') ? (
-      <kit.Link href={r.fullPath}>{r.fullPath}</kit.Link>
-    ) : (
-      <span>{r.fullPath}</span>
-    );
+    let pre = <span>{r.fullPath}</span>;
+    if (r.fullPath.includes('http') && !r.fullPath.includes('*')) {
+      pre = <kit.Link href={r.fullPath}>{r.fullPath}</kit.Link>;
+    }
 
     return (
       <div key={r.fullPath}>
