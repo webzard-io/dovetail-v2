@@ -309,7 +309,13 @@ export const ServiceOutClusterAccessColumnRenderer = <Model extends ServiceModel
     display: true,
     dataIndex: [],
     render(_, record) {
-      return <ServiceOutClusterAccessComponent service={record} />;
+      return (
+        <ServiceOutClusterAccessComponent
+          service={record}
+          // the API_HOST in vite.config.js
+          clusterVip="192.168.31.86"
+        />
+      );
     },
   };
 };
@@ -430,4 +436,3 @@ export const PodContainersNumColumnRenderer = <Model extends PodModel>(
     sorter: CommonSorter(['readyDisplay']),
   };
 };
-

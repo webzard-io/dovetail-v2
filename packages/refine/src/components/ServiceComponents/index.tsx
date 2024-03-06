@@ -1,5 +1,5 @@
+import { Link } from '@cloudtower/eagle';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { ServiceModel, ServiceTypeEnum } from '../../models';
 
 type Props = {
@@ -16,8 +16,9 @@ export const ServiceInClusterAccessComponent: React.FC<Props> = ({ service }) =>
   }
 };
 
-export const ServiceOutClusterAccessComponent: React.FC<Props> = ({ service }) => {
-  const i18n = useTranslation();
+export const ServiceOutClusterAccessComponent: React.FC<
+  Props & { clusterVip: string }
+> = ({ service, clusterVip }) => {
   const spec = service._rawYaml.spec;
   switch (spec.type) {
     case ServiceTypeEnum.NodePort:
@@ -25,7 +26,9 @@ export const ServiceOutClusterAccessComponent: React.FC<Props> = ({ service }) =
         ?.filter(v => !!v)
         .map(p => (
           <li key={p.nodePort}>
-            {i18n.t('dovetail.any_node_ip')}: {p.nodePort}
+            <Link target="_blank" href={`http://${clusterVip}:${p.nodePort}`}>
+              {clusterVip}:{p.nodePort}
+            </Link>
           </li>
         ));
       return <ul>{content}</ul>;
