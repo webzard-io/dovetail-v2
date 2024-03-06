@@ -11,6 +11,7 @@ export const ConfigMapConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
   apiVersion: 'v1',
   parent: RESOURCE_GROUP.STORAGE,
   label: 'ConfigMaps',
+  description: 'ConfigMap 常用于存储工作负载所需的配置信息，许多应用程序会从配置文件、命令行参数或环境变量中读取配置信息。',
   columns: () => [AgeColumnRenderer(i18n)],
   showConfig: () => ({
     tabs: [
