@@ -21,11 +21,10 @@ export type DropdownSize = 'normal' | 'large';
 interface K8sDropdownProps {
   record: ResourceModel;
   size?: DropdownSize;
-  hideEdit?: boolean;
 }
 
 function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
-  const { record, size = 'normal', hideEdit } = props;
+  const { record, size = 'normal' } = props;
   const kit = useUIKit();
   const { globalStore } = useGlobalStore();
   const useResourceResult = useResource();
@@ -36,6 +35,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const download = useDownloadYAML();
   const { t } = useTranslation();
   const openForm = useOpenForm({ id: record.id });
+  const isInShowPage = useResourceResult.action === 'show';
 
   return (
     <>
@@ -43,7 +43,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
         overlay={
           <kit.menu>
             {
-              hideEdit ? null : (
+              isInShowPage ? null : (
                 <kit.menuItem
                   onClick={openForm}
                 >

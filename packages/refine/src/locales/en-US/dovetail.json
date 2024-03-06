@@ -108,5 +108,9 @@
   "path_type": "Path Type",
   "path": "Path",
   "backend": "Backend",
-  "belong_to_node": "Node"
+  "belong_to_node": "Node",
+  "true": "True",
+  "false": "False",
+  "warning": "Warning",
+  "normal": "Normal"
 }

@@ -14,11 +14,10 @@ import K8sDropdown, { DropdownSize } from '../K8sDropdown';
 type Props<Model extends CronJobModel> = {
   record: Model;
   size?: DropdownSize;
-  hideEdit?: boolean;
 };
 
 export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>) {
-  const { record, size, hideEdit } = props;
+  const { record, size } = props;
   const { spec } = record as CronJob;
   const kit = useUIKit();
   const { resource } = useResource();
@@ -28,7 +27,7 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
   const suspended = Boolean(spec?.suspend);
 
   return (
-    <K8sDropdown record={record} size={size} hideEdit={hideEdit}>
+    <K8sDropdown record={record} size={size}>
       <kit.menu.Item
         onClick={() => {
           const v = suspended ? record.resume() : record.suspend();

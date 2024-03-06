@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { WorkloadState } from '../../constants';
 
-const StateTagStyle = css`
+export const StateTagStyle = css`
   &.ant-tag {
     padding: 3px 16px;
     height: 24px;
@@ -22,22 +22,23 @@ type Props = {
   hideBackground?: boolean;
 };
 
-export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATEING, hideBackground, className }) => {
+export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATING, hideBackground, className }) => {
   const kit = useUIKit();
   const { t } = useTranslation();
 
   const colorMap: Record<WorkloadState, StatusCapsuleColor> = {
     updating: 'blue',
     ready: 'green',
-    completed: 'green',
+    completed: 'gray',
     failed: 'red',
     suspended: 'warning',
     running: 'blue',
     succeeded: 'green',
-    unknown: 'gray',
-    terminating: 'gray',
+    unknown: 'warning',
+    terminating: 'red',
     pending: 'gray',
-    waiting: 'gray',
+    waiting: 'warning',
+    terminated: 'red'
   };
 
   return <kit.statusCapsule

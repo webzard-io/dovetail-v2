@@ -43,7 +43,7 @@ export class JobModel extends WorkloadBaseModel {
     const startTime = this._rawYaml.status?.startTime;
 
     if (!completionTime && startTime) {
-      return getSecondsDiff(startTime, Date.now().toString());
+      return getSecondsDiff(startTime, (new Date()).toString());
     }
 
     if (completionTime && startTime) {
