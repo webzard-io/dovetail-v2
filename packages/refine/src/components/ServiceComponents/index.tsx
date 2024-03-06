@@ -17,12 +17,14 @@ export const ServiceInClusterAccessComponent: React.FC<Props> = ({ service }) =>
 };
 
 export const ServiceOutClusterAccessComponent: React.FC<
-  Props & { clusterVip: string }
-> = ({ service, clusterVip }) => {
+  Props & { clusterVip: string; separator?: string; }
+> = ({ service, clusterVip, separator = '\n' }) => {
   const spec = service._rawYaml.spec;
+  let content: string | React.ReactNode[] | undefined = '-';
+
   switch (spec.type) {
     case ServiceTypeEnum.NodePort:
-      const content = spec.ports
+      content = spec.ports
         ?.filter(v => !!v)
         .map(p => (
           <li key={p.nodePort}>
@@ -33,9 +35,16 @@ export const ServiceOutClusterAccessComponent: React.FC<
         ));
       return <ul>{content}</ul>;
     case ServiceTypeEnum.LoadBalancer:
-      const children = spec.externalIPs?.map(ip => <li key={ip}>{ip}</li>);
-      return <ul>{children}</ul>;
+      content = spec.externalIPs?.join(separator);
+      break;
     default:
-      return <div>-</div>;
+      content = '-';
+      break;
   }
+
+  return (
+    <div style={{ whiteSpace: 'pre-wrap' }}>
+      {content || '-'}
+    </div>
+  );
 };

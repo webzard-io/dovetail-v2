@@ -3,11 +3,13 @@ import React from 'react';
 import { TextTags } from '../../components';
 import {
   ServiceTypeField,
-  ClusterIpField,
-  SessionAffinityField,
+  PortsGroup,
   BasicGroup,
   ServicePodsGroup,
   ConditionsGroup,
+  ServiceInnerClusterAccessField,
+  ServiceOutClusterAccessField,
+  PodSelectorGroup,
 } from '../../components/ShowContent';
 import { SERVICE_CLUSTER_IP_INIT_VALUE } from '../../constants';
 import {
@@ -38,7 +40,7 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
     },
     {
       key: 'podSelector',
-      title: 'Pod Selector',
+      title: i18n.t('dovetail.pod_selector'),
       display: true,
       dataIndex: ['spec', 'selector'],
       width: 200,
@@ -67,12 +69,19 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
         BasicGroup(i18n, {
           basicFields: [
             ServiceTypeField(i18n),
-            ClusterIpField(i18n),
-            SessionAffinityField(i18n),
+            {
+              key: 'dnsRecord',
+              title: i18n.t('dovetail.dns_record'),
+              path: ['dnsRecord'],
+            },
+            ServiceInnerClusterAccessField(i18n),
+            ServiceOutClusterAccessField(i18n, '192.168.31.98'),
           ]
         }),
+        PodSelectorGroup(i18n),
+        PortsGroup(i18n),
+        ConditionsGroup(i18n),
         ServicePodsGroup(),
-        ConditionsGroup(i18n)
       ]
     },],
   }),
