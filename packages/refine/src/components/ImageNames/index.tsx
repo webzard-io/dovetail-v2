@@ -1,34 +1,14 @@
-import { Typo, useUIKit } from '@cloudtower/eagle';
-import { cx, css } from '@linaria/core';
+import { css } from '@linaria/core';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 
-const MoreTriggerStyle = css`
-  color: #bec1d2;
+const ImageWrapperStyle = css`
+  white-space: pre-wrap;
 `;
 
-export const ImageNames: React.FC<{ value: string[] }> = ({ value }) => {
-  const kit = useUIKit();
-  const { t } = useTranslation();
-
+export const ImageNames: React.FC<{ value: string[]; separator?: string; }> = ({ value, separator = '\n' }) => {
   return (
-    <span>
-      <span>{value[0]}</span>
-      {value.length > 1 && (
-        <kit.tooltip
-          title={
-            <>
-              {value.slice(1).map((name, index) => {
-                return <div key={index}>{name}</div>;
-              })}
-            </>
-          }
-        >
-          <div className={cx(Typo.Label.l4_regular, MoreTriggerStyle)}>
-            +{value.length - 1} {t('dovetail.more')}
-          </div>
-        </kit.tooltip>
-      )}
+    <span className={ImageWrapperStyle}>
+      {value.join(separator)}
     </span>
   );
 };

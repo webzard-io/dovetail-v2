@@ -31,7 +31,7 @@ export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATEING, hid
     ready: 'green',
     completed: 'green',
     failed: 'red',
-    suspended: 'gray',
+    suspended: 'warning',
     running: 'blue',
     succeeded: 'green',
     unknown: 'gray',
@@ -44,6 +44,6 @@ export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATEING, hid
     className={cx(className, StateTagStyle, hideBackground && 'no-background')}
     color={colorMap[state]}
   >
-    {t(`dovetail.${state || 'updaing'}`)}
+    {t(`dovetail.${state || 'updating'}`)}
   </kit.statusCapsule>;
 };

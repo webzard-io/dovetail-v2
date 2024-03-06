@@ -97,16 +97,6 @@ export const DataTab = <Model extends ResourceModel>(i18n: I18nType): ShowTab<Mo
   }]
 });
 
-export const JobsTab = <Model extends JobModel | CronJobModel>(): ShowTab<Model> => ({
-  title: 'Jobs',
-  key: 'jobs',
-  groups: [{
-    areas: [{
-      fields: [JobsField()]
-    }]
-  }]
-});
-
 export const PodContainersTab = <Model extends PodModel>(i18n: I18nType): ShowTab<Model> => ({
   title: i18n.t('dovetail.container'),
   key: 'pod-containers',

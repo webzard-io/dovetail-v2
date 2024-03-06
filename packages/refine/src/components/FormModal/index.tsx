@@ -36,13 +36,15 @@ export function FormModal(props: FormModalProps) {
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
   const [saveButtonProps, setSaveButtonProps] = useState<{ loading?: boolean; onClick?: () => void; }>({});
+  const [isError, setIsError] = useState<boolean>(false);
   const kit = useUIKit();
 
   const config = useMemo(() => configs[resourceFromProps || resource?.name || ''], [configs, resourceFromProps, resource]);
   const title = useMemo(() => i18n.t(
-    id ? 'dovetail.edit_resource' : 'dovetail.create_resource',
+    id ? 'dovetail.edit_yaml' : 'dovetail.create_resource',
     { resource: config?.kind }
   ), [id, i18n, config]);
+  const okText = useMemo(() => i18n.t(id ? 'dovetail.save' : 'dovetail.create'), [i18n, id]);
   const formProps: YamlFormProps = useMemo(() => ({
     ...props.formProps,
     initialValues: props.formProps?.initialValues || config?.initValue,
@@ -53,6 +55,9 @@ export function FormModal(props: FormModalProps) {
       redirect: false,
     },
     onSaveButtonPropsChange: setSaveButtonProps,
+    onErrorsChange(errors) {
+      setIsError(!!errors.length);
+    },
     onFinish: popModal
   }), [props.formProps, setSaveButtonProps, config.initValue, id]);
 
@@ -70,8 +75,10 @@ export function FormModal(props: FormModalProps) {
       title={title}
       okButtonProps={saveButtonProps}
       closeIcon={<CloseCircleFilled />}
+      okText={okText}
       onOk={onOk}
       onCancel={onCancel}
+      error={isError ? i18n.t(id ? 'dovetail.save_failed' : 'dovetail.create_failed') : ''}
       destroyOnClose
       fullscreen
     >
