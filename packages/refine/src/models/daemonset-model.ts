@@ -18,8 +18,16 @@ export class DaemonSetModel extends WorkloadModel {
 
   get stateDisplay() {
     if (this.status?.desiredNumberScheduled !== this.status?.numberReady) {
-      return WorkloadState.UPDATEING;
+      return WorkloadState.UPDATING;
     }
     return WorkloadState.READY;
+  }
+
+  get replicas() {
+    return this.status && 'desiredNumberScheduled' in this.status ? this.status.desiredNumberScheduled : 0;
+  }
+
+  get readyReplicas() {
+    return this.status && 'numberReady' in this.status ? this.status.numberReady : 0;
   }
 }

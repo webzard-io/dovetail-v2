@@ -3,7 +3,7 @@ import { css } from '@linaria/core';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormErrorAlert } from 'src/components/FormErrorAlert';
-import { useSubmitForm} from 'src/hooks/useSubmitForm';
+import { useSubmitForm } from 'src/hooks/useSubmitForm';
 
 const EditFieldModalStyle = css`
 .ant-modal-content {
@@ -45,7 +45,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
     onSubmitSuccess: popModal
   });
 
-  const close = useCallback(()=> {
+  const close = useCallback(() => {
     popModal();
     reset();
   }, [reset]);
@@ -57,6 +57,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
       confirmLoading={submitting}
       onOk={onSubmit}
       onCancel={close}
+      okText={i18n.t('dovetail.save')}
       normal
       destroyOnClose
     >

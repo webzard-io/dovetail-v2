@@ -1,10 +1,12 @@
+import { StatusCapsule, StatusCapsuleColor } from '@cloudtower/eagle';
+import { cx } from '@linaria/core';
 import { useList, useParsed } from '@refinedev/core';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { StateTagStyle } from 'src/components/StateTag';
 import {
   AgeColumnRenderer,
   CommonSorter,
-  NameSpaceColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { EventModel } from '../../models';
 import Table from '../Table';
@@ -21,13 +23,24 @@ export const EventsTable: React.FC = ({ }) => {
 
   const columns = useMemo(
     () => [
-      NameSpaceColumnRenderer(i18n),
       {
         key: 'type',
         display: true,
         dataIndex: ['type'],
         title: i18n.t('dovetail.type'),
         sortable: true,
+        render(value: string) {
+          const colorMap: Record<string, StatusCapsuleColor> = {
+            'Warning': 'red',
+            'Normal': 'green',
+          };
+
+          return (
+            <StatusCapsule color={colorMap[value]} className={cx(StateTagStyle, 'no-background')}>
+              {i18n.t(`dovetail.${value.toLowerCase()}`)}
+            </StatusCapsule>
+          );
+        },
         sorter: CommonSorter(['type']),
       },
       {
@@ -37,14 +50,6 @@ export const EventsTable: React.FC = ({ }) => {
         title: i18n.t('dovetail.reason'),
         sortable: true,
         sorter: CommonSorter(['reason']),
-      },
-      {
-        key: 'object',
-        display: true,
-        dataIndex: ['regarding', 'name'],
-        title: i18n.t('dovetail.object'),
-        sortable: true,
-        sorter: CommonSorter(['regarding', 'name']),
       },
       {
         key: 'note',

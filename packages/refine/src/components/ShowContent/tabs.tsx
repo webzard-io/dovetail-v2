@@ -7,14 +7,13 @@ import React from 'react';
 import { NetworkPolicyRulesTable } from 'src/components/NetworkPolicyRulesTable';
 import { PodContainersTable } from 'src/components/PodContainersTable';
 import { PodLog } from 'src/components/PodLog';
-import { ResourceModel, IngressModel, JobModel, CronJobModel, PodModel } from 'src/models';
+import { ResourceModel, IngressModel, PodModel } from 'src/models';
 import {
   ShowTab,
   SecretDataField,
   EventsTableTabField,
   IngressRulesTableTabField,
   DataField,
-  JobsField,
 } from './fields';
 
 export const SecretDataTab = <Model extends ResourceModel>(i18n: I18nType): ShowTab<Model> => ({
@@ -95,27 +94,6 @@ export const DataTab = <Model extends ResourceModel>(i18n: I18nType): ShowTab<Mo
       fields: [DataField()]
     }]
   }]
-});
-
-export const PodContainersTab = <Model extends PodModel>(i18n: I18nType): ShowTab<Model> => ({
-  title: i18n.t('dovetail.container'),
-  key: 'pod-containers',
-  groups: [{
-    areas: [{
-      fields: [{
-        key: 'container',
-        path: [],
-        renderContent: (_, record) => {
-          return (
-            <PodContainersTable
-              containerStatuses={record.status?.containerStatuses || []}
-              initContainerStatuses={record.status?.initContainerStatuses || []}
-            />
-          );
-        },
-      }]
-    }]
-  }],
 });
 
 export const PodLogTab = <Model extends PodModel>(i18n: I18nType): ShowTab<Model> => ({

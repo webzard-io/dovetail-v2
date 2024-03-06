@@ -28,33 +28,19 @@ export const PodContainersTable: React.FC<Props> = ({
   const columns: RequiredColumnProps<WithId<ContainerStatus>>[] = useMemo(
     () => [
       {
-        key: 'state',
-        dataIndex: ['state'],
-        title: i18n.t('dovetail.state'),
-        sortable: true,
-        sorter: CommonSorter(['state']),
-        render: v => <StateTag state={Object.keys(v)[0] as WorkloadState} />,
-      },
-      {
-        key: 'ready',
-        dataIndex: ['ready'],
-        title: i18n.t('dovetail.ready'),
-        sortable: true,
-        sorter: CommonSorter(['ready']),
-        render: v => (
-          <Icon
-            src={
-              v ? CheckmarkDoneSuccessCorrect16BoldGreenIcon : XmarkFailed16BoldRedIcon
-            }
-          />
-        ),
-      },
-      {
         key: 'name',
         dataIndex: ['name'],
         title: i18n.t('dovetail.name'),
         sortable: true,
         sorter: CommonSorter(['name']),
+      },
+      {
+        key: 'state',
+        dataIndex: ['state'],
+        title: i18n.t('dovetail.state'),
+        sortable: true,
+        sorter: CommonSorter(['state']),
+        render: v => <StateTag state={Object.keys(v)[0] as WorkloadState} hideBackground />,
       },
       {
         key: 'image',
@@ -66,15 +52,13 @@ export const PodContainersTable: React.FC<Props> = ({
       {
         key: 'init',
         dataIndex: [],
-        title: i18n.t('dovetail.init_container'),
+        title: i18n.t('dovetail.type'),
         render: (_, record) => {
           const isInit = initContainerStatuses.some(
             c => c.containerID === record.containerID
           );
-          if (isInit) {
-            return <Icon src={CheckmarkDoneSuccessCorrect16BoldGreenIcon} />;
-          }
-          return <span>-</span>;
+
+          return i18n.t(isInit ? 'dovetail.init_container' : 'dovetail.regular_container');
         },
       },
       {
