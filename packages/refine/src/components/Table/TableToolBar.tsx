@@ -11,10 +11,12 @@ type Props = {
   hideCreate?: boolean;
 };
 
+const ToolbarWrapperStyle = css`
+  padding: 12px 24px;
+`;
 const ToolbarStyle = css`
   justify-content: space-between;
   width: 100%;
-  padding: 12px 24px;
 `;
 const TitleStyle = css`
   color: #00122E;
@@ -28,13 +30,15 @@ export const TableToolBar: React.FC<Props> = ({ description, selectedKeys, hideC
   const { resource } = useResource();
 
   return (
-    <kit.space className={cx(ToolbarStyle, 'table-toolbar')}>
-      <span className={cx(Typo.Display.d2_regular_title, TitleStyle)}>{resource?.meta?.kind}</span>
-      <kit.space>
-        {selectedKeys.length > 0 ? <DeleteManyButton ids={selectedKeys} /> : undefined}
-        {!hideCreate ? <CreateButton /> : null}
+    <div className={cx(ToolbarWrapperStyle, 'table-toolbar')}>
+      <kit.space className={ToolbarStyle}>
+        <span className={cx(Typo.Display.d2_regular_title, TitleStyle)}>{resource?.meta?.kind}</span>
+        <kit.space>
+          {selectedKeys.length > 0 ? <DeleteManyButton ids={selectedKeys} /> : undefined}
+          {!hideCreate ? <CreateButton /> : null}
+        </kit.space>
       </kit.space>
-      {description ? <span className={DescriptionStyle}></span> : null}
-    </kit.space>
+      {description ? <div className={DescriptionStyle}>{description}</div> : null}
+    </div>
   );
 };
