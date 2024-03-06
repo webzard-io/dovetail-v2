@@ -117,12 +117,12 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 
 export const StateDisplayColumnRenderer = <
   Model extends
-    | WorkloadModel
-    | CronJobModel
-    | PodModel
-    | ServiceModel
-    | DaemonSetModel
-    | JobModel,
+  | WorkloadModel
+  | CronJobModel
+  | PodModel
+  | ServiceModel
+  | DaemonSetModel
+  | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -451,5 +451,18 @@ export const PodContainersNumColumnRenderer = <Model extends PodModel>(
     ),
     sortable: true,
     sorter: CommonSorter(['readyDisplay']),
+  };
+};
+
+export const DataKeysColumnRenderer = <Model extends ResourceModel>(i18n: I18nType): Column<Model> => {
+  return {
+    key: 'data',
+    display: true,
+    dataIndex: ['data'],
+    title: i18n.t('dovetail.data'),
+    render(data) {
+      return Object.keys(data || {}).join(', ');
+    },
+    sortable: true,
   };
 };
