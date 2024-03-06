@@ -21,10 +21,11 @@ export type DropdownSize = 'normal' | 'large';
 interface K8sDropdownProps {
   record: ResourceModel;
   size?: DropdownSize;
+  hideEdit?: boolean;
 }
 
 function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
-  const { record, size = 'normal' } = props;
+  const { record, size = 'normal', hideEdit } = props;
   const kit = useUIKit();
   const { globalStore } = useGlobalStore();
   const useResourceResult = useResource();
@@ -41,19 +42,15 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
       <kit.dropdown
         overlay={
           <kit.menu>
-            <kit.menuItem
-              onClick={openForm}
-            >
-              <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit')}</Icon>
-            </kit.menuItem>
-            <kit.menuItem
-              danger={true}
-              onClick={() => {
-                openDeleteConfirmModal(record.id);
-              }}
-            >
-              <Icon src={TrashBinDelete16Icon}>{t('dovetail.delete')}</Icon>
-            </kit.menuItem>
+            {
+              hideEdit ? null : (
+                <kit.menuItem
+                  onClick={openForm}
+                >
+                  <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_yaml')}</Icon>
+                </kit.menuItem>
+              )
+            }
             <kit.menu.Item
               onClick={() => {
                 if (record.id) {
@@ -67,6 +64,15 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
               <Icon src={Download16GradientBlueIcon}>{t('dovetail.download_yaml')}</Icon>
             </kit.menu.Item>
             {props.children}
+            <kit.divider style={{ margin: 0 }} />
+            <kit.menuItem
+              danger={true}
+              onClick={() => {
+                openDeleteConfirmModal(record.id);
+              }}
+            >
+              <Icon src={TrashBinDelete16Icon}>{t('dovetail.delete')}</Icon>
+            </kit.menuItem>
           </kit.menu>
         }
       >

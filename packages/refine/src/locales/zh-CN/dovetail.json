@@ -4,7 +4,7 @@
   "view_changes": "查看改动",
   "back_to_edit": "编辑",
   "configure_file": "配置内容",
-  "yaml_format_wrong": "配置内容不是有效的 yaml 格式。",
+  "yaml_format_wrong": "配置内容不是有效的 YAML 格式。",
   "yaml_value_wrong": "配置内容中存在不合法的值。",
   "edit_yaml": "编辑 YAML",
   "copied": "已复制",
@@ -12,7 +12,9 @@
   "cancel": "取消",
   "delete": "删除",
   "create": "创建",
-  "confirm_delete_text": "确定要删除 {{target}} 吗？",
+  "delete_resource": "删除 {{resource}}",
+  "confirm_delete_text": "确认删除 {{kind}} {{target}} 吗？",
+  "delete_tip": "该操作无法被撤回。",
   "edit": "编辑",
   "namespace": "名字空间",
   "name": "名称",
@@ -109,5 +111,10 @@
   "path": "路径",
   "backend": "后端",
   "belong_to_node": "所属节点",
-  "please_input": "请输入…"
+  "please_input": "请输入…",
+  "create_failed": "创建失败。",
+  "create_failed_tip": "请解决如下问题后，再创建：",
+  "save_failed": "保存失败。",
+  "save_failed_tip": "请解决如下问题后，再保存：",
+  "completion_num_tooltip": "已完成数量/预期数量"
 }

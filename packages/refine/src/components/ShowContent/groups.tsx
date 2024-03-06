@@ -1,5 +1,5 @@
 import { i18n as I18nType } from 'i18next';
-import { ResourceModel, WorkloadBaseModel, ServiceModel } from 'src/models';
+import { ResourceModel, WorkloadBaseModel, ServiceModel, JobModel, CronJobModel } from 'src/models';
 import {
   ShowField,
   ShowArea,
@@ -11,6 +11,7 @@ import {
   PodsField,
   ConditionsField,
   ServicePodsField,
+  JobsField,
 } from './fields';
 
 export const BasicGroup = <Model extends ResourceModel>(
@@ -51,5 +52,12 @@ export const ConditionsGroup = <Model extends ResourceModel>(i18n: I18nType): Sh
   title: i18n.t('dovetail.condition'),
   areas: [{
     fields: [ConditionsField()]
+  }]
+});
+
+export const JobsGroup = <Model extends JobModel | CronJobModel>(): ShowGroup<Model> => ({
+  title: 'Job',
+  areas: [{
+    fields: [JobsField()]
   }]
 });

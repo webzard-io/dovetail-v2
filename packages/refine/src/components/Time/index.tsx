@@ -1,5 +1,6 @@
 // TODO: use ui-kit
 import { Tooltip } from '@cloudtower/eagle';
+import { css, cx } from '@linaria/core';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +17,10 @@ dayjs.extend(relativeTime, {
     { l: 'dd', r: Infinity, d: 'day' },
   ],
 });
+const TimeStyle = css`
+  padding-bottom: 3px;
+  border-bottom: 1px dashed rgba(107, 128, 167, 0.6);
+`;
 
 const Time: React.FunctionComponent<{
   className?: string;
@@ -43,7 +48,7 @@ const Time: React.FunctionComponent<{
 
   return (
     <Tooltip title={`${time.format(dateTemplate)} ${time.format(timeTemplate)}`}>
-      <span className={className}>{text}</span>
+      <span className={cx(className, TimeStyle)}>{text}</span>
     </Tooltip>
   );
 };
