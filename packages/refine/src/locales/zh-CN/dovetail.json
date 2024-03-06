@@ -105,6 +105,8 @@
   "protocol": "协议",
   "key": "键",
   "value": "值",
+  "show_data_value": "显示数值",
+  "hide_data_value": "隐藏数值",
   "path_type": "路径类型",
   "path": "路径",
   "backend": "后端",

@@ -18,7 +18,7 @@ const ShowContentWrapperStyle = css`
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #FFF 0%, #EDF0F7 100%);
+  background: linear-gradient(180deg, #fff 0%, #edf0f7 100%);
 
   .ant-row {
     margin-right: 0 !important;
@@ -53,8 +53,10 @@ const ShowContentHeaderStyle = css`
 const GroupStyle = css`
   padding: 12px 16px;
   border-radius: 8px;
-  border: 1px solid rgba(211, 218, 235, 0.60);
-  box-shadow: 0px 0px 2.003px 0px rgba(107, 125, 153, 0.15), 0px 0px 16px 0px rgba(107, 125, 153, 0.08);
+  border: 1px solid rgba(211, 218, 235, 0.6);
+  box-shadow:
+    0px 0px 2.003px 0px rgba(107, 125, 153, 0.15),
+    0px 0px 16px 0px rgba(107, 125, 153, 0.08);
   background-color: #fff;
   margin: 16px 24px;
   overflow: auto;
@@ -64,8 +66,10 @@ const GroupStyle = css`
   }
 `;
 const GroupTitleStyle = css`
-  color: #1D326C;
+  display: flex;
+  color: #1d326c;
   margin-bottom: 12px;
+  justify-content: space-between;
 `;
 const FieldWrapperStyle = css`
   display: flex;
@@ -96,12 +100,21 @@ type Props<Model extends ResourceModel> = {
   Dropdown?: React.FC<{ record: Model }>;
 };
 
-function ShowGroup(props: React.PropsWithChildren<{ title: string; className?: string; }>) {
-  const { title, className, children } = props;
+export function ShowGroup(
+  props: React.PropsWithChildren<{
+    title: string;
+    className?: string;
+    operationEle?: React.ReactElement;
+  }>
+) {
+  const { title, className, children, operationEle } = props;
 
   return (
     <div className={cx(GroupStyle, className)}>
-      <div className={cx(Typo.Heading.h2_bold_title, GroupTitleStyle)}>{title}</div>
+      <div className={cx(Typo.Heading.h2_bold_title, GroupTitleStyle)}>
+        <div>{title}</div>
+        {operationEle}
+      </div>
       {children}
     </div>
   );
@@ -154,19 +167,19 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
             field.render(value, record, field)
           ) : (
             <div className={FieldWrapperStyle}>
-              {
-                field.title && (
-                  <span
-                    className={Typo.Label.l3_regular}
-                    style={{ width: field.labelWidth || '165px', marginRight: 8, flexShrink: 0 }}
-                  >
-                    {field.title}
-                  </span>
-                )
-              }
-              <span style={{ flex: 1, minWidth: 0 }}>
-                {content}
-              </span>
+              {field.title && (
+                <span
+                  className={Typo.Label.l3_regular}
+                  style={{
+                    width: field.labelWidth || '165px',
+                    marginRight: 8,
+                    flexShrink: 0,
+                  }}
+                >
+                  {field.title}
+                </span>
+              )}
+              <span style={{ flex: 1, minWidth: 0 }}>{content}</span>
             </div>
           )}
         </kit.col>
@@ -181,7 +194,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
         className={cx(Typo.Label.l4_bold, BackButton)}
         onClick={() => {
           go({
-            to: navigation.listUrl(resource?.name || '')
+            to: navigation.listUrl(resource?.name || ''),
           });
         }}
       >
@@ -191,14 +204,16 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       </span>
       <kit.space className={TopBarStyle}>
         <div style={{ display: 'flex' }}>
-          <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>{record?.metadata?.name}</span>
-          {stateDisplay ? (
-            <StateTag state={stateDisplay} />
-          ) : undefined}
+          <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>
+            {record?.metadata?.name}
+          </span>
+          {stateDisplay ? <StateTag state={stateDisplay} /> : undefined}
         </div>
         <kit.space>
-          <kit.button style={{ marginRight: 8 }} onClick={openForm}>{t('dovetail.edit_yaml')}</kit.button>
-          <Dropdown record={record} size='large' />
+          <kit.button style={{ marginRight: 8 }} onClick={openForm}>
+            {t('dovetail.edit_yaml')}
+          </kit.button>
+          <Dropdown record={record} size="large" />
         </kit.space>
       </kit.space>
     </div>
@@ -211,21 +226,20 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           key: tab.key,
           children: tab.groups?.map(group => {
             const GroupContainer = group.title ? ShowGroup : React.Fragment;
-
+            const FieldContainer = group.title ? kit.row : React.Fragment;
             return (
               <GroupContainer key={group.title} title={group.title || ''}>
-                {
-                  group.areas
-                    .map((area, index) => (
-                      <>
-                        <kit.row key={index} gutter={[24, 8]}>{renderFields(area.fields, area.type)}</kit.row>
-                        {index !== group.areas.length - 1 ? <kit.divider /> : null}
-                      </>
-                    ))
-                }
+                {group.areas.map((area, index) => (
+                  <>
+                    <FieldContainer key={index} gutter={[24, 8]}>
+                      {renderFields(area.fields, area.type)}
+                    </FieldContainer>
+                    {index !== group.areas.length - 1 ? <kit.divider /> : null}
+                  </>
+                ))}
               </GroupContainer>
             );
-          })
+          }),
         };
       })}
       className={TabsStyle}
