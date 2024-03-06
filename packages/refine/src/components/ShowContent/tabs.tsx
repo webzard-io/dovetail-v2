@@ -5,21 +5,15 @@ import type {
 } from 'kubernetes-types/networking/v1';
 import React from 'react';
 import { NetworkPolicyRulesTable } from 'src/components/NetworkPolicyRulesTable';
-import { PodContainersTable } from 'src/components/PodContainersTable';
 import { PodLog } from 'src/components/PodLog';
 import {
   ResourceModel,
-  IngressModel,
-  JobModel,
-  CronJobModel,
   PodModel,
 } from 'src/models';
 import {
   ShowTab,
   EventsTableTabField,
-  IngressRulesTableTabField,
   DataField,
-  JobsField,
 } from './fields';
 
 export const EventsTab = <Model extends ResourceModel>(
@@ -32,22 +26,6 @@ export const EventsTab = <Model extends ResourceModel>(
       areas: [
         {
           fields: [EventsTableTabField()],
-        },
-      ],
-    },
-  ],
-});
-
-export const IngressRulesTab = <Model extends IngressModel>(
-  i18n: I18nType
-): ShowTab<Model> => ({
-  title: i18n.t('dovetail.rule'),
-  key: 'ingres-rules',
-  groups: [
-    {
-      areas: [
-        {
-          fields: [IngressRulesTableTabField()],
         },
       ],
     },

@@ -55,5 +55,7 @@ export const JobConfig = (i18n: i18n): ResourceConfig<JobModel> => ({
   }),
   initValue: JOB_INIT_VALUE,
   Dropdown: K8sDropdown,
-  formType: FormType.MODAL,
+  formConfig: {
+    formType: FormType.MODAL,
+  }
 });

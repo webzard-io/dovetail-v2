@@ -19,7 +19,7 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
       {
         title: i18n.t('dovetail.detail'),
         key: 'detail',
-        groups: [BasicGroup(i18n), SecretDataGroup(i18n)],
+        groups: [BasicGroup(i18n), SecretDataGroup()],
       },
     ],
   }),
