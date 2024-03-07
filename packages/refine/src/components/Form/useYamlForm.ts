@@ -24,7 +24,7 @@ import { useSchema } from 'src/hooks/useSchema';
 import { pruneBeforeEdit } from 'src/utils/k8s';
 import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
-import { useGlobalStore } from './useGlobalStore';
+import { useGlobalStore } from '../../hooks/useGlobalStore';
 
 type EditorProps = Omit<YamlEditorProps, 'schema'> & {
   ref: React.RefObject<YamlEditorHandle>;
@@ -91,7 +91,7 @@ export type UseFormReturnType<
   ) => Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void>;
 };
 
-const useEagleForm = <
+const useYamlForm = <
   TQueryFnData extends Unstructured = Unstructured & { id: string },
   TError extends HttpError = HttpError,
   TVariables extends { [prop: string]: unknown } = { [prop: string]: unknown },
@@ -338,4 +338,4 @@ const useEagleForm = <
   };
 };
 
-export default useEagleForm;
+export default useYamlForm;
