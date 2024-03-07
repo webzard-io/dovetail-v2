@@ -1,11 +1,13 @@
 import { Divider } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
+import { useResource } from '@refinedev/core';
 import React, { useContext } from 'react';
 import { NamespacesFilter } from 'src/components/NamespacesFilter';
 import BaseTable from 'src/components/Table';
 import { TableProps } from 'src/components/Table';
 import { TableToolBar } from 'src/components/Table/TableToolBar';
 import ComponentContext from 'src/contexts/component';
+import ConfigsContext from 'src/contexts/configs';
 import { ResourceModel } from '../../models';
 
 const ListPageStyle = css`
@@ -40,11 +42,14 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
   const { selectedKeys, tableProps } = props;
   const { Table: TableComponent } = useContext(ComponentContext);
   const Table = TableComponent || BaseTable;
+  const { resource } = useResource();
+  const configs = useContext(ConfigsContext);
+  const config = configs[resource?.name || ''];
 
   return (
     <div className={ListPageStyle}>
-      <TableToolBar selectedKeys={selectedKeys} />
-      <Divider style={{ margin: 0 }} />
+      <TableToolBar selectedKeys={selectedKeys} description={config?.description} />
+      <Divider style={{ margin: 0, minHeight: 1 }} />
       <div className={ListContentStyle}>
         <NamespacesFilter className={NamespaceFilterStyle} />
         <Table
