@@ -1,18 +1,15 @@
 import { pushModal } from '@cloudtower/eagle';
-import {
-  useResource,
-  useGo,
-  useNavigation,
-} from '@refinedev/core';
+import { useResource, useGo, useNavigation } from '@refinedev/core';
 import { useContext } from 'react';
-import FormModal from 'src/components/FormModal';
 import ConfigsContext from 'src/contexts/configs';
 import { useEdit } from 'src/hooks/useEdit';
 import { FormType } from 'src/types';
 import { getInitialValues } from 'src/utils/form';
+import { FormModal, YamlFormProps } from '../components';
 
 interface UseOpenFormOptions {
   id?: string;
+  renderForm?: (props: YamlFormProps) => React.ReactNode;
 }
 
 export function useOpenForm(options?: UseOpenFormOptions) {
@@ -25,17 +22,18 @@ export function useOpenForm(options?: UseOpenFormOptions) {
   return function openForm() {
     if (resource?.name) {
       const config = configs[resource.name];
-
-      if (config.formType === undefined || config.formType === FormType.MODAL) {
+      const formType = config.formConfig?.formType;
+      if (formType === undefined || formType === FormType.MODAL) {
         pushModal({
-          component: config.FormModal || FormModal,
+          component: FormModal,
           props: {
             resource: resource.name,
             id: options?.id,
             formProps: {
               initialValues: getInitialValues(config),
-            }
-          }
+            },
+            renderForm: options?.renderForm || config.formConfig?.renderForm,
+          },
         });
       } else if (options?.id) {
         edit(options.id);

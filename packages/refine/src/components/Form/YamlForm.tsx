@@ -8,11 +8,10 @@ import { FormErrorAlert } from 'src/components/FormErrorAlert';
 import FormLayout from 'src/components/FormLayout';
 import { YamlEditorComponent } from 'src/components/YamlEditor/YamlEditorComponent';
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
-import useEagleForm from 'src/hooks/useEagleForm';
 import { getCommonErrors } from 'src/utils/error';
+import useYamlForm from './useYamlForm';
 
-const FormStyle = css`
-`;
+const FormStyle = css``;
 const EditorStyle = css`
   flex: 1;
   height: 100%;
@@ -31,7 +30,7 @@ export interface YamlFormProps {
   initialValues?: Record<string, unknown>;
   schemaStrategy?: SchemaStrategy;
   isShowLayout?: boolean;
-  useFormProps?: Parameters<typeof useEagleForm>[0];
+  useFormProps?: Parameters<typeof useYamlForm>[0];
   onSaveButtonPropsChange?: (saveButtonProps: {
     disabled?: boolean;
     onClick: () => void;
@@ -40,7 +39,7 @@ export interface YamlFormProps {
   onFinish?: () => void;
 }
 
-function YamlForm(props: YamlFormProps) {
+export function YamlForm(props: YamlFormProps) {
   const {
     id,
     action: actionFromProps,
@@ -61,7 +60,7 @@ function YamlForm(props: YamlFormProps) {
     isLoadingSchema,
     queryResult,
     fetchSchema,
-  } = useEagleForm({
+  } = useYamlForm({
     id,
     action: actionFromProps,
     editorOptions: {
@@ -85,13 +84,16 @@ function YamlForm(props: YamlFormProps) {
       : []
   ), [errorResponseBody, i18n]);
 
-  const onFinish = useCallback(async (store) => {
-    const result = await formProps.onFinish?.(store);
+  const onFinish = useCallback(
+    async store => {
+      const result = await formProps.onFinish?.(store);
 
-    if (result) {
-      props.onFinish?.();
-    }
-  }, [formProps, props]);
+      if (result) {
+        props.onFinish?.();
+      }
+    },
+    [formProps, props]
+  );
 
   useEffect(() => {
     onSaveButtonPropsChange?.(saveButtonProps);
@@ -127,7 +129,9 @@ function YamlForm(props: YamlFormProps) {
               <kit.form.Item>
                 {mutationResult.error && (
                   <FormErrorAlert
-                    errorMsgs={errorResponseBody ? responseErrors : [mutationResult.error.message]}
+                    errorMsgs={
+                      errorResponseBody ? responseErrors : [mutationResult.error.message]
+                    }
                     style={{ marginBottom: 16 }}
                     isEdit={action === 'edit'}
                   />
@@ -145,5 +149,3 @@ function YamlForm(props: YamlFormProps) {
     </FormWrapper>
   );
 }
-
-export default YamlForm;

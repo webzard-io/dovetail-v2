@@ -2508,13 +2508,13 @@
     temp "^0.9.4"
     tslib "^2.3.1"
 
-"@refinedev/core@^4.38.0", "@refinedev/core@^4.38.4":
-  version "4.38.4"
-  resolved "https://registry.npmmirror.com/@refinedev/core/-/core-4.38.4.tgz#24ef7f1b9dfa55eb65b95b67e28a9169ec5b8379"
-  integrity sha512-kddtqJpwSTyCbBfAe/LG1uNojJzEJHoGUyrxhyXkz5Q6IxZdmNcyFQKKSZA161wa0UCbLImuawpRxg6Cpa0QHg==
+"@refinedev/core@^4.47.1", "@refinedev/core@^4.47.2":
+  version "4.47.2"
+  resolved "https://registry.npmjs.org/@refinedev/core/-/core-4.47.2.tgz#1823f0202de6a2c8cac42671f528c222e1fae337"
+  integrity sha512-3qhZG7fu0QghFKXHFowDnJAQJ3rhmtnzs2eguFH3dF5a3+L7o8ajoSqbsYgNq5txvQExJSMAMlkrxx862WV70A==
   dependencies:
+    "@refinedev/devtools-internal" "1.1.5"
     "@tanstack/react-query" "^4.10.1"
-    export-to-csv-fix-source-map "^0.2.1"
     lodash "^4.17.21"
     lodash-es "^4.17.21"
     papaparse "^5.3.0"
@@ -2523,15 +2523,34 @@
     tslib "^2.3.1"
     warn-once "^0.1.0"
 
-"@refinedev/inferencer@^4.5.4":
-  version "4.5.8"
-  resolved "https://registry.npmmirror.com/@refinedev/inferencer/-/inferencer-4.5.8.tgz#0c2337752463450f6c3438419251e09a27a6dcb4"
-  integrity sha512-mfAwPvGJkgg448NYAm+TsoTOo3UQyTC5SP69mWipHmzshiyfKHS0ju350YIMNsOLJAkyOMmnGupqi4uMBnT3Ug==
+"@refinedev/devtools-internal@1.1.5":
+  version "1.1.5"
+  resolved "https://registry.npmjs.org/@refinedev/devtools-internal/-/devtools-internal-1.1.5.tgz#ceec7969e01d3fd67e5d324799a18725ae72f087"
+  integrity sha512-24yE9r6rnTcCAe35XqmeiL5oL9FlodAOAPo4joMxu2SDzBNndh1ZdEEuFxoLd9t9CYu46cjLKQhaWcWWC2Ii3A==
+  dependencies:
+    "@refinedev/devtools-shared" "1.1.3"
+    "@tanstack/react-query" "^4.10.1"
+    error-stack-parser "^2.1.4"
+
+"@refinedev/devtools-shared@1.1.3":
+  version "1.1.3"
+  resolved "https://registry.npmjs.org/@refinedev/devtools-shared/-/devtools-shared-1.1.3.tgz#0932579cfb22a9190f5dfa28bee385a7e893cb95"
+  integrity sha512-3xtVUwMGWwwnufDL+QDEdMkoi+qLQllefil+y5UyNsDuEIeh9xcNn/Uxl/N27lObA+zakHX9QOR++lR8SQ+TnQ==
+  dependencies:
+    "@tanstack/react-query" "^4.10.1"
+    error-stack-parser "^2.1.4"
+
+"@refinedev/inferencer@^4.5.20":
+  version "4.5.20"
+  resolved "https://registry.npmjs.org/@refinedev/inferencer/-/inferencer-4.5.20.tgz#4bd24e3cdf2968cbc4d3542892e520872687dabd"
+  integrity sha512-3BlTrhmMijzhoWuVbnez2VbtINPp1YV+ZZFv7mg5eRYgV1pfjacz10EjIsmhihQ51W/1NhLG4kkp+SzYBWjTkA==
   dependencies:
     "@aliemir/react-live" "^4.0.0"
-    "@refinedev/core" "^4.38.4"
-    "@tabler/icons" "^1.1.0"
+    "@refinedev/core" "^4.47.1"
+    "@tabler/icons" "^1.119.0"
     dayjs "^1.10.7"
+    graphql "^15.6.1"
+    graphql-tag "^2.12.6"
     lodash "^4.17.21"
     lodash-es "^4.17.21"
     pluralize "^8.0.0"
@@ -2540,6 +2559,15 @@
     react-markdown "^6.0.1"
     remark-gfm "^1.0.0"
     tslib "^2.3.1"
+
+"@refinedev/react-hook-form@^4.8.14":
+  version "4.8.14"
+  resolved "https://registry.npmjs.org/@refinedev/react-hook-form/-/react-hook-form-4.8.14.tgz#73d8318425172e8f2ec2e27d5a3f332e9f3f0c92"
+  integrity sha512-buUTprTFIoc7bB3GWBSIkxmYf7aWKv5yBGbFF064TVXaJowrNHtedltoQ+NujMALglvyTKFXfw+D/PgTEJrPGA==
+  dependencies:
+    lodash "^4.17.21"
+    lodash-es "^4.17.21"
+    react-hook-form "^7.30.0"
 
 "@rollup/pluginutils@^4.1.0":
   version "4.2.1"
@@ -2573,9 +2601,9 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@tabler/icons@^1.1.0":
+"@tabler/icons@^1.119.0":
   version "1.119.0"
-  resolved "https://registry.npmmirror.com/@tabler/icons/-/icons-1.119.0.tgz#8c590bc5a563c8673a78ccd451bedabd584b376e"
+  resolved "https://registry.npmjs.org/@tabler/icons/-/icons-1.119.0.tgz#8c590bc5a563c8673a78ccd451bedabd584b376e"
   integrity sha512-Fk3Qq4w2SXcTjc/n1cuL5bccPkylrOMo7cYpQIf/yw6zP76LQV9dtLcHQUjFiUnaYuswR645CnURIhlafyAh9g==
 
 "@tanstack/query-core@4.35.3":
@@ -5201,6 +5229,13 @@ error-ex@^1.3.1:
   dependencies:
     is-arrayish "^0.2.1"
 
+error-stack-parser@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.npmjs.org/error-stack-parser/-/error-stack-parser-2.1.4.tgz#229cb01cdbfa84440bfa91876285b94680188286"
+  integrity sha512-Sk5V6wVazPhq5MhpO+AUxJn5x7XSXGl1R93Vn7i+zS15KDVxQijejNCrz8340/2bgLBjR9GtEG8ZVKONDjcqGQ==
+  dependencies:
+    stackframe "^1.3.4"
+
 es-abstract@^1.22.1:
   version "1.22.2"
   resolved "https://registry.npmmirror.com/es-abstract/-/es-abstract-1.22.2.tgz#90f7282d91d0ad577f505e423e52d4c1d93c1b8a"
@@ -5681,11 +5716,6 @@ expect@^29.0.0, expect@^29.7.0:
     jest-matcher-utils "^29.7.0"
     jest-message-util "^29.7.0"
     jest-util "^29.7.0"
-
-export-to-csv-fix-source-map@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.npmmirror.com/export-to-csv-fix-source-map/-/export-to-csv-fix-source-map-0.2.1.tgz#820020401ae7a29e3d08b9f863c03a112038bb8e"
-  integrity sha512-02CGZG9Kduc0l9ErJ5b+99+PjeQIyoeVGz+f7/Yc04V4YKNPbdT63sQqBC5RW05va4w0MZen7pQpf92H3funYw==
 
 express@^4.18.2:
   version "4.18.2"
@@ -6306,6 +6336,18 @@ graphemer@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmmirror.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"
   integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
+
+graphql-tag@^2.12.6:
+  version "2.12.6"
+  resolved "https://registry.npmjs.org/graphql-tag/-/graphql-tag-2.12.6.tgz#d441a569c1d2537ef10ca3d1633b48725329b5f1"
+  integrity sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==
+  dependencies:
+    tslib "^2.1.0"
+
+graphql@^15.6.1:
+  version "15.8.0"
+  resolved "https://registry.npmjs.org/graphql/-/graphql-15.8.0.tgz#33410e96b012fa3bdb1091cc99a94769db212b38"
+  integrity sha512-5gghUc24tP9HRznNpV2+FIoq3xKkj5dTQqf4v0CpdPbFVwFkWoxOM+o+2OC9ZSvjEMTjfmG9QT+gcvggTwW1zw==
 
 handlebars@^4.7.7:
   version "4.7.8"
@@ -10150,6 +10192,11 @@ react-highlight-words@^0.17.0:
     memoize-one "^4.0.0"
     prop-types "^15.5.8"
 
+react-hook-form@^7.30.0, react-hook-form@^7.50.1:
+  version "7.50.1"
+  resolved "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.50.1.tgz#f6aeb17a863327e5a0252de8b35b4fc8990377ed"
+  integrity sha512-3PCY82oE0WgeOgUtIr3nYNNtNvqtJ7BZjsbxh6TnYNbXButaD5WpjOmTjdxZfheuHKR68qfeFnEDVYoSSFPMTQ==
+
 react-html-attributes@^1.4.6:
   version "1.4.6"
   resolved "https://registry.npmmirror.com/react-html-attributes/-/react-html-attributes-1.4.6.tgz#9558b56bb81c60f6cee9ae7d5e97434a59c086ff"
@@ -11128,6 +11175,11 @@ stack-utils@^2.0.2, stack-utils@^2.0.3:
   integrity sha512-XlkWvfIm6RmsWtNJx+uqtKLS8eqFbxUg0ZzLXqY0caEy9l7hruX8IpiDnjsLavoBgqCCR71TqWO8MaXYheJ3RQ==
   dependencies:
     escape-string-regexp "^2.0.0"
+
+stackframe@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.npmjs.org/stackframe/-/stackframe-1.3.4.tgz#b881a004c8c149a5e8efef37d51b16e412943310"
+  integrity sha512-oeVtt7eWQS+Na6F//S4kJ2K2VbRlS9D43mAlMyVpVWovy9o+jfgH8O9agzANzaiLjclA0oYzUXEM4PurhSUChw==
 
 static-extend@^0.1.1:
   version "0.1.2"

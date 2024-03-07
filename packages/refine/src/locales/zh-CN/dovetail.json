@@ -123,5 +123,11 @@
   "normal": "正常",
   "realtime_log": "实时日志",
   "previous_log": "上次启动日志",
-  "auto_wrap": "自动换行"
+  "auto_wrap": "自动换行",
+  "name_can_not_be_empty": "名称不能为空",
+  "password": "密码",
+  "username": "用户名",
+  "host": "主机",
+  "create_resource_success": "创建 {{resource}} 资源 {{name}} 成功",
+  "edit_resource_success": "编辑 {{resource}} 资源 {{name}} 成功"
 }
