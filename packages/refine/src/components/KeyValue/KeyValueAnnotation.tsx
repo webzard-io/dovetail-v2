@@ -2,6 +2,7 @@ import { Button } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ValueDisplay from 'src/components/ValueDisplay';
 import { KeyValue } from './KeyValue';
 
 const WrapperStyle = css`
@@ -41,18 +42,20 @@ export function KeyValueAnnotation(props: KeyValueDataProps) {
   return (
     <div className={WrapperStyle}>
       <div className={cx(HeaderStyle, isExpand && 'expanded')}>
-        <span className={HeaderItemStyle}>{Object.keys(data).length}</span>
         {Object.keys(data).length ? (
-          <Button
-            type="link"
-            className={ExpandButtonStyle}
-            onClick={() => {
-              setIsExpand(!isExpand);
-            }}
-          >
-            {isExpand ? t('dovetail.fold') : t('dovetail.expand')}
-          </Button>
-        ) : null}
+          <>
+            <span className={HeaderItemStyle}>{Object.keys(data).length}</span>
+            <Button
+              type="link"
+              className={ExpandButtonStyle}
+              onClick={() => {
+                setIsExpand(!isExpand);
+              }}
+            >
+              {isExpand ? t('dovetail.fold') : t('dovetail.expand')}
+            </Button>
+          </>
+        ) : <ValueDisplay value="" />}
       </div>
       {isExpand ? <KeyValue data={data} /> : null}
     </div>

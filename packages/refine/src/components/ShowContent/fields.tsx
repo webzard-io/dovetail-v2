@@ -38,12 +38,12 @@ export type ShowField<Model extends ResourceModel> = {
     val: unknown,
     record: Model,
     field: ShowField<Model>
-  ) => React.ReactElement | undefined;
+  ) => React.ReactNode | undefined;
   renderContent?: (
     val: unknown,
     record: Model,
     field: ShowField<Model>
-  ) => React.ReactElement | undefined;
+  ) => React.ReactNode | undefined;
 };
 
 export enum AreaType {
@@ -79,7 +79,7 @@ export const ImageField = <Model extends WorkloadBaseModel>(
     title: i18n.t('dovetail.image'),
     path: ['imageNames'],
     renderContent(value) {
-      return <ImageNames value={value as string[]} separator=', ' />;
+      return <ImageNames value={value as string[]} breakLine={false} />;
     },
   };
 };
@@ -277,7 +277,7 @@ export const LabelsField = <Model extends ResourceModel>(
   path: ['metadata', 'labels'],
   renderContent: value => {
     if (!value) {
-      return <>-</>;
+      return '-';
     }
 
     return <Tags value={value as Record<string, string>} />;
