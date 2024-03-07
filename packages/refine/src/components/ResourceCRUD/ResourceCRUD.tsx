@@ -16,20 +16,13 @@ export function ResourceCRUD(props: Props) {
         return (
           <React.Fragment key={config.name}>
             <Route path={`${urlPrefix}/${config.name}`} exact>
-              <ResourceList
-                name={config.kind}
-                formatter={config.formatter}
-                columns={config.columns?.() || []}
-                Dropdown={config.Dropdown}
-              />
+              <ResourceList config={config} />
             </Route>
-            <Route path={`${urlPrefix}/${config.name}/show`}>
-              <ResourceShow
-                formatter={config.formatter}
-                showConfig={config.showConfig?.() || {}}
-                Dropdown={config.Dropdown}
-              />
-            </Route>
+            {!config.noShow ? (
+              <Route path={`${urlPrefix}/${config.name}/show`}>
+                <ResourceShow config={config} />
+              </Route>
+            ) : null}
             {
               // the modals would render in ModalStack
               config.formType === FormType.PAGE ? (
@@ -42,7 +35,6 @@ export function ResourceCRUD(props: Props) {
                   </Route>
                 </>
               ) : null
-
             }
           </React.Fragment>
         );

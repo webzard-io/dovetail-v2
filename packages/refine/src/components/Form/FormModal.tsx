@@ -1,0 +1,138 @@
+import { CloseCircleFilled } from '@ant-design/icons';
+import { popModal, Modal } from '@cloudtower/eagle';
+import { css } from '@linaria/core';
+import { useResource } from '@refinedev/core';
+import React, { useState, useContext, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import ConfigsContext from 'src/contexts/configs';
+import { RefineFormContent } from './RefineFormContent';
+import { useRefineForm } from './useRefineForm';
+import { YamlForm, YamlFormProps } from './YamlForm';
+
+const FullscreenModalStyle = css`
+  &.ant-modal.fullscreen {
+    .ant-modal-header {
+      padding: 60px 128px 32px 128px;
+    }
+
+    .ant-modal-body {
+      padding: 0 128px;
+    }
+
+    .ant-modal-footer {
+      padding: 15px 128px;
+    }
+  }
+`;
+
+export type FormModalProps = {
+  resource?: string;
+  id?: string;
+  formProps?: YamlFormProps;
+  renderForm?: (props: YamlFormProps) => React.ReactNode;
+};
+
+export function FormModal(props: FormModalProps) {
+  const { resource: resourceFromProps, id, renderForm } = props;
+  const { i18n } = useTranslation();
+  const { resource } = useResource();
+  const configs = useContext(ConfigsContext);
+  const [yamlSaveButtonProps, setYamlSaveButtonProps] = useState<{
+    loading?: boolean;
+    onClick?: () => void;
+  }>({});
+  const [isError, setIsError] = useState<boolean>(false);
+
+  const config = configs[resourceFromProps || resource?.name || ''];
+  const title = i18n.t(id ? 'dovetail.edit_resource' : 'dovetail.create_resource', {
+    resource: config?.kind,
+  });
+  const okText = i18n.t(id ? 'dovetail.save' : 'dovetail.create');
+
+  const yamlFormProps: YamlFormProps = useMemo(
+    () => ({
+      ...props.formProps,
+      initialValues: props.formProps?.initialValues || config?.initValue,
+      id,
+      action: id ? 'edit' : 'create',
+      isShowLayout: false,
+      useFormProps: {
+        redirect: false,
+      },
+      onSaveButtonPropsChange: setYamlSaveButtonProps,
+      onErrorsChange(errors) {
+        setIsError(!!errors.length);
+      },
+      onFinish: popModal,
+    }),
+    [props.formProps, setYamlSaveButtonProps, config.initValue, id]
+  );
+
+  const refineFormResult = useRefineForm({
+    config,
+    id,
+    refineProps: {
+      onMutationSuccess: () => {
+        popModal();
+      },
+    },
+  });
+
+  const isYamlForm = !config.formConfig?.fields;
+
+  const formEle = (() => {
+    if (renderForm) {
+      return renderForm(yamlFormProps);
+    }
+
+    if (isYamlForm) return <YamlForm {...yamlFormProps} />;
+
+    return (
+      <RefineFormContent
+        control={refineFormResult.formResult.control}
+        config={config}
+        errorMsg={refineFormResult.responseErrorMsg}
+        action={id ? 'edit' : 'create'}
+      />
+    );
+  })();
+
+  const saveButtonProps = isYamlForm
+    ? yamlSaveButtonProps
+    : refineFormResult.formResult.saveButtonProps;
+
+  const onCancel = useCallback(() => {
+    popModal();
+  }, []);
+
+  const onOk = useCallback(
+    e => {
+      saveButtonProps.onClick?.(e);
+    },
+    [saveButtonProps]
+  );
+
+  const errorText = (() => {
+    if (!!refineFormResult.responseErrorMsg || isError) {
+      return i18n.t(id ? 'dovetail.save_failed' : 'dovetail.create_failed');
+    }
+  })();
+
+  return (
+    <Modal
+      className={FullscreenModalStyle}
+      width="calc(100vw - 16px)"
+      title={title}
+      error={errorText}
+      okButtonProps={saveButtonProps}
+      closeIcon={<CloseCircleFilled />}
+      okText={okText}
+      onOk={onOk}
+      onCancel={onCancel}
+      destroyOnClose
+      fullscreen
+    >
+      {formEle}
+    </Modal>
+  );
+}

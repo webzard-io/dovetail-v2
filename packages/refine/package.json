@@ -14,8 +14,9 @@
     "@cloudtower/icons-react": "^0.27.73",
     "@patternfly/react-core": "^5.1.1",
     "@patternfly/react-log-viewer": "^5.0.0",
-    "@refinedev/core": "^4.38.0",
-    "@refinedev/inferencer": "^4.5.4",
+    "@refinedev/core": "^4.47.2",
+    "@refinedev/inferencer": "^4.5.20",
+    "@refinedev/react-hook-form": "^4.8.14",
     "antd": "4.5.0",
     "dayjs": "^1.11.10",
     "i18next": "^23.2.3",
@@ -29,6 +30,7 @@
     "qs": "6.11.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-hook-form": "^7.50.1",
     "react-router-dom": "^5.1.2",
     "sunflower-antd": "^1.0.0-beta.3",
     "usehooks-ts": "^2.9.1"
@@ -69,7 +71,7 @@
   "peerDependencies": {
     "@cloudtower/eagle": "^0.27.73",
     "@cloudtower/icons-react": "^0.27.73",
-    "@refinedev/core": "^4.38.0",
+    "@refinedev/core": "^4.47.2",
     "antd": "4.5.0",
     "i18next": "^23.2.3",
     "react": "^16.12.0",

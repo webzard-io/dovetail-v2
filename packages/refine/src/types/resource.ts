@@ -1,4 +1,5 @@
-import { FormModalProps } from 'src/components/FormModal';
+import { YamlFormProps } from '../components';
+import { RefineFormField } from '../components/Form';
 import { ShowConfig } from '../components/ShowContent';
 import { Column } from '../components/Table';
 import { ResourceModel } from '../models';
@@ -14,7 +15,7 @@ export enum RESOURCE_GROUP {
 
 export enum FormType {
   PAGE = 'PAGE',
-  MODAL = 'MODAL'
+  MODAL = 'MODAL',
 }
 
 export type WithId<T> = T & { id: string };
@@ -30,9 +31,13 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   formatter?: (v: Model) => Model;
   initValue?: Record<string, unknown>;
   columns?: () => Column<Model>[];
+  noShow?: boolean;
   showConfig?: () => ShowConfig<Model>;
   Dropdown?: React.FC<{ record: Model }>;
-  formType?: FormType;
-  FormModal?: React.FC<FormModalProps>;
   isCustom?: boolean;
+  formConfig?: {
+    fields: RefineFormField[];
+    renderForm?: (props: YamlFormProps) => React.ReactNode;
+    formType?: FormType;
+  };
 };

@@ -87,6 +87,20 @@ export const NameColumnRenderer = <Model extends ResourceModel>(
   };
 };
 
+export const PlainTextNameColumnRenderer = <Model extends ResourceModel>(
+  i18n: I18nType
+): Column<Model> => {
+  const dataIndex = ['metadata', 'name'];
+  return {
+    key: 'name',
+    display: true,
+    dataIndex,
+    title: i18n.t('dovetail.name'),
+    sortable: true,
+    sorter: CommonSorter(dataIndex),
+  };
+};
+
 export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
   i18n: I18nType
 ): Column<Model> => {

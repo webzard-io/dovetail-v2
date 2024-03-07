@@ -3,18 +3,20 @@ import { GlobalStore } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { Route, Router } from 'react-router-dom';
-import { Layout } from './components';
+import { YamlFormProps, Layout, YamlForm } from './components';
 import {
   CRONJOB_INIT_VALUE,
   DAEMONSET_INIT_VALUE,
+  DEPLOYMENT_INIT_VALUE,
   POD_INIT_VALUE,
+  SERVER_INSTANCE_INIT_VALUE,
 } from './constants/k8s';
 import { Dovetail } from './Dovetail';
 import i18n from './i18n';
 import { ConfigMapConfig } from './pages/configmaps';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
-import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
+import { DeploymentList, DeploymentShow } from './pages/deployments';
 import { IngressConfig } from './pages/ingresses';
 import { JobConfig } from './pages/jobs';
 import { NetworkPolicyConfig } from './pages/networkPolicies';
@@ -54,8 +56,16 @@ function App() {
         kind: 'Deployment',
         parent: RESOURCE_GROUP.WORKLOAD,
         label: 'Deployments',
-        formType: FormType.MODAL,
-        FormModal: DeploymentForm,
+        formConfig: {
+          formType: FormType.MODAL,
+          renderForm: (formProps: YamlFormProps) => (
+            <YamlForm
+              {...formProps}
+              initialValues={DEPLOYMENT_INIT_VALUE}
+              isShowLayout={false}
+            />
+          ),
+        },
         isCustom: true,
       },
       StatefulSetConfig(i18n),
@@ -67,6 +77,55 @@ function App() {
         label: 'Pods',
         initValue: POD_INIT_VALUE,
         isCustom: true,
+      },
+      {
+        name: 'serverinstances',
+        basePath: '/apis/kubesmart.smtx.io/v1alpha1',
+        kind: 'ServerInstance',
+        parent: RESOURCE_GROUP.NETWORK,
+        label: 'ServerInstanceList',
+        initValue: SERVER_INSTANCE_INIT_VALUE,
+        formConfig: {
+          fields: [
+            {
+              path: ['metadata', 'name'],
+              key: 'name',
+              label: i18n.t('dovetail.name'),
+              validators: [
+                (value: string) => {
+                  if (!value)
+                    return {
+                      isValid: false,
+                      errorMsg: i18n.t('dovetail.name_can_not_be_empty'),
+                    };
+                  return { isValid: true, errorMsg: '' };
+                },
+              ],
+            },
+            {
+              path: ['spec', 'address', 'host'],
+              key: 'host',
+              label: i18n.t('dovetail.host'),
+            },
+            {
+              path: ['spec', 'address', 'port'],
+              key: 'port',
+              label: i18n.t('dovetail.port'),
+              type: 'number',
+            },
+            {
+              path: ['spec', 'address', 'credentials', 'ssh', 'username'],
+              key: 'username',
+              label: i18n.t('dovetail.username'),
+            },
+            {
+              path: ['spec', 'address', 'credentials', 'ssh', 'password'],
+              key: 'password',
+              label: i18n.t('dovetail.password'),
+            },
+          ],
+        },
+        noShow: true,
       },
       JobConfig(i18n),
       IngressConfig(i18n),
