@@ -102,7 +102,13 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 };
 
 export const StateDisplayColumnRenderer = <
-  Model extends WorkloadModel | CronJobModel | PodModel | ServiceModel | DaemonSetModel | JobModel,
+  Model extends
+    | WorkloadModel
+    | CronJobModel
+    | PodModel
+    | ServiceModel
+    | DaemonSetModel
+    | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -301,7 +307,8 @@ export const ServiceInClusterAccessColumnRenderer = <Model extends ServiceModel>
 };
 
 export const ServiceOutClusterAccessColumnRenderer = <Model extends ServiceModel>(
-  i18n: I18nType
+  i18n: I18nType,
+  clusterVip: string
 ): Column<Model> => {
   return {
     key: 'outClusterAccess',
@@ -309,7 +316,9 @@ export const ServiceOutClusterAccessColumnRenderer = <Model extends ServiceModel
     display: true,
     dataIndex: [],
     render(_, record) {
-      return <ServiceOutClusterAccessComponent service={record} />;
+      return (
+        <ServiceOutClusterAccessComponent service={record} clusterVip={clusterVip} />
+      );
     },
   };
 };
@@ -430,4 +439,3 @@ export const PodContainersNumColumnRenderer = <Model extends PodModel>(
     sorter: CommonSorter(['readyDisplay']),
   };
 };
-
