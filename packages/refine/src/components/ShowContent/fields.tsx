@@ -1,7 +1,6 @@
 import { i18n as I18nType } from 'i18next';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
-import { KeyValueData } from 'src/components/KeyValueData';
 import { Tags } from 'src/components/Tags';
 import {
   JobModel,
@@ -18,7 +17,7 @@ import { CronjobJobsTable } from '../CronjobJobsTable';
 import { EventsTable } from '../EventsTable';
 import { ImageNames } from '../ImageNames';
 import { IngressRulesTable } from '../IngressRulesTable';
-import { KeyValue } from '../KeyValue';
+import { KeyValue, KeyValueAnnotation, KeyValueSecret } from '../KeyValue';
 import Time from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
@@ -43,7 +42,7 @@ export type ShowField<Model extends ResourceModel> = {
 
 export enum AreaType {
   Inline = 'Inline',
-  Grid = 'Grid'
+  Grid = 'Grid',
 }
 
 export type ShowArea<Model extends ResourceModel> = {
@@ -118,9 +117,7 @@ export const PodsField = <Model extends WorkloadBaseModel>(): ShowField<Model> =
   };
 };
 
-export const JobsField = <
-  Model extends JobModel | CronJobModel,
->(): ShowField<Model> => {
+export const JobsField = <Model extends JobModel | CronJobModel>(): ShowField<Model> => {
   return {
     key: 'jobs',
     path: [],
@@ -146,7 +143,7 @@ export const DataField = <Model extends ResourceModel>(): ShowField<Model> => {
     key: 'data',
     path: ['data'],
     renderContent: val => {
-      return <KeyValue value={val as Record<string, string>} />;
+      return <KeyValue data={val as Record<string, string>} />;
     },
   };
 };
@@ -160,7 +157,7 @@ export const SecretDataField = <Model extends ResourceModel>(): ShowField<Model>
       for (const key in val as Record<string, string>) {
         decodeVal[key] = atob((val as Record<string, string>)[key]);
       }
-      return <KeyValue value={decodeVal} />;
+      return <KeyValueSecret data={decodeVal} />;
     },
   };
 };
@@ -176,7 +173,9 @@ export const StartTimeField = (i18n: I18nType): ShowField<JobModel> => {
   };
 };
 
-export const ServiceTypeField = <Model extends ServiceModel>(i18n: I18nType): ShowField<Model> => {
+export const ServiceTypeField = <Model extends ServiceModel>(
+  i18n: I18nType
+): ShowField<Model> => {
   return {
     key: 'type',
     title: i18n.t('dovetail.type'),
@@ -184,7 +183,9 @@ export const ServiceTypeField = <Model extends ServiceModel>(i18n: I18nType): Sh
   };
 };
 
-export const ClusterIpField = <Model extends ServiceModel>(i18n: I18nType): ShowField<Model> => {
+export const ClusterIpField = <Model extends ServiceModel>(
+  i18n: I18nType
+): ShowField<Model> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.clusterIp'),
@@ -192,7 +193,9 @@ export const ClusterIpField = <Model extends ServiceModel>(i18n: I18nType): Show
   };
 };
 
-export const SessionAffinityField = <Model extends ServiceModel>(i18n: I18nType): ShowField<Model> => {
+export const SessionAffinityField = <Model extends ServiceModel>(
+  i18n: I18nType
+): ShowField<Model> => {
   return {
     key: 'clusterIp',
     title: i18n.t('dovetail.sessionAffinity'),
@@ -219,7 +222,9 @@ export const ServicePodsField = <Model extends ResourceModel>(): ShowField<Model
   };
 };
 
-export const IngressRulesTableTabField = <Model extends IngressModel>(): ShowField<Model> => {
+export const IngressRulesTableTabField = <
+  Model extends IngressModel,
+>(): ShowField<Model> => {
   return {
     key: 'rules',
     path: ['spec', 'rules'],
@@ -239,13 +244,17 @@ export const EventsTableTabField = <Model extends ResourceModel>(): ShowField<Mo
   };
 };
 
-export const NamespaceField = <Model extends ResourceModel>(i18n: I18nType): ShowField<Model> => ({
+export const NamespaceField = <Model extends ResourceModel>(
+  i18n: I18nType
+): ShowField<Model> => ({
   key: 'NameSpace',
   title: i18n.t('dovetail.namespace'),
   path: ['metadata', 'namespace'],
 });
 
-export const AgeField = <Model extends ResourceModel>(i18n: I18nType): ShowField<Model> => ({
+export const AgeField = <Model extends ResourceModel>(
+  i18n: I18nType
+): ShowField<Model> => ({
   key: 'Age',
   title: i18n.t('dovetail.created_time'),
   path: ['metadata', 'creationTimestamp'],
@@ -254,7 +263,9 @@ export const AgeField = <Model extends ResourceModel>(i18n: I18nType): ShowField
   },
 });
 
-export const LabelsField = <Model extends ResourceModel>(i18n: I18nType): ShowField<Model> => ({
+export const LabelsField = <Model extends ResourceModel>(
+  i18n: I18nType
+): ShowField<Model> => ({
   key: 'Labels',
   title: i18n.t('dovetail.label'),
   path: ['metadata', 'labels'],
@@ -267,11 +278,13 @@ export const LabelsField = <Model extends ResourceModel>(i18n: I18nType): ShowFi
   },
 });
 
-export const AnnotationsField = <Model extends ResourceModel>(i18n: I18nType): ShowField<Model> => ({
+export const AnnotationsField = <Model extends ResourceModel>(
+  i18n: I18nType
+): ShowField<Model> => ({
   key: 'Annotations',
   title: i18n.t('dovetail.annotation'),
   path: ['metadata', 'annotations'],
   renderContent: value => {
-    return <KeyValueData datas={value as Record<string, string>} expandable />;
+    return <KeyValueAnnotation data={value as Record<string, string>} expandable />;
   },
 });
