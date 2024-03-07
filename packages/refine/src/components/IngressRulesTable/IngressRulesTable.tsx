@@ -56,6 +56,24 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       title: t('dovetail.port'),
       sortable: true,
     },
+    {
+      key: 'secret',
+      display: true,
+      dataIndex: 'host',
+      title: 'Secret',
+      render(host: string) {
+        const secretName = ingress._rawYaml.spec.tls?.find(({ hosts }) => hosts?.includes(host))?.secretName;
+
+        return secretName ? (
+          <ResourceLink
+            name="secrets"
+            namespace={ingress.metadata.namespace || 'default'}
+            resourceId={secretName}
+          />
+        ) : '-';
+      },
+      sortable: true,
+    },
   ];
 
   if (rows.length === 0) {
