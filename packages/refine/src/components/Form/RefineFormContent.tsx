@@ -4,14 +4,17 @@ import React from 'react';
 import { Control, Controller } from 'react-hook-form';
 import { ResourceModel } from '../../models';
 import { ResourceConfig } from '../../types';
+import { FormErrorAlert } from '../FormErrorAlert';
 
 type Props<Model extends ResourceModel> = {
   config?: ResourceConfig<Model>;
   control: Control;
+  errorMsg?: string;
+  action?: 'create' | 'edit';
 };
 
 export const RefineFormContent = <Model extends ResourceModel>(props: Props<Model>) => {
-  const { config, control } = props;
+  const { config, control, action, errorMsg } = props;
 
   const fields = config?.formConfig?.fields.map(c => {
     return (
@@ -70,6 +73,11 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
       `}
     >
       {fields}
+      <FormErrorAlert
+        errorMsgs={errorMsg ? [errorMsg] : []}
+        style={{ marginBottom: 16 }}
+        isEdit={action === 'edit'}
+      />
     </Space>
   );
 };

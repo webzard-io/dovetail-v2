@@ -3,10 +3,11 @@ import { GlobalStore } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { Route, Router } from 'react-router-dom';
-import { Layout } from './components';
+import { YamlFormProps, Layout, YamlForm } from './components';
 import {
   CRONJOB_INIT_VALUE,
   DAEMONSET_INIT_VALUE,
+  DEPLOYMENT_INIT_VALUE,
   POD_INIT_VALUE,
   SERVER_INSTANCE_INIT_VALUE,
 } from './constants/k8s';
@@ -15,7 +16,7 @@ import i18n from './i18n';
 import { ConfigMapConfig } from './pages/configmaps';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
-import { DeploymentForm, DeploymentList, DeploymentShow } from './pages/deployments';
+import { DeploymentList, DeploymentShow } from './pages/deployments';
 import { IngressConfig } from './pages/ingresses';
 import { JobConfig } from './pages/jobs';
 import { NetworkPolicyConfig } from './pages/networkPolicies';
@@ -55,8 +56,16 @@ function App() {
         kind: 'Deployment',
         parent: RESOURCE_GROUP.WORKLOAD,
         label: 'Deployments',
-        formType: FormType.MODAL,
-        FormModal: DeploymentForm,
+        formConfig: {
+          formType: FormType.MODAL,
+          renderForm: (formProps: YamlFormProps) => (
+            <YamlForm
+              {...formProps}
+              initialValues={DEPLOYMENT_INIT_VALUE}
+              isShowLayout={false}
+            />
+          ),
+        },
         isCustom: true,
       },
       StatefulSetConfig(i18n),

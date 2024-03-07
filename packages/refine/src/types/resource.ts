@@ -1,5 +1,5 @@
-import { FormModalProps } from 'src/components/FormModal';
-import { RefineFormConfig } from '../components/RefineForm';
+import { YamlFormProps } from '../components';
+import { RefineFormField } from '../components/Form';
 import { ShowConfig } from '../components/ShowContent';
 import { Column } from '../components/Table';
 import { ResourceModel } from '../models';
@@ -34,8 +34,10 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   noShow?: boolean;
   showConfig?: () => ShowConfig<Model>;
   Dropdown?: React.FC<{ record: Model }>;
-  formType?: FormType;
-  FormModal?: React.FC<FormModalProps>;
   isCustom?: boolean;
-  formConfig?: RefineFormConfig;
+  formConfig?: {
+    fields: RefineFormField[];
+    renderForm?: (props: YamlFormProps) => React.ReactNode;
+    formType?: FormType;
+  };
 };

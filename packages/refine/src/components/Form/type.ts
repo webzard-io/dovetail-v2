@@ -15,7 +15,3 @@ export type RefineFormField = {
     onBlur: () => void;
   }>;
 };
-
-export type RefineFormConfig = {
-  fields: RefineFormField[];
-};

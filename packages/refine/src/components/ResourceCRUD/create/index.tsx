@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import YamlForm from 'src/components/YamlForm';
+import { YamlForm } from 'src/components';
 import { getInitialValues } from 'src/utils/form';
 import { ResourceModel } from '../../../models';
 import { ResourceConfig } from '../../../types';
-import { RefineFormPage } from '../../RefineForm';
+import { RefineFormPage } from '../../Form';
 
 type Props<Model extends ResourceModel> = {
   config: ResourceConfig<Model>;
