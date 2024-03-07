@@ -91,7 +91,6 @@
   "port_mapping": "端口映射",
   "out_cluster_access": "集群外访问方式",
   "in_cluster_access": "集群内访问方式",
-  "any_node_ip": "任意节点 IP",
   "fail_get_detail": "{{resource}} {{name}} 已不存在",
   "basic_info": "Basic Information",
   "pod_selector": "Pod Selector",

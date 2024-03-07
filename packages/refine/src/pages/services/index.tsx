@@ -29,7 +29,7 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
   columns: () => [
     ServiceTypeColumnRenderer(i18n),
     ServiceInClusterAccessColumnRenderer(i18n),
-    ServiceOutClusterAccessColumnRenderer(i18n),
+    ServiceOutClusterAccessColumnRenderer(i18n, '192.168.31.98'),
     {
       key: 'dnsRecord',
       title: i18n.t('dovetail.dns_record'),
