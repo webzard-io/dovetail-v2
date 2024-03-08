@@ -6,6 +6,7 @@ import type { OwnerReference } from 'kubernetes-types/meta/v1';
 import type { IngressBackend, IngressTLS } from 'kubernetes-types/networking/v1';
 import { get } from 'lodash';
 import React from 'react';
+import ValueDisplay from 'src/components/ValueDisplay';
 import {
   ServiceInClusterAccessComponent,
   ServiceOutClusterAccessComponent,
@@ -55,6 +56,7 @@ const NameLink: React.FC<{ id: string; name: string; resource?: string }> = prop
           },
         });
       }}
+      title={name}
     >
       {name}
     </kit.button>
@@ -408,7 +410,7 @@ export const IngressClassColumnRenderer = <Model extends IngressModel>(
     sortable: true,
     sorter: CommonSorter(['spec', 'ingressClassName']),
     render: (name: IngressBackend) => {
-      return <span>{name || '-'}</span>;
+      return <ValueDisplay value={name} />;
     },
   };
 };

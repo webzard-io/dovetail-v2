@@ -1,5 +1,6 @@
 import { Link } from '@cloudtower/eagle';
 import React from 'react';
+import ValueDisplay from 'src/components/ValueDisplay';
 import { ServiceModel, ServiceTypeEnum } from '../../models';
 
 type Props = {
@@ -12,7 +13,7 @@ export const ServiceInClusterAccessComponent: React.FC<Props> = ({ service }) =>
     case ServiceTypeEnum.ExternalName:
       return <div>{spec.externalName}</div>;
     default:
-      return <div>{spec.clusterIP || '-'}</div>;
+      return <ValueDisplay value={spec.clusterIP} />;
   }
 };
 
@@ -20,7 +21,7 @@ export const ServiceOutClusterAccessComponent: React.FC<
   Props & { clusterVip: string; separator?: string; }
 > = ({ service, clusterVip, separator = '\n' }) => {
   const spec = service._rawYaml.spec;
-  let content: string | React.ReactNode[] | undefined = '-';
+  let content: React.ReactNode | React.ReactNode[] | undefined = '-';
 
   switch (spec.type) {
     case ServiceTypeEnum.NodePort:
@@ -38,7 +39,7 @@ export const ServiceOutClusterAccessComponent: React.FC<
       content = spec.externalIPs?.join(separator);
       break;
     default:
-      content = '-';
+      content = <ValueDisplay value=""></ValueDisplay>;
       break;
   }
 

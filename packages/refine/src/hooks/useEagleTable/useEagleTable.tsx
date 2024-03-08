@@ -1,6 +1,7 @@
 import { useTable, useResource } from '@refinedev/core';
 import { merge } from 'lodash-es';
 import React, { useCallback, useMemo, useState } from 'react';
+import ValueDisplay from 'src/components/ValueDisplay';
 import K8sDropdown from '../../components/K8sDropdown';
 import { useNamespacesFilter, ALL_NS } from '../../components/NamespacesFilter';
 import { Column, TableProps } from '../../components/Table';
@@ -53,6 +54,16 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     });
     return mergedParams;
   }, [params.useTableParams, nsFilters]);
+  const finalColumns: Column<Model>[] = useMemo(() => columns.map(col => ({
+    ...col,
+    render(value: unknown, record: Model, index: number) {
+      return (
+        <ValueDisplay
+          value={col.render?.(value, record, index) ?? value}
+        />
+      );
+    }
+  })), [columns]);
 
   const table = useTable<Model>(useTableParams);
   const onPageChange = useCallback(
@@ -69,7 +80,7 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     tableKey: resource?.name || 'table',
     loading: table.tableQueryResult.isLoading,
     data: finalDataSource || [],
-    columns,
+    columns: finalColumns,
     refetch: () => null,
     error: false,
     rowKey: 'id',
