@@ -7,6 +7,7 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
 import { Tabs as BaseTabs } from 'src/components/Tabs';
+import ValueDisplay from 'src/components/ValueDisplay';
 import ComponentContext from 'src/contexts/component';
 import { useOpenForm } from 'src/hooks/useOpenForm';
 import { WorkloadState } from '../../constants';
@@ -154,7 +155,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       if (field.renderContent) {
         content = field.renderContent(value, record, field);
       } else {
-        content = <span>{get(record, field.path)}</span>;
+        content = get(record, field.path);
       }
 
       return (
@@ -179,7 +180,12 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
                   {field.title}
                 </span>
               )}
-              <span style={{ flex: 1, minWidth: 0 }}>{content}</span>
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <ValueDisplay
+                  value={content}
+                  useOverflow={false}
+                />
+              </span>
             </div>
           )}
         </kit.col>
