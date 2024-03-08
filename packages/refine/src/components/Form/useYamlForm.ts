@@ -214,18 +214,19 @@ const useYamlForm = <
     warnWhenUnsavedChangesProp ?? warnWhenUnsavedChangesRefine;
 
   const initialValues = useMemo(() => {
-    const initialValues = (queryResult?.data?.data
-      ? globalStore?.restoreItem(queryResult.data.data)
-      : initialValuesForCreate) || {};
+    const initialValues =
+      (queryResult?.data?.data
+        ? globalStore?.restoreItem(queryResult.data.data)
+        : initialValuesForCreate) || {};
 
     if (initialValues) {
       pruneBeforeEdit(initialValues);
     }
 
-    return transformInitValues?.(initialValues) || initialValues;
+    return transformInitValues?.(initialValues as Unstructured) || initialValues;
   }, [queryResult, globalStore, initialValuesForCreate, transformInitValues]);
-  const action = useMemo(() =>
-    actionFromProps || useResourceResult.action,
+  const action = useMemo(
+    () => actionFromProps || useResourceResult.action,
     [actionFromProps, useResourceResult.action]
   );
 
@@ -252,40 +253,54 @@ const useYamlForm = <
     return changeValues;
   };
 
-  const saveButtonProps = useMemo(() => ({
-    loading: formLoading,
-    onClick: () => {
-      form.submit();
-    },
-  }), [formLoading, form]);
+  const saveButtonProps = useMemo(
+    () => ({
+      loading: formLoading,
+      onClick: () => {
+        form.submit();
+      },
+    }),
+    [formLoading, form]
+  );
 
-  const editorProps: EditorProps = useMemo(() => ({
-    ref: editor,
-    defaultValue:
-      schema && editorOptions?.isGenerateAnnotations
-        ? generateYamlBySchema(initialValues || {}, schema)
-        : yaml.dump(initialValues),
-    schema: schema,
-    id: useResourceResult.resource?.name || '',
-    errorMsgs: editorErrors,
-    onValidate(yamlValid: boolean, schemaValid: boolean) {
-      setIsYamlValid(yamlValid);
-      setIsSchemaValid(schemaValid);
+  const editorProps: EditorProps = useMemo(
+    () => ({
+      ref: editor,
+      defaultValue:
+        schema && editorOptions?.isGenerateAnnotations
+          ? generateYamlBySchema(initialValues || {}, schema)
+          : yaml.dump(initialValues),
+      schema: schema,
+      id: useResourceResult.resource?.name || '',
+      errorMsgs: editorErrors,
+      onValidate(yamlValid: boolean, schemaValid: boolean) {
+        setIsYamlValid(yamlValid);
+        setIsSchemaValid(schemaValid);
 
-      if (yamlValid && schemaValid) {
-        setEditorErrors([]);
-      }
-    },
-    onEditorCreate(editorInstance) {
-      const editorValue = yaml.dump(initialValues);
+        if (yamlValid && schemaValid) {
+          setEditorErrors([]);
+        }
+      },
+      onEditorCreate(editorInstance) {
+        const editorValue = yaml.dump(initialValues);
 
-      editor.current?.setEditorValue(editorValue);
-      editor.current?.setValue(editorValue);
-      if (action === 'edit') {
-        fold(editorInstance);
-      }
-    },
-  }), [editorErrors, editorOptions, initialValues, schema, useResourceResult.resource?.name, action, fold]);
+        editor.current?.setEditorValue(editorValue);
+        editor.current?.setValue(editorValue);
+        if (action === 'edit') {
+          fold(editorInstance);
+        }
+      },
+    }),
+    [
+      editorErrors,
+      editorOptions,
+      initialValues,
+      schema,
+      useResourceResult.resource?.name,
+      action,
+      fold,
+    ]
+  );
 
   return {
     form: formSF.form,
@@ -305,7 +320,8 @@ const useYamlForm = <
         const objectValues = editor.current
           ? (yaml.load(editor.current?.getEditorValue() || '') as TVariables)
           : values;
-        const finalValues = transformApplyValues?.(objectValues) || objectValues;
+        const finalValues =
+          transformApplyValues?.(objectValues as Unstructured) || objectValues;
 
         return onFinish(finalValues as TVariables);
       },
