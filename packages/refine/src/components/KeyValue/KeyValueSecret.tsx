@@ -2,7 +2,7 @@ import { Button, Icon } from '@cloudtower/eagle';
 import { ViewEye16GrayIcon } from '@cloudtower/icons-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ShowGroup } from '../ShowContent/ShowContent';
+import { ShowGroupComponent } from '../ShowContent/ShowContent';
 import { KeyValue } from './KeyValue';
 
 export interface KeyValueSecretProps {
@@ -27,8 +27,8 @@ export function KeyValueSecret(props: KeyValueSecretProps) {
   );
 
   return (
-    <ShowGroup title={i18n.t('dovetail.data')} operationEle={toggleButton}>
+    <ShowGroupComponent title={i18n.t('dovetail.data')} operationEle={toggleButton}>
       <KeyValue data={data} hideSecret={hideSecret} />
-    </ShowGroup>
+    </ShowGroupComponent>
   );
 }

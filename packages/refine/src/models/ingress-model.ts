@@ -4,12 +4,13 @@ import { ResourceModel } from './resource-model';
 
 type IngressTypes = Required<Ingress> & Unstructured;
 
-type RuleItem = {
-  serviceName: string;
+export type RuleItem = {
+  serviceName?: string;
+  resourceName?: string;
   fullPath: string;
   pathType: string;
   host?: string;
-  servicePort?: number;
+  servicePort?: number | string;
 };
 
 export class IngressModel extends ResourceModel<IngressTypes> {
@@ -23,11 +24,13 @@ export class IngressModel extends ResourceModel<IngressTypes> {
     this.flattenedRules =
       this._rawYaml.spec.rules?.reduce<RuleItem[]>((res, rule) => {
         const paths = rule.http?.paths.map(p => {
+
           return {
+            resourceName: p.backend.resource?.name || '',
             serviceName: p.backend.service?.name || '',
             fullPath: this.getFullPath(rule, p.path),
             pathType: p.pathType,
-            servicePort: p.backend.service?.port?.number,
+            servicePort: p.backend.service?.port?.number || p.backend.service?.port?.name,
             host: rule.host,
           };
         });
