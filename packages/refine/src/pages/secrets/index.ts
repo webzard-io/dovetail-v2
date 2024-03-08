@@ -1,9 +1,19 @@
 import { i18n } from 'i18next';
+import { Secret } from 'kubernetes-types/core/v1';
 import { SECRET_OPAQUE_INIT_VALUE } from 'src/constants/k8s';
 import { SecretDataGroup, BasicGroup } from '../../components/ShowContent';
 import { AgeColumnRenderer, DataKeysColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig } from '../../types';
+
+function isBase64(value: string) {
+  try {
+    window.atob(value);
+    return !!value;
+  } catch {
+    return false;
+  }
+}
 
 export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
   name: 'secrets',
@@ -14,6 +24,34 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
   label: 'Secrets',
   initValue: SECRET_OPAQUE_INIT_VALUE,
   columns: () => [DataKeysColumnRenderer(i18n), AgeColumnRenderer(i18n)],
+  formConfig: {
+    transformInitValues: (value) => {
+      const data = (value as Secret).data || {};
+
+      return {
+        ...value,
+        data: Object.keys(data).reduce((result: Record<string, string>, key) => {
+          result[key] = window.atob(data[key]);
+
+          return result;
+        }, {})
+      };
+    },
+    transformApplyValues: (value) => {
+      const data = (value as Secret).data || {};
+
+      return {
+        ...value,
+        data: Object.keys(data).reduce((result: Record<string, string>, key) => {
+          const value = data[key];
+
+          result[key] = isBase64(value) ? value : window.btoa(value);
+
+          return result;
+        }, {})
+      };
+    },
+  },
   showConfig: () => ({
     tabs: [
       {

@@ -1,6 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { FormAction, useResource } from '@refinedev/core';
+import { Unstructured } from 'k8s-api-provider';
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
@@ -31,6 +32,8 @@ export interface YamlFormProps {
   schemaStrategy?: SchemaStrategy;
   isShowLayout?: boolean;
   useFormProps?: Parameters<typeof useYamlForm>[0];
+  transformInitValues?: (values: Unstructured) => Unstructured;
+  transformApplyValues?: (values: Unstructured) => Unstructured;
   onSaveButtonPropsChange?: (saveButtonProps: {
     disabled?: boolean;
     onClick: () => void;
@@ -46,6 +49,8 @@ export function YamlForm(props: YamlFormProps) {
     schemaStrategy = SchemaStrategy.Optional,
     isShowLayout = true,
     useFormProps,
+    transformInitValues,
+    transformApplyValues,
     onSaveButtonPropsChange,
     onErrorsChange
   } = props;
@@ -68,6 +73,8 @@ export function YamlForm(props: YamlFormProps) {
     },
     liveMode: 'off',
     initialValuesForCreate: props.initialValues ?? BASE_INIT_VALUE,
+    transformInitValues,
+    transformApplyValues,
     ...useFormProps,
   });
   const kit = useUIKit();

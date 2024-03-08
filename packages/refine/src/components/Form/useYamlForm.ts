@@ -56,6 +56,8 @@ export type UseFormProps<
     isSkipSchema?: boolean;
   };
   initialValuesForCreate?: Record<string, unknown>;
+  transformInitValues?: (values: Unstructured) => Unstructured;
+  transformApplyValues?: (values: Unstructured) => Unstructured;
 };
 
 export type UseFormReturnType<
@@ -126,6 +128,8 @@ const useYamlForm = <
   overtimeOptions,
   editorOptions,
   initialValuesForCreate,
+  transformInitValues,
+  transformApplyValues,
 }: UseFormProps<
   TQueryFnData,
   TError,
@@ -210,15 +214,16 @@ const useYamlForm = <
     warnWhenUnsavedChangesProp ?? warnWhenUnsavedChangesRefine;
 
   const initialValues = useMemo(() => {
-    const initialValues = queryResult?.data?.data
+    const initialValues = (queryResult?.data?.data
       ? globalStore?.restoreItem(queryResult.data.data)
-      : initialValuesForCreate;
+      : initialValuesForCreate) || {};
 
     if (initialValues) {
       pruneBeforeEdit(initialValues);
     }
-    return initialValues;
-  }, [queryResult, globalStore, initialValuesForCreate]);
+
+    return transformInitValues?.(initialValues) || initialValues;
+  }, [queryResult, globalStore, initialValuesForCreate, transformInitValues]);
   const action = useMemo(() =>
     actionFromProps || useResourceResult.action,
     [actionFromProps, useResourceResult.action]
@@ -297,9 +302,10 @@ const useYamlForm = <
           return;
         }
 
-        const finalValues = editor.current
+        const objectValues = editor.current
           ? (yaml.load(editor.current?.getEditorValue() || '') as TVariables)
           : values;
+        const finalValues = transformApplyValues?.(objectValues) || objectValues;
 
         return onFinish(finalValues as TVariables);
       },
