@@ -1,3 +1,4 @@
+import { Unstructured } from 'k8s-api-provider';
 import { YamlFormProps } from '../components';
 import { RefineFormField } from '../components/Form';
 import { ShowConfig } from '../components/ShowContent';
@@ -39,5 +40,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     fields?: RefineFormField[];
     renderForm?: (props: YamlFormProps) => React.ReactNode;
     formType?: FormType;
+    transformInitValues?: (values: Unstructured) => Unstructured;
+    transformApplyValues?: (values: Unstructured) => Unstructured;
   };
 };

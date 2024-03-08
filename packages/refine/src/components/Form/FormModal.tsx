@@ -52,6 +52,8 @@ export function FormModal(props: FormModalProps) {
   const yamlFormProps: YamlFormProps = useMemo(
     () => ({
       ...props.formProps,
+      transformInitValues: config.formConfig?.transformInitValues,
+      transformApplyValues: config.formConfig?.transformApplyValues,
       initialValues: props.formProps?.initialValues || config?.initValue,
       id,
       action: id ? 'edit' : 'create',
@@ -65,7 +67,7 @@ export function FormModal(props: FormModalProps) {
       },
       onFinish: popModal,
     }),
-    [props.formProps, setYamlSaveButtonProps, config.initValue, id]
+    [props.formProps, setYamlSaveButtonProps, config, id]
   );
 
   const refineFormResult = useRefineForm({
