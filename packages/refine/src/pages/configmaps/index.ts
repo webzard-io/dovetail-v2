@@ -1,6 +1,6 @@
 import { i18n } from 'i18next';
 import { DataTab, BasicGroup, } from '../../components/ShowContent';
-import { AgeColumnRenderer } from '../../hooks/useEagleTable/columns';
+import { AgeColumnRenderer, DataKeysColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig } from '../../types';
 
@@ -12,7 +12,7 @@ export const ConfigMapConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
   parent: RESOURCE_GROUP.STORAGE,
   label: 'ConfigMaps',
   description: 'ConfigMap 常用于存储工作负载所需的配置信息，许多应用程序会从配置文件、命令行参数或环境变量中读取配置信息。',
-  columns: () => [AgeColumnRenderer(i18n)],
+  columns: () => [DataKeysColumnRenderer(i18n), AgeColumnRenderer(i18n)],
   showConfig: () => ({
     tabs: [
       {

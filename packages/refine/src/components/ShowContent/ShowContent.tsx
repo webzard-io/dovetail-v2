@@ -100,7 +100,7 @@ type Props<Model extends ResourceModel> = {
   Dropdown?: React.FC<{ record: Model }>;
 };
 
-export function ShowGroup(
+export function ShowGroupComponent(
   props: React.PropsWithChildren<{
     title: string;
     className?: string;
@@ -225,7 +225,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           title: tab.title,
           key: tab.key,
           children: tab.groups?.map(group => {
-            const GroupContainer = group.title ? ShowGroup : React.Fragment;
+            const GroupContainer = group.title ? ShowGroupComponent : React.Fragment;
             const FieldContainer = group.title ? kit.row : React.Fragment;
             return (
               <GroupContainer key={group.title} title={group.title || ''}>

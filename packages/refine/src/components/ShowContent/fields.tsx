@@ -1,6 +1,11 @@
 import { i18n as I18nType } from 'i18next';
+import { Unstructured } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
+import { NetworkPolicy } from 'kubernetes-types/networking/v1';
 import React from 'react';
+import { PodSelectorTable } from 'src/components/PodSelectorTable';
+import { PortsTable } from 'src/components/PortsTable';
+import { ServiceInClusterAccessComponent, ServiceOutClusterAccessComponent } from 'src/components/ServiceComponents';
 import { Tags } from 'src/components/Tags';
 import {
   JobModel,
@@ -10,6 +15,7 @@ import {
   CronJobModel,
   IngressModel,
   ServiceModel,
+  ServiceType,
 } from '../../models';
 import { ExtendObjectMeta } from '../../plugins/relation-plugin';
 import { ConditionsTable } from '../ConditionsTable';
@@ -286,5 +292,42 @@ export const AnnotationsField = <Model extends ResourceModel>(
   path: ['metadata', 'annotations'],
   renderContent: value => {
     return <KeyValueAnnotation data={value as Record<string, string>} expandable />;
+  },
+});
+
+export const ServiceInnerClusterAccessField = <Model extends ServiceModel>(i18n: I18nType): ShowField<Model> => ({
+  key: 'innerClusterAccess',
+  title: i18n.t('dovetail.in_cluster_access'),
+  path: [],
+  renderContent: (_, record) => {
+    return <ServiceInClusterAccessComponent service={record} />;
+  },
+});
+
+export const ServiceOutClusterAccessField = <Model extends ServiceModel>(i18n: I18nType, clusterVip: string): ShowField<Model> => ({
+  key: 'innerClusterAccess',
+  title: i18n.t('dovetail.out_cluster_access'),
+  path: [],
+  renderContent: (_, record) => {
+    return <ServiceOutClusterAccessComponent service={record} clusterVip={clusterVip} separator=', ' />;
+  },
+});
+
+export const PodSelectorField = <Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>>(): ShowField<Model> => ({
+  key: 'podSelector',
+  path: [],
+  renderContent: (_, resource) => {
+    const spec = resource._rawYaml.spec;
+    const selector = spec && (('selector' in spec && spec.selector) || ('podSelector' in spec && spec.podSelector.matchLabels));
+
+    return <PodSelectorTable podSelectors={selector || {}} />;
+  },
+});
+
+export const PortsTableField = <Model extends ServiceModel>(): ShowField<Model> => ({
+  key: 'ports',
+  path: [],
+  renderContent: (_, service) => {
+    return <PortsTable service={service} />;
   },
 });
