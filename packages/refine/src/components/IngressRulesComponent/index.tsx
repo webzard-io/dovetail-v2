@@ -17,22 +17,28 @@ export const IngressRulesComponent: React.FC<{
     }
 
     return (
-      <div key={r.fullPath}>
-        {pre}
-        <span>{divider}</span>
-        {
-          r.serviceName ? (
-            <>
-              <ResourceLink
-                name="services"
-                namespace={ingress.metadata.namespace || 'default'}
-                resourceId={r.serviceName}
-              />
-              <span>:{r.servicePort}</span>
-            </>
-          ) : r.resourceName
-        }
-      </div>
+      <kit.overflowTooltip
+        key={r.fullPath}
+        content={(
+          <>
+            {pre}
+            <span>{divider}</span>
+            {
+              r.serviceName ? (
+                <>
+                  <ResourceLink
+                    name="services"
+                    namespace={ingress.metadata.namespace || 'default'}
+                    resourceId={r.serviceName}
+                  />
+                  <span>:{r.servicePort}</span>
+                </>
+              ) : r.resourceName
+            }
+          </>
+        )}
+        tooltip={`${r.fullPath}${divider}:${r.servicePort}`}
+      />
     );
   });
 

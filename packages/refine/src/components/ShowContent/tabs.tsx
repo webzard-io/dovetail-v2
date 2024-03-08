@@ -88,20 +88,6 @@ export const NetworkPolicyEgressRulesTab = <Model extends ResourceModel>(
   ],
 });
 
-export const DataTab = <Model extends ResourceModel>(i18n: I18nType): ShowTab<Model> => ({
-  title: i18n.t('dovetail.data'),
-  key: 'data',
-  groups: [
-    {
-      areas: [
-        {
-          fields: [DataField()],
-        },
-      ],
-    },
-  ],
-});
-
 export const PodLogTab = <Model extends PodModel>(i18n: I18nType): ShowTab<Model> => ({
   title: i18n.t('dovetail.log'),
   key: 'pod-log',

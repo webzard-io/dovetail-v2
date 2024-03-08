@@ -1,5 +1,6 @@
 import { CloseCircleFilled } from '@ant-design/icons';
 import { popModal, Modal } from '@cloudtower/eagle';
+import { ExclamationErrorCircleFill16RedIcon } from '@cloudtower/icons-react';
 import { css } from '@linaria/core';
 import { useResource } from '@refinedev/core';
 import React, { useState, useContext, useCallback, useMemo } from 'react';
@@ -23,6 +24,11 @@ const FullscreenModalStyle = css`
       padding: 15px 128px;
     }
   }
+`;
+const ErrorStyle = css`
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `;
 
 export type FormModalProps = {
@@ -125,7 +131,11 @@ export function FormModal(props: FormModalProps) {
       className={FullscreenModalStyle}
       width="calc(100vw - 16px)"
       title={title}
-      error={errorText}
+      error={errorText ? (
+        <div className={ErrorStyle}>
+          <ExclamationErrorCircleFill16RedIcon /> {errorText}
+        </div>
+      ) : ''}
       okButtonProps={saveButtonProps}
       closeIcon={<CloseCircleFilled />}
       okText={okText}
