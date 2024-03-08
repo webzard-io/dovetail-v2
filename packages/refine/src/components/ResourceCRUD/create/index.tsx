@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { YamlForm } from 'src/components';
+import { YamlForm, YamlFormProps } from 'src/components';
 import { getInitialValues } from 'src/utils/form';
 import { ResourceModel } from '../../../models';
 import { ResourceConfig } from '../../../types';
@@ -11,9 +11,11 @@ type Props<Model extends ResourceModel> = {
 
 export function ResourceForm<Model extends ResourceModel>(props: Props<Model>) {
   const { config } = props;
-  const formProps = useMemo(() => {
+  const formProps: YamlFormProps = useMemo(() => {
     return {
       initialValues: getInitialValues(config),
+      transformInitValues: config.formConfig?.transformInitValues,
+      transformApplyValues: config.formConfig?.transformApplyValues,
     };
   }, [config]);
 
