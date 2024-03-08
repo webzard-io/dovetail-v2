@@ -78,6 +78,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
       >
         <kit.button
           type={size === 'large' ? 'quiet' : 'tertiary'}
+          size={size === 'large' ? 'middle' : 'small'}
           prefixIcon={size === 'large' ? <Icon
             src={MoreEllipsis324BoldSecondaryIcon}
             hoverSrc={MoreEllipsis324BoldBlueIcon}
