@@ -29,6 +29,7 @@ import {
   IngressRulesTableTabField,
   PodSelectorField,
   PortsTableField,
+  DataField
 } from './fields';
 
 export const BasicGroup = <Model extends ResourceModel>(
@@ -148,4 +149,13 @@ export const PortsGroup = <Model extends ServiceModel>(i18n: I18nType): ShowGrou
   areas: [{
     fields: [PortsTableField()],
   }]
+});
+
+export const DataGroup = <Model extends ResourceModel>(i18n: I18nType): ShowGroup<Model> => ({
+  title: i18n.t('dovetail.data'),
+  areas: [
+    {
+      fields: [DataField()],
+    },
+  ],
 });

@@ -309,7 +309,7 @@ export const ServiceOutClusterAccessField = <Model extends ServiceModel>(i18n: I
   title: i18n.t('dovetail.out_cluster_access'),
   path: [],
   renderContent: (_, record) => {
-    return <ServiceOutClusterAccessComponent service={record} clusterVip={clusterVip} separator=', ' />;
+    return <ServiceOutClusterAccessComponent service={record} clusterVip={clusterVip} breakLine={false} />;
   },
 });
 

@@ -7,7 +7,6 @@ const EmptyStyle = css`
   color: rgba(0,21,64,.3);
 `;
 const ContentStyle = css`
-  display: inline-block;
   width: 100%;
 
   &.overflow {
@@ -27,14 +26,14 @@ function ValueDisplay(props: ValueDisplayProps) {
   const { value, useOverflow = true, className } = props;
 
   return EMPTY_VALUES.includes(value) ? (
-    <span className={cx(EmptyStyle, className)}>-</span>
+    <div className={cx(EmptyStyle, className)}>-</div>
   ) : (
-    <span
+    <div
       className={cx(className, ContentStyle, useOverflow && 'overflow')}
       title={typeof value === 'string' || typeof value === 'number' ? String(value) : ''}
     >
       {value}
-    </span>
+    </div>
   );
 }
 

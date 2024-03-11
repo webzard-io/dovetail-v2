@@ -1,4 +1,6 @@
+import { OverflowTooltip } from '@cloudtower/eagle';
 import React from 'react';
+import ValueDisplay from 'src/components/ValueDisplay';
 
 type Props = {
   value?: Record<string, string>;
@@ -8,12 +10,13 @@ export const TextTags: React.FC<Props> = props => {
   const { value } = props;
 
   if (!value) {
-    return <span>-</span>;
+    return <ValueDisplay value="" />;
   }
   const tags = Object.keys(value).map(key => {
     return (
       <li key={key}>
-        {key}={value[key]}
+        <OverflowTooltip content={`${key}=${value[key]}`}>
+        </OverflowTooltip>
       </li>
     );
   });
