@@ -1,4 +1,5 @@
-import { Link } from '@cloudtower/eagle';
+import { Link, OverflowTooltip } from '@cloudtower/eagle';
+import { css } from '@linaria/core';
 import React from 'react';
 import ValueDisplay from 'src/components/ValueDisplay';
 import { ServiceModel, ServiceTypeEnum } from '../../models';
@@ -17,9 +18,15 @@ export const ServiceInClusterAccessComponent: React.FC<Props> = ({ service }) =>
   }
 };
 
+const BreakLineStyle = css`
+  &.ant-btn.ant-btn-link {
+    display: block;
+  }
+`;
+
 export const ServiceOutClusterAccessComponent: React.FC<
-  Props & { clusterVip: string; separator?: string; }
-> = ({ service, clusterVip, separator = '\n' }) => {
+  Props & { clusterVip: string; breakLine?: boolean; }
+> = ({ service, clusterVip, breakLine = true }) => {
   const spec = service._rawYaml.spec;
   let content: React.ReactNode | React.ReactNode[] | undefined = '-';
 
@@ -27,16 +34,28 @@ export const ServiceOutClusterAccessComponent: React.FC<
     case ServiceTypeEnum.NodePort:
       content = spec.ports
         ?.filter(v => !!v)
-        .map(p => (
-          <li key={p.nodePort}>
-            <Link target="_blank" href={`http://${clusterVip}:${p.nodePort}`}>
-              {clusterVip}:{p.nodePort}
-            </Link>
-          </li>
+        .map((p, index) => (
+          <Link
+            target="_blank"
+            href={`http://${clusterVip}:${p.nodePort}`}
+            className={breakLine ? BreakLineStyle : ''}
+            key={p.nodePort}
+          >
+            <OverflowTooltip
+              content={(
+                <>
+                  {clusterVip}:{p.nodePort}
+                  {!breakLine && index !== ((spec.ports || []).length - 1) ? ', ' : ''}
+                </>
+              )}
+              tooltip={`${clusterVip}:${p.nodePort}`}
+            >
+            </OverflowTooltip>
+          </Link >
         ));
       return <ul>{content}</ul>;
     case ServiceTypeEnum.LoadBalancer:
-      content = spec.externalIPs?.join(separator);
+      content = spec.externalIPs?.join(breakLine ? '\n' : ', ');
       break;
     default:
       content = <ValueDisplay value=""></ValueDisplay>;

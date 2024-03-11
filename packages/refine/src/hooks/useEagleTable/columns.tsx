@@ -1,4 +1,4 @@
-import { useUIKit, Tooltip } from '@cloudtower/eagle';
+import { useUIKit, Tooltip, OverflowTooltip } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
@@ -463,8 +463,25 @@ export const DataKeysColumnRenderer = <Model extends ResourceModel>(i18n: I18nTy
     dataIndex: ['data'],
     title: i18n.t('dovetail.data'),
     render(data) {
-      return Object.keys(data || {}).join(', ');
+      return Object.keys(data || {}).map(key => (
+        <OverflowTooltip content={key} key={key} />
+      ));
     },
     sortable: true,
+  };
+};
+
+export const PortMappingColumnRenderer = <Model extends ServiceModel>(i18n: I18nType): Column<Model> => {
+  return {
+    key: 'displayPortMapping',
+    title: i18n.t('dovetail.port_mapping'),
+    display: true,
+    dataIndex: ['displayPortMapping'],
+    width: 200,
+    render(value) {
+      const content = value.map((v: string) => <OverflowTooltip content={v} key={v}></OverflowTooltip>);
+
+      return <>{content}</>;
+    },
   };
 };

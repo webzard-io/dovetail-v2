@@ -17,6 +17,7 @@ import {
   ServiceInClusterAccessColumnRenderer,
   ServiceOutClusterAccessColumnRenderer,
   ServiceTypeColumnRenderer,
+  PortMappingColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { ServiceModel } from '../../models/service-model';
 import { RESOURCE_GROUP, ResourceConfig } from '../../types';
@@ -48,17 +49,7 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
         return <TextTags value={value} />;
       },
     },
-    {
-      key: 'displayPortMapping',
-      title: i18n.t('dovetail.port_mapping'),
-      display: true,
-      dataIndex: ['displayPortMapping'],
-      width: 200,
-      render(value) {
-        const content = value.map((v: string) => <div key={v}>{v}</div>);
-        return <>{content}</>;
-      },
-    },
+    PortMappingColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
   ],
   showConfig: () => ({
