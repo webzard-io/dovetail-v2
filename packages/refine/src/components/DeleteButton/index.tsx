@@ -16,7 +16,7 @@ export const DeleteButton: React.FC = () => {
 
   return (
     <>
-      <kit.button type="primary" danger onClick={() => openDeleteConfirmModal(id || '')}>
+      <kit.button type="primary" danger onClick={() => openDeleteConfirmModal((id as string) || '')}>
         {t('dovetail.delete')}
       </kit.button>
       {visible ? <kit.modal {...modalProps} /> : null}

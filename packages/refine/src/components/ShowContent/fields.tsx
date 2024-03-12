@@ -3,6 +3,7 @@ import { Unstructured } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
 import { NetworkPolicy } from 'kubernetes-types/networking/v1';
 import React from 'react';
+import { DurationTime } from 'src/components/DurationTime';
 import { PodSelectorTable } from 'src/components/PodSelectorTable';
 import { PortsTable } from 'src/components/PortsTable';
 import { ServiceInClusterAccessComponent, ServiceOutClusterAccessComponent } from 'src/components/ServiceComponents';
@@ -24,7 +25,7 @@ import { EventsTable } from '../EventsTable';
 import { ImageNames } from '../ImageNames';
 import { IngressRulesTable } from '../IngressRulesTable';
 import { KeyValue, KeyValueAnnotation, KeyValueSecret } from '../KeyValue';
-import Time from '../Time';
+import { Time } from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
 
@@ -84,10 +85,10 @@ export const ImageField = <Model extends WorkloadBaseModel>(
   };
 };
 
-export const ReplicaField = <Model extends WorkloadModel>(): ShowField<Model> => {
+export const ReplicaField = <Model extends WorkloadModel | JobModel>(): ShowField<Model> => {
   return {
     key: 'Replicas',
-    path: ['status', 'replicas'],
+    path: [],
     renderContent: (_, record) => {
       return <WorkloadReplicas record={record} editable />;
     },
@@ -144,12 +145,12 @@ export const JobsField = <Model extends JobModel | CronJobModel>(): ShowField<Mo
   };
 };
 
-export const DataField = <Model extends ResourceModel>(): ShowField<Model> => {
+export const DataField = <Model extends ResourceModel>(i18n: I18nType): ShowField<Model> => {
   return {
     key: 'data',
     path: ['data'],
     renderContent: val => {
-      return <KeyValue data={val as Record<string, string>} />;
+      return <KeyValue data={val as Record<string, string>} empty={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.data') })} />;
     },
   };
 };
@@ -331,3 +332,16 @@ export const PortsTableField = <Model extends ServiceModel>(): ShowField<Model> 
     return <PortsTable service={service} />;
   },
 });
+
+export const DurationField = <Model extends JobModel | CronJobModel>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'duration',
+    path: ['duration'],
+    title: i18n.t('dovetail.duration'),
+    renderContent: (v) => {
+      return <DurationTime value={v as number} />;
+    },
+  };
+};

@@ -1,4 +1,4 @@
-import { Icon, useUIKit } from '@cloudtower/eagle';
+import { Icon, useUIKit, message } from '@cloudtower/eagle';
 import { Retry16GradientBlueIcon } from '@cloudtower/icons-react';
 import { useResource, useUpdate } from '@refinedev/core';
 import React from 'react';
@@ -16,21 +16,41 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: React.Props
   const { record, size, children } = props;
   const kit = useUIKit();
   const { resource } = useResource();
-  const { mutate } = useUpdate();
+  const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
 
   return (
     <K8sDropdown record={record} size={size}>
       <kit.menu.Item
-        onClick={() => {
+        onClick={async () => {
           const v = record.redeploy();
           const id = v.id;
           pruneBeforeEdit(v);
-          mutate({
-            id,
-            resource: resource?.name || '',
-            values: v,
-          });
+          try {
+            await mutateAsync({
+              id,
+              resource: resource?.name || '',
+              values: v,
+              successNotification: false,
+              errorNotification: false
+            });
+
+            message.success(t('dovetail.redeploy_success_toast', {
+              kind: record.kind,
+              name: record.id,
+              interpolation: {
+                escapeValue: false,
+              }
+            }), 4.5);
+          } catch {
+            message.error(t('dovetail.redeploy_failed_toast', {
+              kind: record.kind,
+              name: record.id,
+              interpolation: {
+                escapeValue: false,
+              }
+            }), 4.5);
+          }
         }}
       >
         <Icon src={Retry16GradientBlueIcon}>{t('dovetail.redeploy')}</Icon>

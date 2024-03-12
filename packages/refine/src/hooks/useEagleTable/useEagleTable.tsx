@@ -1,3 +1,4 @@
+import { RequiredColumnProps } from '@cloudtower/eagle';
 import { useTable, useResource } from '@refinedev/core';
 import { merge } from 'lodash-es';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -23,6 +24,19 @@ export enum ColumnKeys {
   replicas = 'replicas',
   deploymentImage = 'deploymentImage',
   podImage = 'podImage',
+}
+
+export function transformColumns<Data, Col extends RequiredColumnProps<Data> = RequiredColumnProps<Data>>(columns: Col[]) {
+  return columns.map(col => ({
+    ...col,
+    render(value: unknown, record: Data, index: number) {
+      return (
+        <ValueDisplay
+          value={col.render?.(value, record, index) ?? value}
+        />
+      );
+    }
+  }));
 }
 
 export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>) => {
@@ -54,16 +68,7 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     });
     return mergedParams;
   }, [params.useTableParams, nsFilters]);
-  const finalColumns: Column<Model>[] = useMemo(() => columns.map(col => ({
-    ...col,
-    render(value: unknown, record: Model, index: number) {
-      return (
-        <ValueDisplay
-          value={col.render?.(value, record, index) ?? value}
-        />
-      );
-    }
-  })), [columns]);
+  const finalColumns: Column<Model>[] = useMemo(() => transformColumns(columns), [columns]);
 
   const table = useTable<Model>(useTableParams);
   const onPageChange = useCallback(

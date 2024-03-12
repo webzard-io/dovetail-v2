@@ -28,7 +28,7 @@ export function KeyValueSecret(props: KeyValueSecretProps) {
 
   return (
     <ShowGroupComponent title={i18n.t('dovetail.data')} operationEle={toggleButton}>
-      <KeyValue data={data} hideSecret={hideSecret} />
+      <KeyValue data={data} hideSecret={hideSecret} empty={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.data') })} />
     </ShowGroupComponent>
   );
 }

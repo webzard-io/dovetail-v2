@@ -1,7 +1,12 @@
 import { i18n as I18nType } from 'i18next';
 import { Unstructured } from 'k8s-api-provider';
 import { NetworkPolicy } from 'kubernetes-types/networking/v1';
+import type {
+  NetworkPolicyIngressRule,
+  NetworkPolicyEgressRule,
+} from 'kubernetes-types/networking/v1';
 import React from 'react';
+import { NetworkPolicyRulesViewer } from 'src/components/NetworkPolicyRulesTable';
 import { PodContainersTable } from 'src/components/PodContainersTable';
 import {
   ResourceModel,
@@ -155,7 +160,55 @@ export const DataGroup = <Model extends ResourceModel>(i18n: I18nType): ShowGrou
   title: i18n.t('dovetail.data'),
   areas: [
     {
-      fields: [DataField()],
+      fields: [DataField(i18n)],
+    },
+  ],
+});
+
+export const NetworkPolicyIngressRulesGroup = <Model extends ResourceModel>(
+  i18n: I18nType
+): ShowGroup<Model> => ({
+  title: i18n.t('dovetail.ingress_rule'),
+  areas: [
+    {
+      fields: [
+        {
+          key: 'Ingress',
+          path: ['spec', 'ingress'],
+          renderContent: ingress => {
+            return (
+              <NetworkPolicyRulesViewer
+                ingressOrEgress={ingress as NetworkPolicyIngressRule[]}
+                kind={` ${i18n.t('dovetail.ingress_rule')}`}
+              />
+            );
+          },
+        },
+      ],
+    },
+  ],
+});
+
+export const NetworkPolicyEgressRulesGroup = <Model extends ResourceModel>(
+  i18n: I18nType
+): ShowGroup<Model> => ({
+  title: i18n.t('dovetail.egress_rule'),
+  areas: [
+    {
+      fields: [
+        {
+          key: 'Egress',
+          path: ['spec', 'egress'],
+          renderContent: egress => {
+            return (
+              <NetworkPolicyRulesViewer
+                ingressOrEgress={egress as NetworkPolicyEgressRule[]}
+                kind={` ${i18n.t('dovetail.egress_rule')}`}
+              />
+            );
+          },
+        },
+      ],
     },
   ],
 });

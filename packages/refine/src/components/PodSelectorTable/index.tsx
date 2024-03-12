@@ -1,6 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { transformColumns } from 'src/hooks/useEagleTable';
 import ErrorContent from '../Table/ErrorContent';
 
 type Props = {
@@ -35,14 +36,17 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
   ];
 
   if (datas.length === 0) {
-    return <ErrorContent errorText={t('dovetail.empty')} style={{ padding: '15px 0' }} />;
+    return <ErrorContent
+      errorText={t('dovetail.no_resource', { kind: ` ${t('dovetail.pod_selector')}` })}
+      style={{ padding: '15px 0' }}
+    />;
   }
 
   return (
     <kit.table
       loading={false}
       dataSource={datas}
-      columns={columns}
+      columns={transformColumns(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
     />
