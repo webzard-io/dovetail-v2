@@ -4,9 +4,11 @@ import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { StateTagStyle } from 'src/components/StateTag';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
+import { WithId } from 'src/types';
 import { addId } from '../../utils/addId';
 import ErrorContent from '../Table/ErrorContent';
-import Time from '../Time';
+import { Time } from '../Time';
 
 type Props = {
   conditions: Condition[];
@@ -74,14 +76,14 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
   ];
 
   if (conditionsWithId.length === 0) {
-    return <ErrorContent errorText={t('dovetail.empty')} style={{ padding: '15px 0' }} />;
+    return <ErrorContent errorText={t('dovetail.no_resource', { kind: t('dovetail.condition') })} style={{ padding: '15px 0' }} />;
   }
 
   return (
     <kit.table
       loading={false}
       dataSource={conditionsWithId}
-      columns={columns}
+      columns={addDefaultRenderToColumns<WithId<Condition>>(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
     />

@@ -8,6 +8,7 @@ import { LogViewer } from '@patternfly/react-log-viewer';
 import { useDataProvider } from '@refinedev/core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
 
 import '@patternfly/react-core/dist/styles/base-no-reset.css';
 import { PodModel } from '../../models';
@@ -15,6 +16,8 @@ import { PodModel } from '../../models';
 const WrapperStyle = css`
   padding: 0 24px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 const ToolbarStyle = css`
   margin: 8px 0;
@@ -34,6 +37,10 @@ const ToolbarAreaStyle = css`
   display: flex;
   gap: 12px;
   align-items: center;
+`;
+const ContentStyle = css`
+  flex: 1;
+  min-height: 0;
 `;
 
 export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
@@ -216,30 +223,28 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
         </span>
 
       </div>
-
-      <LogViewer
-        innerRef={logViewerRef}
-        hasLineNumbers={true}
-        height={300}
-        data={logs}
-        theme="light"
-        isTextWrapped={wrap}
-        footer={
-          paused && (
-            <kit.button
-              type="primary"
-              style={{
-                borderRadius: 0,
-              }}
-              onClick={() => setPaused(false)}
-            >
-              {t('dovetail.resume')}
-              {linesBehind === 0 ? null : t('dovetail.log_new_lines', { count: linesBehind })}
-            </kit.button>
+      <div className={ContentStyle}>
+        {
+          logType === 'previous' && !logs.length ? (
+            <ErrorContent
+              style={{ height: '100%' }}
+              errorText={t('dovetail.no_resource', { kind: t('dovetail.previous_log') })}
+              hiddenRetry
+            />
+          ) : (
+            <LogViewer
+              innerRef={logViewerRef}
+              height="100%"
+              hasLineNumbers={true}
+              data={logs}
+              theme="light"
+              isTextWrapped={wrap}
+              onScroll={onScroll}
+            />
           )
         }
-        onScroll={onScroll}
-      />
+
+      </div>
     </div>
   );
 };

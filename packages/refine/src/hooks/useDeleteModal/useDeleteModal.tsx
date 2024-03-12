@@ -1,6 +1,6 @@
 import { ModalProps, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
-import { BaseKey, useDelete, useNavigation } from '@refinedev/core';
+import { useDelete, useNavigation } from '@refinedev/core';
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
@@ -27,10 +27,11 @@ const ModalStyle = css`
 export const useDeleteModal = (resource: string) => {
   const configs = useContext(ConfigsContext);
   const config = configs[resource];
-  const { mutate } = useDelete();
+  const { mutateAsync } = useDelete();
+  const [deleting, setDeleting] = useState<boolean>(false);
   const [visible, setVisible] = useState(false);
   const navigation = useNavigation();
-  const [id, setId] = useState<BaseKey>('');
+  const [id, setId] = useState<string>('');
   const { t } = useTranslation();
   const modalProps: ModalProps = {
     className: ModalStyle,
@@ -38,6 +39,7 @@ export const useDeleteModal = (resource: string) => {
     okText: t('dovetail.delete'),
     okButtonProps: {
       danger: true,
+      loading: deleting
     },
     cancelText: t('dovetail.cancel'),
     children: (
@@ -56,20 +58,49 @@ export const useDeleteModal = (resource: string) => {
         </div>
       </>
     ),
-    onOk() {
-      mutate({
-        resource,
-        id,
-      });
-      setVisible(false);
-      navigation.list(resource);
+    async onOk() {
+      try {
+        setDeleting(true);
+        await mutateAsync({
+          resource,
+          id,
+          successNotification() {
+            return {
+              message: t('dovetail.delete_success_toast', {
+                name: id,
+                kind: config.kind,
+                interpolation: {
+                  escapeValue: false
+                }
+              }),
+              type: 'success'
+            };
+          },
+          errorNotification() {
+            return {
+              message: t('dovetail.delete_failed_toast', {
+                name: id,
+                kind: config.kind,
+                interpolation: {
+                  escapeValue: false
+                }
+              }),
+              type: 'error'
+            };
+          },
+        });
+        setVisible(false);
+        navigation.list(resource);
+      } finally {
+        setDeleting(false);
+      }
     },
     onCancel() {
       setVisible(false);
     },
   };
 
-  function openDeleteConfirmModal(id: BaseKey) {
+  function openDeleteConfirmModal(id: string) {
     setId(id);
     setVisible(true);
   }

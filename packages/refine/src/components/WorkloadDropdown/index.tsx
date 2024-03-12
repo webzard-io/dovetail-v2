@@ -16,20 +16,44 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: React.Props
   const { record, size, children } = props;
   const kit = useUIKit();
   const { resource } = useResource();
-  const { mutate } = useUpdate();
+  const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
 
   return (
     <K8sDropdown record={record} size={size}>
       <kit.menu.Item
-        onClick={() => {
+        onClick={async () => {
           const v = record.redeploy();
           const id = v.id;
           pruneBeforeEdit(v);
-          mutate({
+          await mutateAsync({
             id,
             resource: resource?.name || '',
             values: v,
+            successNotification() {
+              return {
+                message: t('dovetail.redeploy_success_toast', {
+                  kind: record.kind,
+                  name: record.id,
+                  interpolation: {
+                    escapeValue: false,
+                  }
+                }),
+                type: 'success'
+              };
+            },
+            errorNotification() {
+              return {
+                message: t('dovetail.redeploy_failed_toast', {
+                  kind: record.kind,
+                  name: record.id,
+                  interpolation: {
+                    escapeValue: false,
+                  }
+                }),
+                type: 'error'
+              };
+            }
           });
         }}
       >

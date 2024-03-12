@@ -57,6 +57,14 @@ export class JobModel extends WorkloadBaseModel {
     return `${this._rawYaml.status?.succeeded || 0}/${this._rawYaml.spec?.completions}`;
   }
 
+  get succeeded() {
+    return this._rawYaml.status?.succeeded || 0;
+  }
+
+  get completions() {
+    return this._rawYaml.spec?.completions;
+  }
+
   get stateDisplay() {
     if (!this.spec?.completions && !this.status?.succeeded) {
       return WorkloadState.RUNNING;

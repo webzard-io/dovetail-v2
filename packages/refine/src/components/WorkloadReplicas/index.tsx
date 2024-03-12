@@ -2,11 +2,10 @@
 import { useUIKit, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useResource, useUpdate } from '@refinedev/core';
-import { get } from 'lodash-es';
 import React, { useState, useMemo, useCallback, useImperativeHandle, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EditField } from 'src/components/EditField';
-import { WorkloadModel } from '../../models';
+import { WorkloadModel, JobModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
 
 const WorkloadReplicasWrapperStyle = css`
@@ -58,6 +57,7 @@ export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler
   const kit = useUIKit();
   const { resource } = useResource();
   const { mutateAsync } = useUpdate();
+  const { t } = useTranslation();
 
   const [replicas, setReplicas] = useState(defaultValue);
 
@@ -71,8 +71,21 @@ export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler
       id,
       resource: resource?.name || '',
       values: v,
+      successNotification() {
+        return {
+          message: t('dovetail.save_replicas_success_toast', {
+            kind: record.kind,
+            name: record.id,
+            interpolation: {
+              escapeValue: false
+            }
+          }),
+          type: 'success'
+        };
+      },
+      errorNotification: false,
     });
-  }, [record, replicas, resource?.name, mutateAsync]);
+  }, [record, replicas, resource?.name, mutateAsync, t]);
 
   useImperativeHandle(ref, () => ({
     submit,
@@ -103,7 +116,7 @@ export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler
 });
 
 export interface WorkloadReplicasProps {
-  record: WorkloadModel;
+  record: WorkloadModel | JobModel;
   editable?: boolean;
 }
 
@@ -112,8 +125,8 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
   const { t } = useTranslation();
   const formRef = useRef<WorkloadReplicasFormHandler | null>(null);
 
-  const readyReplicas = (record.readyReplicas) || 0;
-  const replicas = record.replicas || 0;
+  const readyReplicas = (('succeeded' in record && record.succeeded) || ('readyReplicas' in record && record.readyReplicas)) || 0;
+  const replicas = (('completions' in record && record.completions) || ('replicas' in record && record.replicas)) || 0;
 
   const canScale = record.kind === 'Deployment' || record.kind === 'StatefulSet';
 
@@ -177,7 +190,7 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
                         <WorkloadReplicasForm
                           ref={formRef}
                           defaultValue={replicas}
-                          record={record}
+                          record={record as WorkloadModel}
                           label={t('dovetail.pod_replicas_num')}
                         />
                       );

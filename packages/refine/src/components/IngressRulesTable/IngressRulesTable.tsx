@@ -1,8 +1,11 @@
 import { useUIKit } from '@cloudtower/eagle';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import ValueDisplay from 'src/components/ValueDisplay';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { RuleItem } from 'src/models/ingress-model';
 import { IngressModel } from '../../models';
+import { WithId } from '../../types';
 import { addId } from '../../utils/addId';
 import { ResourceLink } from '../ResourceLink';
 import ErrorContent from '../Table/ErrorContent';
@@ -15,7 +18,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
   const kit = useUIKit();
   const { t } = useTranslation();
   const rows = useMemo(() => {
-    return addId(ingress.flattenedRules, 'fullPath');
+    return addId(ingress.flattenedRules || [], 'fullPath');
   }, [ingress.flattenedRules]);
 
   const columns = [
@@ -70,21 +73,21 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
             namespace={ingress.metadata.namespace || 'default'}
             resourceId={secretName}
           />
-        ) : '-';
+        ) : <ValueDisplay value="" />;
       },
       sortable: true,
     },
   ];
 
-  if (rows.length === 0) {
-    return <ErrorContent errorText={t('dovetail.empty')} style={{ padding: '15px 0' }} />;
+  if (rows?.length === 0) {
+    return <ErrorContent errorText={t('dovetail.no_resource', { kind: t('dovetail.rule') })} style={{ padding: '15px 0' }} />;
   }
 
   return (
     <kit.table
       loading={false}
       dataSource={rows}
-      columns={columns}
+      columns={addDefaultRenderToColumns<WithId<RuleItem>>(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
     />

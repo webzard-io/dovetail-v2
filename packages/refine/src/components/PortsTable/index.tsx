@@ -1,6 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { ServiceModel } from 'src/models/service-model';
 import ErrorContent from '../Table/ErrorContent';
 
@@ -55,14 +56,14 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
   }));
 
   if (ports?.length === 0) {
-    return <ErrorContent errorText={t('dovetail.empty')} style={{ padding: '15px 0' }} />;
+    return <ErrorContent errorText={t('dovetail.no_resource', { kind: t('dovetail.port') })} style={{ padding: '15px 0' }} />;
   }
 
   return (
     <kit.table
       loading={false}
       dataSource={ports}
-      columns={columns}
+      columns={addDefaultRenderToColumns(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
     />

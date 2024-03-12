@@ -46,6 +46,7 @@ export type TableProps<Data extends ResourceModel> = {
   onPageChange: (page: number) => void;
   onSizeChange?: (size: number) => void;
   RowMenu?: React.FC<{ record: Data; formType?: FormType; }>;
+  empty?: string;
 };
 
 function Table<Data extends ResourceModel>(props: TableProps<Data>) {
@@ -62,9 +63,9 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
     currentSize,
     RowMenu,
     refetch,
-    onSelect,
     onPageChange,
     onSizeChange,
+    empty,
   } = props;
   const auxiliaryLineRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -105,11 +106,14 @@ function Table<Data extends ResourceModel>(props: TableProps<Data>) {
       <ErrorContent
         errorText={t('dovetail.retry_when_access_data_failed')}
         refetch={refetch}
-        style={{ padding: '15px 0' }}
+        style={{ padding: '15px 0', }}
       />
     );
   } else if (dataSource.length === 0) {
-    return <ErrorContent errorText={t('dovetail.empty')} style={{ padding: '15px 0' }} />;
+    return <ErrorContent
+      errorText={empty || t('dovetail.empty')}
+      style={{ padding: '15px 0' }}
+    />;
   }
 
   return (

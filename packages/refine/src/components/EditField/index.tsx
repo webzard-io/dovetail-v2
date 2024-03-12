@@ -1,4 +1,4 @@
-import { useUIKit, pushModal, popModal } from '@cloudtower/eagle';
+import { useUIKit, pushModal, popModal, } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +42,9 @@ export function EditFieldModal(props: EditFieldModalProps) {
     onSubmit,
   } = useSubmitForm({
     formRef: form,
-    onSubmitSuccess: popModal
+    onSubmitSuccess: () => {
+      popModal();
+    }
   });
 
   const close = useCallback(() => {

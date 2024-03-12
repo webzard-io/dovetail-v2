@@ -22,7 +22,7 @@ export const useRefineForm = (props: {
         const formValue = result.getValues() as Unstructured;
         return {
           message: i18n.t(
-            id ? 'dovetail.edit_resource_success' : 'dovetail.create_resource_success',
+            id ? 'dovetail.edit_resource_success' : 'dovetail.create_success_toast',
             {
               resource: config.name,
               name: formValue.metadata.name,
