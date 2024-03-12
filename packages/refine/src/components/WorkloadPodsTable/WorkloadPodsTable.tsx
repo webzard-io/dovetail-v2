@@ -4,6 +4,8 @@ import { useList } from '@refinedev/core';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
+import { transformColumns } from 'src/hooks/useEagleTable';
 import { matchSelector } from 'src/utils/match-selector';
 import {
   NameColumnRenderer,
@@ -63,6 +65,10 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
     AgeColumnRenderer(i18n),
   ];
 
+  if (dataSource?.length === 0) {
+    return <ErrorContent errorText={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.pod') })} style={{ padding: '15px 0' }} />;
+  }
+
   return (
     <kit.space
       direction="vertical"
@@ -78,7 +84,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
         tableKey="pods"
         loading={!dataSource}
         data={dataSource || []}
-        columns={columns}
+        columns={transformColumns<PodModel, Column<PodModel>>(columns)}
         onSelect={keys => setSelectedKeys(keys as string[])}
         rowKey="id"
         error={false}

@@ -1,4 +1,4 @@
-import { Icon, useUIKit } from '@cloudtower/eagle';
+import { Icon, useUIKit, message } from '@cloudtower/eagle';
 import {
   Pause16GradientBlueIcon,
   RecoverContinue16GradientBlueIcon,
@@ -21,7 +21,7 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
   const { spec } = record as CronJob;
   const kit = useUIKit();
   const { resource } = useResource();
-  const { mutate } = useUpdate();
+  const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
 
   const suspended = Boolean(spec?.suspend);
@@ -29,15 +29,36 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
   return (
     <K8sDropdown record={record} size={size}>
       <kit.menu.Item
-        onClick={() => {
+        onClick={async () => {
           const v = suspended ? record.resume() : record.suspend();
           const id = record.id;
+
           pruneBeforeEdit(v);
-          mutate({
-            id,
-            resource: resource?.name || '',
-            values: v,
-          });
+          try {
+            await mutateAsync({
+              id,
+              resource: resource?.name || '',
+              values: v,
+              successNotification: false,
+              errorNotification: false
+            });
+
+            message.success(t(suspended ? 'dovetail.resume_success_toast' : 'dovetail.pause_success_toast', {
+              kind: record.kind,
+              name: id,
+              interpolation: {
+                escapeValue: false,
+              }
+            }), 4.5);
+          } catch {
+            message.error(t(suspended ? 'dovetail.resume_failed_toast' : 'dovetail.pause_failed_toast', {
+              kind: record.kind,
+              name: id,
+              interpolation: {
+                escapeValue: false,
+              }
+            }), 4.5);
+          }
         }}
       >
         <Icon src={suspended ? RecoverContinue16GradientBlueIcon : Pause16GradientBlueIcon}>

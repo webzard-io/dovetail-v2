@@ -53,4 +53,4 @@ const Time: React.FunctionComponent<{
   );
 };
 
-export default Time;
+export { Time };

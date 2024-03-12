@@ -76,7 +76,11 @@ export type UseFormReturnType<
   TResponseError
 > & {
   form: FormInstance;
-  formProps: FormProps;
+  formProps: Omit<FormProps, 'onFinish'> & {
+    onFinish: (
+      values?: TVariables
+    ) => Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void> | undefined;
+  };
   saveButtonProps: ButtonProps & {
     onClick: () => void;
   };
@@ -318,7 +322,7 @@ const useYamlForm = <
         }
 
         const objectValues = editor.current
-          ? (yaml.load(editor.current?.getEditorValue() || '') as TVariables)
+          ? (yaml.load(editor.current?.getEditorValue() || '') as Unstructured)
           : values;
         const finalValues =
           transformApplyValues?.(objectValues as Unstructured) || objectValues;
