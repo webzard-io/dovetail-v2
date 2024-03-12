@@ -26,16 +26,16 @@ export enum ColumnKeys {
   podImage = 'podImage',
 }
 
-export function transformColumns<Data, Col extends RequiredColumnProps<Data> = RequiredColumnProps<Data>>(columns: Col[]) {
+export function addDefaultRenderToColumns<Data, Col extends RequiredColumnProps<Data> = RequiredColumnProps<Data>>(columns: Col[]) {
   return columns.map(col => ({
-    ...col,
-    render(value: unknown, record: Data, index: number) {
+    render(value: unknown) {
       return (
         <ValueDisplay
-          value={col.render?.(value, record, index) ?? value}
+          value={value}
         />
       );
-    }
+    },
+    ...col,
   }));
 }
 
@@ -68,7 +68,10 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     });
     return mergedParams;
   }, [params.useTableParams, nsFilters]);
-  const finalColumns: Column<Model>[] = useMemo(() => transformColumns(columns), [columns]);
+  const finalColumns: Column<Model>[] = useMemo(() =>
+    addDefaultRenderToColumns<Model, Column<Model>>(columns),
+    [columns]
+  );
 
   const table = useTable<Model>(useTableParams);
   const onPageChange = useCallback(

@@ -3,7 +3,7 @@ import { ContainerStatus } from 'kubernetes-types/core/v1';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
-import { transformColumns } from 'src/hooks/useEagleTable';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { WorkloadState } from '../../constants';
 import { CommonSorter } from '../../hooks/useEagleTable/columns';
 import { WithId } from '../../types';
@@ -94,7 +94,7 @@ export const PodContainersTable: React.FC<Props> = ({
     <kit.table
       loading={false}
       dataSource={dataSource}
-      columns={transformColumns<WithId<ContainerStatus>>(columns)}
+      columns={addDefaultRenderToColumns<WithId<ContainerStatus>>(columns)}
       rowKey="containerID"
       error={false}
     />

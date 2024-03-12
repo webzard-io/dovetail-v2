@@ -5,7 +5,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
 import { StateTagStyle } from 'src/components/StateTag';
-import { transformColumns } from 'src/hooks/useEagleTable';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,
   CommonSorter,
@@ -87,7 +87,7 @@ export const EventsTable: React.FC = ({ }) => {
       tableKey="events"
       loading={isLoading}
       data={dataSource || []}
-      columns={transformColumns<EventModel, Column<EventModel>>(columns)}
+      columns={addDefaultRenderToColumns<EventModel, Column<EventModel>>(columns)}
       rowKey="id"
       error={false}
       currentPage={currentPage}

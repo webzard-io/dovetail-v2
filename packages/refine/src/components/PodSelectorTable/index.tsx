@@ -1,7 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { transformColumns } from 'src/hooks/useEagleTable';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import ErrorContent from '../Table/ErrorContent';
 
 type Props = {
@@ -46,7 +46,7 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
     <kit.table
       loading={false}
       dataSource={datas}
-      columns={transformColumns(columns)}
+      columns={addDefaultRenderToColumns(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
     />

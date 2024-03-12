@@ -4,7 +4,7 @@ import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { StateTagStyle } from 'src/components/StateTag';
-import { transformColumns } from 'src/hooks/useEagleTable';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { WithId } from 'src/types';
 import { addId } from '../../utils/addId';
 import ErrorContent from '../Table/ErrorContent';
@@ -83,7 +83,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
     <kit.table
       loading={false}
       dataSource={conditionsWithId}
-      columns={transformColumns<WithId<Condition>>(columns)}
+      columns={addDefaultRenderToColumns<WithId<Condition>>(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
     />

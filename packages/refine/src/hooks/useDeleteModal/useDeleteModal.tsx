@@ -1,4 +1,4 @@
-import { ModalProps, Typo, message } from '@cloudtower/eagle';
+import { ModalProps, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useDelete, useNavigation } from '@refinedev/core';
 import React, { useState, useContext } from 'react';
@@ -64,26 +64,33 @@ export const useDeleteModal = (resource: string) => {
         await mutateAsync({
           resource,
           id,
-          successNotification: false,
-          errorNotification: false,
+          successNotification() {
+            return {
+              message: t('dovetail.delete_success_toast', {
+                name: id,
+                kind: config.kind,
+                interpolation: {
+                  escapeValue: false
+                }
+              }),
+              type: 'success'
+            };
+          },
+          errorNotification() {
+            return {
+              message: t('dovetail.delete_failed_toast', {
+                name: id,
+                kind: config.kind,
+                interpolation: {
+                  escapeValue: false
+                }
+              }),
+              type: 'error'
+            };
+          },
         });
-        message.success(t('dovetail.delete_success_toast', {
-          name: id,
-          kind: config.kind,
-          interpolation: {
-            escapeValue: false
-          }
-        }), 4.5);
         setVisible(false);
         navigation.list(resource);
-      } catch {
-        message.error(t('dovetail.delete_failed_toast', {
-          name: id,
-          kind: config.kind,
-          interpolation: {
-            escapeValue: false
-          }
-        }), 4.5);
       } finally {
         setDeleting(false);
       }
