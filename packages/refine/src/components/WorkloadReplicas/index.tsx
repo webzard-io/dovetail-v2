@@ -2,7 +2,6 @@
 import { useUIKit, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useResource, useUpdate } from '@refinedev/core';
-import { get } from 'lodash-es';
 import React, { useState, useMemo, useCallback, useImperativeHandle, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EditField } from 'src/components/EditField';
@@ -58,6 +57,7 @@ export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler
   const kit = useUIKit();
   const { resource } = useResource();
   const { mutateAsync } = useUpdate();
+  const { t } = useTranslation();
 
   const [replicas, setReplicas] = useState(defaultValue);
 
@@ -71,10 +71,21 @@ export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler
       id,
       resource: resource?.name || '',
       values: v,
-      successNotification: false,
+      successNotification() {
+        return {
+          message: t('dovetail.save_replicas_success_toast', {
+            kind: record.kind,
+            name: record.id,
+            interpolation: {
+              escapeValue: false
+            }
+          }),
+          type: 'success'
+        };
+      },
       errorNotification: false,
     });
-  }, [record, replicas, resource?.name, mutateAsync]);
+  }, [record, replicas, resource?.name, mutateAsync, t]);
 
   useImperativeHandle(ref, () => ({
     submit,
@@ -174,13 +185,6 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
                   modalProps={{
                     formRef,
                     title: t('dovetail.edit_replicas'),
-                    successMsg: t('dovetail.save_replicas_success_toast', {
-                      kind: record.kind,
-                      name: record.id,
-                      interpolation: {
-                        escapeValue: false
-                      }
-                    }),
                     renderContent() {
                       return (
                         <WorkloadReplicasForm

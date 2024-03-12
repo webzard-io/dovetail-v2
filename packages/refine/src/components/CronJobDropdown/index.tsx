@@ -1,4 +1,4 @@
-import { Icon, useUIKit, message } from '@cloudtower/eagle';
+import { Icon, useUIKit } from '@cloudtower/eagle';
 import {
   Pause16GradientBlueIcon,
   RecoverContinue16GradientBlueIcon,
@@ -34,37 +34,41 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
           const id = record.id;
 
           pruneBeforeEdit(v);
-          try {
-            await mutateAsync({
-              id,
-              resource: resource?.name || '',
-              values: v,
-              successNotification: false,
-              errorNotification: false
-            });
-
-            message.success(t(suspended ? 'dovetail.resume_success_toast' : 'dovetail.pause_success_toast', {
-              kind: record.kind,
-              name: id,
-              interpolation: {
-                escapeValue: false,
-              }
-            }), 4.5);
-          } catch {
-            message.error(t(suspended ? 'dovetail.resume_failed_toast' : 'dovetail.pause_failed_toast', {
-              kind: record.kind,
-              name: id,
-              interpolation: {
-                escapeValue: false,
-              }
-            }), 4.5);
-          }
+          await mutateAsync({
+            id,
+            resource: resource?.name || '',
+            values: v,
+            successNotification() {
+              return {
+                message: t(suspended ? 'dovetail.resume_success_toast' : 'dovetail.pause_success_toast', {
+                  kind: record.kind,
+                  name: id,
+                  interpolation: {
+                    escapeValue: false,
+                  }
+                }),
+                type: 'success',
+              };
+            },
+            errorNotification() {
+              return {
+                message: t(suspended ? 'dovetail.resume_failed_toast' : 'dovetail.pause_failed_toast', {
+                  kind: record.kind,
+                  name: id,
+                  interpolation: {
+                    escapeValue: false,
+                  }
+                }),
+                type: 'error'
+              };
+            }
+          });
         }}
       >
         <Icon src={suspended ? RecoverContinue16GradientBlueIcon : Pause16GradientBlueIcon}>
           {t(suspended ? 'dovetail.resume' : 'dovetail.suspend')}
         </Icon>
       </kit.menu.Item>
-    </K8sDropdown>
+    </K8sDropdown >
   );
 }

@@ -1,7 +1,8 @@
 import { useUIKit } from '@cloudtower/eagle';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { transformColumns } from 'src/hooks/useEagleTable';
+import ValueDisplay from 'src/components/ValueDisplay';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { RuleItem } from 'src/models/ingress-model';
 import { IngressModel } from '../../models';
 import { WithId } from '../../types';
@@ -72,7 +73,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
             namespace={ingress.metadata.namespace || 'default'}
             resourceId={secretName}
           />
-        ) : '-';
+        ) : <ValueDisplay value="" />;
       },
       sortable: true,
     },
@@ -86,7 +87,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
     <kit.table
       loading={false}
       dataSource={rows}
-      columns={transformColumns<WithId<RuleItem>>(columns)}
+      columns={addDefaultRenderToColumns<WithId<RuleItem>>(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
     />

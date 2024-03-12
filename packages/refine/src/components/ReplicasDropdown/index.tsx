@@ -32,13 +32,6 @@ export function ReplicasDropdown<Model extends WorkloadModel>(props: React.Props
               const modalProps = {
                 formRef,
                 title: t('dovetail.edit_replicas'),
-                successMsg: t('dovetail.save_replicas_success_toast', {
-                  kind: record.kind,
-                  name: record.id,
-                  interpolation: {
-                    escapeValue: false
-                  }
-                }),
                 renderContent() {
                   return (
                     <WorkloadReplicasForm

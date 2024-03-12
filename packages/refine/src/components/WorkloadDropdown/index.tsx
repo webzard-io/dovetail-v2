@@ -1,4 +1,4 @@
-import { Icon, useUIKit, message } from '@cloudtower/eagle';
+import { Icon, useUIKit } from '@cloudtower/eagle';
 import { Retry16GradientBlueIcon } from '@cloudtower/icons-react';
 import { useResource, useUpdate } from '@refinedev/core';
 import React from 'react';
@@ -26,31 +26,35 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: React.Props
           const v = record.redeploy();
           const id = v.id;
           pruneBeforeEdit(v);
-          try {
-            await mutateAsync({
-              id,
-              resource: resource?.name || '',
-              values: v,
-              successNotification: false,
-              errorNotification: false
-            });
-
-            message.success(t('dovetail.redeploy_success_toast', {
-              kind: record.kind,
-              name: record.id,
-              interpolation: {
-                escapeValue: false,
-              }
-            }), 4.5);
-          } catch {
-            message.error(t('dovetail.redeploy_failed_toast', {
-              kind: record.kind,
-              name: record.id,
-              interpolation: {
-                escapeValue: false,
-              }
-            }), 4.5);
-          }
+          await mutateAsync({
+            id,
+            resource: resource?.name || '',
+            values: v,
+            successNotification() {
+              return {
+                message: t('dovetail.redeploy_success_toast', {
+                  kind: record.kind,
+                  name: record.id,
+                  interpolation: {
+                    escapeValue: false,
+                  }
+                }),
+                type: 'success'
+              };
+            },
+            errorNotification() {
+              return {
+                message: t('dovetail.redeploy_failed_toast', {
+                  kind: record.kind,
+                  name: record.id,
+                  interpolation: {
+                    escapeValue: false,
+                  }
+                }),
+                type: 'error'
+              };
+            }
+          });
         }}
       >
         <Icon src={Retry16GradientBlueIcon}>{t('dovetail.redeploy')}</Icon>

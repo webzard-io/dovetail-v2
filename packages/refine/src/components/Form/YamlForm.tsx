@@ -1,4 +1,4 @@
-import { useUIKit, message } from '@cloudtower/eagle';
+import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { FormAction, useResource } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
@@ -73,7 +73,18 @@ export function YamlForm(props: YamlFormProps) {
     },
     liveMode: 'off',
     initialValuesForCreate: props.initialValues ?? BASE_INIT_VALUE,
-    successNotification: false,
+    successNotification(data) {
+      return {
+        message: i18n.t(action === 'create' ? 'dovetail.create_success_toast' : 'dovetail.save_yaml_success_toast', {
+          kind: resource?.meta?.kind,
+          name: data?.data.id,
+          interpolation: {
+            escapeValue: false
+          }
+        }),
+        type: 'success',
+      };
+    },
     errorNotification: false,
     transformInitValues,
     transformApplyValues,
@@ -98,20 +109,10 @@ export function YamlForm(props: YamlFormProps) {
       const result = await formProps.onFinish?.(store);
 
       if (result) {
-        message.success(
-          i18n.t(action === 'create' ? 'dovetail.create_success_toast' : 'dovetail.save_yaml_success_toast', {
-            kind: resource?.meta?.kind,
-            name: result.data.id,
-            interpolation: {
-              escapeValue: false
-            }
-          }),
-          4.5
-        );
         props.onFinish?.();
       }
     },
-    [formProps, props, action, i18n, resource]
+    [formProps, props]
   );
 
   useEffect(() => {

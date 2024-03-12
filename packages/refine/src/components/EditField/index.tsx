@@ -1,4 +1,4 @@
-import { useUIKit, pushModal, popModal, message, } from '@cloudtower/eagle';
+import { useUIKit, pushModal, popModal, } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,12 +28,11 @@ export interface EditFieldModalProps {
   formRef: React.MutableRefObject<{
     submit: () => (Promise<unknown> | undefined);
   } | null>;
-  successMsg?: string;
   renderContent: () => React.ReactNode;
 }
 
 export function EditFieldModal(props: EditFieldModalProps) {
-  const { title, formRef: form, successMsg, renderContent } = props;
+  const { title, formRef: form, renderContent } = props;
   const kit = useUIKit();
   const { i18n } = useTranslation();
   const {
@@ -45,10 +44,6 @@ export function EditFieldModal(props: EditFieldModalProps) {
     formRef: form,
     onSubmitSuccess: () => {
       popModal();
-
-      if (successMsg) {
-        message.success(successMsg, 4.5);
-      }
     }
   });
 

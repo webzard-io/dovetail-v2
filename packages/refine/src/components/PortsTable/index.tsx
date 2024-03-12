@@ -1,7 +1,7 @@
 import { useUIKit } from '@cloudtower/eagle';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { transformColumns } from 'src/hooks/useEagleTable';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { ServiceModel } from 'src/models/service-model';
 import ErrorContent from '../Table/ErrorContent';
 
@@ -63,7 +63,7 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
     <kit.table
       loading={false}
       dataSource={ports}
-      columns={transformColumns(columns)}
+      columns={addDefaultRenderToColumns(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
     />

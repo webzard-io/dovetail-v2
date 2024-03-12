@@ -476,7 +476,8 @@ export const IngressTlsColumnRenderer = <Model extends IngressModel>(
     sortable: true,
     sorter: CommonSorter(['spec', 'ingressClassName']),
     render: (tls: IngressTLS[]) => {
-      if (!tls) return '-';
+      if (!tls) return <ValueDisplay value="" />;
+
       return (
         <ul>
           {tls.map(t => (
@@ -513,9 +514,11 @@ export const DataKeysColumnRenderer = <Model extends ResourceModel>(i18n: I18nTy
     dataIndex: ['data'],
     title: i18n.t('dovetail.data'),
     render(data) {
-      return Object.keys(data || {}).map(key => (
+      const keys = Object.keys(data || {});
+
+      return keys.length ? keys.map(key => (
         <OverflowTooltip content={key} key={key} />
-      ));
+      )) : <ValueDisplay value="" />;
     },
     width: 300,
     sortable: true,
