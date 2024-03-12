@@ -1,17 +1,15 @@
-import { Icon, RequiredColumnProps, useUIKit } from '@cloudtower/eagle';
-import {
-  CheckmarkDoneSuccessCorrect16BoldGreenIcon,
-  XmarkFailed16BoldRedIcon,
-} from '@cloudtower/icons-react';
+import { RequiredColumnProps, useUIKit } from '@cloudtower/eagle';
 import { ContainerStatus } from 'kubernetes-types/core/v1';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { WorkloadState } from '../../constants';
 import { CommonSorter } from '../../hooks/useEagleTable/columns';
 import { WithId } from '../../types';
 import { addId } from '../../utils/addId';
 import { StateTag } from '../StateTag';
-import Time from '../Time';
+import { Time } from '../Time';
 
 type Props = {
   containerStatuses: ContainerStatus[];
@@ -88,11 +86,15 @@ export const PodContainersTable: React.FC<Props> = ({
     [containerStatuses, initContainerStatuses]
   );
 
+  if (dataSource.length === 0) {
+    return <ErrorContent errorText={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.container') })} style={{ padding: '15px 0' }} />;
+  }
+
   return (
     <kit.table
       loading={false}
       dataSource={dataSource}
-      columns={columns}
+      columns={addDefaultRenderToColumns<WithId<ContainerStatus>>(columns)}
       rowKey="containerID"
       error={false}
     />

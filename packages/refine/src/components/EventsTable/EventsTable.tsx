@@ -3,12 +3,15 @@ import { cx } from '@linaria/core';
 import { useList, useParsed } from '@refinedev/core';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
 import { StateTagStyle } from 'src/components/StateTag';
+import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,
   CommonSorter,
 } from '../../hooks/useEagleTable/columns';
 import { EventModel } from '../../models';
+import { Column } from '../Table';
 import Table from '../Table';
 
 export const EventsTable: React.FC = ({ }) => {
@@ -59,7 +62,7 @@ export const EventsTable: React.FC = ({ }) => {
         sortable: true,
         sorter: CommonSorter(['note']),
       },
-      AgeColumnRenderer(i18n, { title: i18n.t('dovetail.last_seen') }),
+      AgeColumnRenderer<EventModel>(i18n, { title: i18n.t('dovetail.last_seen') }),
     ],
     [i18n]
   );
@@ -72,12 +75,19 @@ export const EventsTable: React.FC = ({ }) => {
     }) as EventModel[];
   }, [data?.data, parsed]);
 
+  if (!dataSource?.length && !isLoading) {
+    return <ErrorContent
+      errorText={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.event') })}
+      hiddenRetry
+    />;
+  }
+
   return (
     <Table
       tableKey="events"
       loading={isLoading}
       data={dataSource || []}
-      columns={columns}
+      columns={addDefaultRenderToColumns<EventModel, Column<EventModel>>(columns)}
       rowKey="id"
       error={false}
       currentPage={currentPage}

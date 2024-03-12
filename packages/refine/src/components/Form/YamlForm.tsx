@@ -54,7 +54,7 @@ export function YamlForm(props: YamlFormProps) {
     onSaveButtonPropsChange,
     onErrorsChange
   } = props;
-  const { action: actionFromResource } = useResource();
+  const { action: actionFromResource, resource } = useResource();
   const action = actionFromProps || actionFromResource;
   const {
     formProps,
@@ -73,6 +73,19 @@ export function YamlForm(props: YamlFormProps) {
     },
     liveMode: 'off',
     initialValuesForCreate: props.initialValues ?? BASE_INIT_VALUE,
+    successNotification(data) {
+      return {
+        message: i18n.t(action === 'create' ? 'dovetail.create_success_toast' : 'dovetail.save_yaml_success_toast', {
+          kind: resource?.meta?.kind,
+          name: data?.data.id,
+          interpolation: {
+            escapeValue: false
+          }
+        }),
+        type: 'success',
+      };
+    },
+    errorNotification: false,
     transformInitValues,
     transformApplyValues,
     ...useFormProps,

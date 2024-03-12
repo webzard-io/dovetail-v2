@@ -3,8 +3,8 @@ import type { LabelSelector } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import {
   BasicGroup,
-  NetworkPolicyIngressRulesTab,
-  NetworkPolicyEgressRulesTab,
+  NetworkPolicyIngressRulesGroup,
+  NetworkPolicyEgressRulesGroup,
   PodSelectorGroup,
 } from 'src/components/ShowContent';
 import { Column, Tags } from '../../components';
@@ -53,10 +53,10 @@ export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyMod
             }]
           }),
           PodSelectorGroup(i18n),
+          NetworkPolicyIngressRulesGroup(i18n),
+          NetworkPolicyEgressRulesGroup(i18n)
         ]
       },
-      NetworkPolicyIngressRulesTab(i18n),
-      NetworkPolicyEgressRulesTab(i18n),
     ],
   }),
   initValue: NETWORK_POLICY_INIT_VALUE,

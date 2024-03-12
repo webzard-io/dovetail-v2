@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CronJobDropdown } from 'src/components/CronJobDropdown';
 import { ListPage } from 'src/components/ListPage';
-import Time from 'src/components/Time';
+import { Time } from 'src/components/Time';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,

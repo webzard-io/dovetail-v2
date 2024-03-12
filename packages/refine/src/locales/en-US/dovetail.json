@@ -111,5 +111,11 @@
   "true": "True",
   "false": "False",
   "warning": "Warning",
-  "normal": "Normal"
+  "normal": "Normal",
+  "delete_tip": "This operation cannot be undone.",
+  "delete_resource": "Delete {{resource}}",
+  "password": "Password",
+  "username": "Username",
+  "host": "Host",
+  "no_resource": "No {{kind}}"
 }

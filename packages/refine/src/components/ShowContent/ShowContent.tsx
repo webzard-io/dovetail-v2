@@ -59,8 +59,11 @@ const GroupStyle = css`
     0px 0px 2.003px 0px rgba(107, 125, 153, 0.15),
     0px 0px 16px 0px rgba(107, 125, 153, 0.08);
   background-color: #fff;
-  margin: 16px 24px;
+  margin: 16px 0;
   overflow: auto;
+  margin-bottom: 0;
+  width: 100%;
+  max-width: 1592px;
 
   &:not(:last-of-type) {
     margin-bottom: 24px;
@@ -72,9 +75,21 @@ const GroupTitleStyle = css`
   margin-bottom: 12px;
   justify-content: space-between;
 `;
+const FullTabContentStyle = css`
+  background-color: #fff;
+  height: 100%;
+`;
 const FieldWrapperStyle = css`
   display: flex;
   flex-wrap: nowrap;
+`;
+const TabContentStyle = css`
+  padding: 0 24px;
+  padding-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 952px;
 `;
 const TabsStyle = css`
   &.ant-tabs {
@@ -91,6 +106,11 @@ const TabsStyle = css`
 
     .ant-tabs-content-holder {
       overflow: auto;
+
+      .ant-tabs-content,
+      .ant-tabs-tabpane-active {
+        height: 100%;
+      }
     }
   }
 `;
@@ -145,7 +165,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   const model = data.data;
   const record = formatter ? formatter(model) : data?.data;
 
-  function renderFields(fields: ShowField<Model>[], areaType?: AreaType) {
+  function renderFields(fields: ShowField<Model>[], areaType?: AreaType, hasCol = true) {
     if (!record) return null;
 
     return fields.map(field => {
@@ -158,7 +178,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
         content = get(record, field.path);
       }
 
-      return (
+      return hasCol ? (
         <kit.col
           flex={areaType === AreaType.Inline ? 'none' : ''}
           span={field.col || 24}
@@ -189,6 +209,12 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
             </div>
           )}
         </kit.col>
+      ) : (
+        <ValueDisplay
+          style={{ height: '100%' }}
+          value={content}
+          useOverflow={false}
+        />
       );
     });
   }
@@ -230,22 +256,29 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
         return {
           title: tab.title,
           key: tab.key,
-          children: tab.groups?.map(group => {
-            const GroupContainer = group.title ? ShowGroupComponent : React.Fragment;
-            const FieldContainer = group.title ? kit.row : React.Fragment;
-            return (
-              <GroupContainer key={group.title} title={group.title || ''}>
-                {group.areas.map((area, index) => (
-                  <>
-                    <FieldContainer key={index} gutter={[24, 8]}>
-                      {renderFields(area.fields, area.type)}
-                    </FieldContainer>
-                    {index !== group.areas.length - 1 ? <kit.divider /> : null}
-                  </>
-                ))}
-              </GroupContainer>
-            );
-          }),
+          children: (
+            <div className={cx(TabContentStyle, tab.groups.length <= 1 && FullTabContentStyle)}>
+              {
+                tab.groups?.map(group => {
+                  const GroupContainer = group.title ? ShowGroupComponent : React.Fragment;
+                  const FieldContainer = group.title ? kit.row : React.Fragment;
+
+                  return (
+                    <GroupContainer key={group.title} title={group.title || ''}>
+                      {group.areas.map((area, index) => (
+                        <>
+                          <FieldContainer key={index} gutter={[24, 8]}>
+                            {renderFields(area.fields, area.type, !!group.title)}
+                          </FieldContainer>
+                          {index !== group.areas.length - 1 ? <kit.divider /> : null}
+                        </>
+                      ))}
+                    </GroupContainer>
+                  );
+                })
+              }
+            </div>
+          ),
         };
       })}
       className={TabsStyle}

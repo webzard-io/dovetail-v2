@@ -102,6 +102,9 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
       resourceBasePath: '/api/v1',
       kind: 'Namespace',
     },
+    pagination: {
+      mode: 'off'
+    }
   });
   const [value, setValue] = useLocalStorage<string[]>(NS_STORE_KEY, [ALL_NS]);
   const debouncedSetSearch = debounce(setSearch, 100);
@@ -112,6 +115,7 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
       style={{ width: 256 }}
       className={cx(SelectStyle, className)}
       searchValue={search}
+      virtual={false}
       input={{
         value,
         onChange(value) {

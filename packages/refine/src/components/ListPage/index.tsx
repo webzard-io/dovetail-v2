@@ -2,6 +2,7 @@ import { Divider } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useResource } from '@refinedev/core';
 import React, { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { NamespacesFilter } from 'src/components/NamespacesFilter';
 import BaseTable from 'src/components/Table';
 import { TableProps } from 'src/components/Table';
@@ -19,8 +20,14 @@ const ListPageStyle = css`
 
 const ListContentStyle = css`
   padding: 12px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
 const TableStyle = css`
+  flex: 1;
+  min-height: 0;
+
   &.table-wrapper {
     height: auto;
     flex-shrink: 1;
@@ -41,6 +48,7 @@ interface ListPageProps<T extends ResourceModel> {
 export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
   const { selectedKeys, tableProps } = props;
   const { Table: TableComponent } = useContext(ComponentContext);
+  const { t } = useTranslation();
   const Table = TableComponent || BaseTable;
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
@@ -54,10 +62,10 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
         <NamespacesFilter className={NamespaceFilterStyle} />
         <Table
           {...tableProps}
+          empty={tableProps.empty || t('dovetail.no_resource', { kind: ` ${config.kind}` })}
           className={cx(tableProps.className, TableStyle)}
           scroll={{ y: 'calc(100% - 48px)' }}
         />
-
       </div>
     </div>
   );

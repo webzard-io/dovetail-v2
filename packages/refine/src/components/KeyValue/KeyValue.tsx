@@ -1,6 +1,8 @@
 import { Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
 
 const ContentBlockStyle = css`
   display: flex;
@@ -28,11 +30,13 @@ const ValueStyle = css`
 
 export interface KeyValueProps {
   data: Record<string, string>;
+  empty?: string;
   hideSecret?: boolean;
 }
 
 export const KeyValue: React.FC<KeyValueProps> = (props: KeyValueProps) => {
-  const { data = {}, hideSecret } = props;
+  const { data = {}, hideSecret, empty } = props;
+  const { t } = useTranslation();
 
   const result = Object.keys(data).map(key => (
     <div key={key} className={ContentBlockStyle}>
@@ -42,6 +46,13 @@ export const KeyValue: React.FC<KeyValueProps> = (props: KeyValueProps) => {
       </span>
     </div>
   ));
+
+  if (!result.length) {
+    return <ErrorContent
+      errorText={empty || t('dovetail.empty')}
+      hiddenRetry
+    />;
+  }
 
   return <>{result}</>;
 };

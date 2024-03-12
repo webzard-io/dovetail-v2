@@ -21,7 +21,7 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
   const { spec } = record as CronJob;
   const kit = useUIKit();
   const { resource } = useResource();
-  const { mutate } = useUpdate();
+  const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
 
   const suspended = Boolean(spec?.suspend);
@@ -29,14 +29,39 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
   return (
     <K8sDropdown record={record} size={size}>
       <kit.menu.Item
-        onClick={() => {
+        onClick={async () => {
           const v = suspended ? record.resume() : record.suspend();
           const id = record.id;
+
           pruneBeforeEdit(v);
-          mutate({
+          await mutateAsync({
             id,
             resource: resource?.name || '',
             values: v,
+            successNotification() {
+              return {
+                message: t(suspended ? 'dovetail.resume_success_toast' : 'dovetail.pause_success_toast', {
+                  kind: record.kind,
+                  name: id,
+                  interpolation: {
+                    escapeValue: false,
+                  }
+                }),
+                type: 'success',
+              };
+            },
+            errorNotification() {
+              return {
+                message: t(suspended ? 'dovetail.resume_failed_toast' : 'dovetail.pause_failed_toast', {
+                  kind: record.kind,
+                  name: id,
+                  interpolation: {
+                    escapeValue: false,
+                  }
+                }),
+                type: 'error'
+              };
+            }
           });
         }}
       >
@@ -44,6 +69,6 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
           {t(suspended ? 'dovetail.resume' : 'dovetail.suspend')}
         </Icon>
       </kit.menu.Item>
-    </K8sDropdown>
+    </K8sDropdown >
   );
 }

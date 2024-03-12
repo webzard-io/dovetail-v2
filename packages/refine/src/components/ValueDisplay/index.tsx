@@ -19,16 +19,18 @@ const ContentStyle = css`
 interface ValueDisplayProps {
   value: React.ReactNode;
   useOverflow?: boolean;
+  style?: React.CSSProperties;
   className?: string;
 }
 
 function ValueDisplay(props: ValueDisplayProps) {
-  const { value, useOverflow = true, className } = props;
+  const { value, useOverflow = true, className, style } = props;
 
   return EMPTY_VALUES.includes(value) ? (
-    <div className={cx(EmptyStyle, className)}>-</div>
+    <div className={cx(EmptyStyle, className)} style={style}>-</div>
   ) : (
     <div
+      style={style}
       className={cx(className, ContentStyle, useOverflow && 'overflow')}
       title={typeof value === 'string' || typeof value === 'number' ? String(value) : ''}
     >
