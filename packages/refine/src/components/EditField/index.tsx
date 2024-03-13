@@ -1,8 +1,10 @@
 import { useUIKit, pushModal, popModal, } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
+import { useResource, CanAccess } from '@refinedev/core';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormErrorAlert } from 'src/components/FormErrorAlert';
+import { AccessControlAuth } from 'src/constants/auth';
 import { useSubmitForm } from 'src/hooks/useSubmitForm';
 
 const EditFieldModalStyle = css`
@@ -80,17 +82,23 @@ export function EditField(props: EditField) {
   const { modalProps } = props;
   const kit = useUIKit();
   const { i18n } = useTranslation();
+  const { resource } = useResource();
 
   return (
-    <kit.button
-      className={EditButtonStyle}
-      type="link"
-      onClick={() => {
-        pushModal({
-          component: EditFieldModal,
-          props: modalProps
-        });
-      }}
-    >{i18n.t('dovetail.edit')}</kit.button>
+    <CanAccess
+      resource={resource?.name}
+      action={AccessControlAuth.Edit}
+    >
+      <kit.button
+        className={EditButtonStyle}
+        type="link"
+        onClick={() => {
+          pushModal({
+            component: EditFieldModal,
+            props: modalProps
+          });
+        }}
+      >{i18n.t('dovetail.edit')}</kit.button>
+    </CanAccess>
   );
 }

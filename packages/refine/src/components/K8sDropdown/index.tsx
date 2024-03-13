@@ -7,9 +7,10 @@ import {
   TrashBinDelete16Icon,
   Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
-import { useResource } from '@refinedev/core';
+import { useResource, CanAccess } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { AccessControlAuth } from 'src/constants/auth';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useOpenForm } from 'src/hooks/useOpenForm';
@@ -42,15 +43,20 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
       <kit.dropdown
         overlay={
           <kit.menu>
-            {
-              isInShowPage ? null : (
-                <kit.menuItem
-                  onClick={openForm}
-                >
-                  <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_yaml')}</Icon>
-                </kit.menuItem>
-              )
-            }
+            <CanAccess
+              resource={resource?.name}
+              action={AccessControlAuth.Edit}
+            >
+              {
+                isInShowPage ? null : (
+                  <kit.menuItem
+                    onClick={openForm}
+                  >
+                    <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_yaml')}</Icon>
+                  </kit.menuItem>
+                )
+              }
+            </CanAccess>
             <kit.menu.Item
               onClick={() => {
                 if (record.id) {
@@ -64,15 +70,25 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
               <Icon src={Download16GradientBlueIcon}>{t('dovetail.download_yaml')}</Icon>
             </kit.menu.Item>
             {props.children}
-            <kit.divider style={{ margin: 0 }} />
-            <kit.menuItem
-              danger={true}
-              onClick={() => {
-                openDeleteConfirmModal(record.id);
-              }}
+            <CanAccess
+              resource={resource?.name}
+              action={AccessControlAuth.Delete}
             >
-              <Icon src={TrashBinDelete16Icon}>{t('dovetail.delete')}</Icon>
-            </kit.menuItem>
+              <kit.divider style={{ margin: 0 }} />
+            </CanAccess>
+            <CanAccess
+              resource={resource?.name}
+              action={AccessControlAuth.Delete}
+            >
+              <kit.menuItem
+                danger={true}
+                onClick={() => {
+                  openDeleteConfirmModal(record.id);
+                }}
+              >
+                <Icon src={TrashBinDelete16Icon}>{t('dovetail.delete')}</Icon>
+              </kit.menuItem>
+            </CanAccess>
           </kit.menu>
         }
       >
