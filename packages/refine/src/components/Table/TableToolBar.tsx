@@ -1,7 +1,8 @@
 import { useUIKit, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
-import { useResource } from '@refinedev/core';
+import { useResource, CanAccess } from '@refinedev/core';
 import React from 'react';
+import { AccessControlAuth } from 'src/constants/auth';
 import { CreateButton } from '../CreateButton';
 import { DeleteManyButton } from '../DeleteManyButton';
 
@@ -35,7 +36,12 @@ export const TableToolBar: React.FC<Props> = ({ description, selectedKeys, hideC
         <span className={cx(Typo.Display.d2_regular_title, TitleStyle)}>{resource?.meta?.kind}</span>
         <kit.space>
           {selectedKeys.length > 0 ? <DeleteManyButton ids={selectedKeys} /> : undefined}
-          {!hideCreate ? <CreateButton /> : null}
+          <CanAccess
+            resource={resource?.name}
+            action={AccessControlAuth.Create}
+          >
+            {!hideCreate ? <CreateButton /> : null}
+          </CanAccess>
         </kit.space>
       </kit.space>
       {description ? <div className={DescriptionStyle}>{description}</div> : null}

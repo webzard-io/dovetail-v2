@@ -1,13 +1,14 @@
 import { Typo, useUIKit, Icon } from '@cloudtower/eagle';
 import { ArrowChevronLeft16BoldTertiaryIcon, ArrowChevronLeftSmall16BoldBlueIcon, } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
-import { useParsed, useResource, useShow, useNavigation, useGo } from '@refinedev/core';
+import { useParsed, useResource, useShow, useNavigation, useGo, CanAccess } from '@refinedev/core';
 import { get } from 'lodash-es';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/K8sDropdown';
 import { Tabs as BaseTabs } from 'src/components/Tabs';
 import ValueDisplay from 'src/components/ValueDisplay';
+import { AccessControlAuth } from 'src/constants/auth';
 import ComponentContext from 'src/contexts/component';
 import { useOpenForm } from 'src/hooks/useOpenForm';
 import { WorkloadState } from '../../constants';
@@ -242,9 +243,14 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           {stateDisplay ? <StateTag state={stateDisplay} /> : undefined}
         </div>
         <kit.space>
-          <kit.button style={{ marginRight: 8 }} onClick={openForm}>
-            {t('dovetail.edit_yaml')}
-          </kit.button>
+          <CanAccess
+            resource={resource?.name}
+            action={AccessControlAuth.Edit}
+          >
+            <kit.button style={{ marginRight: 8 }} onClick={openForm}>
+              {t('dovetail.edit_yaml')}
+            </kit.button>
+          </CanAccess>
           <Dropdown record={record} size="large" />
         </kit.space>
       </kit.space>
