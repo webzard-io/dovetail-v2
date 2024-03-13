@@ -16,7 +16,7 @@ type Props<Model extends ResourceModel> = IResourceComponentsProps & {
 };
 
 export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
-  const { formatter, name, columns, Dropdown, noShow } = props.config;
+  const { formatter, columns, Dropdown, noShow } = props.config;
   const { i18n } = useTranslation();
 
   const nameRenderer: Column<Model> = noShow

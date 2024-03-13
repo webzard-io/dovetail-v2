@@ -1,5 +1,5 @@
 import { KitStoreProvider, ModalStack, useMessage } from '@cloudtower/eagle';
-import { NotificationProvider, Refine } from '@refinedev/core';
+import { NotificationProvider, Refine, AccessControlProvider } from '@refinedev/core';
 import { History } from 'history';
 import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import { keyBy } from 'lodash-es';
@@ -20,10 +20,11 @@ type Props = {
   Layout?: React.FC<unknown>;
   history: History;
   globalStore: GlobalStore;
+  accessControlProvider?: AccessControlProvider;
 };
 
 export const Dovetail: React.FC<Props> = props => {
-  const { resourcesConfig, urlPrefix = '', Layout, history, globalStore } = props;
+  const { resourcesConfig, urlPrefix = '', Layout, history, globalStore, accessControlProvider } = props;
   const msg = useMessage();
 
   const notCustomResources = useMemo(() => {
@@ -77,6 +78,7 @@ export const Dovetail: React.FC<Props> = props => {
                 liveMode: 'auto',
                 disableTelemetry: true,
               }}
+              accessControlProvider={accessControlProvider}
               resources={resourcesConfig.map(c => {
                 return {
                   name: c.name,
