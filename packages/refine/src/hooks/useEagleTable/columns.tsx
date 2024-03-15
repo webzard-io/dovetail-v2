@@ -1,12 +1,14 @@
 import { useUIKit, Tooltip, OverflowTooltip, Divider } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
+import dayjs from 'dayjs';
 import { i18n as I18nType } from 'i18next';
 import type { OwnerReference } from 'kubernetes-types/meta/v1';
 import type { IngressBackend, IngressTLS } from 'kubernetes-types/networking/v1';
 import { get } from 'lodash';
 import React from 'react';
 import { Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { DurationTime } from 'src/components/DurationTime';
 import ValueDisplay from 'src/components/ValueDisplay';
 import {
@@ -179,6 +181,7 @@ export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
     display: true,
     width: 120,
     dataIndex,
+    align: 'right',
     title: i18n.t('dovetail.restarts'),
     sortable: false,
   };
@@ -213,9 +216,11 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
 
 export const AgeColumnRenderer = <Model extends ResourceModel>(
   i18n: I18nType,
-  config?: { title?: string }
+  config?: { title?: string; width: number; },
+  { isRelativeTime = true }: { isRelativeTime?: boolean; } = {},
 ): Column<Model> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
+
   return {
     key: 'creationTimestamp',
     display: true,
@@ -231,7 +236,7 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
       return -1;
     },
     render: (value: string) => {
-      return <Time date={new Date(value)} />;
+      return isRelativeTime ? <Time date={new Date(value)} /> : <ValueDisplay value={dayjs(value).format('YYYY-MM-DD hh:mm:ss')} />;
     },
     ...config,
   };
@@ -287,6 +292,7 @@ export const CompletionsCountColumnRenderer = <Model extends JobModel | CronJobM
     ),
     sortable: true,
     width: 120,
+    align: 'right',
     sorter: CommonSorter(dataIndex),
   };
 };
@@ -303,6 +309,7 @@ export const DurationColumnRenderer = <Model extends JobModel | CronJobModel>(
     sortable: true,
     sorter: CommonSorter(dataIndex),
     width: 120,
+    align: 'right',
     render: v => {
       return <DurationTime value={v} />;
     },
@@ -324,23 +331,26 @@ export const ServiceTypeColumnRenderer = <Model extends ResourceModel>(
   };
 };
 
-export const ServiceInClusterAccessColumnRenderer = <Model extends ServiceModel>(
-  i18n: I18nType
-): Column<Model> => {
+export function ServiceInClusterAccessTitle() {
+  const { i18n } = useTranslation();
+
+  return (
+    <Tooltip overlayClassName={ServiceClusterTooltipStyle} title={(
+      <div style={{ lineHeight: '22px' }}>
+        <div>{i18n.t('dovetail.in_cluster_desc')}</div>
+        <div>{i18n.t('dovetail.in_cluster_ip_desc')}</div>
+        <Divider style={{ margin: '6px 0' }} />
+        <div>{i18n.t('dovetail.in_cluster_external_name_desc')}</div>
+      </div>
+    )}>
+      <span className={DashedTitleStyle}>{i18n.t('dovetail.in_cluster_access')}</span>
+    </Tooltip>
+  );
+}
+export const ServiceInClusterAccessColumnRenderer = <Model extends ServiceModel>(): Column<Model> => {
   return {
     key: 'inClusterAccess',
-    title: (
-      <Tooltip overlayClassName={ServiceClusterTooltipStyle} title={(
-        <div style={{ lineHeight: '22px' }}>
-          <div>{i18n.t('dovetail.in_cluster_desc')}</div>
-          <div>{i18n.t('dovetail.in_cluster_ip_desc')}</div>
-          <Divider style={{ margin: '6px 0' }} />
-          <div>{i18n.t('dovetail.in_cluster_external_name_desc')}</div>
-        </div>
-      )}>
-        <span className={DashedTitleStyle}>{i18n.t('dovetail.in_cluster_access')}</span>
-      </Tooltip>
-    ),
+    title: <ServiceInClusterAccessTitle />,
     display: true,
     dataIndex: [],
     width: 160,
@@ -350,30 +360,34 @@ export const ServiceInClusterAccessColumnRenderer = <Model extends ServiceModel>
   };
 };
 
+export function ServiceOutClusterAccessTitle() {
+  const { i18n } = useTranslation();
+
+  return (
+    <Tooltip overlayClassName={ServiceClusterTooltipStyle} title={(
+      <div style={{
+        lineHeight: '22px'
+      }}>
+        <div>{i18n.t('dovetail.out_cluster_ip_desc')}</div>
+        <div>
+          <Trans i18nKey="dovetail.out_cluster_node_port_desc" />
+        </div>
+        <div>
+          <Trans i18nKey="dovetail.out_cluster_lb_desc" />
+        </div>
+        <div>{i18n.t('dovetail.out_external_name_desc')}</div>
+      </div>
+    )}>
+      <span className={DashedTitleStyle}>{i18n.t('dovetail.out_cluster_access')}</span>
+    </Tooltip>
+  );
+}
 export const ServiceOutClusterAccessColumnRenderer = <Model extends ServiceModel>(
-  i18n: I18nType,
   clusterVip: string
 ): Column<Model> => {
   return {
     key: 'outClusterAccess',
-    title: (
-      <Tooltip overlayClassName={ServiceClusterTooltipStyle} title={(
-        <div style={{
-          lineHeight: '22px'
-        }}>
-          <div>{i18n.t('dovetail.out_cluster_ip_desc')}</div>
-          <div>
-            <Trans i18nKey="dovetail.out_cluster_node_port_desc" />
-          </div>
-          <div>
-            <Trans i18nKey="dovetail.out_cluster_lb_desc" />
-          </div>
-          <div>{i18n.t('dovetail.out_external_name_desc')}</div>
-        </div>
-      )}>
-        <span className={DashedTitleStyle}>{i18n.t('dovetail.out_cluster_access')}</span>
-      </Tooltip>
-    ),
+    title: <ServiceOutClusterAccessTitle />,
     display: true,
     dataIndex: [],
     width: 160,
@@ -398,6 +412,10 @@ export const PodWorkloadColumnRenderer = <Model extends PodModel>(
     sorter: CommonSorter(dataIndex),
     width: 160,
     render(value: OwnerReference[], record) {
+      if (!value?.length) {
+        return <ValueDisplay value="" />;
+      }
+
       return value.map(o => (
         <ReferenceLink
           key={o.name}
@@ -503,6 +521,7 @@ export const PodContainersNumColumnRenderer = <Model extends PodModel>(
     ),
     width: 120,
     sortable: true,
+    align: 'right',
     sorter: CommonSorter(['readyDisplay']),
   };
 };

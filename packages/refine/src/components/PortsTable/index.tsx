@@ -1,17 +1,20 @@
-import { useUIKit } from '@cloudtower/eagle';
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
+import BaseTable from 'src/components/Table';
+import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { ServiceModel } from 'src/models/service-model';
-import ErrorContent from '../Table/ErrorContent';
 
 type Props = {
   service: ServiceModel;
 };
 
 export const PortsTable: React.FC<Props> = ({ service }) => {
-  const kit = useUIKit();
   const { t } = useTranslation();
+  const component = useContext(ComponentContext);
+  const Table = component.Table || BaseTable;
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const columns = [
     {
@@ -60,12 +63,17 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
   }
 
   return (
-    <kit.table
+    <Table
+      tableKey="ports"
       loading={false}
-      dataSource={ports}
+      data={ports}
       columns={addDefaultRenderToColumns(columns)}
-      rowKey="type"
+      rowKey="name"
       empty={t('dovetail.empty')}
+      currentSize={10}
+      currentPage={currentPage}
+      onPageChange={setCurrentPage}
+      showMenuColumn={false}
     />
   );
 };

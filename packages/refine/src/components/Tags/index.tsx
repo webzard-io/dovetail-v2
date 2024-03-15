@@ -1,15 +1,26 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import React from 'react';
+import ValueDisplay from 'src/components/ValueDisplay';
 
 const TagWrapper = css`
   flex-wrap: wrap;
   max-width: 100%;
+  gap: 8px 8px;
 `;
 
 const TagStyle = css`
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #1D326C;
+
+  .outside-tag {
+    background: rgba(211, 218, 235, 0.60);
+  }
+
+  .inside-tag {
+    background: rgba(192, 203, 224, 0.60);
+  }
 `;
 
 type Props = {
@@ -21,8 +32,9 @@ export const Tags: React.FC<Props> = props => {
   const kit = useUIKit();
 
   if (!value) {
-    return <span>-</span>;
+    return <ValueDisplay value="" />;
   }
+
   const tags = Object.keys(value).map(key => {
     return (
       <kit.tag.SplitTag

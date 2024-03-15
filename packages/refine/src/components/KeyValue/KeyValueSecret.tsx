@@ -1,5 +1,5 @@
 import { Button, Icon } from '@cloudtower/eagle';
-import { ViewEye16GrayIcon } from '@cloudtower/icons-react';
+import { ViewEye16GrayIcon, EntityFilterIgnoreGradient16GrayIcon } from '@cloudtower/icons-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShowGroupComponent } from '../ShowContent/ShowContent';
@@ -17,7 +17,7 @@ export function KeyValueSecret(props: KeyValueSecretProps) {
   const toggleButton = (
     <Button
       type="quiet"
-      prefixIcon={<Icon src={ViewEye16GrayIcon} />}
+      prefixIcon={<Icon src={hideSecret ? ViewEye16GrayIcon : EntityFilterIgnoreGradient16GrayIcon} />}
       onClick={() => setHideSecret(v => !v)}
     >
       {hideSecret

@@ -30,12 +30,11 @@ export type WidgetErrorContentProps = {
   className?: string;
   style?: React.CSSProperties;
   errorText?: string;
-  hiddenRetry?: boolean;
   refetch?: () => void;
 };
 
 const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = props => {
-  const { refetch, errorText, hiddenRetry } = props;
+  const { refetch, errorText } = props;
   const kit = useContext(kitContext);
   const { t } = useTranslation();
 
@@ -45,7 +44,7 @@ const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = pro
         <p className={cx(Typo.Label.l1_regular_title, 'title')}>
           {errorText || t('dovetail.obtain_data_error')}
         </p>
-        {hiddenRetry ? null : (
+        {!refetch ? null : (
           <kit.button
             size="small"
             type="ordinary"

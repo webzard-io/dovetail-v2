@@ -273,6 +273,22 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
             zIndex: 1,
           }}
         >
+          <Suspense fallback={<pre className={PlainCodeStyle}>{value}</pre>}>
+            <div style={{ display: isDiff ? 'none' : 'block' }}>
+              <MonacoYamlEditor
+                id={props.id}
+                getInstance={getInstance}
+                defaultValue={value}
+                height={height}
+                onChange={onChange}
+                onValidate={onValidate}
+                onEditorCreate={onEditorCreate}
+                onBlur={props.onBlur}
+                schema={schema}
+                readOnly={readOnly}
+              />
+            </div>
+          </Suspense>
           {isDiff ? (
             <Suspense fallback={<pre className={PlainCodeStyle}>{value}</pre>}>
               <MonacoYamlDiffEditor
@@ -282,22 +298,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                 height={height}
               />
             </Suspense>
-          ) : (
-            <Suspense fallback={<pre className={PlainCodeStyle}>{value}</pre>}>
-              <MonacoYamlEditor
-                id={props.id}
-                getInstance={getInstance}
-                defaultValue={defaultValue}
-                height={height}
-                onChange={onChange}
-                onValidate={onValidate}
-                onEditorCreate={onEditorCreate}
-                onBlur={props.onBlur}
-                schema={schema}
-                readOnly={readOnly}
-              />
-            </Suspense>
-          )}
+          ) : null}
         </div>
       </div>
     );

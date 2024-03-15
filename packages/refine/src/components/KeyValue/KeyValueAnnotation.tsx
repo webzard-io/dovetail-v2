@@ -1,4 +1,4 @@
-import { Button } from '@cloudtower/eagle';
+import { Button, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -47,7 +47,7 @@ export function KeyValueAnnotation(props: KeyValueDataProps) {
             <span className={HeaderItemStyle}>{Object.keys(data).length}</span>
             <Button
               type="link"
-              className={ExpandButtonStyle}
+              className={cx(ExpandButtonStyle, Typo.Label.l4_regular_title)}
               onClick={() => {
                 setIsExpand(!isExpand);
               }}
