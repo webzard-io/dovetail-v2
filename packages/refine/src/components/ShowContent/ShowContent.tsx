@@ -1,5 +1,5 @@
 import { Typo, useUIKit, Icon } from '@cloudtower/eagle';
-import { ArrowChevronLeft16BoldTertiaryIcon, ArrowChevronLeftSmall16BoldBlueIcon, } from '@cloudtower/icons-react';
+import { ArrowChevronLeft16BoldTertiaryIcon, ArrowChevronLeftSmall16BoldBlueIcon, EditPen16GradientBlueIcon } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useParsed, useResource, useShow, useNavigation, useGo, CanAccess } from '@refinedev/core';
 import { get } from 'lodash-es';
@@ -43,6 +43,7 @@ const ToolBarWrapper = css`
   background-color: #fff;
 `;
 const NameStyle = css`
+  color: #00122E;
   margin-right: 8px;
 `;
 const TopBarStyle = css`
@@ -60,11 +61,15 @@ const GroupStyle = css`
     0px 0px 2.003px 0px rgba(107, 125, 153, 0.15),
     0px 0px 16px 0px rgba(107, 125, 153, 0.08);
   background-color: #fff;
-  margin: 16px 0;
+  margin: 0 24px;
   overflow: auto;
   margin-bottom: 0;
-  width: 100%;
+  width: calc(100% - 48px);
   max-width: 1592px;
+
+  &:first-of-type {
+    margin-top: 16px;
+  }
 
   &:not(:last-of-type) {
     margin-bottom: 24px;
@@ -85,12 +90,14 @@ const FieldWrapperStyle = css`
   flex-wrap: nowrap;
 `;
 const TabContentStyle = css`
-  padding: 0 24px;
   padding-bottom: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 952px;
+`;
+const ValueStyle = css`
+  color: #00122E;
 `;
 const TabsStyle = css`
   &.ant-tabs {
@@ -191,7 +198,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
             <div className={FieldWrapperStyle}>
               {field.title && (
                 <span
-                  className={Typo.Label.l3_regular}
+                  className={Typo.Label.l4_regular_title}
                   style={{
                     width: field.labelWidth || '165px',
                     marginRight: 8,
@@ -203,6 +210,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
               )}
               <span style={{ flex: 1, minWidth: 0 }}>
                 <ValueDisplay
+                  className={cx(Typo.Label.l4_regular_title, ValueStyle)}
                   value={content}
                   useOverflow={false}
                 />
@@ -247,7 +255,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
             resource={resource?.name}
             action={AccessControlAuth.Edit}
           >
-            <kit.button style={{ marginRight: 8 }} onClick={openForm}>
+            <kit.button style={{ marginRight: 8 }} onClick={openForm} prefixIcon={<EditPen16GradientBlueIcon />}>
               {t('dovetail.edit_yaml')}
             </kit.button>
           </CanAccess>

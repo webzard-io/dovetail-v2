@@ -1,16 +1,19 @@
-import { useUIKit } from '@cloudtower/eagle';
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
+import BaseTable from 'src/components/Table';
+import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
-import ErrorContent from '../Table/ErrorContent';
 
 type Props = {
   podSelectors: Record<string, string>;
 };
 
 export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
-  const kit = useUIKit();
   const { t } = useTranslation();
+  const component = useContext(ComponentContext);
+  const Table = component.Table || BaseTable;
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const datas = Object.keys(podSelectors).map(key => ({
     id: key,
@@ -43,12 +46,17 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
   }
 
   return (
-    <kit.table
+    <Table
+      tableKey="podSelector"
       loading={false}
-      dataSource={datas}
+      data={datas}
       columns={addDefaultRenderToColumns(columns)}
-      rowKey="type"
+      rowKey="key"
       empty={t('dovetail.empty')}
+      currentSize={10}
+      currentPage={currentPage}
+      onPageChange={setCurrentPage}
+      showMenuColumn={false}
     />
   );
 };

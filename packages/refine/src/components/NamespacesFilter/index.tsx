@@ -14,13 +14,19 @@ const SelectStyle = css`
     overflow: hidden;
     gap: 4px;
 
-    & > span:first-of-type {
+    & > span {
       max-width: calc(100% - 76px);
+      flex-shrink: 0;
     }
   }
 
   .ant-select-selection-search {
     display: none;
+  }
+
+  .zoom-leave {
+    opacity: 0;
+    position: absolute;
   }
 }
 `;
@@ -144,7 +150,7 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
 
         return isAll ? <span style={{ marginLeft: 12 }}>{label}</span> : (
           <kit.token
-            className={isCountToken ? CountTokenStyle : TokenStyle}
+            className={cx(isCountToken ? CountTokenStyle : TokenStyle, isCountToken ? '' : 'closable-token')}
             closable={closable}
             onClose={onClose}
           >
@@ -154,6 +160,8 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
       }}
       maxTagCount={1}
       optionLabelProp='label'
+      showArrow
+      showSearch={false}
       multiple
     >
       <kit.option key="_all" value="_all" label={t('dovetail.all_namespaces')} className={AllNamespaceOptionStyle}>

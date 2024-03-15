@@ -106,6 +106,10 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
     }
 
     fetch(url, { signal }).then(response => {
+      if (response.status !== 200) {
+        setLogs([]);
+        return;
+      }
       const reader = response.body?.getReader();
       if (!reader) {
         return;
@@ -125,6 +129,8 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
         }
         const total = buffer + chunk.slice(0, lastIndex);
         buffer = chunk.slice(lastIndex + 1);
+
+        console.log(total);
 
         const formattedLogs = total
           .split('\n')
@@ -229,7 +235,6 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
             <ErrorContent
               style={{ height: '100%' }}
               errorText={t('dovetail.no_resource', { kind: t('dovetail.previous_log') })}
-              hiddenRetry
             />
           ) : (
             <LogViewer

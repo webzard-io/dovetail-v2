@@ -35,11 +35,16 @@ const ReplicasValueStyle = css`
   color: rgba(44, 56, 82, 0.60);
 `;
 const ContentWrapperStyle = css`
+  display: table;
   margin: auto 0;
   position: relative;
 `;
 const LabelStyle = css`
-  margin-right: 40px;
+  padding-right: 40px;
+  color: rgba(44, 56, 82, 0.75);
+`;
+const ValueStyle = css`
+  color: #00122E;
 `;
 
 interface WorkloadReplicasFormProps {
@@ -138,10 +143,10 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
     }];
     const remain = replicas - readyReplicas;
 
-    if (remain > 0) {
+    if (remain > 0 || replicas === 0) {
       data.push({
         name: 'remain',
-        value: remain,
+        value: replicas === 0 ? 1 : remain,
         color: 'rgba(162, 240, 213, 1)'
       });
     }
@@ -171,14 +176,14 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
         </kit.DonutChart>
       </div>
       <div className={ContentWrapperStyle}>
-        <div>
-          <span className={LabelStyle}>{t('dovetail.pod_ready_num')}</span>
-          <span>{readyReplicas}</span>
-        </div>
-        <div>
-          <span className={LabelStyle}>{t('dovetail.pod_replicas_num')}</span>
-          <span>{replicas}</span>
-          <span>
+        <tr>
+          <td className={cx(LabelStyle, Typo.Label.l3_regular)}>{record.kind === 'Job' ? t('dovetail.pod_complete_num') : t('dovetail.pod_ready_num')}</td>
+          <td className={cx(ValueStyle, Typo.Label.l3_regular)}>{readyReplicas}</td>
+        </tr>
+        <tr>
+          <td className={cx(LabelStyle, Typo.Label.l3_regular)}>{t('dovetail.pod_replicas_num')}</td>
+          <td className={cx(ValueStyle, Typo.Label.l3_regular)}>{replicas}</td>
+          <td>
             {
               editable && canScale && (
                 <EditField
@@ -199,8 +204,8 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
                 />
               )
             }
-          </span>
-        </div>
+          </td>
+        </tr>
       </div>
     </span >
   );

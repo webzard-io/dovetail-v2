@@ -6,8 +6,8 @@ import type {
 } from 'kubernetes-types/networking/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
-import ErrorContent from '../Table/ErrorContent';
 
 const EditorStyle = css`
   border-radius: 8px;

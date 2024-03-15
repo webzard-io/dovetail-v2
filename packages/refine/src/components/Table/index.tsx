@@ -3,7 +3,6 @@ import { css, cx } from '@linaria/core';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormType } from 'src/types';
-import { ResourceModel } from '../../models';
 import ErrorContent from './ErrorContent';
 import { AuxiliaryLine } from './TableWidgets';
 
@@ -25,17 +24,17 @@ const TableContainerStyle = css`
   }
 `;
 
-export type Column<Data extends ResourceModel> = RequiredColumnProps<Data> & {
-  display: boolean;
+export type Column<Data extends { id: string; }> = RequiredColumnProps<Data> & {
+  display?: boolean;
 };
 
-export type TableProps<Data extends ResourceModel> = {
+export type TableProps<Data extends { id: string; }> = {
   tableKey: string;
   className?: string;
   loading: boolean;
-  error: boolean;
+  error?: boolean;
   data: Data[];
-  refetch: () => void;
+  refetch?: () => void;
   rowKey: (string & keyof Data) | ((record: Data) => string);
   columns: Array<Column<Data>>;
   scroll?: BaseTableProps<Data>['scroll'];
@@ -47,9 +46,10 @@ export type TableProps<Data extends ResourceModel> = {
   onSizeChange?: (size: number) => void;
   RowMenu?: React.FC<{ record: Data; formType?: FormType; }>;
   empty?: string;
+  showMenuColumn?: boolean;
 };
 
-function Table<Data extends ResourceModel>(props: TableProps<Data>) {
+function Table<Data extends { id: string; }>(props: TableProps<Data>) {
   const kit = useUIKit();
   const { t } = useTranslation();
   const {
