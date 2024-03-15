@@ -1,10 +1,11 @@
 import { StatusCapsule, StatusCapsuleColor } from '@cloudtower/eagle';
 import { cx } from '@linaria/core';
 import { useList, useParsed } from '@refinedev/core';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
 import { StateTagStyle } from 'src/components/StateTag';
+import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,
@@ -12,7 +13,7 @@ import {
 } from '../../hooks/useEagleTable/columns';
 import { EventModel } from '../../models';
 import { Column } from '../Table';
-import Table from '../Table';
+import BaseTable from '../Table';
 
 export const EventsTable: React.FC = ({ }) => {
   const { i18n } = useTranslation();
@@ -62,10 +63,12 @@ export const EventsTable: React.FC = ({ }) => {
         sortable: true,
         sorter: CommonSorter(['note']),
       },
-      AgeColumnRenderer<EventModel>(i18n, { title: i18n.t('dovetail.last_seen') }),
+      AgeColumnRenderer<EventModel>(i18n, { title: i18n.t('dovetail.last_seen'), width: 160, }, { isRelativeTime: false }),
     ],
     [i18n]
   );
+  const component = useContext(ComponentContext);
+  const Table = component.Table || BaseTable;
 
   const dataSource = useMemo<EventModel[]>(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -78,7 +81,6 @@ export const EventsTable: React.FC = ({ }) => {
   if (!dataSource?.length && !isLoading) {
     return <ErrorContent
       errorText={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.event') })}
-      hiddenRetry
     />;
   }
 
@@ -94,6 +96,7 @@ export const EventsTable: React.FC = ({ }) => {
       onPageChange={p => setCurrentPage(p)}
       currentSize={10}
       refetch={() => null}
+      showMenuColumn={false}
     />
   );
 };

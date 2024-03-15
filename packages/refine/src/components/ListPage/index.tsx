@@ -3,6 +3,7 @@ import { css, cx } from '@linaria/core';
 import { useResource } from '@refinedev/core';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
 import { NamespacesFilter } from 'src/components/NamespacesFilter';
 import BaseTable from 'src/components/Table';
 import { TableProps } from 'src/components/Table';
@@ -22,6 +23,7 @@ const ListContentStyle = css`
   padding: 12px 24px;
   flex: 1;
   display: flex;
+  min-height: 0;
   flex-direction: column;
 `;
 const TableStyle = css`
@@ -60,12 +62,20 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
       <Divider style={{ margin: 0, minHeight: 1 }} />
       <div className={ListContentStyle}>
         <NamespacesFilter className={NamespaceFilterStyle} />
-        <Table
-          {...tableProps}
-          empty={tableProps.empty || t('dovetail.no_resource', { kind: ` ${config.kind}` })}
-          className={cx(tableProps.className, TableStyle)}
-          scroll={{ y: 'calc(100% - 48px)' }}
-        />
+        <div className={TableStyle}>
+          {
+            !(tableProps.data.length || tableProps.loading) ? (
+              <ErrorContent errorText={tableProps.empty || t('dovetail.no_resource', { kind: ` ${config.kind}` })} />
+            ) : (
+              <Table
+                {...tableProps}
+                empty={tableProps.empty || t('dovetail.no_resource', { kind: ` ${config.kind}` })}
+                className={cx(tableProps.className)}
+                scroll={{ y: 'calc(100% - 48px)' }}
+              />
+            )
+          }
+        </div>
       </div>
     </div>
   );

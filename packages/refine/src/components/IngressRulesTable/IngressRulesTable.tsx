@@ -1,25 +1,28 @@
-import { useUIKit } from '@cloudtower/eagle';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
+import BaseTable from 'src/components/Table';
 import ValueDisplay from 'src/components/ValueDisplay';
+import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { RuleItem } from 'src/models/ingress-model';
 import { IngressModel } from '../../models';
 import { WithId } from '../../types';
 import { addId } from '../../utils/addId';
 import { ResourceLink } from '../ResourceLink';
-import ErrorContent from '../Table/ErrorContent';
 
 type Props = {
   ingress: IngressModel;
 };
 
 export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
-  const kit = useUIKit();
   const { t } = useTranslation();
   const rows = useMemo(() => {
     return addId(ingress.flattenedRules || [], 'fullPath');
   }, [ingress.flattenedRules]);
+  const component = useContext(ComponentContext);
+  const Table = component.Table || BaseTable;
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const columns = [
     {
@@ -84,12 +87,17 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
   }
 
   return (
-    <kit.table
+    <Table<WithId<RuleItem>>
+      tableKey="ingressRules"
       loading={false}
-      dataSource={rows}
+      data={rows}
       columns={addDefaultRenderToColumns<WithId<RuleItem>>(columns)}
-      rowKey="type"
+      rowKey="pathType"
       empty={t('dovetail.empty')}
+      currentSize={10}
+      currentPage={currentPage}
+      onPageChange={setCurrentPage}
+      showMenuColumn={false}
     />
   );
 };

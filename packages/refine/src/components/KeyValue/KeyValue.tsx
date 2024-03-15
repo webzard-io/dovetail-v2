@@ -50,7 +50,6 @@ export const KeyValue: React.FC<KeyValueProps> = (props: KeyValueProps) => {
   if (!result.length) {
     return <ErrorContent
       errorText={empty || t('dovetail.empty')}
-      hiddenRetry
     />;
   }
 

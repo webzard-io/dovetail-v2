@@ -69,6 +69,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
       <FormErrorAlert
         style={{ marginTop: 16 }}
         errorMsgs={errorMsgs}
+        isEdit
       />
     </kit.modal>
   );

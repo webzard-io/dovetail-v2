@@ -4,7 +4,9 @@ import React from 'react';
 const EMPTY_VALUES: unknown[] = [undefined, null, '', '-'];
 
 const EmptyStyle = css`
-  color: rgba(0,21,64,.3);
+  && {
+    color: rgba(0,21,64,.3);
+  }
 `;
 const ContentStyle = css`
   width: 100%;

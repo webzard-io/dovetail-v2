@@ -6,7 +6,7 @@ import type {
   NetworkPolicyEgressRule,
 } from 'kubernetes-types/networking/v1';
 import React from 'react';
-import { NetworkPolicyRulesViewer } from 'src/components/NetworkPolicyRulesTable';
+import { NetworkPolicyRulesViewer } from 'src/components/NetworkPolicyRulesViewer';
 import { PodContainersTable } from 'src/components/PodContainersTable';
 import {
   ResourceModel,

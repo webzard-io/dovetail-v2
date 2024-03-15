@@ -2,7 +2,7 @@ import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageShow } from '../../../components/PageShow';
-import { BasicGroup, ConditionsGroup, PodContainersGroup, PodLogTab } from '../../../components/ShowContent';
+import { BasicGroup, ConditionsGroup, PodContainersGroup, PodLogTab, EventsTab } from '../../../components/ShowContent';
 import { PodModel } from '../../../models';
 
 export const PodShow: React.FC<IResourceComponentsProps> = () => {
@@ -44,6 +44,7 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
               ConditionsGroup(i18n),
             ],
           },
+          EventsTab(i18n),
           PodLogTab(i18n),
         ],
       }}

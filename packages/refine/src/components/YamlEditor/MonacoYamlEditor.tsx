@@ -104,7 +104,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
       editor.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultValue, schema, id, readOnly, isScrollOnFocus, getInstance]);
+  }, [schema, id, readOnly, isScrollOnFocus, getInstance]);
 
   useEffect(() => {
     const editor = instanceRef.current.editor;

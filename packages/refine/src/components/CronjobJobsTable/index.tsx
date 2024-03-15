@@ -2,8 +2,9 @@ import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useList } from '@refinedev/core';
 import { OwnerReference } from 'kubernetes-types/meta/v1';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import ComponentContext from 'src/contexts/component';
 import {
   AgeColumnRenderer,
   CompletionsCountColumnRenderer,
@@ -14,7 +15,7 @@ import {
   WorkloadImageColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { CronJobModel } from '../../models';
-import Table, { Column } from '../Table';
+import BaseTable, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
 const WrapperStyle = css`
@@ -51,6 +52,8 @@ export const CronjobJobsTable: React.FC<{
   const kit = useUIKit();
   const [selectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const component = useContext(ComponentContext);
+  const Table = component.Table || BaseTable;
 
   const { data } = useList<CronJobModel>({
     resource: 'jobs',
@@ -90,6 +93,7 @@ export const CronjobJobsTable: React.FC<{
         onPageChange={p => setCurrentPage(p)}
         currentSize={10}
         refetch={() => null}
+        showMenuColumn={false}
       />
     </kit.space>
   );
