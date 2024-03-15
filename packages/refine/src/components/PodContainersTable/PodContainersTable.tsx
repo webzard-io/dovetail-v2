@@ -1,8 +1,10 @@
-import { RequiredColumnProps, useUIKit } from '@cloudtower/eagle';
+import { RequiredColumnProps } from '@cloudtower/eagle';
 import { ContainerStatus } from 'kubernetes-types/core/v1';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
+import BaseTable from 'src/components/Table';
+import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { WorkloadState } from '../../constants';
 import { CommonSorter } from '../../hooks/useEagleTable/columns';
@@ -20,8 +22,10 @@ export const PodContainersTable: React.FC<Props> = ({
   containerStatuses,
   initContainerStatuses,
 }) => {
-  const kit = useUIKit();
   const { i18n } = useTranslation();
+  const component = useContext(ComponentContext);
+  const Table = component.Table || BaseTable;
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const columns: RequiredColumnProps<WithId<ContainerStatus>>[] = useMemo(
     () => [
@@ -91,12 +95,17 @@ export const PodContainersTable: React.FC<Props> = ({
   }
 
   return (
-    <kit.table
+    <Table<WithId<ContainerStatus>>
+      tableKey="podContainers"
       loading={false}
-      dataSource={dataSource}
+      data={dataSource}
       columns={addDefaultRenderToColumns<WithId<ContainerStatus>>(columns)}
       rowKey="containerID"
       error={false}
+      currentSize={10}
+      currentPage={currentPage}
+      onPageChange={setCurrentPage}
+      showMenuColumn={false}
     />
   );
 };

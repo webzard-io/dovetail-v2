@@ -8,6 +8,7 @@ import { PodSelectorTable } from 'src/components/PodSelectorTable';
 import { PortsTable } from 'src/components/PortsTable';
 import { ServiceInClusterAccessComponent, ServiceOutClusterAccessComponent } from 'src/components/ServiceComponents';
 import { Tags } from 'src/components/Tags';
+import { ServiceOutClusterAccessTitle, ServiceInClusterAccessTitle } from 'src/hooks/useEagleTable/columns';
 import {
   JobModel,
   ResourceModel,
@@ -31,7 +32,7 @@ import { WorkloadReplicas } from '../WorkloadReplicas';
 
 export type ShowField<Model extends ResourceModel> = {
   key: string;
-  title?: string;
+  title?: React.ReactNode;
   path: string[];
   labelWidth?: string;
   col?: number;
@@ -246,7 +247,11 @@ export const EventsTableTabField = <Model extends ResourceModel>(): ShowField<Mo
     key: 'event',
     path: [],
     renderContent: () => {
-      return <EventsTable />;
+      return (
+        <div style={{ padding: '0 24px', height: '100%' }}>
+          <EventsTable />
+        </div>
+      );
     },
   };
 };
@@ -296,18 +301,18 @@ export const AnnotationsField = <Model extends ResourceModel>(
   },
 });
 
-export const ServiceInnerClusterAccessField = <Model extends ServiceModel>(i18n: I18nType): ShowField<Model> => ({
+export const ServiceInnerClusterAccessField = <Model extends ServiceModel>(): ShowField<Model> => ({
   key: 'innerClusterAccess',
-  title: i18n.t('dovetail.in_cluster_access'),
+  title: <ServiceInClusterAccessTitle />,
   path: [],
   renderContent: (_, record) => {
     return <ServiceInClusterAccessComponent service={record} />;
   },
 });
 
-export const ServiceOutClusterAccessField = <Model extends ServiceModel>(i18n: I18nType, clusterVip: string): ShowField<Model> => ({
+export const ServiceOutClusterAccessField = <Model extends ServiceModel>(clusterVip: string): ShowField<Model> => ({
   key: 'innerClusterAccess',
-  title: i18n.t('dovetail.out_cluster_access'),
+  title: <ServiceOutClusterAccessTitle />,
   path: [],
   renderContent: (_, record) => {
     return <ServiceOutClusterAccessComponent service={record} clusterVip={clusterVip} breakLine={false} />;

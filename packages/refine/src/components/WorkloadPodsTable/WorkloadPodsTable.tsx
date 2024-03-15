@@ -2,9 +2,10 @@ import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useList } from '@refinedev/core';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
+import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { matchSelector } from 'src/utils/match-selector';
 import {
@@ -17,7 +18,7 @@ import {
   AgeColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { PodModel } from '../../models';
-import Table, { Column } from '../Table';
+import BaseTable, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
 interface WorkloadPodsTableProps {
@@ -33,6 +34,8 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   const kit = useUIKit();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const component = useContext(ComponentContext);
+  const Table = component.Table || BaseTable;
 
   const { data } = useList<PodModel>({
     resource: 'pods',
@@ -66,7 +69,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   ];
 
   if (dataSource?.length === 0) {
-    return <ErrorContent errorText={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.pod') })} style={{ padding: '15px 0' }} />;
+    return <ErrorContent errorText={i18n.t('dovetail.no_resource', { kind: ` ${i18n.t('dovetail.pod')}` })} style={{ padding: '15px 0' }} />;
   }
 
   return (
@@ -92,6 +95,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
         onPageChange={p => setCurrentPage(p)}
         currentSize={10}
         refetch={() => null}
+        showMenuColumn={false}
       />
     </kit.space>
   );

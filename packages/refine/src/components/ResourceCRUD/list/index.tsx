@@ -27,7 +27,7 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
     useTableParams: {},
     columns: [nameRenderer, ...(columns?.() || [])],
     tableProps: {
-      currentSize: 10,
+      currentSize: 50,
     },
     formatter,
     Dropdown,

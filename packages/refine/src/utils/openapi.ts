@@ -70,6 +70,11 @@ class K8sOpenAPI {
       });
     }
 
+    // ignore the status schema
+    if (schema?.properties?.status) {
+      delete schema?.properties.status;
+    }
+
     return schema;
   }
 }

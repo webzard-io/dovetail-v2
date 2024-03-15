@@ -1,6 +1,6 @@
 import { Icon, useUIKit } from '@cloudtower/eagle';
 import { Retry16GradientBlueIcon } from '@cloudtower/icons-react';
-import { useResource, useUpdate, CanAccess } from '@refinedev/core';
+import { useResource, useUpdate, useCan } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccessControlAuth } from 'src/constants/auth';
@@ -19,52 +19,56 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: React.Props
   const { resource } = useResource();
   const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
+  const { data: canEditData } = useCan({
+    resource: resource?.name,
+    action: AccessControlAuth.Edit
+  });
 
   return (
     <K8sDropdown record={record} size={size}>
-      <CanAccess
-        resource={resource?.name}
-        action={AccessControlAuth.Edit}
-      >
-        <kit.menu.Item
-          onClick={async () => {
-            const v = record.redeploy();
-            const id = v.id;
-            pruneBeforeEdit(v);
-            await mutateAsync({
-              id,
-              resource: resource?.name || '',
-              values: v,
-              successNotification() {
-                return {
-                  message: t('dovetail.redeploy_success_toast', {
-                    kind: record.kind,
-                    name: record.id,
-                    interpolation: {
-                      escapeValue: false,
-                    }
-                  }),
-                  type: 'success'
-                };
-              },
-              errorNotification() {
-                return {
-                  message: t('dovetail.redeploy_failed_toast', {
-                    kind: record.kind,
-                    name: record.id,
-                    interpolation: {
-                      escapeValue: false,
-                    }
-                  }),
-                  type: 'error'
-                };
-              }
-            });
-          }}
-        >
-          <Icon src={Retry16GradientBlueIcon}>{t('dovetail.redeploy')}</Icon>
-        </kit.menu.Item>
-      </CanAccess>
+      {
+        canEditData?.can !== false ? (
+          <kit.menu.Item
+            onClick={async () => {
+              const v = record.redeploy();
+              const id = v.id;
+              pruneBeforeEdit(v);
+              await mutateAsync({
+                id,
+                resource: resource?.name || '',
+                values: v,
+                successNotification() {
+                  return {
+                    message: t('dovetail.redeploy_success_toast', {
+                      kind: record.kind,
+                      name: record.id,
+                      interpolation: {
+                        escapeValue: false,
+                      }
+                    }),
+                    type: 'success'
+                  };
+                },
+                errorNotification() {
+                  return {
+                    message: t('dovetail.redeploy_failed_toast', {
+                      kind: record.kind,
+                      name: record.id,
+                      interpolation: {
+                        escapeValue: false,
+                      }
+                    }),
+                    type: 'error'
+                  };
+                }
+              });
+            }}
+          >
+            <Icon src={Retry16GradientBlueIcon}>{t('dovetail.redeploy')}</Icon>
+          </kit.menu.Item>
+
+        ) : null
+      }
       {children}
     </K8sDropdown>
   );

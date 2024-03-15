@@ -1,13 +1,15 @@
-import { useUIKit, StatusCapsuleColor } from '@cloudtower/eagle';
+import { StatusCapsule, StatusCapsuleColor } from '@cloudtower/eagle';
 import { cx } from '@linaria/core';
 import { Condition } from 'kubernetes-types/meta/v1';
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
 import { StateTagStyle } from 'src/components/StateTag';
+import BaseTable from 'src/components/Table';
+import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { WithId } from 'src/types';
 import { addId } from '../../utils/addId';
-import ErrorContent from '../Table/ErrorContent';
 import { Time } from '../Time';
 
 type Props = {
@@ -15,8 +17,10 @@ type Props = {
 };
 
 export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
-  const kit = useUIKit();
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const { t } = useTranslation();
+  const component = useContext(ComponentContext);
+  const Table = component.Table || BaseTable;
 
   const conditionsWithId = addId(conditions, 'type');
 
@@ -41,9 +45,9 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
         };
 
         return (
-          <kit.statusCapsule color={colorMap[value || 'Unknown']} className={cx(StateTagStyle, 'no-background')}>
+          <StatusCapsule color={colorMap[value || 'Unknown']} className={cx(StateTagStyle, 'no-background')}>
             {t(`dovetail.${value.toLowerCase()}`)}
-          </kit.statusCapsule>
+          </StatusCapsule>
         );
       },
       sortable: true,
@@ -80,12 +84,17 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
   }
 
   return (
-    <kit.table
+    <Table<WithId<Condition>>
+      tableKey="condition"
       loading={false}
-      dataSource={conditionsWithId}
+      data={conditionsWithId}
       columns={addDefaultRenderToColumns<WithId<Condition>>(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
+      currentSize={10}
+      currentPage={currentPage}
+      onPageChange={setCurrentPage}
+      showMenuColumn={false}
     />
   );
 };

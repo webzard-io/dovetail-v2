@@ -8,6 +8,7 @@ import {
   BasicGroup,
   PodsGroup,
   ConditionsGroup,
+  ReplicaField,
 } from '../../components/ShowContent';
 import { JOB_INIT_VALUE } from '../../constants/k8s';
 import {
@@ -46,7 +47,10 @@ export const JobConfig = (i18n: i18n): ResourceConfig<JobModel> => ({
           basicFields: [
             StartTimeField(i18n),
             ImageField(i18n),
-          ]
+          ],
+          upAreas: [{
+            fields: [ReplicaField()]
+          }]
         }),
         PodsGroup(),
         ConditionsGroup(i18n)
