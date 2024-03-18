@@ -21,8 +21,9 @@ export class ServiceModel extends ResourceModel<ServiceType> {
   }
 
   get displayType() {
-    const type = this._rawYaml.spec.type;
-    if (type === ServiceTypeEnum.ClusterIP && !this._rawYaml.spec.clusterIP) {
+    const spec = this._rawYaml.spec;
+    const type = spec.type;
+    if (type === ServiceTypeEnum.ClusterIP && (!spec.clusterIP || spec.clusterIP === 'None')) {
       return ServiceTypeEnum.Headless;
     }
     return type;
@@ -35,10 +36,14 @@ export class ServiceModel extends ResourceModel<ServiceType> {
   get displayPortMapping() {
     return this._rawYaml.spec.ports?.map(p => {
       let servicePort = `${p.port}`;
-      if (this._rawYaml.spec.clusterIP) {
+      if (this._rawYaml.spec.clusterIP && this._rawYaml.spec.clusterIP !== 'None') {
         servicePort = `${this._rawYaml.spec.clusterIP}:${p.port}`;
       }
-      return `${servicePort} > ${p.targetPort}/${p.protocol}`;
+      return {
+        servicePort,
+        targetPort: p.targetPort,
+        protocol: p.protocol,
+      };
     });
   }
 }

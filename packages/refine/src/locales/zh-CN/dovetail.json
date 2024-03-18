@@ -146,9 +146,9 @@
   "port_mapping_title_tooltip": "Service 端口与 Pod 端口的映射关系。",
   "in_cluster_desc": "ClusterIP、NodePort 和 LoadBalancer 类型的服务，展示 ClusterIP 字段，为虚拟 IP 地址，只能在集群内部使用。",
   "in_cluster_ip_desc": "ClusterIP 为无头服务时，内容为空。",
-  "in_cluster_external_name_desc": "ExternalName 类型展示的是 externalName 字段。",
+  "in_cluster_external_name_desc": "ExternalName 类型展示的是 DNS 记录。",
   "out_cluster_ip_desc": "ClusterIP 不支持集群外部访问。",
   "out_cluster_node_port_desc": "NodePort 展示<strong>节点 IP：nodeport</strong>。",
-  "out_cluster_lb_desc": "LoadBalancer 展示 <strong>external-IP</strong>。",
-  "out_external_name_desc": "ExternalName 展示为空。"
+  "out_cluster_lb_desc": "LoadBalancer 展示 <strong>ingress[*].ip</strong>。",
+  "out_external_name_desc": "ExternalName 展示 <strong>external-ip</strong>。"
 }

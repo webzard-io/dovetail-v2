@@ -1,4 +1,4 @@
-import { useUIKit, Tooltip, OverflowTooltip, Divider } from '@cloudtower/eagle';
+import { useUIKit, Tooltip, OverflowTooltip, Divider, Link } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import dayjs from 'dayjs';
@@ -86,6 +86,7 @@ export const NameColumnRenderer = <Model extends ResourceModel>(
   resource = ''
 ): Column<Model> => {
   const dataIndex = ['metadata', 'name'];
+
   return {
     key: 'name',
     display: true,
@@ -104,6 +105,7 @@ export const PlainTextNameColumnRenderer = <Model extends ResourceModel>(
   i18n: I18nType
 ): Column<Model> => {
   const dataIndex = ['metadata', 'name'];
+
   return {
     key: 'name',
     display: true,
@@ -555,8 +557,18 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(i18n: I18n
     display: true,
     dataIndex: ['displayPortMapping'],
     width: 300,
-    render(value) {
-      const content = value.map((v: string) => <OverflowTooltip content={v} key={v}></OverflowTooltip>);
+    render(value, record) {
+      const content = record.displayPortMapping?.map((v) => (
+        <OverflowTooltip
+          content={(
+            <span style={{ whiteSpace: 'pre' }}>
+              {record.displayType === 'NodePort' ? <Link href={`//${v.servicePort}`} target="_blank" >{v.servicePort}</Link> : v.servicePort} &gt; {v.targetPort}/{v.protocol}
+            </span>
+          )}
+          key={v.servicePort}
+          tooltip={`${v.servicePort} > ${v.targetPort}/${v.protocol}`}
+        >
+        </OverflowTooltip>));
 
       return <>{content}</>;
     },
