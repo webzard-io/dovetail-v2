@@ -377,7 +377,9 @@ export function ServiceOutClusterAccessTitle() {
         <div>
           <Trans i18nKey="dovetail.out_cluster_lb_desc" />
         </div>
-        <div>{i18n.t('dovetail.out_external_name_desc')}</div>
+        <div>
+          <Trans i18nKey="dovetail.out_external_name_desc" />
+        </div>
       </div>
     )}>
       <span className={DashedTitleStyle}>{i18n.t('dovetail.out_cluster_access')}</span>
