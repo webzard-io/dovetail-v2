@@ -48,6 +48,12 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
                 />
               );
           }
+
+          // editing name is not allowed
+          if (action === 'edit' && c.key === 'name') {
+            ele = <div>{value}</div>;
+          }
+
           return (
             <Form.Item
               key={c.key}
