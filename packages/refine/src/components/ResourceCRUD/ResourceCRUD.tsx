@@ -15,11 +15,11 @@ export function ResourceCRUD(props: Props) {
       {configs.map(config => {
         return (
           <React.Fragment key={config.name}>
-            <Route path={`${urlPrefix}/${config.name}`} exact>
+            <Route path={config.customPath?.list || `${urlPrefix}/${config.name}`} exact>
               <ResourceList config={config} />
             </Route>
             {!config.noShow ? (
-              <Route path={`${urlPrefix}/${config.name}/show`}>
+              <Route path={config.customPath?.show || `${urlPrefix}/${config.name}/show`}>
                 <ResourceShow config={config} />
               </Route>
             ) : null}
@@ -27,10 +27,16 @@ export function ResourceCRUD(props: Props) {
               // the modals would render in ModalStack
               config.formConfig?.formType === FormType.PAGE ? (
                 <>
-                  <Route path={`${urlPrefix}/${config.name}/create`}>
+                  <Route
+                    path={
+                      config.customPath?.create || `${urlPrefix}/${config.name}/create`
+                    }
+                  >
                     <ResourceForm config={config} />
                   </Route>
-                  <Route path={`${urlPrefix}/${config.name}/edit`}>
+                  <Route
+                    path={config.customPath?.edit || `${urlPrefix}/${config.name}/edit`}
+                  >
                     <ResourceForm config={config} />
                   </Route>
                 </>

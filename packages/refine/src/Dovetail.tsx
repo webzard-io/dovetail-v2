@@ -88,10 +88,10 @@ export const Dovetail: React.FC<Props> = props => {
                     parent: c.parent,
                     label: `${c.kind}s`,
                   },
-                  list: `${urlPrefix}/${c.name}`,
-                  show: `${urlPrefix}/${c.name}/show`,
-                  create: `${urlPrefix}/${c.name}/create`,
-                  edit: `${urlPrefix}/${c.name}/edit`,
+                  list: c.customPath?.list || `${urlPrefix}/${c.name}`,
+                  show: c.customPath?.show || `${urlPrefix}/${c.name}/show`,
+                  create: c.customPath?.create || `${urlPrefix}/${c.name}/create`,
+                  edit: c.customPath?.edit || `${urlPrefix}/${c.name}/edit`,
                 };
               })}
             >

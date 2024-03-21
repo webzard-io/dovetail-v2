@@ -33,7 +33,5 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
     Dropdown,
   });
 
-  return (
-    <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />
-  );
+  return <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />;
 }

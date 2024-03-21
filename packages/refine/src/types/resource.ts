@@ -43,4 +43,10 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     transformInitValues?: (values: Unstructured) => Unstructured;
     transformApplyValues?: (values: Unstructured) => Unstructured;
   };
+  customPath?: {
+    list?: string;
+    show?: string;
+    create?: string;
+    edit?: string;
+  };
 };
