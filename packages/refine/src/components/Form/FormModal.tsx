@@ -83,6 +83,7 @@ export function FormModal(props: FormModalProps) {
       onMutationSuccess: () => {
         popModal();
       },
+      redirect: false,
     },
   });
 
