@@ -24,7 +24,7 @@ export const useRefineForm = (props: {
           message: i18n.t(
             id ? 'dovetail.edit_resource_success' : 'dovetail.create_success_toast',
             {
-              resource: config.name,
+              kind: formValue.kind,
               name: formValue.metadata.name,
               interpolation: { escapeValue: false },
             }
