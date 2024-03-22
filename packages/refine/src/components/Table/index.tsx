@@ -2,8 +2,8 @@ import { useUIKit, TableProps as BaseTableProps, RequiredColumnProps } from '@cl
 import { css, cx } from '@linaria/core';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent from 'src/components/ErrorContent';
 import { FormType } from 'src/types';
-import ErrorContent from './ErrorContent';
 import { AuxiliaryLine } from './TableWidgets';
 
 export type IDObject = { id: string };

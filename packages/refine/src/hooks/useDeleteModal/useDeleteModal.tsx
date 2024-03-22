@@ -1,8 +1,8 @@
-import { ModalProps, Typo } from '@cloudtower/eagle';
+import { ModalProps, Typo, Tag } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useDelete, useNavigation } from '@refinedev/core';
 import React, { useState, useContext } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
 
 const TextStyle = css`
@@ -10,6 +10,13 @@ const TextStyle = css`
 `;
 const TipStyle = css`
   color: rgba(44, 56, 82, 0.60);
+`;
+const NameStyle = css`
+  &.ant-tag.ant-tag-gray {
+    background-color: rgba(237, 241, 250, .6);
+    border: 1px solid rgba(211, 218, 235, .6);
+    color: #00122e;
+  }
 `;
 const ModalStyle = css`
 &.ant-modal {
@@ -45,13 +52,16 @@ export const useDeleteModal = (resource: string) => {
     children: (
       <>
         <div className={cx(Typo.Label.l2_regular, TextStyle)}>
-          {
-            t('dovetail.confirm_delete_text', {
+          <Trans
+            i18nKey="dovetail.confirm_delete_text"
+            tOptions={{
               target: id,
               kind: config.kind,
-              interpolation: { escapeValue: false },
-            })
-          }
+            }}
+            shouldUnescape={true}
+          >
+            <Tag color="gray" className={NameStyle}></Tag>
+          </Trans>
         </div>
         <div className={cx(Typo.Label.l4_regular, TipStyle)}>
           {t('dovetail.delete_tip')}

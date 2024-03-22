@@ -4,7 +4,7 @@ import { useList } from '@refinedev/core';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useMemo, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent from 'src/components/ErrorContent';
+import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { matchSelector } from 'src/utils/match-selector';
@@ -69,7 +69,11 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   ];
 
   if (dataSource?.length === 0) {
-    return <ErrorContent errorText={i18n.t('dovetail.no_resource', { kind: ` ${i18n.t('dovetail.pod')}` })} style={{ padding: '15px 0' }} />;
+    return <ErrorContent
+      errorText={i18n.t('dovetail.no_resource', { kind: ` ${i18n.t('dovetail.pod')}` })}
+      style={{ padding: '15px 0' }}
+      type={ErrorContentType.Card}
+    />;
   }
 
   return (

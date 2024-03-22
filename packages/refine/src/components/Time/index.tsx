@@ -18,7 +18,9 @@ dayjs.extend(relativeTime, {
   ],
 });
 const TimeStyle = css`
-  padding-bottom: 3px;
+  display: inline-block;
+  line-height: 18px;
+  height: 18px;
   border-bottom: 1px dashed rgba(107, 128, 167, 0.6);
 `;
 
