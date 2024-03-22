@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { ResourceConfig, FormType } from 'src/types';
+import { ResourceConfig, FormType } from '../../types';
 import { ResourceForm } from './create';
 import { ResourceList } from './list';
 import { ResourceShow } from './show';
