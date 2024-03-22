@@ -92,7 +92,7 @@ export const CronjobJobsTable: React.FC<{
       {hideToolBar ? null : (<TableToolBar selectedKeys={selectedKeys} hideCreate />)}
       <Table
         tableKey="cronjobs"
-        loading={!isLoading}
+        loading={isLoading}
         data={dataSource || []}
         columns={columns}
         rowKey="id"
