@@ -59,7 +59,7 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
   return (
     <div className={ListPageStyle}>
       <TableToolBar selectedKeys={selectedKeys} description={config?.description} />
-      <Divider style={{ margin: 0, minHeight: 1 }} />
+      <Divider style={{ margin: 0, minHeight: 1, marginRight: 24, width: 'calc(100% - 24px)' }} />
       <div className={ListContentStyle}>
         <NamespacesFilter className={NamespaceFilterStyle} />
         <div className={TableStyle}>

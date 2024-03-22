@@ -2,7 +2,7 @@ import { Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent from 'src/components/ErrorContent';
+import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 
 const ContentBlockStyle = css`
   display: flex;
@@ -22,6 +22,7 @@ const KeyStyle = css`
   color: rgba(44, 56, 82, 0.6);
   width: calc(30% - 4px);
   margin-right: 8px;
+  word-break: break-all;
 `;
 const ValueStyle = css`
   word-break: break-all;
@@ -50,6 +51,7 @@ export const KeyValue: React.FC<KeyValueProps> = (props: KeyValueProps) => {
   if (!result.length) {
     return <ErrorContent
       errorText={empty || t('dovetail.empty')}
+      type={ErrorContentType.Card}
     />;
   }
 

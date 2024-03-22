@@ -10,16 +10,18 @@ const TagWrapper = css`
 `;
 
 const TagStyle = css`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #1D326C;
+  &.ant-tag {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #1D326C;
 
-  .outside-tag {
-    background: rgba(211, 218, 235, 0.60);
-  }
+    &.outside-tag {
+      background-color: rgba(211, 218, 235, 0.60);
+    }
 
-  .inside-tag {
-    background: rgba(192, 203, 224, 0.60);
+    .inside-tag {
+      background-color: rgba(192, 203, 224, 0.60);
+    }
   }
 `;
 

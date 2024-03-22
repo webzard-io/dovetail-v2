@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent from 'src/components/ErrorContent';
+import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/Table';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
@@ -42,6 +42,7 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
     return <ErrorContent
       errorText={t('dovetail.no_resource', { kind: ` ${t('dovetail.pod_selector')}` })}
       style={{ padding: '15px 0' }}
+      type={ErrorContentType.Card}
     />;
   }
 
