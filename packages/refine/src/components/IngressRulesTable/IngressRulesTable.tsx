@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent from 'src/components/ErrorContent';
+import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/Table';
 import ValueDisplay from 'src/components/ValueDisplay';
 import ComponentContext from 'src/contexts/component';
@@ -83,7 +83,11 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
   ];
 
   if (rows?.length === 0) {
-    return <ErrorContent errorText={t('dovetail.no_resource', { kind: t('dovetail.rule') })} style={{ padding: '15px 0' }} />;
+    return <ErrorContent
+      errorText={t('dovetail.no_resource', { kind: t('dovetail.rule') })}
+      style={{ padding: '15px 0' }}
+      type={ErrorContentType.Card}
+    />;
   }
 
   return (

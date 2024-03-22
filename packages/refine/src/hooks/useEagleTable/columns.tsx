@@ -341,7 +341,7 @@ export function ServiceInClusterAccessTitle() {
       <div style={{ lineHeight: '22px' }}>
         <div>{i18n.t('dovetail.in_cluster_desc')}</div>
         <div>{i18n.t('dovetail.in_cluster_ip_desc')}</div>
-        <Divider style={{ margin: '6px 0' }} />
+        <Divider style={{ margin: '6px 0', background: 'rgba(107, 128, 167, 0.60)' }} />
         <div>{i18n.t('dovetail.in_cluster_external_name_desc')}</div>
       </div>
     )}>

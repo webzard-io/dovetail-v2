@@ -3,7 +3,7 @@ import { cx } from '@linaria/core';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent from 'src/components/ErrorContent';
+import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import { StateTagStyle } from 'src/components/StateTag';
 import BaseTable from 'src/components/Table';
 import ComponentContext from 'src/contexts/component';
@@ -80,7 +80,11 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
   ];
 
   if (conditionsWithId.length === 0) {
-    return <ErrorContent errorText={t('dovetail.no_resource', { kind: t('dovetail.condition') })} style={{ padding: '15px 0' }} />;
+    return <ErrorContent
+      errorText={t('dovetail.no_resource', { kind: t('dovetail.condition') })}
+      style={{ padding: '15px 0' }}
+      type={ErrorContentType.Card}
+    />;
   }
 
   return (

@@ -19,29 +19,52 @@ export const ErrorContent = styled.div`
 
   .title {
     margin-bottom: 8px;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-image: linear-gradient(211.41deg, #929dad 0%, #d3dbe3 100%);
+
+    &.widget {
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-image: linear-gradient(211.41deg, #929dad 0%, #d3dbe3 100%);
+    }
+
+    &.list {
+      color: rgba(44, 56, 82, 0.60);
+    }
+
+    &.card {
+      color: rgba(0, 21, 64, 0.30);
+    }
   }
 `;
+
+export enum ErrorContentType {
+  List = 'list',
+  Card = 'card',
+  Widget = 'widget',
+}
 
 export type WidgetErrorContentProps = {
   className?: string;
   style?: React.CSSProperties;
   errorText?: string;
+  type?: ErrorContentType;
   refetch?: () => void;
 };
 
 const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = props => {
-  const { refetch, errorText } = props;
+  const { refetch, errorText, type = ErrorContentType.List } = props;
   const kit = useContext(kitContext);
   const { t } = useTranslation();
+  const fontMap = {
+    [ErrorContentType.Widget]: Typo.Label.l1_regular_title,
+    [ErrorContentType.Card]: Typo.Label.l1_bold,
+    [ErrorContentType.List]: Typo.Display.d2_bold_title,
+  };
 
   return (
     <ErrorWrapper className={props.className} style={props.style}>
       <ErrorContent>
-        <p className={cx(Typo.Label.l1_regular_title, 'title')}>
+        <p className={cx(fontMap[type], 'title', type)}>
           {errorText || t('dovetail.obtain_data_error')}
         </p>
         {!refetch ? null : (
