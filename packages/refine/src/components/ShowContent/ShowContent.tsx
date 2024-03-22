@@ -39,6 +39,8 @@ const BackButton = css`
   }
 `;
 const ToolBarWrapper = css`
+  display: flex;
+  flex-direction: column;
   padding: 16px 24px 8px 24px;
   background-color: #fff;
 `;
@@ -55,6 +57,7 @@ const ShowContentHeaderStyle = css`
 `;
 const GroupStyle = css`
   padding: 12px 16px;
+  padding-bottom: 8px;
   border-radius: 8px;
   border: 1px solid rgba(211, 218, 235, 0.6);
   box-shadow:
@@ -63,7 +66,6 @@ const GroupStyle = css`
   background-color: #fff;
   margin: 0 24px;
   overflow: auto;
-  margin-bottom: 0;
   width: calc(100% - 48px);
   max-width: 1592px;
 
@@ -74,12 +76,18 @@ const GroupStyle = css`
   &:not(:last-of-type) {
     margin-bottom: 24px;
   }
+
+  .pagination-wrapper {
+    padding-top: 12px;
+    padding-bottom: 0;
+  }
 `;
 const GroupTitleStyle = css`
   display: flex;
   color: #1d326c;
   margin-bottom: 12px;
   justify-content: space-between;
+  align-items: center;
 `;
 const FullTabContentStyle = css`
   background-color: #fff;
@@ -94,7 +102,7 @@ const TabContentStyle = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 952px;
+  min-width: 904px;
 `;
 const ValueStyle = css`
   color: #00122E;
@@ -106,6 +114,7 @@ const TabsStyle = css`
 
     .ant-tabs-nav {
       margin-bottom: 0;
+      margin-right: 24px;
     }
 
     .ant-tabs-nav-list {
@@ -284,7 +293,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
                           <FieldContainer key={index} gutter={[24, 8]}>
                             {renderFields(area.fields, area.type, !!group.title)}
                           </FieldContainer>
-                          {index !== group.areas.length - 1 ? <kit.divider /> : null}
+                          {index !== group.areas.length - 1 ? <kit.divider style={{ margin: '8px 0 12px 0' }} /> : null}
                         </>
                       ))}
                     </GroupContainer>

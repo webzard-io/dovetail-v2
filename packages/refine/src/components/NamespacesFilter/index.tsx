@@ -30,6 +30,9 @@ const SelectStyle = css`
   }
 }
 `;
+const DropdownStyle = css`
+  border-radius: 6px;
+`;
 const SearchInputStyle = css`
   &&.ant-input-affix-wrapper {
     border: unset;
@@ -38,10 +41,16 @@ const SearchInputStyle = css`
     box-shadow: unset;
     outline: unset;
     padding: 5px 18px;
+
+    &:hover,
+    &:focus {
+      box-shadow: unset;
+      outline: unset;
+    }
   }
 `;
 const SelectContentStyle = css`
-  .ant-select-item-group{
+  .ant-select-item-group {
     border-bottom: 1px solid rgba(211, 218, 235, 0.6);
     min-height: 0;
     padding: 0;
@@ -118,8 +127,9 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
   return (
     <kit.select
       loading={isLoading}
-      style={{ width: 256 }}
+      style={{ width: 278 }}
       className={cx(SelectStyle, className)}
+      dropdownClassName={DropdownStyle}
       searchValue={search}
       virtual={false}
       input={{
@@ -148,10 +158,11 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
         const isCountToken = label !== value && typeof label === 'string';
         const isAll = value === ALL_NS;
 
-        return isAll ? <span style={{ marginLeft: 12 }}>{label}</span> : (
+        return isAll ? <span style={{ marginLeft: 8 }}>{label}</span> : (
           <kit.token
             className={cx(isCountToken ? CountTokenStyle : TokenStyle, isCountToken ? '' : 'closable-token')}
             closable={closable}
+            size='medium'
             onClose={onClose}
           >
             <kit.overflowTooltip content={isCountToken ? label.replace(/[\s\.]/g, '') : label} />

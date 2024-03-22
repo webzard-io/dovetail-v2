@@ -6,7 +6,7 @@ import type {
 } from 'kubernetes-types/networking/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent from 'src/components/ErrorContent';
+import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import MonacoYamlEditor from 'src/components/YamlEditor/MonacoYamlEditor';
 
 const EditorStyle = css`
@@ -29,7 +29,11 @@ export const NetworkPolicyRulesViewer: React.FC<Props> = ({ ingressOrEgress, kin
   const { t } = useTranslation();
 
   if (!ingressOrEgress) {
-    return <ErrorContent errorText={t('dovetail.no_resource', { kind: kind || t('dovetail.rule') })} style={{ padding: '15px 0' }} />;
+    return <ErrorContent
+      errorText={t('dovetail.no_resource', { kind: kind || t('dovetail.rule') })}
+      style={{ padding: '15px 0' }}
+      type={ErrorContentType.Card}
+    />;
   }
 
   return <MonacoYamlEditor

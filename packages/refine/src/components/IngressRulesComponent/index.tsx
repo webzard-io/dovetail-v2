@@ -13,7 +13,7 @@ export const IngressRulesComponent: React.FC<{
 
     let pre = <span>{r.fullPath}</span>;
     if (r.fullPath.includes('http') && !r.fullPath.includes('*')) {
-      pre = <kit.Link href={r.fullPath}>{r.fullPath}</kit.Link>;
+      pre = <kit.Link href={r.fullPath} target="_blank">{r.fullPath}</kit.Link>;
     }
 
     return (
