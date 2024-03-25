@@ -42,5 +42,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     formType?: FormType;
     transformInitValues?: (values: Unstructured) => Unstructured;
     transformApplyValues?: (values: Unstructured) => Unstructured;
+    formTitle?: string;
+    formDesc?: string;
   };
 };

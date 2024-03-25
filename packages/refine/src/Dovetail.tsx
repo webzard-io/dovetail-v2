@@ -5,8 +5,8 @@ import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import { keyBy } from 'lodash-es';
 import React, { useMemo } from 'react';
 import { Router } from 'react-router-dom';
-import ConfigsContext from 'src/contexts/configs';
 import { ResourceCRUD } from './components/ResourceCRUD';
+import ConfigsContext from './contexts/configs';
 import GlobalStoreContext from './contexts/global-store';
 import { routerProvider } from './providers/router-provider';
 import { ResourceConfig } from './types';
@@ -21,10 +21,19 @@ type Props = {
   history: History;
   globalStore: GlobalStore;
   accessControlProvider?: AccessControlProvider;
+  routerProvider?: any;
 };
 
 export const Dovetail: React.FC<Props> = props => {
-  const { resourcesConfig, urlPrefix = '', Layout, history, globalStore, accessControlProvider } = props;
+  const {
+    resourcesConfig,
+    urlPrefix = '',
+    Layout,
+    history,
+    globalStore,
+    accessControlProvider,
+    routerProvider: customRouterProvider,
+  } = props;
   const msg = useMessage();
 
   const notCustomResources = useMemo(() => {
@@ -70,7 +79,7 @@ export const Dovetail: React.FC<Props> = props => {
               dataProvider={{
                 default: dataProvider(globalStore),
               }}
-              routerProvider={routerProvider}
+              routerProvider={customRouterProvider || routerProvider}
               liveProvider={liveProvider(globalStore)}
               notificationProvider={notificationProvider}
               options={{

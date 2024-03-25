@@ -25,6 +25,9 @@ const FullscreenModalStyle = css`
     }
   }
 `;
+const FormDescStyle = css`
+  margin-bottom: 16px;
+`;
 const ErrorStyle = css`
   display: flex;
   align-items: center;
@@ -131,12 +134,16 @@ export function FormModal(props: FormModalProps) {
     <Modal
       className={FullscreenModalStyle}
       width="calc(100vw - 16px)"
-      title={title}
-      error={errorText ? (
-        <div className={ErrorStyle}>
-          <ExclamationErrorCircleFill16RedIcon /> {errorText}
-        </div>
-      ) : ''}
+      title={config.formConfig?.formTitle || title}
+      error={
+        errorText ? (
+          <div className={ErrorStyle}>
+            <ExclamationErrorCircleFill16RedIcon /> {errorText}
+          </div>
+        ) : (
+          ''
+        )
+      }
       okButtonProps={saveButtonProps}
       closeIcon={<CloseCircleFilled />}
       okText={okText}
@@ -145,6 +152,9 @@ export function FormModal(props: FormModalProps) {
       destroyOnClose
       fullscreen
     >
+      {config.formConfig?.formDesc ? (
+        <div className={FormDescStyle}>{config.formConfig?.formDesc}</div>
+      ) : undefined}
       {formEle}
     </Modal>
   );
