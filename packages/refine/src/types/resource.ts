@@ -27,6 +27,8 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   basePath: string;
   apiVersion: string;
   label: string;
+  hideListToolBar?: boolean;
+  hideNamespacesFilter?: boolean;
   description?: string;
   parent?: RESOURCE_GROUP;
   formatter?: (v: Model) => Model;
