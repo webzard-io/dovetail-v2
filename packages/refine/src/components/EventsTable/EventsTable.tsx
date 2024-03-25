@@ -22,6 +22,9 @@ export const EventsTable: React.FC = ({ }) => {
   const { data, isLoading } = useList<EventModel>({
     resource: 'events',
     meta: { resourceBasePath: '/apis/events.k8s.io/v1', kind: 'Event' },
+    pagination: {
+      mode: 'off'
+    }
   });
   const parsed = useParsed();
 
