@@ -1,3 +1,4 @@
+import { UseFormProps } from '@refinedev/react-hook-form';
 import { Unstructured } from 'k8s-api-provider';
 import { YamlFormProps } from '../components';
 import { RefineFormField } from '../components/Form';
@@ -46,5 +47,6 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     transformApplyValues?: (values: Unstructured) => Unstructured;
     formTitle?: string;
     formDesc?: string;
+    refineCoreProps?: UseFormProps['refineCoreProps'];
   };
 };
