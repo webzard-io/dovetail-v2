@@ -59,6 +59,9 @@ export const CronjobJobsTable: React.FC<{
   const { data, isLoading } = useList<CronJobModel>({
     resource: 'jobs',
     meta: { resourceBasePath: '/apis/batch/v1', kind: 'Job' },
+    pagination: {
+      mode: 'off'
+    }
   });
 
   const dataSource = useMemo(() => {

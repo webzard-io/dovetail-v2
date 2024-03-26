@@ -28,6 +28,9 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
       kind: 'PodMetrics',
       k8sResource: 'pods',
     },
+    pagination: {
+      mode: 'off'
+    }
   });
 
   const metricsMap = useMemo(() => {
