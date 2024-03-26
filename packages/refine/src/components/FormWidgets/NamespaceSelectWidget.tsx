@@ -14,6 +14,9 @@ export function NamespaceSelectWidget(props: NamespaceSelectProps) {
       resourceBasePath: '/api/v1',
       kind: 'Namespace',
     },
+    pagination: {
+      mode: 'off'
+    }
   });
 
   return (
