@@ -58,23 +58,41 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
 
   return (
     <div className={ListPageStyle}>
-      <TableToolBar selectedKeys={selectedKeys} description={config?.description} />
-      <Divider style={{ margin: 0, minHeight: 1, marginRight: 24, width: 'calc(100% - 24px)' }} />
+      {!config.hideListToolBar ? (
+        <>
+          <TableToolBar selectedKeys={selectedKeys} description={config?.description} />
+          <Divider
+            style={{
+              margin: 0,
+              minHeight: 1,
+              marginRight: 24,
+              width: 'calc(100% - 24px)',
+            }}
+          />
+        </>
+      ) : undefined}
+
       <div className={ListContentStyle}>
-        <NamespacesFilter className={NamespaceFilterStyle} />
+        {!config.hideNamespacesFilter ? (
+          <NamespacesFilter className={NamespaceFilterStyle} />
+        ) : undefined}
         <div className={TableStyle}>
-          {
-            !(tableProps.data.length || tableProps.loading) ? (
-              <ErrorContent errorText={tableProps.empty || t('dovetail.no_resource', { kind: ` ${config.kind}` })} />
-            ) : (
-              <Table
-                {...tableProps}
-                empty={tableProps.empty || t('dovetail.no_resource', { kind: ` ${config.kind}` })}
-                className={cx(tableProps.className)}
-                scroll={{ y: 'calc(100% - 48px)' }}
-              />
-            )
-          }
+          {!(tableProps.data.length || tableProps.loading) ? (
+            <ErrorContent
+              errorText={
+                tableProps.empty || t('dovetail.no_resource', { kind: ` ${config.kind}` })
+              }
+            />
+          ) : (
+            <Table
+              {...tableProps}
+              empty={
+                tableProps.empty || t('dovetail.no_resource', { kind: ` ${config.kind}` })
+              }
+              className={cx(tableProps.className)}
+              scroll={{ y: 'calc(100% - 48px)' }}
+            />
+          )}
         </div>
       </div>
     </div>

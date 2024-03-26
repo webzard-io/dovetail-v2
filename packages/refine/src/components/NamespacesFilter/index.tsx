@@ -1,10 +1,11 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
-import { useList } from '@refinedev/core';
+import { useList, useResource } from '@refinedev/core';
 import { last, debounce } from 'lodash-es';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from 'usehooks-ts';
+import { ConfigsContext } from '../../contexts';
 
 const SelectStyle = css`
 &.ant-select {
@@ -97,6 +98,15 @@ export const ALL_NS = '_all';
 
 export const useNamespacesFilter = () => {
   const [value] = useLocalStorage<string[]>(NS_STORE_KEY, [ALL_NS]);
+  const { resource } = useResource();
+  const configs = useContext(ConfigsContext);
+
+  if (resource?.name && configs[resource?.name].hideNamespacesFilter) {
+    // if namespaceFilter is hidden, don't read filter in localstorage
+    return {
+      value: [],
+    };
+  }
 
   return {
     value,
