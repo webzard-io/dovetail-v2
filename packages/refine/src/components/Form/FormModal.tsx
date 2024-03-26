@@ -87,6 +87,7 @@ export function FormModal(props: FormModalProps) {
         popModal();
       },
       redirect: false,
+      ...config.formConfig?.refineCoreProps,
     },
   });
 
