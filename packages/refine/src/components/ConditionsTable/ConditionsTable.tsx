@@ -21,6 +21,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
   const { t } = useTranslation();
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
+  const currentSize = 10;
 
   const conditionsWithId = addId(conditions, 'type');
 
@@ -91,11 +92,12 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
     <Table<WithId<Condition>>
       tableKey="condition"
       loading={false}
-      data={conditionsWithId}
+      data={conditionsWithId.slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+      total={conditionsWithId.length}
       columns={addDefaultRenderToColumns<WithId<Condition>>(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
-      currentSize={10}
+      currentSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}

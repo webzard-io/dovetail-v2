@@ -81,7 +81,9 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     [setCurrentPage]
   );
 
-  const data = table.tableQueryResult.data?.data;
+  const currentSize = tableProps?.currentSize || 5;
+  const data = table.tableQueryResult.data?.data?.slice((currentPage - 1) * currentSize, currentPage * currentSize);
+  const total = table.tableQueryResult.data?.data.length || 0;
   const finalDataSource = formatter ? data?.map(formatter) : data;
 
   const finalProps: TableProps<Model> = {
@@ -93,11 +95,12 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     error: false,
     rowKey: 'id',
     currentPage,
-    currentSize: tableProps?.currentSize || 5,
+    currentSize,
     onPageChange: onPageChange,
     onSelect: keys => {
       setSelectedKeys(keys as string[]);
     },
+    total,
     RowMenu: Dropdown
   };
   return { tableProps: finalProps, selectedKeys, ...table };

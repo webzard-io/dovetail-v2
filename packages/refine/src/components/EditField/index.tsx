@@ -5,17 +5,9 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormErrorAlert } from 'src/components/FormErrorAlert';
 import { AccessControlAuth } from 'src/constants/auth';
+import { ModalStyle } from 'src/hooks/useDeleteModal';
 import { useSubmitForm } from 'src/hooks/useSubmitForm';
 
-const EditFieldModalStyle = css`
-.ant-modal-content {
-  border-radius: 16px;
-}
-
-.ant-modal-header {
-  border-radius: 16px 16px 0 0;
-}
-`;
 const EditButtonStyle = css`
   &.ant-btn.ant-btn-link {
     height: 22px;
@@ -56,7 +48,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
 
   return (
     <kit.modal
-      className={EditFieldModalStyle}
+      className={ModalStyle}
       title={title || i18n.t('dovetail.edit')}
       confirmLoading={submitting}
       onOk={onSubmit}

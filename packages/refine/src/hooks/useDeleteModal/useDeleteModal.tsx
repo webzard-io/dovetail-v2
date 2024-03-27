@@ -18,17 +18,33 @@ const NameStyle = css`
     color: #00122e;
   }
 `;
-const ModalStyle = css`
-&.ant-modal {
+export const ModalStyle = css`
+&.ant-modal.normal-modal {
   .ant-modal-content {
+    width: 492px;
     border-radius: 16px;
+  }
+
+  .ant-modal-body {
+    padding: 32px 40px;
+    min-height: 160px;
   }
 
   .ant-modal-header {
     border-radius: 16px 16px 0 0;
+    padding: 32px 40px;
+    padding-bottom: 0;
+  }
+
+  .ant-modal-footer {
+    padding: 24px 40px;
+  }
+
+  .ant-modal-close-x {
+    top: 35px;
+    right: 40px;
   }
 }
-
 `;
 
 export const useDeleteModal = (resource: string) => {

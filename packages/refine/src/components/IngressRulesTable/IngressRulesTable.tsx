@@ -23,6 +23,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const currentSize = 10;
 
   const columns = [
     {
@@ -94,11 +95,12 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
     <Table<WithId<RuleItem>>
       tableKey="ingressRules"
       loading={false}
-      data={rows}
+      data={rows.slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+      total={rows.length}
       columns={addDefaultRenderToColumns<WithId<RuleItem>>(columns)}
       rowKey="pathType"
       empty={t('dovetail.empty')}
-      currentSize={10}
+      currentSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}
