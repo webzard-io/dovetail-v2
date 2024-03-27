@@ -55,6 +55,7 @@ export const CronjobJobsTable: React.FC<{
   const [currentPage, setCurrentPage] = useState<number>(1);
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
+  const currentSize = 10;
 
   const { data, isLoading } = useList<CronJobModel>({
     resource: 'jobs',
@@ -96,13 +97,14 @@ export const CronjobJobsTable: React.FC<{
       <Table
         tableKey="cronjobs"
         loading={isLoading}
-        data={dataSource || []}
+        data={(dataSource || []).slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+        total={dataSource?.length || 0}
         columns={columns}
         rowKey="id"
         error={false}
         currentPage={currentPage}
         onPageChange={p => setCurrentPage(p)}
-        currentSize={10}
+        currentSize={currentSize}
         refetch={() => null}
         showMenuColumn={false}
       />

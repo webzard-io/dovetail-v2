@@ -26,6 +26,7 @@ const KeyStyle = css`
 `;
 const ValueStyle = css`
   word-break: break-all;
+  white-space: pre-wrap;
   width: calc(70% - 4px);
 `;
 

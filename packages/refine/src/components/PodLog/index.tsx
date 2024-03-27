@@ -25,10 +25,6 @@ const ToolbarStyle = css`
   display: flex;
   justify-content: space-between;
 
-  > * {
-    margin-right: 8px !important;
-  }
-
   .ant-select {
     width: 256px !important;
   }
@@ -129,8 +125,6 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
         }
         const total = buffer + chunk.slice(0, lastIndex);
         buffer = chunk.slice(lastIndex + 1);
-
-        console.log(total);
 
         const formattedLogs = total
           .split('\n')

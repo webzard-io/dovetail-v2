@@ -15,6 +15,7 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const currentSize = 10;
 
   const columns = [
     {
@@ -70,11 +71,12 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
     <Table
       tableKey="ports"
       loading={false}
-      data={ports}
+      data={ports.slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+      total={ports.length}
       columns={addDefaultRenderToColumns(columns)}
       rowKey="name"
       empty={t('dovetail.empty')}
-      currentSize={10}
+      currentSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}

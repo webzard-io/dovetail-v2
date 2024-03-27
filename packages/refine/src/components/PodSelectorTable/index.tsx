@@ -14,6 +14,7 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const currentSize = 10;
 
   const datas = Object.keys(podSelectors).map(key => ({
     id: key,
@@ -50,11 +51,12 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
     <Table
       tableKey="podSelector"
       loading={false}
-      data={datas}
+      data={datas.slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+      total={datas.length}
       columns={addDefaultRenderToColumns(columns)}
       rowKey="key"
       empty={t('dovetail.empty')}
-      currentSize={10}
+      currentSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}

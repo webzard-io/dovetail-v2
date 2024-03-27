@@ -26,6 +26,7 @@ export const PodContainersTable: React.FC<Props> = ({
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const currentSize = 10;
 
   const columns: RequiredColumnProps<WithId<ContainerStatus>>[] = useMemo(
     () => [
@@ -102,11 +103,12 @@ export const PodContainersTable: React.FC<Props> = ({
     <Table<WithId<ContainerStatus>>
       tableKey="podContainers"
       loading={false}
-      data={dataSource}
+      data={dataSource.slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+      total={dataSource.length}
       columns={addDefaultRenderToColumns<WithId<ContainerStatus>>(columns)}
       rowKey="containerID"
       error={false}
-      currentSize={10}
+      currentSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}

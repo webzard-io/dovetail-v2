@@ -34,6 +34,7 @@ export type TableProps<Data extends { id: string; }> = {
   loading: boolean;
   error?: boolean;
   data: Data[];
+  total: number;
   refetch?: () => void;
   rowKey: (string & keyof Data) | ((record: Data) => string);
   columns: Array<Column<Data>>;
