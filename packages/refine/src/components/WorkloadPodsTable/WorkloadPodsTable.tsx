@@ -36,6 +36,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
+  const currentSize = 10;
 
   const { data } = useList<PodModel>({
     resource: 'pods',
@@ -90,14 +91,15 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
       <Table
         tableKey="pods"
         loading={!dataSource}
-        data={dataSource || []}
+        data={(dataSource || []).slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+        total={dataSource?.length || 0}
         columns={addDefaultRenderToColumns<PodModel, Column<PodModel>>(columns)}
         onSelect={keys => setSelectedKeys(keys as string[])}
         rowKey="id"
         error={false}
         currentPage={currentPage}
         onPageChange={p => setCurrentPage(p)}
-        currentSize={10}
+        currentSize={currentSize}
         refetch={() => null}
         showMenuColumn={false}
       />
