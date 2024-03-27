@@ -18,6 +18,7 @@ import BaseTable from '../Table';
 export const EventsTable: React.FC = ({ }) => {
   const { i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const currentSize = 10;
 
   const { data, isLoading } = useList<EventModel>({
     resource: 'events',
@@ -91,13 +92,14 @@ export const EventsTable: React.FC = ({ }) => {
     <Table
       tableKey="events"
       loading={isLoading}
-      data={dataSource || []}
+      data={(dataSource || []).slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+      total={dataSource?.length || 0}
       columns={addDefaultRenderToColumns<EventModel, Column<EventModel>>(columns)}
       rowKey="id"
       error={false}
       currentPage={currentPage}
       onPageChange={p => setCurrentPage(p)}
-      currentSize={10}
+      currentSize={currentSize}
       refetch={() => null}
       showMenuColumn={false}
     />

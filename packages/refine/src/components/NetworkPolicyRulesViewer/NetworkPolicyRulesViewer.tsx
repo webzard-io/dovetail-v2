@@ -42,5 +42,6 @@ export const NetworkPolicyRulesViewer: React.FC<Props> = ({ ingressOrEgress, kin
     height="300px"
     className={EditorStyle}
     readOnly
+    isScrollOnFocus
   />;
 };
