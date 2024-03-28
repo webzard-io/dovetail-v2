@@ -1,9 +1,9 @@
-import { UseFormProps } from '@refinedev/core';
-import { useForm } from '@refinedev/react-hook-form';
 import { Unstructured } from 'k8s-api-provider';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResourceConfig } from '../../types';
+import { useForm } from './useReactHookForm';
+import { UseFormProps } from './useReactHookForm';
 
 export const useRefineForm = (props: {
   config: ResourceConfig;
@@ -13,9 +13,9 @@ export const useRefineForm = (props: {
   const { config, id, refineProps } = props;
   const [responseErrorMsg, setResponseErrorMsg] = useState<string>('');
   const i18n = useTranslation();
-
   const result = useForm({
-    mode: 'onChange',
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     refineCoreProps: {
       errorNotification: false,
       successNotification: () => {

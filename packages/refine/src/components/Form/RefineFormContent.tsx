@@ -16,9 +16,7 @@ type Props<Model extends ResourceModel> = {
 
 export const RefineFormContent = <Model extends ResourceModel>(props: Props<Model>) => {
   const { config, formResult, action, errorMsg } = props;
-  const { control, watch, getValues } = formResult;
-
-  watch(); // watching every fields in the form
+  const { control, getValues } = formResult;
 
   const fields = config?.formConfig?.fields?.map(c => {
     return (
