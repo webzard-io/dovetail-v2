@@ -81,7 +81,7 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
       columns={addDefaultRenderToColumns(columns)}
       rowKey="name"
       empty={t('dovetail.empty')}
-      currentSize={currentSize}
+      defaultSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}

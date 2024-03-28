@@ -100,7 +100,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
         error={false}
         currentPage={currentPage}
         onPageChange={p => setCurrentPage(p)}
-        currentSize={currentSize}
+        defaultSize={currentSize}
         refetch={() => null}
         showMenuColumn={false}
       />

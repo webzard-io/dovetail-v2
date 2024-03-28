@@ -107,7 +107,7 @@ export const CronjobJobsTable: React.FC<{
         error={false}
         currentPage={currentPage}
         onPageChange={p => setCurrentPage(p)}
-        currentSize={currentSize}
+        defaultSize={currentSize}
         refetch={() => null}
         showMenuColumn={false}
       />

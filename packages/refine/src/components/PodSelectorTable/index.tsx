@@ -58,7 +58,7 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
       columns={addDefaultRenderToColumns(columns)}
       rowKey="key"
       empty={t('dovetail.empty')}
-      currentSize={currentSize}
+      defaultSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}

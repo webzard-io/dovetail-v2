@@ -105,7 +105,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       columns={addDefaultRenderToColumns<WithId<RuleItem>>(columns)}
       rowKey="pathType"
       empty={t('dovetail.empty')}
-      currentSize={currentSize}
+      defaultSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}
