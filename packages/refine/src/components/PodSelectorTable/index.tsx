@@ -29,6 +29,7 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
       dataIndex: 'key',
       title: t('dovetail.key'),
       sortable: true,
+      width: '50%',
     },
     {
       key: 'value',
@@ -36,6 +37,7 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
       dataIndex: 'value',
       title: t('dovetail.value'),
       sortable: true,
+      width: '50%',
     },
   ];
 

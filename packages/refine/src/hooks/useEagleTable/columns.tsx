@@ -35,7 +35,7 @@ import {
 
 const DashedTitleStyle = css`
   border-bottom: 1px dashed rgba(107, 128, 167, 0.6);
-  padding-bottom: 2px;
+  padding-bottom: 1px;
 `;
 const ServiceClusterTooltipStyle = css`
   &.ant-tooltip {

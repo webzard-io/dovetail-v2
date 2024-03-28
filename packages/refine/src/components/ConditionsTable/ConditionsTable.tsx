@@ -31,6 +31,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       display: true,
       dataIndex: 'type',
       title: t('dovetail.type'),
+      width: 120,
       sortable: true,
     },
     {
@@ -51,6 +52,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
           </StatusCapsule>
         );
       },
+      width: 120,
       sortable: true,
     },
     {
@@ -59,6 +61,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       dataIndex: 'lastUpdateTime',
       title: t('dovetail.updated_time'),
       sortable: true,
+      width: 120,
       render: (value: string, record: Condition) => {
         const time = value || record.lastTransitionTime;
         return <Time date={new Date(time)} />;
@@ -70,6 +73,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       dataIndex: 'reason',
       title: t('dovetail.reason'),
       sortable: true,
+      width: 300,
     },
     {
       key: 'message',
@@ -77,6 +81,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       dataIndex: 'message',
       title: t('dovetail.message'),
       sortable: true,
+      width: 403,
     },
   ];
 
