@@ -9,10 +9,12 @@ export type RefineFormField = {
   label: string;
   type?: 'number';
   validators?: RefineFormValidator[];
+  disabledWhenEdit?: boolean;
   render?: (
     value: unknown,
     onChange: (event: unknown) => void,
     formValue: unknown,
-    onBlur: () => void
+    onBlur: () => void,
+    action: 'edit' | 'create'
   ) => React.ReactElement;
 };
