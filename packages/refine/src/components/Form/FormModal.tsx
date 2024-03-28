@@ -53,11 +53,8 @@ export function FormModal(props: FormModalProps) {
   const [isError, setIsError] = useState<boolean>(false);
 
   const config = configs[resourceFromProps || resource?.name || ''];
-  const title = i18n.t(id ? 'dovetail.edit_resource' : 'dovetail.create_resource', {
-    resource: config?.kind,
-  });
   const okText = i18n.t(id ? 'dovetail.save' : 'dovetail.create');
-
+  const action = id ? 'edit' : 'create';
   const yamlFormProps: YamlFormProps = useMemo(
     () => ({
       ...props.formProps,
@@ -65,7 +62,7 @@ export function FormModal(props: FormModalProps) {
       transformApplyValues: config.formConfig?.transformApplyValues,
       initialValues: props.formProps?.initialValues || config?.initValue,
       id,
-      action: id ? 'edit' : 'create',
+      action,
       isShowLayout: false,
       useFormProps: {
         redirect: false,
@@ -76,7 +73,14 @@ export function FormModal(props: FormModalProps) {
       },
       onFinish: popModal,
     }),
-    [props.formProps, setYamlSaveButtonProps, config, id]
+    [
+      props.formProps,
+      config.formConfig?.transformInitValues,
+      config.formConfig?.transformApplyValues,
+      config?.initValue,
+      id,
+      action,
+    ]
   );
 
   const refineFormResult = useRefineForm({
@@ -131,11 +135,23 @@ export function FormModal(props: FormModalProps) {
     }
   })();
 
+  const title = useMemo(() => {
+    if (typeof config.formConfig?.formTitle === 'string')
+      return config.formConfig?.formTitle;
+
+    if (typeof config.formConfig?.formTitle === 'function') {
+      return config.formConfig?.formTitle(action);
+    }
+    return i18n.t(id ? 'dovetail.edit_resource' : 'dovetail.create_resource', {
+      resource: config?.kind,
+    });
+  }, [action, config.formConfig, config?.kind, i18n, id]);
+
   return (
     <Modal
       className={FullscreenModalStyle}
       width="calc(100vw - 16px)"
-      title={config.formConfig?.formTitle || title}
+      title={title}
       error={
         errorText ? (
           <div className={ErrorStyle}>

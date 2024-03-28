@@ -2,13 +2,12 @@ import { Unstructured } from 'k8s-api-provider';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResourceConfig } from '../../types';
-import { useForm } from './useReactHookForm';
-import { UseFormProps } from './useReactHookForm';
+import { useForm, UseFormProps } from './useReactHookForm';
 
 export const useRefineForm = (props: {
   config: ResourceConfig;
   id?: string;
-  refineProps?: UseFormProps;
+  refineProps?: UseFormProps['refineCoreProps'];
 }) => {
   const { config, id, refineProps } = props;
   const [responseErrorMsg, setResponseErrorMsg] = useState<string>('');
@@ -47,10 +46,10 @@ export const useRefineForm = (props: {
     const response = result.refineCore.mutationResult.error?.response;
     if (response && !response?.bodyUsed) {
       response.json?.().then((body: any) => {
-        setResponseErrorMsg(body.message);
+        setResponseErrorMsg(config.formConfig?.formatError?.(body) || body.message);
       });
     }
-  }, [result.refineCore.mutationResult.error?.response]);
+  }, [config.formConfig, result.refineCore.mutationResult.error?.response]);
 
   return { formResult: result, responseErrorMsg };
 };

@@ -91,6 +91,7 @@ function App() {
               path: ['metadata', 'name'],
               key: 'name',
               label: i18n.t('dovetail.name'),
+              disabledWhenEdit: true,
               validators: [
                 (value: string) => {
                   if (!value)
@@ -106,12 +107,14 @@ function App() {
               path: ['spec', 'address', 'host'],
               key: 'host',
               label: i18n.t('dovetail.host'),
+              disabledWhenEdit: true,
             },
             {
               path: ['spec', 'address', 'port'],
               key: 'port',
               label: i18n.t('dovetail.port'),
               type: 'number',
+              disabledWhenEdit: true,
             },
             {
               path: ['spec', 'address', 'credentials', 'ssh', 'username'],

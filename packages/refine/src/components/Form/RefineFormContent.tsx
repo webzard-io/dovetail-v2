@@ -11,7 +11,7 @@ type Props<Model extends ResourceModel> = {
   config?: ResourceConfig<Model>;
   formResult: UseFormReturnType;
   errorMsg?: string;
-  action?: 'create' | 'edit';
+  action: 'create' | 'edit';
 };
 
 export const RefineFormContent = <Model extends ResourceModel>(props: Props<Model>) => {
@@ -54,12 +54,12 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
           }
 
           // editing name is not allowed
-          if (action === 'edit' && c.key === 'name') {
+          if (action === 'edit' && c.disabledWhenEdit) {
             ele = <div>{value}</div>;
           }
 
           if (c?.render) {
-            ele = c.render(value, onChange, formValue, onBlur);
+            ele = c.render(value, onChange, formValue, onBlur, action);
           }
 
           return (
