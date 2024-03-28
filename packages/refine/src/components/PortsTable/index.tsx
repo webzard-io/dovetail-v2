@@ -24,6 +24,7 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
       dataIndex: 'name',
       title: t('dovetail.name'),
       sortable: true,
+      width: 267,
     },
     {
       key: 'servicePort',
@@ -31,6 +32,7 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
       dataIndex: 'port',
       title: t('dovetail.service_port'),
       sortable: true,
+      width: 199,
     },
     {
       key: 'protocol',
@@ -38,6 +40,7 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
       dataIndex: 'protocol',
       title: t('dovetail.protocol'),
       sortable: true,
+      width: 199,
     },
     {
       key: 'podPort',
@@ -45,6 +48,7 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
       dataIndex: 'targetPort',
       title: t('dovetail.pod_port'),
       sortable: true,
+      width: 199,
     },
     {
       key: 'nodePort',
@@ -52,6 +56,7 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
       dataIndex: 'nodePort',
       title: t('dovetail.node_port'),
       sortable: true,
+      width: 199,
     },
   ];
   const ports = (service._rawYaml.spec.ports || []).map(port => ({

@@ -31,6 +31,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       display: true,
       dataIndex: 'pathType',
       title: t('dovetail.path_type'),
+      width: 160,
       sortable: true,
     },
     {
@@ -38,6 +39,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       display: true,
       dataIndex: 'fullPath',
       title: t('dovetail.path'),
+      width: 478,
       sortable: true,
     },
     {
@@ -46,6 +48,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       dataIndex: 'serviceName',
       title: t('dovetail.backend'),
       sortable: true,
+      width: 160,
       render: (serviceName: string, record: RuleItem) => {
         return record.serviceName ? (
           <ResourceLink
@@ -61,6 +64,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       display: true,
       dataIndex: 'servicePort',
       title: t('dovetail.port'),
+      width: 120,
       sortable: true,
     },
     {
@@ -68,6 +72,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       display: true,
       dataIndex: 'host',
       title: 'Secret',
+      width: 160,
       render(host: string) {
         const secretName = ingress._rawYaml.spec.tls?.find(({ hosts }) => hosts?.includes(host))?.secretName;
 

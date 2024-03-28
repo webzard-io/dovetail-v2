@@ -37,6 +37,7 @@ export const EventsTable: React.FC = ({ }) => {
         dataIndex: ['type'],
         title: i18n.t('dovetail.type'),
         sortable: true,
+        width: 120,
         render(value: string) {
           const colorMap: Record<string, StatusCapsuleColor> = {
             'Warning': 'red',
@@ -57,6 +58,7 @@ export const EventsTable: React.FC = ({ }) => {
         dataIndex: ['reason'],
         title: i18n.t('dovetail.reason'),
         sortable: true,
+        width: 120,
         sorter: CommonSorter(['reason']),
       },
       {
@@ -65,6 +67,7 @@ export const EventsTable: React.FC = ({ }) => {
         dataIndex: ['note'],
         title: i18n.t('dovetail.note'),
         sortable: true,
+        width: 723,
         sorter: CommonSorter(['note']),
       },
       AgeColumnRenderer<EventModel>(i18n, { title: i18n.t('dovetail.last_seen'), width: 160, }, { isRelativeTime: false }),
