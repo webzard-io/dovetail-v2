@@ -25,7 +25,6 @@ export const RefineFormPage = (props: Props) => {
     refineCore: { onFinish },
     getValues,
     saveButtonProps,
-    control,
   } = formResult;
 
   const onClick = () => {
@@ -40,7 +39,7 @@ export const RefineFormPage = (props: Props) => {
         width: 100%;
       `}
     >
-      <RefineFormContent config={config} control={control} />;
+      <RefineFormContent config={config} formResult={formResult} />;
       <Button {...saveButtonProps} onClick={onClick}>
         {action === 'create' ? t('dovetail.create') : t('dovetail.edit')}
       </Button>
