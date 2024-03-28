@@ -40,7 +40,7 @@ export type TableProps<Data extends { id: string; }> = {
   columns: Array<Column<Data>>;
   scroll?: BaseTableProps<Data>['scroll'];
   currentPage: number;
-  currentSize: number;
+  defaultSize: number;
   onActive?: (key: unknown, record: Data) => void;
   onSelect?: (keys: React.Key[], rows: Data[]) => void;
   onPageChange: (page: number) => void;
@@ -61,7 +61,8 @@ function Table<Data extends { id: string; }>(props: TableProps<Data>) {
     columns,
     scroll,
     currentPage,
-    currentSize,
+    defaultSize,
+    total,
     RowMenu,
     refetch,
     onPageChange,
@@ -74,10 +75,10 @@ function Table<Data extends { id: string; }>(props: TableProps<Data>) {
   const pagination = useMemo(
     () => ({
       current: currentPage,
-      pageSize: currentSize,
+      pageSize: defaultSize,
       onChange: onPageChange,
     }),
-    [currentPage, currentSize, onPageChange]
+    [currentPage, defaultSize, onPageChange]
   );
   const finalColumns = useMemo(() => {
     if (RowMenu) {
@@ -136,8 +137,8 @@ function Table<Data extends { id: string; }>(props: TableProps<Data>) {
       <AuxiliaryLine ref={auxiliaryLineRef}></AuxiliaryLine>
       <kit.pagination
         current={currentPage}
-        size={currentSize}
-        count={dataSource.length}
+        size={defaultSize}
+        count={total}
         onChange={onPageChange}
         onSizeChange={onSizeChange}
       />

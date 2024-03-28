@@ -102,7 +102,7 @@ export const EventsTable: React.FC = ({ }) => {
       error={false}
       currentPage={currentPage}
       onPageChange={p => setCurrentPage(p)}
-      currentSize={currentSize}
+      defaultSize={currentSize}
       refetch={() => null}
       showMenuColumn={false}
     />

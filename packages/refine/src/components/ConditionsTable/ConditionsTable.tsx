@@ -102,7 +102,7 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       columns={addDefaultRenderToColumns<WithId<Condition>>(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
-      currentSize={currentSize}
+      defaultSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}
