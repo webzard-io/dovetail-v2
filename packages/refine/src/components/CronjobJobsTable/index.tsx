@@ -75,7 +75,10 @@ export const CronjobJobsTable: React.FC<{
     NameColumnRenderer(i18n, 'jobs'),
     StateDisplayColumnRenderer(i18n),
     NameSpaceColumnRenderer(i18n),
-    WorkloadImageColumnRenderer(i18n),
+    {
+      ...WorkloadImageColumnRenderer(i18n),
+      width: 238,
+    },
     CompletionsCountColumnRenderer(i18n),
     DurationColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
@@ -104,7 +107,7 @@ export const CronjobJobsTable: React.FC<{
         error={false}
         currentPage={currentPage}
         onPageChange={p => setCurrentPage(p)}
-        currentSize={currentSize}
+        defaultSize={currentSize}
         refetch={() => null}
         showMenuColumn={false}
       />

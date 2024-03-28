@@ -29,7 +29,7 @@ export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
       AgeColumnRenderer(i18n),
     ],
     tableProps: {
-      currentSize: 10,
+      defaultSize: 10,
     },
     Dropdown: WorkloadDropdown,
   });

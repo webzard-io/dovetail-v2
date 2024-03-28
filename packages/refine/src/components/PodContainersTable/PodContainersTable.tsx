@@ -36,6 +36,7 @@ export const PodContainersTable: React.FC<Props> = ({
         title: i18n.t('dovetail.name'),
         sortable: true,
         sorter: CommonSorter(['name']),
+        width: 200,
       },
       {
         key: 'state',
@@ -43,6 +44,7 @@ export const PodContainersTable: React.FC<Props> = ({
         title: i18n.t('dovetail.state'),
         sortable: true,
         sorter: CommonSorter(['state']),
+        width: 120,
         render: v => <StateTag state={Object.keys(v)[0] as WorkloadState} hideBackground />,
       },
       {
@@ -50,12 +52,14 @@ export const PodContainersTable: React.FC<Props> = ({
         dataIndex: ['image'],
         title: i18n.t('dovetail.image'),
         sortable: true,
+        width: 383,
         sorter: CommonSorter(['image']),
       },
       {
         key: 'init',
         dataIndex: [],
         title: i18n.t('dovetail.type'),
+        width: 120,
         render: (_, record) => {
           const isInit = initContainerStatuses.some(
             c => c.containerID === record.containerID
@@ -69,6 +73,8 @@ export const PodContainersTable: React.FC<Props> = ({
         dataIndex: ['restartCount'],
         title: i18n.t('dovetail.restarts'),
         sortable: true,
+        align: 'right',
+        width: 120,
         sorter: CommonSorter(['restartCount']),
       },
       {
@@ -77,6 +83,7 @@ export const PodContainersTable: React.FC<Props> = ({
         title: i18n.t('dovetail.created_time'),
         sortable: true,
         sorter: CommonSorter(['state', 'running', 'startedAt']),
+        width: 120,
         render: (value: string) => {
           if (value) return <Time date={new Date(value)} />;
           return <span>-</span>;
@@ -108,7 +115,7 @@ export const PodContainersTable: React.FC<Props> = ({
       columns={addDefaultRenderToColumns<WithId<ContainerStatus>>(columns)}
       rowKey="containerID"
       error={false}
-      currentSize={currentSize}
+      defaultSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}

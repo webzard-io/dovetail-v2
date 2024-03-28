@@ -29,6 +29,7 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
       dataIndex: 'key',
       title: t('dovetail.key'),
       sortable: true,
+      width: '50%',
     },
     {
       key: 'value',
@@ -36,6 +37,7 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
       dataIndex: 'value',
       title: t('dovetail.value'),
       sortable: true,
+      width: '50%',
     },
   ];
 
@@ -56,7 +58,7 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
       columns={addDefaultRenderToColumns(columns)}
       rowKey="key"
       empty={t('dovetail.empty')}
-      currentSize={currentSize}
+      defaultSize={currentSize}
       currentPage={currentPage}
       onPageChange={setCurrentPage}
       showMenuColumn={false}

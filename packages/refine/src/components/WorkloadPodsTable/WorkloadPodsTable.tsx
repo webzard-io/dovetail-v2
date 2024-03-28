@@ -61,6 +61,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
       dataIndex: ['status', 'podIP'],
       title: i18n.t('dovetail.ip_address'),
       sortable: true,
+      width: 160,
     },
     NodeNameColumnRenderer(i18n),
     WorkloadImageColumnRenderer(i18n),
@@ -99,7 +100,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
         error={false}
         currentPage={currentPage}
         onPageChange={p => setCurrentPage(p)}
-        currentSize={currentSize}
+        defaultSize={currentSize}
         refetch={() => null}
         showMenuColumn={false}
       />
