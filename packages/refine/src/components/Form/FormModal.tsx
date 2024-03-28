@@ -102,7 +102,7 @@ export function FormModal(props: FormModalProps) {
 
     return (
       <RefineFormContent
-        control={refineFormResult.formResult.control}
+        formResult={refineFormResult.formResult}
         config={config}
         errorMsg={refineFormResult.responseErrorMsg}
         action={id ? 'edit' : 'create'}

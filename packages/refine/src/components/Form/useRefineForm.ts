@@ -36,6 +36,7 @@ export const useRefineForm = (props: {
       resource: config.name,
       action: id ? 'edit' : 'create',
       id,
+      liveMode: 'off',
       ...refineProps,
     },
     defaultValues: config?.initValue,
