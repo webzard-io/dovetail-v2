@@ -88,7 +88,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
       AgeColumnRenderer(i18n),
     ]) as Column<PodModel>[],
     tableProps: {
-      currentSize: 10,
+      defaultSize: 10,
     },
   });
 
