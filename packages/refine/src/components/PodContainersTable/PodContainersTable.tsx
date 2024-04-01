@@ -1,9 +1,11 @@
 import { RequiredColumnProps } from '@cloudtower/eagle';
 import { ContainerStatus } from 'kubernetes-types/core/v1';
+import { get } from 'lodash-es';
 import React, { useMemo, useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/Table';
+import ValueDisplay from 'src/components/ValueDisplay';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import { WorkloadState } from '../../constants';
@@ -84,9 +86,12 @@ export const PodContainersTable: React.FC<Props> = ({
         sortable: true,
         sorter: CommonSorter(['state', 'running', 'startedAt']),
         width: 120,
-        render: (value: string) => {
+        render: (_: string, record) => {
+          const value = get(record, ['state', 'running', 'startedAt']) || get(record, ['state', 'terminated', 'startedAt']);
+
           if (value) return <Time date={new Date(value)} />;
-          return <span>-</span>;
+
+          return <ValueDisplay value="" />;
         },
       },
     ],
