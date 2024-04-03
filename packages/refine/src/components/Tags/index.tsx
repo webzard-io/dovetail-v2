@@ -16,11 +16,12 @@ const TagStyle = css`
     color: #1D326C;
 
     &.outside-tag {
-      background-color: rgba(211, 218, 235, 0.60);
+      border: 1px solid #A3B4CC;
+      background-color: #E4E9F2;
     }
 
     .inside-tag {
-      background-color: rgba(192, 203, 224, 0.60);
+      background-color: #CCD4E3;
     }
   }
 `;
