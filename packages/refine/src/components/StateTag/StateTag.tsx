@@ -26,24 +26,25 @@ export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATING, hide
   const kit = useUIKit();
   const { t } = useTranslation();
 
-  const colorMap: Record<WorkloadState, StatusCapsuleColor> = {
-    updating: 'blue',
+  const statusMap: Record<WorkloadState, StatusCapsuleColor | 'loading'> = {
+    updating: 'loading',
     ready: 'green',
     completed: 'gray',
     failed: 'red',
     suspended: 'warning',
-    running: 'blue',
-    succeeded: 'green',
-    unknown: 'warning',
-    terminating: 'red',
-    pending: 'gray',
+    running: 'green',
+    succeeded: 'blue',
+    unknown: 'gray',
+    terminating: 'loading',
+    pending: 'warning',
     waiting: 'warning',
     terminated: 'red'
   };
 
   return <kit.statusCapsule
     className={cx(className, StateTagStyle, hideBackground && 'no-background')}
-    color={colorMap[state]}
+    color={statusMap[state] !== 'loading' ? statusMap[state] as StatusCapsuleColor : undefined}
+    loading={statusMap[state] === 'loading'}
   >
     {t(`dovetail.${state || 'updating'}`)}
   </kit.statusCapsule>;
