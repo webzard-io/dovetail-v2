@@ -19,7 +19,7 @@ const ContentBlockStyle = css`
   }
 `;
 const KeyStyle = css`
-  color: rgba(44, 56, 82, 0.6);
+  color: rgba(44, 56, 82, 0.75);
   width: calc(30% - 4px);
   margin-right: 8px;
   word-break: break-all;
