@@ -321,13 +321,22 @@ const useYamlForm = <
           return;
         }
 
-        const objectValues = editor.current
-          ? (yaml.load(editor.current?.getEditorValue() || '') as Unstructured)
-          : values;
-        const finalValues =
-          transformApplyValues?.(objectValues as Unstructured) || objectValues;
+        try {
+          const objectValues = editor.current
+            ? (yaml.load(editor.current?.getEditorValue() || '') as Unstructured)
+            : values;
+          const finalValues =
+            transformApplyValues?.(objectValues as Unstructured) || objectValues;
 
-        return onFinish(finalValues as TVariables);
+          return onFinish(finalValues as TVariables);
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            if (error.message === 'expected a single document in the stream, but found more') {
+              setEditorErrors([t('dovetail.only_support_one_yaml')]);
+              return;
+            }
+          }
+        }
       },
       onKeyUp,
       onValuesChange,

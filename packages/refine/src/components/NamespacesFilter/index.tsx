@@ -2,22 +2,27 @@ import { useUIKit } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useList, useResource } from '@refinedev/core';
 import { last, debounce } from 'lodash-es';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocalStorage } from 'usehooks-ts';
 import { ConfigsContext } from '../../contexts';
 
 const SelectStyle = css`
 &.ant-select {
-  .ant-select-selector {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow: hidden;
-    gap: 4px;
+  align-self: flex-start;
+  min-width: 276px;
+  max-width: 100%;
 
-    & > span {
-      max-width: calc(100% - 76px);
-      flex-shrink: 0;
+  .ant-select-selector {
+    display: block;
+    overflow: hidden;
+    padding-right: 32px;
+    white-space: nowrap;
+
+    & > span:nth-child(-n + 8):not(.ant-select-selection-search) {
+      display: inline-block;
+      max-width: var(--tag-max-width);
+      margin-right: 4px;
     }
   }
 
@@ -65,7 +70,7 @@ const TokenStyle = css`
 `;
 const CountTokenStyle = css`
   flex-shrink: 0;
-  margin-right: 0;
+  margin-right: 0 !important;
 `;
 const SelectOptionGroupStyle = css`
 `;
@@ -121,6 +126,7 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
   const kit = useUIKit();
   const { t } = useTranslation();
   const [search, setSearch] = useState<string>('');
+  const [tagMaxWidth, setTagMaxWidth] = useState<string>('');
   const { data, isLoading } = useList({
     resource: 'namespaces',
     meta: {
@@ -132,75 +138,144 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
     }
   });
   const [value, setValue] = useLocalStorage<string[]>(NS_STORE_KEY, [ALL_NS]);
+  const [open, setOpen] = useState<boolean>(false);
   const debouncedSetSearch = debounce(setSearch, 100);
+  const MAX_TAG_COUNT = 8;
+  const COUNT_TAG_WIDTH = 22;
+  const TAG_GAP = 4;
+  const PADDING = 36;
+  const hasCountTag = value.length > MAX_TAG_COUNT;
+  const WRAPPER_CLASS = 'd2-namespace-select-wrapper';
+  const SELECT_CLASS = 'd2-namespace-select';
+
+  const calcTagMaxWidth = useCallback(() => {
+    // The maximum label width is calculated based on the current selector width,
+    // and the remaining width after removing some fixed widths is divided equally by the current number of labels
+    const wrapper = document.querySelector<HTMLDivElement>(`.${WRAPPER_CLASS}`);
+    const n = Math.min(value.length, MAX_TAG_COUNT);
+    const tagWidth = (wrapper?.offsetWidth || 0) / n;
+    const gapsWidth = (Math.min(value.length, MAX_TAG_COUNT + 1) - 1) * TAG_GAP;
+    const paddingAndCountTagWidth = PADDING + (hasCountTag ? COUNT_TAG_WIDTH : 0);
+    const perTagMaxWidth = tagWidth - (paddingAndCountTagWidth + gapsWidth) / n;
+
+    setTagMaxWidth(`${perTagMaxWidth}px`);
+  }, [value, hasCountTag]);
+  useEffect(() => {
+    calcTagMaxWidth();
+  }, [calcTagMaxWidth]);
+  useEffect(() => {
+    window.addEventListener('resize', calcTagMaxWidth);
+
+    return () => {
+      window.removeEventListener('resize', calcTagMaxWidth);
+    };
+  }, [calcTagMaxWidth]);
 
   return (
-    <kit.select
-      loading={isLoading}
-      style={{ width: 278 }}
-      className={cx(SelectStyle, className)}
-      dropdownClassName={DropdownStyle}
-      searchValue={search}
-      virtual={false}
-      input={{
-        value,
-        onChange(value) {
-          if (last(value) === ALL_NS || value.length === 0) {
-            setValue([ALL_NS]);
-          } else {
-            setValue((value as string[]).filter(namespace => namespace !== ALL_NS));
-          }
-        },
-      }}
-      dropdownRender={(menu) => (
-        <div className={SelectContentStyle}>
-          <kit.searchInput
-            style={{ width: '100%' }}
-            className={SearchInputStyle}
-            onChange={debouncedSetSearch}
-            placeholder={t('dovetail.please_input')}
-          />
-          {menu}
-          {isLoading ? <kit.loading /> : null}
-        </div>
-      )}
-      tagRender={({ label, value, closable, onClose }) => {
-        const isCountToken = label !== value && typeof label === 'string';
-        const isAll = value === ALL_NS;
-
-        return isAll ? <span style={{ marginLeft: 8 }}>{label}</span> : (
-          <kit.token
-            className={cx(isCountToken ? CountTokenStyle : TokenStyle, isCountToken ? '' : 'closable-token')}
-            closable={closable}
-            size='medium'
-            onClose={onClose}
-          >
-            <kit.overflowTooltip content={isCountToken ? label.replace(/[\s\.]/g, '') : label} />
-          </kit.token>
-        );
-      }}
-      maxTagCount={1}
-      optionLabelProp='label'
-      showArrow
-      showSearch={false}
-      multiple
-    >
-      <kit.option key="_all" value="_all" label={t('dovetail.all_namespaces')} className={AllNamespaceOptionStyle}>
-        <kit.overflowTooltip content={t('dovetail.all_namespaces')} className={LabelWrapperStyle}>
-        </kit.overflowTooltip>
-      </kit.option>
-      <kit.selectOptGroup label="" className={SelectOptionGroupStyle}>
-        {data?.data.map(namespace => {
-          const { name } = namespace.metadata;
+    <div className={WRAPPER_CLASS}>
+      <kit.select
+        loading={isLoading}
+        className={cx(SelectStyle, SELECT_CLASS, className)}
+        style={
+          { '--tag-max-width': tagMaxWidth } as React.CSSProperties
+        }
+        dropdownClassName={DropdownStyle}
+        searchValue={search}
+        virtual={false}
+        input={{
+          value,
+          onChange(value) {
+            if (last(value) === ALL_NS || value.length === 0) {
+              setValue([ALL_NS]);
+            } else {
+              setValue((value as string[]).filter(namespace => namespace !== ALL_NS));
+            }
+          },
+        }}
+        dropdownRender={(menu) => (
+          <div className={SelectContentStyle}>
+            <kit.searchInput
+              style={{ width: '100%' }}
+              className={SearchInputStyle}
+              onChange={debouncedSetSearch}
+              placeholder={t('dovetail.please_input')}
+            />
+            {menu}
+            {isLoading ? <kit.loading /> : null}
+          </div>
+        )}
+        tagRender={({ label, value: namespaceValue, closable, onClose }) => {
+          const isCountToken = label !== namespaceValue && typeof label === 'string';
+          const isAll = namespaceValue === ALL_NS;
 
           return (
-            <kit.option key={name} value={name} label={name} className={OptionStyle}>
-              <kit.overflowTooltip content={name} className={LabelWrapperStyle}>
-              </kit.overflowTooltip>
-            </kit.option>
+            <span onClick={() => { setOpen(!open); }}>
+              {
+                isAll ? (
+
+                  <span style={{ marginLeft: 8 }}>{label}...</span>
+                ) : (
+                  <kit.token
+                    className={cx(isCountToken ? CountTokenStyle : TokenStyle, isCountToken ? '' : 'closable-token')}
+                    closable={closable}
+                    size='medium'
+                    onClose={onClose}
+                  >
+
+                    <kit.overflowTooltip
+                      content={
+                        isCountToken ?
+                          (
+                            <kit.tooltip
+                              title={(
+                                isCountToken ? value.slice(MAX_TAG_COUNT).map((namespace, index) => (
+                                  <>
+                                    <div>{namespace}</div>
+                                    {
+                                      index !== value.length - 1 - MAX_TAG_COUNT ? <kit.divider style={{ margin: '6px 0', borderColor: 'rgba(107, 128, 167, 0.60)' }} /> : null
+                                    }
+                                  </>
+                                )) : null
+                              )}
+                              trigger={['hover']}
+                            >
+                              <span>{label.replace(/[\s\.]/g, '')}</span>
+                            </kit.tooltip>
+                          ) :
+                          label
+                      }
+                    />
+                  </kit.token>
+                )
+              }
+            </span>
           );
-        })}
-      </kit.selectOptGroup>
-    </kit.select>
+        }}
+        maxTagCount={MAX_TAG_COUNT}
+        optionLabelProp='label'
+        showArrow
+        showSearch={false}
+        open={open}
+        onDropdownVisibleChange={(open) => { setOpen(open); }}
+        multiple
+      >
+        <kit.option key="_all" value="_all" label={t('dovetail.all_namespaces')} className={AllNamespaceOptionStyle}>
+          <kit.overflowTooltip content={t('dovetail.all_namespaces')} className={LabelWrapperStyle}>
+          </kit.overflowTooltip>
+        </kit.option>
+        <kit.selectOptGroup label="" className={SelectOptionGroupStyle}>
+          {data?.data.map(namespace => {
+            const { name } = namespace.metadata;
+
+            return (
+              <kit.option key={name} value={name} label={name} className={OptionStyle}>
+                <kit.overflowTooltip content={name} className={LabelWrapperStyle}>
+                </kit.overflowTooltip>
+              </kit.option>
+            );
+          })}
+        </kit.selectOptGroup>
+      </kit.select>
+    </div>
   );
 };
