@@ -85,8 +85,9 @@ function App() {
         parent: RESOURCE_GROUP.NETWORK,
         label: 'ServerInstanceList',
         initValue: SERVER_INSTANCE_INIT_VALUE,
+        noShow: true,
         formConfig: {
-          fields: [
+          fields: () => [
             {
               path: ['metadata', 'name'],
               key: 'name',
@@ -128,7 +129,6 @@ function App() {
             },
           ],
         },
-        noShow: true,
       },
       JobConfig(i18n),
       IngressConfig(i18n),

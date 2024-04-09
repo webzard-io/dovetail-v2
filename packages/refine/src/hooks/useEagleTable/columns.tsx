@@ -114,6 +114,7 @@ export const PlainTextNameColumnRenderer = <Model extends ResourceModel>(
     sortable: true,
     width: 200,
     sorter: CommonSorter(dataIndex),
+    render: v => <OverflowTooltip content={v} tooltip={v} />,
   };
 };
 

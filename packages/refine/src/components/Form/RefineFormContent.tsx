@@ -1,5 +1,6 @@
-import { Fields, Form, Space } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
+import { Fields, Form, Space, Typo } from '@cloudtower/eagle';
+import { css, cx } from '@linaria/core';
+import { useList, useShow } from '@refinedev/core';
 import { UseFormReturnType } from '@refinedev/react-hook-form';
 import React from 'react';
 import { Controller } from 'react-hook-form';
@@ -11,14 +12,33 @@ type Props<Model extends ResourceModel> = {
   config?: ResourceConfig<Model>;
   formResult: UseFormReturnType;
   errorMsg?: string;
-  action: 'create' | 'edit';
+  resourceId?: string;
 };
 
 export const RefineFormContent = <Model extends ResourceModel>(props: Props<Model>) => {
-  const { config, formResult, action, errorMsg } = props;
+  const { config, formResult, resourceId, errorMsg } = props;
   const { control, getValues } = formResult;
+  const action = resourceId ? 'edit' : 'create';
+  const listQuery = useList<Model>({
+    resource: config?.name,
+    meta: { resourceBasePath: config?.basePath, kind: config?.kind },
+    pagination: {
+      mode: 'off',
+    },
+  });
+  const showQuery = useShow<Model>({
+    resource: config?.name,
+    meta: { resourceBasePath: config?.basePath, kind: config?.kind },
+    id: resourceId,
+  });
 
-  const fields = config?.formConfig?.fields?.map(c => {
+  const formFieldsConfig = config?.formConfig?.fields?.({
+    record: showQuery.queryResult.data?.data,
+    records: listQuery.data?.data || [],
+    action,
+  });
+
+  const fields = formFieldsConfig?.map(c => {
     return (
       <Controller
         key={c.key}
@@ -39,6 +59,7 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
           const formValue = getValues();
           let ele = (
             <Fields.String
+              placeholder={c.placeholder}
               input={{ value, onChange, onBlur, name, onFocus: () => null }}
               meta={{}}
             />
@@ -47,6 +68,7 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
             case 'number':
               ele = (
                 <Fields.Integer
+                  placeholder={c.placeholder}
                   input={{ value, onChange, onBlur, name, onFocus: () => null }}
                   meta={{}}
                 />
@@ -56,6 +78,31 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
           // editing name is not allowed
           if (action === 'edit' && c.disabledWhenEdit) {
             ele = <div>{value}</div>;
+          }
+
+          // add helper text
+          if (c.helperText) {
+            ele = (
+              <Space
+                size={4}
+                direction="vertical"
+                className={css`
+                  width: 100%;
+                `}
+              >
+                {ele}
+                <div
+                  className={cx(
+                    Typo.Footnote.f2_regular,
+                    css`
+                      color: rgba(44, 56, 82, 0.6);
+                    `
+                  )}
+                >
+                  {c.helperText}
+                </div>
+              </Space>
+            );
           }
 
           if (c?.render) {

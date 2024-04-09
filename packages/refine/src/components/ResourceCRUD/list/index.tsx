@@ -28,12 +28,11 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
     columns: [nameRenderer, ...(columns?.() || [])],
     tableProps: {
       defaultSize: 50,
+      ...props.config.tableProps,
     },
     formatter,
     Dropdown,
   });
 
-  return (
-    <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />
-  );
+  return <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />;
 }

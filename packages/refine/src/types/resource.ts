@@ -3,7 +3,7 @@ import { Unstructured } from 'k8s-api-provider';
 import { YamlFormProps } from '../components';
 import { RefineFormField } from '../components/Form';
 import { ShowConfig } from '../components/ShowContent';
-import { Column } from '../components/Table';
+import { Column, TableProps } from '../components/Table';
 import { ResourceModel } from '../models';
 
 export enum RESOURCE_GROUP {
@@ -38,9 +38,14 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   noShow?: boolean;
   showConfig?: () => ShowConfig<Model>;
   Dropdown?: React.FC<{ record: Model }>;
+  tableProps?: Partial<TableProps<Model>>;
   isCustom?: boolean;
   formConfig?: {
-    fields?: RefineFormField[];
+    fields?: (props: {
+      record?: Model;
+      records: Model[];
+      action: 'create' | 'edit';
+    }) => RefineFormField[];
     renderForm?: (props: YamlFormProps) => React.ReactNode;
     formType?: FormType;
     transformInitValues?: (values: Unstructured) => Unstructured;
