@@ -18,7 +18,7 @@ import BaseTable from '../Table';
 export const EventsTable: React.FC = ({ }) => {
   const { i18n } = useTranslation();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const currentSize = 10;
+  const currentSize = 50;
 
   const { data, isLoading } = useList<EventModel>({
     resource: 'events',
