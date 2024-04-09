@@ -109,7 +109,7 @@ export function FormModal(props: FormModalProps) {
         formResult={refineFormResult.formResult}
         config={config}
         errorMsg={refineFormResult.responseErrorMsg}
-        action={id ? 'edit' : 'create'}
+        resourceId={id as string}
       />
     );
   })();

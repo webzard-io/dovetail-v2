@@ -49,7 +49,7 @@ export const useRefineForm = (props: {
         setResponseErrorMsg(config.formConfig?.formatError?.(body) || body.message);
       });
     }
-  }, [config.formConfig, result.refineCore.mutationResult.error?.response]);
+  }, [config.formConfig, result]);
 
   return { formResult: result, responseErrorMsg };
 };

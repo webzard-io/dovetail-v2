@@ -7,6 +7,8 @@ export type RefineFormField = {
   path: string[];
   key: string;
   label: string;
+  placeholder?: string;
+  helperText?: string;
   type?: 'number';
   validators?: RefineFormValidator[];
   disabledWhenEdit?: boolean;

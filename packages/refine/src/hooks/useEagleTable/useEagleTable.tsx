@@ -95,13 +95,14 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     error: false,
     rowKey: 'id',
     currentPage,
-    defaultSize: currentSize,
     onPageChange: onPageChange,
     onSelect: keys => {
       setSelectedKeys(keys as string[]);
     },
     total,
-    RowMenu: Dropdown
+    RowMenu: Dropdown,
+    ...tableProps,
+    defaultSize: currentSize,
   };
   return { tableProps: finalProps, selectedKeys, ...table };
 };
