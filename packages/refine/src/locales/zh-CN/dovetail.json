@@ -150,5 +150,6 @@
   "out_cluster_ip_desc": "ClusterIP 不支持集群外部访问。",
   "out_cluster_node_port_desc": "NodePort 展示<strong>节点 IP：nodeport</strong>。",
   "out_cluster_lb_desc": "LoadBalancer 展示 <strong>ingress[*].ip</strong>。",
-  "out_external_name_desc": "ExternalName 展示 <strong>external-ip</strong>。"
+  "out_external_name_desc": "ExternalName 展示 <strong>external-ip</strong>。",
+  "only_support_one_yaml": "一次仅支持输入一个 YAML 配置。"
 }
