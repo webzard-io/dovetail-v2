@@ -279,10 +279,10 @@ export const RestartCountColumnRenderer = <Model extends PodModel>(
   };
 };
 
-export const CompletionsCountColumnRenderer = <Model extends JobModel | CronJobModel>(
+export const CompletionsCountColumnRenderer = <Model extends JobModel>(
   i18n: I18nType
 ): Column<Model> => {
-  const dataIndex = ['completionsDisplay'];
+  const dataIndex = ['succeeded'];
 
   return {
     key: 'completions',
@@ -297,6 +297,9 @@ export const CompletionsCountColumnRenderer = <Model extends JobModel | CronJobM
     width: 120,
     align: 'right',
     sorter: CommonSorter(dataIndex),
+    render: (_, record: Model) => {
+      return <span>{record.completionsDisplay}</span>;
+    },
   };
 };
 

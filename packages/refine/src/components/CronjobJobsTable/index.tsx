@@ -15,7 +15,7 @@ import {
   StateDisplayColumnRenderer,
   WorkloadImageColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
-import { CronJobModel } from '../../models';
+import { JobModel } from '../../models';
 import BaseTable, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
@@ -27,7 +27,7 @@ const WrapperStyle = css`
 `;
 
 function matchOwner(
-  job: CronJobModel,
+  job: JobModel,
   owner: OwnerReference & { namespace: string }
 ): boolean {
   let match = false;
@@ -57,12 +57,12 @@ export const CronjobJobsTable: React.FC<{
   const Table = component.Table || BaseTable;
   const currentSize = 10;
 
-  const { data, isLoading } = useList<CronJobModel>({
+  const { data, isLoading } = useList<JobModel>({
     resource: 'jobs',
     meta: { resourceBasePath: '/apis/batch/v1', kind: 'Job' },
     pagination: {
-      mode: 'off'
-    }
+      mode: 'off',
+    },
   });
 
   const dataSource = useMemo(() => {
@@ -71,7 +71,7 @@ export const CronjobJobsTable: React.FC<{
     });
   }, [data?.data, owner]);
 
-  const columns: Column<CronJobModel>[] = [
+  const columns: Column<JobModel>[] = [
     NameColumnRenderer(i18n, 'jobs'),
     StateDisplayColumnRenderer(i18n),
     NameSpaceColumnRenderer(i18n),
