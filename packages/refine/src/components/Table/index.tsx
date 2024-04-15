@@ -7,6 +7,7 @@ import { FormType } from 'src/types';
 import { AuxiliaryLine } from './TableWidgets';
 
 export type IDObject = { id: string };
+export type SorterOrder = 'descend' | 'ascend' | undefined;
 
 const TableContainerStyle = css`
   width: 100%;
@@ -45,6 +46,7 @@ export type TableProps<Data extends { id: string; }> = {
   onSelect?: (keys: React.Key[], rows: Data[]) => void;
   onPageChange: (page: number) => void;
   onSizeChange?: (size: number) => void;
+  onSorterChange?: (order: SorterOrder | null, key?: string) => void;
   RowMenu?: React.FC<{ record: Data; formType?: FormType; }>;
   empty?: string;
   showMenuColumn?: boolean;
@@ -127,7 +129,6 @@ function Table<Data extends { id: string; }>(props: TableProps<Data>) {
         tableLayout="fixed"
         columns={finalColumns}
         dataSource={dataSource}
-        pagination={pagination}
         error={error}
         loading={loading}
         rowKey={rowKey}

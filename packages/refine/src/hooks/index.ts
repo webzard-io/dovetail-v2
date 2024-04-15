@@ -5,3 +5,4 @@ export * from './useDownloadYAML';
 export * from './useEdit';
 export * from './useGlobalStore';
 export * from './useOpenForm';
+export { default as useNamespaceRefineFilter } from './useNamespaceRefineFilter';

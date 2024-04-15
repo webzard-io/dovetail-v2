@@ -1,6 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import useNamespaceRefineFilter from 'src/hooks/useNamespaceRefineFilter';
 import { useEagleTable } from '../../../hooks/useEagleTable';
 import {
   NameColumnRenderer,
@@ -22,9 +23,12 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
   const nameRenderer: Column<Model> = noShow
     ? PlainTextNameColumnRenderer(i18n)
     : NameColumnRenderer(i18n);
+  const filters = useNamespaceRefineFilter();
 
   const { tableProps, selectedKeys } = useEagleTable<Model>({
-    useTableParams: {},
+    useTableParams: {
+      filters,
+    },
     columns: [nameRenderer, ...(columns?.() || [])],
     tableProps: {
       defaultSize: 50,
@@ -33,6 +37,11 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
     formatter,
     Dropdown,
   });
+
+  useEffect(() => {
+    tableProps.onPageChange(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]);
 
   return <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />;
 }

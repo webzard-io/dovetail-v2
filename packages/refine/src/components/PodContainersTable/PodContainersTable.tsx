@@ -1,11 +1,14 @@
 import { RequiredColumnProps } from '@cloudtower/eagle';
 import { ContainerStatus } from 'kubernetes-types/core/v1';
-import React, { useMemo, useState, useContext } from 'react';
+import { get } from 'lodash-es';
+import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/Table';
+import ValueDisplay from 'src/components/ValueDisplay';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
+import useTableData from 'src/hooks/useTableData';
 import { WorkloadState } from '../../constants';
 import { CommonSorter } from '../../hooks/useEagleTable/columns';
 import { WithId } from '../../types';
@@ -25,7 +28,6 @@ export const PodContainersTable: React.FC<Props> = ({
   const { i18n } = useTranslation();
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const currentSize = 10;
 
   const columns: RequiredColumnProps<WithId<ContainerStatus>>[] = useMemo(
@@ -84,9 +86,12 @@ export const PodContainersTable: React.FC<Props> = ({
         sortable: true,
         sorter: CommonSorter(['state', 'running', 'startedAt']),
         width: 120,
-        render: (value: string) => {
+        render: (_: string, record) => {
+          const value = get(record, ['state', 'running', 'startedAt']) || get(record, ['state', 'terminated', 'startedAt']);
+
           if (value) return <Time date={new Date(value)} />;
-          return <span>-</span>;
+
+          return <ValueDisplay value="" />;
         },
       },
     ],
@@ -97,6 +102,20 @@ export const PodContainersTable: React.FC<Props> = ({
     () => addId(containerStatuses.concat(initContainerStatuses), 'containerID'),
     [containerStatuses, initContainerStatuses]
   );
+
+  const {
+    data: finalData,
+    currentPage,
+    onPageChange,
+    onSorterChange,
+  } = useTableData({
+    data: dataSource,
+    columns,
+    defaultSorters: [{
+      field: 'state.running.startedAt',
+      order: 'desc'
+    }]
+  });
 
   if (dataSource.length === 0) {
     return <ErrorContent
@@ -110,14 +129,15 @@ export const PodContainersTable: React.FC<Props> = ({
     <Table<WithId<ContainerStatus>>
       tableKey="podContainers"
       loading={false}
-      data={dataSource.slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+      data={finalData}
       total={dataSource.length}
       columns={addDefaultRenderToColumns<WithId<ContainerStatus>>(columns)}
       rowKey="containerID"
       error={false}
       defaultSize={currentSize}
       currentPage={currentPage}
-      onPageChange={setCurrentPage}
+      onPageChange={onPageChange}
+      onSorterChange={onSorterChange}
       showMenuColumn={false}
     />
   );

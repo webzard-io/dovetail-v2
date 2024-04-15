@@ -1,11 +1,10 @@
 import { RequiredColumnProps } from '@cloudtower/eagle';
 import { useTable, useResource } from '@refinedev/core';
 import { merge } from 'lodash-es';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import ValueDisplay from 'src/components/ValueDisplay';
 import K8sDropdown from '../../components/K8sDropdown';
-import { useNamespacesFilter, ALL_NS } from '../../components/NamespacesFilter';
-import { Column, TableProps } from '../../components/Table';
+import { Column, TableProps, SorterOrder } from '../../components/Table';
 import { ResourceModel } from '../../models';
 
 type Params<Model extends ResourceModel> = {
@@ -44,30 +43,18 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
   const { resource } = useResource();
-
-  const { value: nsFilters = [] } = useNamespacesFilter();
+  const currentSize = tableProps?.defaultSize || 10;
 
   const useTableParams = useMemo(() => {
     // TODO: check whether resource can be namespaced
     const mergedParams = merge(params.useTableParams, {
       pagination: {
-        mode: 'off',
-      },
-      filters: {
-        permanent: [
-          {
-            operator: 'or',
-            value: nsFilters.filter(filter => filter !== ALL_NS).map(filter => ({
-              field: 'metadata.namespace',
-              operator: 'eq',
-              value: filter,
-            }))
-          }
-        ],
+        pageSize: currentSize,
+        mode: 'server',
       },
     });
     return mergedParams;
-  }, [params.useTableParams, nsFilters]);
+  }, [params.useTableParams, currentSize]);
   const finalColumns: Column<Model>[] = useMemo(() =>
     addDefaultRenderToColumns<Model, Column<Model>>(columns),
     [columns]
@@ -77,13 +64,25 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
   const onPageChange = useCallback(
     (page: number) => {
       setCurrentPage(page);
+      table.setCurrent?.(page || 1);
     },
-    [setCurrentPage]
+    [setCurrentPage, table]
   );
+  const onSorterChange = useCallback((order?: SorterOrder | null, key?: string) => {
+    const ORDER_MAP = {
+      descend: 'desc',
+      ascend: 'asc'
+    } as const;
+    const sorters = [{
+      field: columns.find(col => col.key === key)?.dataIndex,
+      order: order ? ORDER_MAP[order] : order,
+    }];
 
-  const currentSize = tableProps?.defaultSize || 10;
-  const data = table.tableQueryResult.data?.data?.slice((currentPage - 1) * currentSize, currentPage * currentSize);
-  const total = table.tableQueryResult.data?.data.length || 0;
+    table.setSorters(sorters as any);
+  }, [table, columns]);
+
+  const data = table.tableQueryResult.data?.data;
+  const total = table.tableQueryResult.data?.total || 0;
   const finalDataSource = formatter ? data?.map(formatter) : data;
 
   const finalProps: TableProps<Model> = {
@@ -91,11 +90,11 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     loading: table.tableQueryResult.isLoading,
     data: finalDataSource || [],
     columns: finalColumns,
-    refetch: () => null,
     error: false,
     rowKey: 'id',
     currentPage,
     onPageChange: onPageChange,
+    onSorterChange,
     onSelect: keys => {
       setSelectedKeys(keys as string[]);
     },
@@ -104,5 +103,14 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     ...tableProps,
     defaultSize: currentSize,
   };
+
+  useEffect(() => {
+    table.setSorters([{
+      field: 'metadata.creationTimestamp',
+      order: 'desc'
+    }]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return { tableProps: finalProps, selectedKeys, ...table };
 };

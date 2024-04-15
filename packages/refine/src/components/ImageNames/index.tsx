@@ -9,8 +9,8 @@ const ImageWrapperStyle = css`
 export const ImageNames: React.FC<{ value: string[]; breakLine?: boolean; }> = ({ value, breakLine = true }) => {
   return (
     <span className={ImageWrapperStyle}>
-      {breakLine ? value.map(image => (
-        <OverflowTooltip key={image} content={image} tooltip={image}></OverflowTooltip>
+      {breakLine ? value.map((image, index) => (
+        <OverflowTooltip key={`${image}-${index}`} content={image} tooltip={image}></OverflowTooltip>
       )) : value.join(', ')}
     </span>
   );

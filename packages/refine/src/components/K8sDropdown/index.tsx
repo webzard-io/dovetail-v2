@@ -8,6 +8,7 @@ import {
   Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
 import { useResource, useCan } from '@refinedev/core';
+import { omit } from 'lodash-es';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccessControlAuth } from 'src/constants/auth';
@@ -65,7 +66,7 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 if (record.id) {
                   download({
                     name: record.metadata?.name || record.kind || '',
-                    item: globalStore?.restoreItem(record) || record,
+                    item: omit(globalStore?.restoreItem(record) || record, 'id'),
                   });
                 }
               }}

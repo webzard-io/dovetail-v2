@@ -212,8 +212,7 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
             <span onClick={() => { setOpen(!open); }}>
               {
                 isAll ? (
-
-                  <span style={{ marginLeft: 8 }}>{label}...</span>
+                  <span style={{ marginLeft: 8 }}>{label}</span>
                 ) : (
                   <kit.token
                     className={cx(isCountToken ? CountTokenStyle : TokenStyle, isCountToken ? '' : 'closable-token')}

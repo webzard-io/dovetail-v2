@@ -229,15 +229,8 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
     display: true,
     dataIndex,
     title: i18n.t('dovetail.created_time'),
-    sortable: true,
     width: 120,
-    sorter: (a: ResourceModel, b: ResourceModel) => {
-      const valA = new Date(get(a, dataIndex));
-      const valB = new Date(get(b, dataIndex));
-      if (valA === valB) return 0;
-      if (valA > valB) return 1;
-      return -1;
-    },
+    sorter: true,
     render: (value: string) => {
       return isRelativeTime ? <Time date={new Date(value)} /> : <ValueDisplay value={dayjs(value).format('YYYY-MM-DD hh:mm:ss')} />;
     },
