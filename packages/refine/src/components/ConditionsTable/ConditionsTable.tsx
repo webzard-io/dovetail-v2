@@ -1,13 +1,14 @@
 import { StatusCapsule, StatusCapsuleColor } from '@cloudtower/eagle';
 import { cx } from '@linaria/core';
 import { Condition } from 'kubernetes-types/meta/v1';
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import { StateTagStyle } from 'src/components/StateTag';
 import BaseTable from 'src/components/Table';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
+import useTableData from 'src/hooks/useTableData';
 import { WithId } from 'src/types';
 import { addId } from '../../utils/addId';
 import { Time } from '../Time';
@@ -17,14 +18,10 @@ type Props = {
 };
 
 export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const { t } = useTranslation();
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
-  const currentSize = 10;
-
   const conditionsWithId = addId(conditions, 'type');
-
   const columns = [
     {
       key: 'type',
@@ -84,6 +81,15 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       width: 403,
     },
   ];
+  const { data: finalData, currentPage, onPageChange, onSorterChange } = useTableData({
+    data: conditionsWithId,
+    columns,
+    defaultSorters: [{
+      field: 'lastUpdateTime',
+      order: 'desc'
+    }]
+  });
+  const currentSize = 10;
 
   if (conditionsWithId.length === 0) {
     return <ErrorContent
@@ -97,14 +103,15 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
     <Table<WithId<Condition>>
       tableKey="condition"
       loading={false}
-      data={conditionsWithId.slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+      data={finalData}
       total={conditionsWithId.length}
       columns={addDefaultRenderToColumns<WithId<Condition>>(columns)}
       rowKey="type"
       empty={t('dovetail.empty')}
       defaultSize={currentSize}
       currentPage={currentPage}
-      onPageChange={setCurrentPage}
+      onPageChange={onPageChange}
+      onSorterChange={onSorterChange}
       showMenuColumn={false}
     />
   );

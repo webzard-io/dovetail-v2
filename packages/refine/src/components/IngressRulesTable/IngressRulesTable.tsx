@@ -1,10 +1,11 @@
-import React, { useMemo, useState, useContext } from 'react';
+import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/Table';
 import ValueDisplay from 'src/components/ValueDisplay';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
+import useTableData from 'src/hooks/useTableData';
 import { RuleItem } from 'src/models/ingress-model';
 import { IngressModel } from '../../models';
 import { WithId } from '../../types';
@@ -22,7 +23,6 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
   }, [ingress.flattenedRules]);
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const currentSize = 10;
 
   const columns = [
@@ -88,6 +88,16 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
     },
   ];
 
+  const {
+    data: finalData,
+    currentPage,
+    onPageChange,
+    onSorterChange,
+  } = useTableData({
+    columns,
+    data: rows
+  });
+
   if (rows?.length === 0) {
     return <ErrorContent
       errorText={t('dovetail.no_resource', { kind: t('dovetail.rule') })}
@@ -100,14 +110,15 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
     <Table<WithId<RuleItem>>
       tableKey="ingressRules"
       loading={false}
-      data={rows.slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+      data={finalData}
       total={rows.length}
       columns={addDefaultRenderToColumns<WithId<RuleItem>>(columns)}
       rowKey="pathType"
       empty={t('dovetail.empty')}
       defaultSize={currentSize}
       currentPage={currentPage}
-      onPageChange={setCurrentPage}
+      onPageChange={onPageChange}
+      onSorterChange={onSorterChange}
       showMenuColumn={false}
     />
   );

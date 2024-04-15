@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/Table';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
+import useTableData from 'src/hooks/useTableData';
 import { ServiceModel } from 'src/models/service-model';
 
 type Props = {
@@ -14,7 +15,6 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
   const { t } = useTranslation();
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const currentSize = 10;
 
   const columns = [
@@ -64,6 +64,16 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
     id: port.name || '',
   }));
 
+  const {
+    data: finalData,
+    currentPage,
+    onPageChange,
+    onSorterChange
+  } = useTableData({
+    data: ports,
+    columns,
+  });
+
   if (ports?.length === 0) {
     return <ErrorContent
       errorText={t('dovetail.no_resource', { kind: t('dovetail.port') })}
@@ -76,14 +86,15 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
     <Table
       tableKey="ports"
       loading={false}
-      data={ports.slice((currentPage - 1) * currentSize, currentPage * currentSize)}
+      data={finalData}
       total={ports.length}
       columns={addDefaultRenderToColumns(columns)}
       rowKey="name"
       empty={t('dovetail.empty')}
       defaultSize={currentSize}
       currentPage={currentPage}
-      onPageChange={setCurrentPage}
+      onPageChange={onPageChange}
+      onSorterChange={onSorterChange}
       showMenuColumn={false}
     />
   );
