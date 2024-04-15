@@ -166,6 +166,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   const id = parsed?.params?.id;
   const { queryResult } = useShow<Model>({
     id,
+    errorNotification: false,
   });
   const { t } = useTranslation();
   const { data } = queryResult;
