@@ -40,6 +40,7 @@ const Time: React.FunctionComponent<{
     };
 
     i18n.on('languageChanged', onChange);
+    setText(dayjs(date).fromNow());
 
     return () => i18n.off('languageChanged', onChange);
   }, [date, i18n]);
