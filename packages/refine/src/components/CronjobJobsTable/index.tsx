@@ -1,11 +1,11 @@
 import { useUIKit } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
-import { useList } from '@refinedev/core';
 import { OwnerReference } from 'kubernetes-types/meta/v1';
-import React, { useMemo, useState, useContext } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import ComponentContext from 'src/contexts/component';
+import { useEagleTable } from 'src/hooks/useEagleTable/useEagleTable';
 import {
   AgeColumnRenderer,
   CompletionsCountColumnRenderer,
@@ -52,26 +52,9 @@ export const CronjobJobsTable: React.FC<{
   const { i18n } = useTranslation();
   const kit = useUIKit();
   const [selectedKeys] = useState<string[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
-  const currentSize = 10;
-
-  const { data, isLoading } = useList<JobModel>({
-    resource: 'jobs',
-    meta: { resourceBasePath: '/apis/batch/v1', kind: 'Job' },
-    pagination: {
-      mode: 'off',
-    },
-  });
-
-  const dataSource = useMemo(() => {
-    return data?.data.filter(p => {
-      return owner ? matchOwner(p, owner) : true;
-    });
-  }, [data?.data, owner]);
-
-  const columns: Column<JobModel>[] = [
+  const columns: Column<JobModel>[] = useMemo(() => ([
     NameColumnRenderer(i18n, 'jobs'),
     StateDisplayColumnRenderer(i18n),
     NameSpaceColumnRenderer(i18n),
@@ -82,9 +65,27 @@ export const CronjobJobsTable: React.FC<{
     CompletionsCountColumnRenderer(i18n),
     DurationColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
-  ];
+  ]), [i18n]);
+  const params = useMemo(() => ({
+    columns,
+    useTableParams: {
+      resource: 'jobs',
+      meta: { resourceBasePath: '/apis/batch/v1', kind: 'Job' },
+      filters: {
+        permanent: [{
+          field: '',
+          value: '',
+          fn(item: JobModel) {
+            return owner ? matchOwner(item, owner) : true;
+          }
+        }] as any
+      }
+    }
+  }), [columns, owner]);
 
-  if (!dataSource?.length && !isLoading) {
+  const { tableProps } = useEagleTable<JobModel>(params);
+
+  if (!tableProps.data?.length && !tableProps.loading) {
     return <ErrorContent
       errorText={i18n.t('dovetail.no_resource', { kind: ' Job' })}
       type={ErrorContentType.Card}
@@ -98,17 +99,8 @@ export const CronjobJobsTable: React.FC<{
     >
       {hideToolBar ? null : (<TableToolBar selectedKeys={selectedKeys} hideCreate />)}
       <Table
+        {...tableProps}
         tableKey="cronjobs"
-        loading={isLoading}
-        data={(dataSource || []).slice((currentPage - 1) * currentSize, currentPage * currentSize)}
-        total={dataSource?.length || 0}
-        columns={columns}
-        rowKey="id"
-        error={false}
-        currentPage={currentPage}
-        onPageChange={p => setCurrentPage(p)}
-        defaultSize={currentSize}
-        refetch={() => null}
         showMenuColumn={false}
       />
     </kit.space>

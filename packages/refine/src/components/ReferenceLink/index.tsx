@@ -1,6 +1,6 @@
 import type { OwnerReference } from 'kubernetes-types/meta/v1';
-
 import React, { useContext } from 'react';
+import ValueDisplay from 'src/components/ValueDisplay';
 import { ConfigsContext } from '../../contexts';
 import { ResourceLink } from '../ResourceLink';
 
@@ -21,7 +21,7 @@ export const ReferenceLink: React.FC<Props> = props => {
   const resource = Object.values(configs).find(c => c.kind === ownerReference.kind);
 
   if (!resource) {
-    return <span>-</span>;
+    return <ValueDisplay value="" />;
   }
 
   return (

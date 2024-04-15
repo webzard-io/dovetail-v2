@@ -45,7 +45,7 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
     pod.spec?.containers[0]?.name || ''
   );
   const [logs, setLogs] = useState<string[]>([]);
-  const [logType, setLogType] = useState<'realtime' | 'previous'>();
+  const [logType, setLogType] = useState<'realtime' | 'previous'>('realtime');
   const [currentItemCount, setCurrentItemCount] = useState(0);
   const [paused, setPaused] = useState(false);
   const [wrap, setWrap] = useState(false);
@@ -85,23 +85,11 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
     }
   };
 
-  const fetchLogs = useCallback(() => {
-    if (!selectedContainer) {
-      return;
-    }
-
+  const fetchLogsByUrl = useCallback(async (url) => {
     abortControllerRef.current = new AbortController();
     const { signal } = abortControllerRef.current;
 
-    let url = `${apiUrl}/api/v1/namespaces/${pod.metadata?.namespace}/pods/${pod.metadata?.name}/log?container=${selectedContainer}&timestamps=true`;
-
-    if (logType === 'realtime') {
-      url += '&follow=true';
-    } else if (logType === 'previous') {
-      url += '&previous=true';
-    }
-
-    fetch(url, { signal }).then(response => {
+    fetch(url, { signal }).then(async (response) => {
       if (response.status !== 200) {
         setLogs([]);
         return;
@@ -148,7 +136,22 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
       // Start reading the first chunk
       reader.read().then(processChunk);
     });
-  }, [pod.metadata?.namespace, pod.metadata?.name, selectedContainer, logType, apiUrl]);
+  }, []);
+
+  const fetchLogs = useCallback(async () => {
+    if (!selectedContainer) {
+      return;
+    }
+
+    const url = `${apiUrl}/api/v1/namespaces/${pod.metadata?.namespace}/pods/${pod.metadata?.name}/log?container=${selectedContainer}&timestamps=true`;
+
+    if (logType === 'realtime') {
+      // await fetchLogsByUrl(url);
+      fetchLogsByUrl(`${url}&follow=true`);
+    } else if (logType === 'previous') {
+      fetchLogsByUrl(`${url}&previous=true`);
+    }
+  }, [pod.metadata?.namespace, pod.metadata?.name, selectedContainer, logType, apiUrl, fetchLogsByUrl]);
 
   const stopFetchingLogs = useCallback(() => {
     if (abortControllerRef.current) {
