@@ -21,7 +21,7 @@
   "delete": "Delete",
   "create": "Create",
   "confirm_delete_text": "Are you sure you want to delete the {{kind}} <0>{{target}}</0>?",
-  "edit": "edit",
+  "edit": "Edit",
   "namespace": "Namespace",
   "created_time": "Creation time",
   "label": "Label",
