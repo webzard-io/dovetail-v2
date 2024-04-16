@@ -1,6 +1,7 @@
 import { Link, OverflowTooltip, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ValueDisplay from 'src/components/ValueDisplay';
 import { ServiceModel, ServiceTypeEnum } from '../../models';
 
@@ -33,6 +34,7 @@ const LinkStyle = css`
 export const ServiceOutClusterAccessComponent: React.FC<
   Props & { clusterVip: string; breakLine?: boolean; }
 > = ({ service, clusterVip, breakLine = true }) => {
+  const { i18n } = useTranslation();
   const spec = service._rawYaml.spec;
   const status = service._rawYaml.status;
   let content: React.ReactNode | React.ReactNode[] | undefined = '-';
@@ -66,6 +68,9 @@ export const ServiceOutClusterAccessComponent: React.FC<
       break;
     case ServiceTypeEnum.LoadBalancer:
       content = <ValueDisplay value={status.loadBalancer?.ingress?.map(({ ip }) => ip).join(breakLine ? '\n' : ', ')}></ValueDisplay>;
+      break;
+    case ServiceTypeEnum.ClusterIP:
+      content = i18n.t('dovetail.not_support');
       break;
     default:
       content = <ValueDisplay value=""></ValueDisplay>;
