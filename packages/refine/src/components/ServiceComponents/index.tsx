@@ -11,9 +11,12 @@ type Props = {
 
 export const ServiceInClusterAccessComponent: React.FC<Props> = ({ service }) => {
   const spec = service._rawYaml.spec;
-  switch (spec.type) {
+
+  switch (service.displayType) {
     case ServiceTypeEnum.ExternalName:
       return <ValueDisplay value={service.dnsRecord} />;
+    case ServiceTypeEnum.Headless:
+      return <ValueDisplay value="" />;
     default:
       return <ValueDisplay value={spec.clusterIP} />;
   }
