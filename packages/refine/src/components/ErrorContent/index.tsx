@@ -32,6 +32,9 @@ export const ErrorContent = styled.div`
     }
 
     &.card {
+      display: flex;
+      align-items: center;
+      height: 60px;
       color: rgba(0, 21, 64, 0.30);
     }
   }
