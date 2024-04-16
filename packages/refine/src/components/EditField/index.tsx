@@ -10,6 +10,7 @@ import { useSubmitForm } from 'src/hooks/useSubmitForm';
 
 const EditButtonStyle = css`
   &.ant-btn.ant-btn-link {
+    font-size: 13px;
     height: 22px;
     margin-left: 8px;
   }
