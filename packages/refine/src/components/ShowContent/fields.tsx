@@ -187,7 +187,7 @@ export const ServiceTypeField = <Model extends ServiceModel>(
   return {
     key: 'type',
     title: i18n.t('dovetail.type'),
-    path: ['spec', 'type'],
+    path: ['displayType'],
   };
 };
 
