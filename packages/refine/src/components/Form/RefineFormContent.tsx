@@ -129,6 +129,7 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
   return (
     <Space
       direction="vertical"
+      size={16}
       className={css`
         flex-basis: 58%;
         width: 100%;
