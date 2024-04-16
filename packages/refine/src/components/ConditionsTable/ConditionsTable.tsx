@@ -53,14 +53,14 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       sortable: true,
     },
     {
-      key: 'lastUpdateTime',
+      key: 'lastTransitionTime',
       display: true,
-      dataIndex: 'lastUpdateTime',
+      dataIndex: 'lastTransitionTime',
       title: t('dovetail.updated_time'),
       sortable: true,
       width: 120,
-      render: (value: string, record: Condition) => {
-        const time = value || record.lastTransitionTime;
+      render: (value: string) => {
+        const time = value;
         return <Time date={new Date(time)} />;
       },
     },
