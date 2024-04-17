@@ -118,6 +118,7 @@ export const PodsField = <Model extends WorkloadBaseModel>(): ShowField<Model> =
               return r.kind === 'Pod' && r.type === 'creates';
             })?.selector
           }
+          namespace={record.metadata.namespace}
           hideToolbar
         />
       );
@@ -223,6 +224,7 @@ export const ServicePodsField = <Model extends ResourceModel>(): ShowField<Model
               return r.kind === 'Pod' && r.type === 'selects';
             })?.selector
           }
+          namespace={record.metadata.namespace}
           hideToolbar
         />
       );
