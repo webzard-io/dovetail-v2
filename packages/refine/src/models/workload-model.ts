@@ -31,7 +31,7 @@ export class WorkloadModel extends WorkloadBaseModel {
       kind: 'Pod',
     })) as PodList;
     const myPods = pods.items.filter(p =>
-      this.spec?.selector ? matchSelector(p as PodModel, this.spec?.selector) : false
+      matchSelector(p as PodModel, this.spec?.selector, this.metadata.namespace)
     );
     const result = sumBy(myPods, 'restartCount');
     this.restarts = result;

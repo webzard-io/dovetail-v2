@@ -14,7 +14,7 @@
   "retry": "Retry",
   "create_resource": "Create {{resource}}",
   "edit_resource": "Edit {{resource}}",
-  "state": "State",
+  "state": "Status",
   "name": "Name",
   "pod": "Pod",
   "cancel": "Cancel",
