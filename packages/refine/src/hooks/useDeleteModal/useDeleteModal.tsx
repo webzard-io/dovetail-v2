@@ -16,6 +16,10 @@ const NameStyle = css`
     background-color: rgba(237, 241, 250, .6);
     border: 1px solid rgba(211, 218, 235, .6);
     color: #00122e;
+    word-break: break-all;
+    white-space: normal;
+    display: inline;
+    font-weight: bold;
   }
 `;
 export const ModalStyle = css`
@@ -28,6 +32,7 @@ export const ModalStyle = css`
   .ant-modal-body {
     padding: 32px 40px;
     min-height: 160px;
+    overflow-x: hidden;
   }
 
   .ant-modal-header {
