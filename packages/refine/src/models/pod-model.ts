@@ -83,8 +83,8 @@ export class PodModel extends WorkloadBaseModel {
   }
 
   get readyDisplay() {
-    return `${this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length}/${this
-      ._rawYaml.spec?.containers.length}`;
+    return `${this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length || 0}/${this
+      ._rawYaml.spec?.containers.length || 0}`;
   }
   get readyContainerCount() {
     return this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length;
