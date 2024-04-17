@@ -1,6 +1,6 @@
 import { StatusCapsule, StatusCapsuleColor } from '@cloudtower/eagle';
 import { cx } from '@linaria/core';
-import { useParsed, CrudFilters } from '@refinedev/core';
+import { CrudFilters } from '@refinedev/core';
 import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
@@ -14,10 +14,12 @@ import {
 import { EventModel } from '../../models';
 import BaseTable from '../Table';
 
-export const EventsTable: React.FC = ({ }) => {
+type EventTableProps = {
+  uid: string;
+}
+
+export const EventsTable: React.FC<EventTableProps> = ({ uid }: EventTableProps) => {
   const { i18n } = useTranslation();
-  const parsed = useParsed();
-  const [regardingNamespace, regardingName] = (parsed?.id as string)?.split('/');
 
   const columns = useMemo(
     () => [
@@ -77,20 +79,15 @@ export const EventsTable: React.FC = ({ }) => {
           operator: 'and',
           value: [
             {
-              field: 'regarding.namespace',
+              field: 'regarding.uid',
               operator: 'eq',
-              value: regardingNamespace
-            },
-            {
-              field: 'regarding.name',
-              operator: 'eq',
-              value: regardingName
+              value: uid,
             },
           ]
         }] as CrudFilters
       }
     }
-  }), [columns, regardingName, regardingNamespace]);
+  }), [columns, uid]);
   const { tableProps } = useEagleTable<EventModel>(params);
 
   const component = useContext(ComponentContext);
