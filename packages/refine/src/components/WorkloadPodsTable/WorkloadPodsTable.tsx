@@ -21,11 +21,13 @@ import BaseTable, { Column } from '../Table';
 import { TableToolBar } from '../Table/TableToolBar';
 
 interface WorkloadPodsTableProps {
+  namespace?: string;
   selector?: LabelSelector;
   hideToolbar?: boolean;
 }
 
 export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
+  namespace,
   selector,
   hideToolbar,
 }) => {
@@ -63,7 +65,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
           field: '',
           value: '',
           fn(item: PodModel) {
-            return selector ? matchSelector(item, selector) : true;
+            return matchSelector(item, selector, item.metadata.namespace);
           }
         }] as any
       }
