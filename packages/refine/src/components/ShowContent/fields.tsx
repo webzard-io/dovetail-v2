@@ -246,10 +246,10 @@ export const EventsTableTabField = <Model extends ResourceModel>(): ShowField<Mo
   return {
     key: 'event',
     path: [],
-    renderContent: () => {
+    renderContent: (_, record) => {
       return (
         <div style={{ padding: '0 24px', height: '100%' }}>
-          <EventsTable />
+          <EventsTable uid={record.metadata.uid as string} />
         </div>
       );
     },
