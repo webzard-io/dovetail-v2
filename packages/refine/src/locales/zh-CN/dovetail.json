@@ -152,5 +152,6 @@
   "out_cluster_lb_desc": "LoadBalancer 展示 <strong>ingress[*].ip</strong>。",
   "out_external_name_desc": "ExternalName 展示 <strong>external-ip</strong>。",
   "only_support_one_yaml": "一次仅支持输入一个 YAML 配置。",
-  "not_support": "不支持"
+  "not_support": "不支持",
+  "stopped": "已停止"
 }

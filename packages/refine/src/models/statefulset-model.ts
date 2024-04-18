@@ -17,7 +17,9 @@ export class StatefulSetModel extends WorkloadModel {
   }
 
   get stateDisplay() {
-    if (this.spec?.replicas !== this.status?.readyReplicas) {
+    if (this.spec?.replicas === 0) {
+      return WorkloadState.STOPPED;
+    } else if (this.spec?.replicas !== this.status?.readyReplicas) {
       return WorkloadState.UPDATING;
     }
     return WorkloadState.READY;
