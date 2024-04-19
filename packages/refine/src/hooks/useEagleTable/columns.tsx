@@ -191,7 +191,7 @@ export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
 };
 
 export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
-  i18n: I18nType
+  i18n: I18nType,
 ): Column<Model> => {
   const dataIndex = ['status', 'replicas'];
   return {
@@ -199,7 +199,7 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
     display: true,
     dataIndex,
     title: (
-      <Tooltip title={i18n.t('dovetail.completion_num_tooltip')}>
+      <Tooltip title={i18n.t('dovetail.ready_num_tooltip')}>
         <span className={DashedTitleStyle}>{i18n.t('dovetail.pod_num')}</span>
       </Tooltip>
     ),
