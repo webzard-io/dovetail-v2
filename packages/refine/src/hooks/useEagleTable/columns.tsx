@@ -569,7 +569,7 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(i18n: I18n
         >
         </OverflowTooltip>));
 
-      return <>{content}</>;
+      return <ValueDisplay value={content} />;
     },
   };
 };
