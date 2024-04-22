@@ -1,7 +1,6 @@
 import { useUIKit, Tooltip, OverflowTooltip, Divider, Link } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
-import dayjs from 'dayjs';
 import { i18n as I18nType } from 'i18next';
 import type { OwnerReference } from 'kubernetes-types/meta/v1';
 import type { IngressBackend, IngressTLS } from 'kubernetes-types/networking/v1';
@@ -186,12 +185,11 @@ export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
     dataIndex,
     align: 'right',
     title: i18n.t('dovetail.restarts'),
-    sortable: false,
   };
 };
 
 export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
-  i18n: I18nType
+  i18n: I18nType,
 ): Column<Model> => {
   const dataIndex = ['status', 'replicas'];
   return {
@@ -199,7 +197,7 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
     display: true,
     dataIndex,
     title: (
-      <Tooltip title={i18n.t('dovetail.completion_num_tooltip')}>
+      <Tooltip title={i18n.t('dovetail.ready_num_tooltip')}>
         <span className={DashedTitleStyle}>{i18n.t('dovetail.pod_num')}</span>
       </Tooltip>
     ),
@@ -223,6 +221,7 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
   { isRelativeTime = true }: { isRelativeTime?: boolean; } = {},
 ): Column<Model> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
+  const kit = useUIKit();
 
   return {
     key: 'creationTimestamp',
@@ -232,7 +231,7 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
     width: 120,
     sorter: true,
     render: (value: string) => {
-      return isRelativeTime ? <Time date={new Date(value)} /> : <ValueDisplay value={dayjs(value).format('YYYY-MM-DD hh:mm:ss')} />;
+      return isRelativeTime ? <Time date={new Date(value)} /> : <ValueDisplay value={<kit.time date={value} timeTemplate="HH:mm:ss" dateTemplate="YYYY-MM-DD" />} />;
     },
     ...config,
   };
@@ -569,7 +568,7 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(i18n: I18n
         >
         </OverflowTooltip>));
 
-      return <>{content}</>;
+      return <ValueDisplay value={content} />;
     },
   };
 };
