@@ -185,7 +185,6 @@ export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
     dataIndex,
     align: 'right',
     title: i18n.t('dovetail.restarts'),
-    sortable: false,
   };
 };
 
