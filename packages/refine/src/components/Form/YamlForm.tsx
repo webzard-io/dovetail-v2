@@ -88,6 +88,9 @@ export function YamlForm(props: YamlFormProps) {
     errorNotification: false,
     transformInitValues,
     transformApplyValues,
+    mutationMeta: {
+      updateType: 'put'
+    },
     ...useFormProps,
   });
   const kit = useUIKit();
