@@ -21,7 +21,7 @@ export function KeyValueSecret(props: KeyValueSecretProps) {
   const { i18n } = useTranslation();
   const [hideSecret, setHideSecret] = useState(true);
 
-  const toggleButton = (
+  const toggleButton = Object.keys(data).length ? (
     <Button
       type="quiet"
       prefixIcon={<Icon src={hideSecret ? ViewEye16GradientGrayIcon : EntityFilterIgnoreGradient16GrayIcon} />}
@@ -33,7 +33,7 @@ export function KeyValueSecret(props: KeyValueSecretProps) {
         ? i18n.t('dovetail.show_data_value')
         : i18n.t('dovetail.hide_data_value')}
     </Button>
-  );
+  ) : null;
 
   return (
     <ShowGroupComponent title={i18n.t('dovetail.data')} operationEle={toggleButton}>
