@@ -1,4 +1,4 @@
-import { Icon, useUIKit, pushModal } from '@cloudtower/eagle';
+import { Icon, useUIKit, usePushModal } from '@cloudtower/eagle';
 import { EditPen16PrimaryIcon } from '@cloudtower/icons-react';
 import { useResource, useCan } from '@refinedev/core';
 import React, { useRef } from 'react';
@@ -19,6 +19,7 @@ export function ReplicasDropdown<Model extends WorkloadModel>(props: React.Props
   const { record, size, children } = props;
   const kit = useUIKit();
   const { t } = useTranslation();
+  const pushModal = usePushModal();
   const formRef = useRef(null);
   const { action, resource } = useResource();
   const isInShowPage = action === 'show';
@@ -48,7 +49,7 @@ export function ReplicasDropdown<Model extends WorkloadModel>(props: React.Props
                 }
               };
 
-              pushModal({
+              pushModal<'EditFieldModal'>({
                 component: EditFieldModal,
                 props: modalProps
               });

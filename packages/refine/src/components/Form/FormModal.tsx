@@ -1,5 +1,5 @@
 import { CloseCircleFilled } from '@ant-design/icons';
-import { popModal, Modal } from '@cloudtower/eagle';
+import { usePopModal, Modal } from '@cloudtower/eagle';
 import { ExclamationErrorCircleFill16RedIcon } from '@cloudtower/icons-react';
 import { css } from '@linaria/core';
 import { useResource } from '@refinedev/core';
@@ -51,6 +51,7 @@ export function FormModal(props: FormModalProps) {
     onClick?: () => void;
   }>({});
   const [isError, setIsError] = useState<boolean>(false);
+  const popModal = usePopModal();
 
   const config = configs[resourceFromProps || resource?.name || ''];
   const okText = i18n.t(id ? 'dovetail.save' : 'dovetail.create');
@@ -80,6 +81,7 @@ export function FormModal(props: FormModalProps) {
       config?.initValue,
       id,
       action,
+      popModal
     ]
   );
 
