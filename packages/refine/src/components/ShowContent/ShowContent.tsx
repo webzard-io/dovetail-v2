@@ -142,7 +142,7 @@ export function ShowGroupComponent(
   props: React.PropsWithChildren<{
     title: string;
     className?: string;
-    operationEle?: React.ReactElement;
+    operationEle?: React.ReactElement | null;
   }>
 ) {
   const { title, className, children, operationEle } = props;
