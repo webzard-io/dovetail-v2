@@ -11,6 +11,7 @@ export enum WorkloadState {
   TERMINATING = 'terminating',
   PENDING = 'pending',
   WAITING = 'waiting',
+  STOPPED = 'stopped'
 }
 
 // export type DeploymentState = WorkloadState.UPDATEING | WorkloadState.READY;
