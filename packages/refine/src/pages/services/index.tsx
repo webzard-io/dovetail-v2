@@ -32,7 +32,7 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
   columns: () => [
     ServiceTypeColumnRenderer(i18n),
     ServiceInClusterAccessColumnRenderer(),
-    ServiceOutClusterAccessColumnRenderer('192.168.31.98'),
+    ServiceOutClusterAccessColumnRenderer(),
     {
       key: 'dnsRecord',
       title: i18n.t('dovetail.dns_record'),
@@ -53,28 +53,30 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
     AgeColumnRenderer(i18n),
   ],
   showConfig: () => ({
-    tabs: [{
-      title: i18n.t('dovetail.detail'),
-      key: 'detail',
-      groups: [
-        BasicGroup(i18n, {
-          basicFields: [
-            ServiceTypeField(i18n),
-            {
-              key: 'dnsRecord',
-              title: i18n.t('dovetail.dns_record'),
-              path: ['dnsRecord'],
-            },
-            ServiceInnerClusterAccessField(),
-            ServiceOutClusterAccessField('192.168.31.98'),
-          ]
-        }),
-        PodSelectorGroup(i18n),
-        PortsGroup(i18n),
-        ConditionsGroup(i18n),
-        ServicePodsGroup(),
-      ]
-    },],
+    tabs: [
+      {
+        title: i18n.t('dovetail.detail'),
+        key: 'detail',
+        groups: [
+          BasicGroup(i18n, {
+            basicFields: [
+              ServiceTypeField(i18n),
+              {
+                key: 'dnsRecord',
+                title: i18n.t('dovetail.dns_record'),
+                path: ['dnsRecord'],
+              },
+              ServiceInnerClusterAccessField(),
+              ServiceOutClusterAccessField(),
+            ],
+          }),
+          PodSelectorGroup(i18n),
+          PortsGroup(i18n),
+          ConditionsGroup(i18n),
+          ServicePodsGroup(),
+        ],
+      },
+    ],
   }),
   initValue: SERVICE_CLUSTER_IP_INIT_VALUE,
 });
