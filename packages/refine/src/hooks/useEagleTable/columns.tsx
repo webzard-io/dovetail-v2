@@ -134,12 +134,12 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 
 export const StateDisplayColumnRenderer = <
   Model extends
-  | WorkloadModel
-  | CronJobModel
-  | PodModel
-  | ServiceModel
-  | DaemonSetModel
-  | JobModel,
+    | WorkloadModel
+    | CronJobModel
+    | PodModel
+    | ServiceModel
+    | DaemonSetModel
+    | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -189,7 +189,7 @@ export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
 };
 
 export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
-  i18n: I18nType,
+  i18n: I18nType
 ): Column<Model> => {
   const dataIndex = ['status', 'replicas'];
   return {
@@ -217,8 +217,8 @@ export const ReplicasColumnRenderer = <Model extends WorkloadModel>(
 
 export const AgeColumnRenderer = <Model extends ResourceModel>(
   i18n: I18nType,
-  config?: { title?: string; width: number; },
-  { isRelativeTime = true }: { isRelativeTime?: boolean; } = {},
+  config?: { title?: string; width: number },
+  { isRelativeTime = true }: { isRelativeTime?: boolean } = {}
 ): Column<Model> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
   const kit = useUIKit();
@@ -231,7 +231,15 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
     width: 120,
     sorter: true,
     render: (value: string) => {
-      return isRelativeTime ? <Time date={new Date(value)} /> : <ValueDisplay value={<kit.time date={value} timeTemplate="HH:mm:ss" dateTemplate="YYYY-MM-DD" />} />;
+      return isRelativeTime ? (
+        <Time date={new Date(value)} />
+      ) : (
+        <ValueDisplay
+          value={
+            <kit.time date={value} timeTemplate="HH:mm:ss" dateTemplate="YYYY-MM-DD" />
+          }
+        />
+      );
     },
     ...config,
   };
@@ -333,19 +341,24 @@ export function ServiceInClusterAccessTitle() {
   const { i18n } = useTranslation();
 
   return (
-    <Tooltip overlayClassName={ServiceClusterTooltipStyle} title={(
-      <div style={{ lineHeight: '22px' }}>
-        <div>{i18n.t('dovetail.in_cluster_desc')}</div>
-        <div>{i18n.t('dovetail.in_cluster_ip_desc')}</div>
-        <Divider style={{ margin: '6px 0', background: 'rgba(107, 128, 167, 0.60)' }} />
-        <div>{i18n.t('dovetail.in_cluster_external_name_desc')}</div>
-      </div>
-    )}>
+    <Tooltip
+      overlayClassName={ServiceClusterTooltipStyle}
+      title={
+        <div style={{ lineHeight: '22px' }}>
+          <div>{i18n.t('dovetail.in_cluster_desc')}</div>
+          <div>{i18n.t('dovetail.in_cluster_ip_desc')}</div>
+          <Divider style={{ margin: '6px 0', background: 'rgba(107, 128, 167, 0.60)' }} />
+          <div>{i18n.t('dovetail.in_cluster_external_name_desc')}</div>
+        </div>
+      }
+    >
       <span className={DashedTitleStyle}>{i18n.t('dovetail.in_cluster_access')}</span>
     </Tooltip>
   );
 }
-export const ServiceInClusterAccessColumnRenderer = <Model extends ServiceModel>(): Column<Model> => {
+export const ServiceInClusterAccessColumnRenderer = <
+  Model extends ServiceModel,
+>(): Column<Model> => {
   return {
     key: 'inClusterAccess',
     title: <ServiceInClusterAccessTitle />,
@@ -362,29 +375,34 @@ export function ServiceOutClusterAccessTitle() {
   const { i18n } = useTranslation();
 
   return (
-    <Tooltip overlayClassName={ServiceClusterTooltipStyle} title={(
-      <div style={{
-        lineHeight: '22px'
-      }}>
-        <div>{i18n.t('dovetail.out_cluster_ip_desc')}</div>
-        <div>
-          <Trans i18nKey="dovetail.out_cluster_node_port_desc" />
+    <Tooltip
+      overlayClassName={ServiceClusterTooltipStyle}
+      title={
+        <div
+          style={{
+            lineHeight: '22px',
+          }}
+        >
+          <div>{i18n.t('dovetail.out_cluster_ip_desc')}</div>
+          <div>
+            <Trans i18nKey="dovetail.out_cluster_node_port_desc" />
+          </div>
+          <div>
+            <Trans i18nKey="dovetail.out_cluster_lb_desc" />
+          </div>
+          <div>
+            <Trans i18nKey="dovetail.out_external_name_desc" />
+          </div>
         </div>
-        <div>
-          <Trans i18nKey="dovetail.out_cluster_lb_desc" />
-        </div>
-        <div>
-          <Trans i18nKey="dovetail.out_external_name_desc" />
-        </div>
-      </div>
-    )}>
+      }
+    >
       <span className={DashedTitleStyle}>{i18n.t('dovetail.out_cluster_access')}</span>
     </Tooltip>
   );
 }
-export const ServiceOutClusterAccessColumnRenderer = <Model extends ServiceModel>(
-  clusterVip: string
-): Column<Model> => {
+export const ServiceOutClusterAccessColumnRenderer = <
+  Model extends ServiceModel,
+>(): Column<Model> => {
   return {
     key: 'outClusterAccess',
     title: <ServiceOutClusterAccessTitle />,
@@ -392,9 +410,7 @@ export const ServiceOutClusterAccessColumnRenderer = <Model extends ServiceModel
     dataIndex: [],
     width: 160,
     render(_, record) {
-      return (
-        <ServiceOutClusterAccessComponent service={record} clusterVip={clusterVip} />
-      );
+      return <ServiceOutClusterAccessComponent service={record} />;
     },
   };
 };
@@ -526,7 +542,9 @@ export const PodContainersNumColumnRenderer = <Model extends PodModel>(
   };
 };
 
-export const DataKeysColumnRenderer = <Model extends ResourceModel>(i18n: I18nType): Column<Model> => {
+export const DataKeysColumnRenderer = <Model extends ResourceModel>(
+  i18n: I18nType
+): Column<Model> => {
   return {
     key: 'data',
     display: true,
@@ -535,16 +553,20 @@ export const DataKeysColumnRenderer = <Model extends ResourceModel>(i18n: I18nTy
     render(data) {
       const keys = Object.keys(data || {});
 
-      return keys.length ? keys.map(key => (
-        <OverflowTooltip content={key} key={key} />
-      )) : <ValueDisplay value="" />;
+      return keys.length ? (
+        keys.map(key => <OverflowTooltip content={key} key={key} />)
+      ) : (
+        <ValueDisplay value="" />
+      );
     },
     width: 300,
     sortable: true,
   };
 };
 
-export const PortMappingColumnRenderer = <Model extends ServiceModel>(i18n: I18nType): Column<Model> => {
+export const PortMappingColumnRenderer = <Model extends ServiceModel>(
+  i18n: I18nType
+): Column<Model> => {
   return {
     key: 'displayPortMapping',
     title: (
@@ -556,17 +578,24 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(i18n: I18n
     dataIndex: ['displayPortMapping'],
     width: 300,
     render(value, record) {
-      const content = record.displayPortMapping?.map((v) => (
+      const content = record.displayPortMapping?.map(v => (
         <OverflowTooltip
-          content={(
+          content={
             <span style={{ whiteSpace: 'pre' }}>
-              {record.displayType === 'NodePort' ? <Link href={`//${v.servicePort}`} target="_blank" >{v.servicePort}</Link> : v.servicePort} &gt; {v.targetPort}/{v.protocol}
+              {record.displayType === 'NodePort' ? (
+                <Link href={`//${v.link}`} target="_blank">
+                  {v.servicePort}
+                </Link>
+              ) : (
+                v.servicePort
+              )}{' '}
+              &gt; {v.targetPort}/{v.protocol}
             </span>
-          )}
+          }
           key={v.servicePort}
           tooltip={`${v.servicePort} > ${v.targetPort}/${v.protocol}`}
-        >
-        </OverflowTooltip>));
+        ></OverflowTooltip>
+      ));
 
       return <ValueDisplay value={content} />;
     },
