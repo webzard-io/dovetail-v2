@@ -1,4 +1,4 @@
-import { useUIKit, pushModal, popModal, } from '@cloudtower/eagle';
+import { useUIKit, usePushModal, usePopModal, } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useResource, CanAccess } from '@refinedev/core';
 import React, { useCallback } from 'react';
@@ -30,6 +30,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
   const { title, formRef: form, renderContent } = props;
   const kit = useUIKit();
   const { i18n } = useTranslation();
+  const popModal = usePopModal();
   const {
     submitting,
     errorMsgs,
@@ -77,6 +78,7 @@ export function EditField(props: EditField) {
   const kit = useUIKit();
   const { i18n } = useTranslation();
   const { resource } = useResource();
+  const pushModal = usePushModal();
 
   return (
     <CanAccess
@@ -87,7 +89,7 @@ export function EditField(props: EditField) {
         className={EditButtonStyle}
         type="link"
         onClick={() => {
-          pushModal({
+          pushModal<"EditFieldModal">({
             component: EditFieldModal,
             props: modalProps
           });

@@ -8,6 +8,8 @@ type ModalProps = {
 };
 
 declare module '@cloudtower/eagle' {
+  interface IModalProps extends ModalProps {}
+
   export declare function pushModal<K extends keyof ModalProps>(
     modal: ModalType<ModalProps[K]>
   ): void;
