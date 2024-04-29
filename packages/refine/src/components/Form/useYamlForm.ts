@@ -334,6 +334,8 @@ const useYamlForm = <
             if (error.message === 'expected a single document in the stream, but found more') {
               setEditorErrors([t('dovetail.only_support_one_yaml')]);
               return;
+            } else {
+              setEditorErrors([error.message]);
             }
           }
         }
