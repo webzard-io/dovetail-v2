@@ -1,4 +1,4 @@
-import { pushModal } from '@cloudtower/eagle';
+import { usePushModal } from '@cloudtower/eagle';
 import { useResource, useGo, useNavigation } from '@refinedev/core';
 import { useContext } from 'react';
 import ConfigsContext from 'src/contexts/configs';
@@ -17,6 +17,7 @@ export function useOpenForm(options?: UseOpenFormOptions) {
   const configs = useContext(ConfigsContext);
   const { edit } = useEdit();
   const navigation = useNavigation();
+  const pushModal = usePushModal();
   const go = useGo();
 
   return function openForm() {
@@ -24,7 +25,7 @@ export function useOpenForm(options?: UseOpenFormOptions) {
       const config = configs[resource.name];
       const formType = config.formConfig?.formType;
       if (formType === undefined || formType === FormType.MODAL) {
-        pushModal({
+        pushModal<'FormModal'>({
           component: FormModal,
           props: {
             resource: resource.name,
