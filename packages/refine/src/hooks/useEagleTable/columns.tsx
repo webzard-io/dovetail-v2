@@ -474,7 +474,8 @@ export const IngressDefaultBackendColumnRenderer = <Model extends IngressModel>(
     sorter: CommonSorter(['spec', 'defaultBackend']),
     width: 120,
     render: (defaultBackend: IngressBackend) => {
-      if (defaultBackend?.service?.name) return <span>{i18n.t('dovetail.true')}</span>;
+      if (defaultBackend?.service?.name || defaultBackend?.resource?.name)
+        return <span>{i18n.t('dovetail.true')}</span>;
       return <span>{i18n.t('dovetail.false')}</span>;
     },
   };
