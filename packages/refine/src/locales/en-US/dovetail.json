@@ -152,5 +152,6 @@
   "path_type": "Path type",
   "only_support_one_yaml": "Only one YAML configuration is supported at a time.",
   "not_support": "Not supported",
-  "stopped": "Stopped"
+  "stopped": "Stopped",
+  "any_node_ip": "Any node IP"
 }

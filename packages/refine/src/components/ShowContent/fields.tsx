@@ -6,9 +6,15 @@ import React from 'react';
 import { DurationTime } from 'src/components/DurationTime';
 import { PodSelectorTable } from 'src/components/PodSelectorTable';
 import { PortsTable } from 'src/components/PortsTable';
-import { ServiceInClusterAccessComponent, ServiceOutClusterAccessComponent } from 'src/components/ServiceComponents';
+import {
+  ServiceInClusterAccessComponent,
+  ServiceOutClusterAccessComponent,
+} from 'src/components/ServiceComponents';
 import { Tags } from 'src/components/Tags';
-import { ServiceOutClusterAccessTitle, ServiceInClusterAccessTitle } from 'src/hooks/useEagleTable/columns';
+import {
+  ServiceOutClusterAccessTitle,
+  ServiceInClusterAccessTitle,
+} from 'src/hooks/useEagleTable/columns';
 import {
   JobModel,
   ResourceModel,
@@ -86,7 +92,9 @@ export const ImageField = <Model extends WorkloadBaseModel>(
   };
 };
 
-export const ReplicaField = <Model extends WorkloadModel | JobModel>(): ShowField<Model> => {
+export const ReplicaField = <
+  Model extends WorkloadModel | JobModel,
+>(): ShowField<Model> => {
   return {
     key: 'Replicas',
     path: [],
@@ -147,12 +155,19 @@ export const JobsField = <Model extends JobModel | CronJobModel>(): ShowField<Mo
   };
 };
 
-export const DataField = <Model extends ResourceModel>(i18n: I18nType): ShowField<Model> => {
+export const DataField = <Model extends ResourceModel>(
+  i18n: I18nType
+): ShowField<Model> => {
   return {
     key: 'data',
     path: ['data'],
     renderContent: val => {
-      return <KeyValue data={val as Record<string, string>} empty={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.data') })} />;
+      return (
+        <KeyValue
+          data={val as Record<string, string>}
+          empty={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.data') })}
+        />
+      );
     },
   };
 };
@@ -303,7 +318,9 @@ export const AnnotationsField = <Model extends ResourceModel>(
   },
 });
 
-export const ServiceInnerClusterAccessField = <Model extends ServiceModel>(): ShowField<Model> => ({
+export const ServiceInnerClusterAccessField = <
+  Model extends ServiceModel,
+>(): ShowField<Model> => ({
   key: 'innerClusterAccess',
   title: <ServiceInClusterAccessTitle />,
   path: [],
@@ -312,21 +329,28 @@ export const ServiceInnerClusterAccessField = <Model extends ServiceModel>(): Sh
   },
 });
 
-export const ServiceOutClusterAccessField = <Model extends ServiceModel>(clusterVip: string): ShowField<Model> => ({
+export const ServiceOutClusterAccessField = <
+  Model extends ServiceModel,
+>(): ShowField<Model> => ({
   key: 'innerClusterAccess',
   title: <ServiceOutClusterAccessTitle />,
   path: [],
   renderContent: (_, record) => {
-    return <ServiceOutClusterAccessComponent service={record} clusterVip={clusterVip} breakLine={false} />;
+    return <ServiceOutClusterAccessComponent service={record} breakLine={false} />;
   },
 });
 
-export const PodSelectorField = <Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>>(): ShowField<Model> => ({
+export const PodSelectorField = <
+  Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>,
+>(): ShowField<Model> => ({
   key: 'podSelector',
   path: [],
   renderContent: (_, resource) => {
     const spec = resource._rawYaml.spec;
-    const selector = spec && (('selector' in spec && spec.selector) || ('podSelector' in spec && spec.podSelector.matchLabels));
+    const selector =
+      spec &&
+      (('selector' in spec && spec.selector) ||
+        ('podSelector' in spec && spec.podSelector.matchLabels));
 
     return <PodSelectorTable podSelectors={selector || {}} />;
   },
@@ -347,7 +371,7 @@ export const DurationField = <Model extends JobModel | CronJobModel>(
     key: 'duration',
     path: ['duration'],
     title: i18n.t('dovetail.duration'),
-    renderContent: (v) => {
+    renderContent: v => {
       return <DurationTime value={v as number} />;
     },
   };

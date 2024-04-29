@@ -1,4 +1,4 @@
-import { Link, OverflowTooltip, Typo } from '@cloudtower/eagle';
+import { OverflowTooltip, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,16 +27,10 @@ const BreakLineStyle = css`
     display: block;
   }
 `;
-const LinkStyle = css`
-  &.ant-btn.ant-btn-link {
-    line-height: 18px;
-    height: 18px;
-  }
-`;
 
 export const ServiceOutClusterAccessComponent: React.FC<
-  Props & { clusterVip: string; breakLine?: boolean; }
-> = ({ service, clusterVip, breakLine = true }) => {
+  Props & { breakLine?: boolean }
+> = ({ service, breakLine = true }) => {
   const { i18n } = useTranslation();
   const spec = service._rawYaml.spec;
   const status = service._rawYaml.status;
@@ -47,30 +41,33 @@ export const ServiceOutClusterAccessComponent: React.FC<
       content = spec.ports
         ?.filter(v => !!v)
         .map((p, index) => (
-          <Link
-            target="_blank"
-            href={`http://${clusterVip}:${p.nodePort}`}
-            className={cx(breakLine ? BreakLineStyle : '', LinkStyle)}
+          <OverflowTooltip
             key={p.nodePort}
-          >
-            <OverflowTooltip
-              content={(
-                <span className={Typo.Label.l4_regular_title}>
-                  {clusterVip}:{p.nodePort}
-                  {!breakLine && index !== ((spec.ports || []).length - 1) ? ', ' : ''}
-                </span>
-              )}
-              tooltip={`${clusterVip}:${p.nodePort}`}
-            >
-            </OverflowTooltip>
-          </Link >
+            content={
+              <span className={cx(Typo.Label.l4_regular_title, BreakLineStyle)}>
+                {i18n.t('dovetail.any_node_ip')}:{p.nodePort}
+                {!breakLine && index !== (spec.ports || []).length - 1 ? ', ' : ''}
+              </span>
+            }
+            tooltip={`${i18n.t('dovetail.any_node_ip')}:${p.nodePort}`}
+          />
         ));
       return <ul>{content}</ul>;
     case ServiceTypeEnum.ExternalName:
-      content = <ValueDisplay value={spec.externalIPs?.join(breakLine ? '\n' : ', ')}></ValueDisplay>;
+      content = (
+        <ValueDisplay
+          value={spec.externalIPs?.join(breakLine ? '\n' : ', ')}
+        ></ValueDisplay>
+      );
       break;
     case ServiceTypeEnum.LoadBalancer:
-      content = <ValueDisplay value={status.loadBalancer?.ingress?.map(({ ip }) => ip).join(breakLine ? '\n' : ', ')}></ValueDisplay>;
+      content = (
+        <ValueDisplay
+          value={status.loadBalancer?.ingress
+            ?.map(({ ip }) => ip)
+            .join(breakLine ? '\n' : ', ')}
+        ></ValueDisplay>
+      );
       break;
     case ServiceTypeEnum.ClusterIP:
       content = i18n.t('dovetail.not_support');
@@ -80,9 +77,5 @@ export const ServiceOutClusterAccessComponent: React.FC<
       break;
   }
 
-  return (
-    <div style={{ whiteSpace: 'pre-wrap' }}>
-      {content || '-'}
-    </div>
-  );
+  return <div style={{ whiteSpace: 'pre-wrap' }}>{content || '-'}</div>;
 };
