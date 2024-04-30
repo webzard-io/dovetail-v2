@@ -1,7 +1,7 @@
 import { CloseCircleFilled } from '@ant-design/icons';
 import { usePopModal, Modal } from '@cloudtower/eagle';
 import { ExclamationErrorCircleFill16RedIcon } from '@cloudtower/icons-react';
-import { css } from '@linaria/core';
+import { css, cx } from '@linaria/core';
 import { useResource } from '@refinedev/core';
 import React, { useState, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,32 @@ const FullscreenModalStyle = css`
     }
 
     .ant-modal-footer {
-      padding: 15px 128px;
+      .footer-content {
+        margin: 0 128px;
+      }
+    }
+  }
+`;
+const MaxWidthModalStyle = css`
+  .ant-modal-header {
+    max-width: 648px;
+    width: 100%;
+    padding: 60px 0 32px 0 !important;
+    margin: auto;
+  }
+
+  .ant-modal-body {
+    max-width: 656px;
+    width: 100%;
+    padding: 0 4px !important;
+    margin: auto;
+  }
+
+  .ant-modal-footer {
+    .footer-content {
+      max-width: 648px;
+      width: 100%;
+      margin: auto !important;
     }
   }
 `;
@@ -81,7 +106,7 @@ export function FormModal(props: FormModalProps) {
       config?.initValue,
       id,
       action,
-      popModal
+      popModal,
     ]
   );
 
@@ -151,7 +176,7 @@ export function FormModal(props: FormModalProps) {
 
   return (
     <Modal
-      className={FullscreenModalStyle}
+      className={cx(FullscreenModalStyle, isYamlForm ? '' : MaxWidthModalStyle)}
       width="calc(100vw - 16px)"
       title={title}
       error={
