@@ -188,7 +188,7 @@ export function FormModal(props: FormModalProps) {
           ''
         )
       }
-      okButtonProps={saveButtonProps}
+      okButtonProps={{ ...saveButtonProps, children: config.formConfig?.saveButtonText }}
       closeIcon={<CloseCircleFilled />}
       okText={okText}
       onOk={onOk}
