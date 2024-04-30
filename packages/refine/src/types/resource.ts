@@ -46,6 +46,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
       records: Model[];
       action: 'create' | 'edit';
     }) => RefineFormField[];
+    saveButtonText?: string;
     renderForm?: (props: YamlFormProps) => React.ReactNode;
     formType?: FormType;
     transformInitValues?: (values: Unstructured) => Unstructured;

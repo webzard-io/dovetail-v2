@@ -68,6 +68,9 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
             case 'number':
               ele = (
                 <Fields.Integer
+                  className={css`
+                    max-width: 144px;
+                  `}
                   placeholder={c.placeholder}
                   input={{ value, onChange, onBlur, name, onFocus: () => null }}
                   meta={{}}

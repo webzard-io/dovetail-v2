@@ -54,6 +54,9 @@ export class JobModel extends WorkloadBaseModel {
   }
 
   get completionsDisplay() {
+    if (this._rawYaml.spec.parallelism && !this._rawYaml.spec.completions) {
+      return `0/1 of ${this._rawYaml.spec.parallelism}`;
+    }
     return `${this._rawYaml.status?.succeeded || 0}/${this._rawYaml.spec?.completions}`;
   }
 
