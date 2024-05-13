@@ -37,6 +37,7 @@ export interface YamlFormProps {
   onSaveButtonPropsChange?: (saveButtonProps: {
     disabled?: boolean;
     onClick: () => void;
+    loading?: boolean | { delay?: number | undefined; };
   }) => void;
   onErrorsChange?: (errors: string[]) => void;
   onFinish?: () => void;
@@ -97,6 +98,7 @@ export function YamlForm(props: YamlFormProps) {
   const { t, i18n } = useTranslation();
 
   const FormWrapper = isShowLayout ? FormLayout : React.Fragment;
+  const formWrapperProps = isShowLayout ? { saveButtonProps } : {};
   // use useMemo to keep {} the same
   const schema = useMemo(() => {
     return editorProps.schema || {};
@@ -109,13 +111,20 @@ export function YamlForm(props: YamlFormProps) {
 
   const onFinish = useCallback(
     async store => {
-      const result = await formProps.onFinish?.(store);
-
-      if (result) {
-        props.onFinish?.();
+      try {
+        const result = await formProps.onFinish?.(store);
+        if (result) {
+          props.onFinish?.();
+        }
+      } catch {
+      } finally {
+        onSaveButtonPropsChange?.({
+          ...saveButtonProps,
+          loading: false
+        });
       }
     },
-    [formProps, props]
+    [formProps, props, saveButtonProps, onSaveButtonPropsChange]
   );
 
   useEffect(() => {
@@ -126,7 +135,7 @@ export function YamlForm(props: YamlFormProps) {
   }, [responseErrors, onErrorsChange]);
 
   return (
-    <FormWrapper saveButtonProps={saveButtonProps}>
+    <FormWrapper {...formWrapperProps}>
       <kit.form
         {...formProps}
         initialValues={formProps.initialValues}
