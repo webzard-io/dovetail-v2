@@ -65,7 +65,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
           field: '',
           value: '',
           fn(item: PodModel) {
-            return matchSelector(item, selector, item.metadata.namespace);
+            return matchSelector(item, selector, namespace);
           }
         }] as any
       }

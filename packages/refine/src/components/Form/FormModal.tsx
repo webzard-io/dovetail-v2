@@ -147,10 +147,11 @@ export function FormModal(props: FormModalProps) {
 
   const onCancel = useCallback(() => {
     popModal();
-  }, []);
+  }, [popModal]);
 
   const onOk = useCallback(
     e => {
+      setIsError(false);
       saveButtonProps.onClick?.(e);
     },
     [saveButtonProps]
@@ -188,10 +189,13 @@ export function FormModal(props: FormModalProps) {
           ''
         )
       }
-      okButtonProps={{ ...saveButtonProps, children: config.formConfig?.saveButtonText }}
+      okButtonProps={{
+        ...saveButtonProps,
+        children: config.formConfig?.saveButtonText,
+        onClick: onOk
+      }}
       closeIcon={<CloseCircleFilled />}
       okText={okText}
-      onOk={onOk}
       onCancel={onCancel}
       destroyOnClose
       fullscreen
