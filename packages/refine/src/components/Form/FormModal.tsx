@@ -72,7 +72,7 @@ export function FormModal(props: FormModalProps) {
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
   const [yamlSaveButtonProps, setYamlSaveButtonProps] = useState<{
-    loading?: boolean;
+    loading?: boolean | { delay?: number | undefined; };
     onClick?: () => void;
   }>({});
   const [isError, setIsError] = useState<boolean>(false);
