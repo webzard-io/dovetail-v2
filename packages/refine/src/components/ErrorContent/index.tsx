@@ -10,6 +10,24 @@ export const ErrorWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+
+  &.widget .title {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(211.41deg, #929dad 0%, #d3dbe3 100%);
+  }
+
+  &.list .title {
+    color: rgba(44, 56, 82, 0.60);
+  }
+
+  &.card .title {
+    display: flex;
+    align-items: center;
+    height: 96px;
+    color: rgba(0, 21, 64, 0.30);
+  }
 `;
 
 export const ErrorContent = styled.div`
@@ -19,24 +37,6 @@ export const ErrorContent = styled.div`
 
   .title {
     margin-bottom: 8px;
-
-    &.widget {
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-image: linear-gradient(211.41deg, #929dad 0%, #d3dbe3 100%);
-    }
-
-    &.list {
-      color: rgba(44, 56, 82, 0.60);
-    }
-
-    &.card {
-      display: flex;
-      align-items: center;
-      height: 60px;
-      color: rgba(0, 21, 64, 0.30);
-    }
   }
 `;
 
@@ -65,9 +65,9 @@ const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = pro
   };
 
   return (
-    <ErrorWrapper className={props.className} style={props.style}>
+    <ErrorWrapper className={cx(props.className, type)} style={props.style}>
       <ErrorContent>
-        <p className={cx(fontMap[type], 'title', type)}>
+        <p className={cx(fontMap[type], 'title')}>
           {errorText || t('dovetail.obtain_data_error')}
         </p>
         {!refetch ? null : (
