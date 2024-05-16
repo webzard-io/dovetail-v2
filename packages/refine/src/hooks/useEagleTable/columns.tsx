@@ -566,7 +566,8 @@ export const DataKeysColumnRenderer = <Model extends ResourceModel>(
 };
 
 export const PortMappingColumnRenderer = <Model extends ServiceModel>(
-  i18n: I18nType
+  i18n: I18nType,
+  clusterVip: string,
 ): Column<Model> => {
   return {
     key: 'displayPortMapping',
@@ -584,7 +585,7 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(
           content={
             <span style={{ whiteSpace: 'pre' }}>
               {record.displayType === 'NodePort' ? (
-                <Link href={`//${v.link}`} target="_blank">
+                <Link href={`//${clusterVip}:${v.nodePort}`} target="_blank">
                   {v.servicePort}
                 </Link>
               ) : (
