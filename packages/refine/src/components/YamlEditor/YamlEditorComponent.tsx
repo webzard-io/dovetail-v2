@@ -256,10 +256,10 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
               <XmarkFailedSeriousWarningFill16RedIcon className={ErrorIconStyle} />
               <div>
                 {errorMsgs.map((errorMsg, index) => (
-                  <div className={ErrorMsgStyle} key={errorMsg}>
+                  <pre className={ErrorMsgStyle} key={errorMsg}>
                     {errorMsgs.length > 1 ? `${index + 1}. ` : ''}
                     {errorMsg}
-                  </div>
+                  </pre>
                 ))}
               </div>
             </kit.space>
