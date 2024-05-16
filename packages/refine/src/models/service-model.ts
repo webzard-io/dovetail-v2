@@ -44,6 +44,7 @@ export class ServiceModel extends ResourceModel<ServiceType> {
       }
       return {
         servicePort: p.port,
+        nodePort: p.nodePort,
         link,
         targetPort: p.targetPort,
         protocol: p.protocol,
