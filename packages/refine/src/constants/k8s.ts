@@ -470,7 +470,7 @@ export const SECRET_OPAQUE_INIT_VALUE = {
   },
   'type': 'Opaque',
   'data': {
-    'key': window.btoa('value')
+    'key': 'value'
   }
 };
 
@@ -496,8 +496,8 @@ export const SECRET_BASIC_AUTH_INIT_VALUE = {
   },
   'type': 'kubernetes.io/basic-auth',
   'data': {
-    'username': window.btoa('example'),
-    'password': window.btoa('example')
+    'username': 'example',
+    'password': 'example'
   }
 };
 
