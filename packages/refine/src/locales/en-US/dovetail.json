@@ -110,7 +110,7 @@
   "auto_wrap": "Auto wrap",
   "container_num": "Containers",
   "edit_resource_success": "{{resource}} {{name}} was edited successfully",
-  "redeploy_success_toast": "{{kind}} was redeployed successfully",
+  "redeploy_success_toast": "{{kind}} {{name}} was redeployed successfully",
   "redeploy_failed_toast": "Failed to redeploy {{kind}} {{name}}",
   "pause_success_toast": "Successfully suspended",
   "pause_failed_toast": "Failed to suspend",

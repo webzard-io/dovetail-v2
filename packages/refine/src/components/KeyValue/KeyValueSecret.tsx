@@ -11,6 +11,9 @@ const ButtonStyle = css`
     color: rgba(44, 56, 82, 0.75);
   }
 `;
+const GroupStyle = css`
+  padding-bottom: 12px;
+`;
 
 export interface KeyValueSecretProps {
   data: Record<string, string>;
@@ -36,7 +39,7 @@ export function KeyValueSecret(props: KeyValueSecretProps) {
   ) : null;
 
   return (
-    <ShowGroupComponent title={i18n.t('dovetail.data')} operationEle={toggleButton}>
+    <ShowGroupComponent title={i18n.t('dovetail.data')} operationEle={toggleButton} className={GroupStyle}>
       <KeyValue data={data} hideSecret={hideSecret} empty={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.data') })} />
     </ShowGroupComponent>
   );
