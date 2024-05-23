@@ -38,15 +38,22 @@ export const ServiceOutClusterAccessComponent: React.FC<
 
   switch (spec.type) {
     case ServiceTypeEnum.NodePort:
+      if (!breakLine) {
+        content = spec.ports
+          ?.filter(v => !!v)
+          .map(p => `${i18n.t('dovetail.any_node_ip')}:${p.nodePort}`)
+          .join(', ');
+        break;
+      }
+
       content = spec.ports
         ?.filter(v => !!v)
-        .map((p, index) => (
+        .map(p => (
           <OverflowTooltip
             key={p.nodePort}
             content={
               <span className={cx(Typo.Label.l4_regular_title, BreakLineStyle)}>
                 {i18n.t('dovetail.any_node_ip')}:{p.nodePort}
-                {!breakLine && index !== (spec.ports || []).length - 1 ? ', ' : ''}
               </span>
             }
             tooltip={`${i18n.t('dovetail.any_node_ip')}:${p.nodePort}`}
@@ -56,24 +63,26 @@ export const ServiceOutClusterAccessComponent: React.FC<
     case ServiceTypeEnum.ExternalName:
       content = (
         <ValueDisplay
+          useOverflow={false}
           value={spec.externalIPs?.join(breakLine ? '\n' : ', ')}
-        ></ValueDisplay>
+        />
       );
       break;
     case ServiceTypeEnum.LoadBalancer:
       content = (
         <ValueDisplay
+          useOverflow={false}
           value={status.loadBalancer?.ingress
             ?.map(({ ip }) => ip)
             .join(breakLine ? '\n' : ', ')}
-        ></ValueDisplay>
+        />
       );
       break;
     case ServiceTypeEnum.ClusterIP:
       content = i18n.t('dovetail.not_support');
       break;
     default:
-      content = <ValueDisplay value=""></ValueDisplay>;
+      content = <ValueDisplay useOverflow={false} value="" />;
       break;
   }
 
