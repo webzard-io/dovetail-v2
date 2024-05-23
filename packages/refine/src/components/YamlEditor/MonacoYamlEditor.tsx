@@ -87,6 +87,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
       model,
       scrollbar: {
         handleMouseWheel: !isScrollOnFocus,
+        alwaysConsumeMouseWheel: false, // https://github.com/microsoft/monaco-editor/issues/2007
       },
       tabSize: 2,
       readOnly: readOnly,
