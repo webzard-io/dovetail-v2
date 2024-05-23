@@ -72,7 +72,10 @@ export class JobModel extends WorkloadBaseModel {
     if (!this.spec?.completions && !this.status?.succeeded) {
       return WorkloadState.RUNNING;
     }
-    if (this.spec?.completions === this.status?.succeeded) {
+    if (
+      this.spec?.completions === this.status?.succeeded ||
+      this.status?.conditions?.some(c => c.type === 'Complete' && c.status === 'True')
+    ) {
       return WorkloadState.COMPLETED;
     }
     if (this.status?.conditions?.some(c => c.type === 'Failed' && c.status === 'True')) {
