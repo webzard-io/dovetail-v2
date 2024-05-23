@@ -57,7 +57,7 @@ const ShowContentHeaderStyle = css`
 `;
 const GroupStyle = css`
   padding: 12px 16px;
-  padding-bottom: 8px;
+  padding-bottom: 4px;
   border-radius: 8px;
   border: 1px solid rgba(211, 218, 235, 0.6);
   box-shadow:
@@ -85,7 +85,7 @@ const GroupStyle = css`
 const GroupTitleStyle = css`
   display: flex;
   color: #1d326c;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   justify-content: space-between;
   align-items: center;
 `;
