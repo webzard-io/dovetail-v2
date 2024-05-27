@@ -10,6 +10,7 @@ import { RuleItem } from 'src/models/ingress-model';
 import { IngressModel } from '../../models';
 import { WithId } from '../../types';
 import { addId } from '../../utils/addId';
+import { IngressFullPath } from '../IngressRulesComponent';
 import { ResourceLink } from '../ResourceLink';
 
 type Props = {
@@ -41,6 +42,9 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       title: t('dovetail.path'),
       width: 478,
       sortable: true,
+      render(value: string) {
+        return <IngressFullPath fullPath={value} />;
+      }
     },
     {
       key: 'serviceName',

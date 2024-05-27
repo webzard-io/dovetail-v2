@@ -8,6 +8,20 @@ const LinkStyle = css`
   padding: 0 !important;
 `;
 
+export function IngressFullPath({ fullPath }: { fullPath: string }) {
+  const kit = useUIKit();
+
+  if (fullPath.includes('http') && !fullPath.includes('*')) {
+    return (
+      <kit.Link className={LinkStyle} href={fullPath} target="_blank">
+        {fullPath}
+      </kit.Link>
+    );
+  }
+
+  return <span>{fullPath}</span>;
+}
+
 export const IngressRulesComponent: React.FC<{
   ingress: IngressModel;
 }> = ({ ingress }) => {
@@ -16,21 +30,12 @@ export const IngressRulesComponent: React.FC<{
   const result = ingress.flattenedRules.map(r => {
     const divider = ' > ';
 
-    let pre = <span>{r.fullPath}</span>;
-    if (r.fullPath.includes('http') && !r.fullPath.includes('*')) {
-      pre = (
-        <kit.Link className={LinkStyle} href={r.fullPath} target="_blank">
-          {r.fullPath}
-        </kit.Link>
-      );
-    }
-
     return (
       <kit.overflowTooltip
         key={r.fullPath}
         content={
           <>
-            {pre}
+            <IngressFullPath fullPath={r.fullPath} />
             <span>{divider}</span>
             {r.serviceName ? (
               <>
