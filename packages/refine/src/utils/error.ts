@@ -63,7 +63,7 @@ export function getCommonErrors(responseBody: ErrorResponseBody, i18n: I18n) {
           [
             `error.${cause.reason}`,
             `error.${cause.code}`,
-            `${message}${cause.field ? `(${cause.field})` : ''}`,
+            `${cause.field ? `${cause.field}: ` : ''}${message}`,
           ],
           {
             ...params,
@@ -76,7 +76,7 @@ export function getCommonErrors(responseBody: ErrorResponseBody, i18n: I18n) {
         [
           `error.${cause.reason}`,
           `error.${cause.code}`,
-          `${message}${cause.field ? `(${cause.field})` : ''}`,
+          `${cause.field ? `${cause.field}: ` : ''}${message}`,
         ],
         {
           ...params,
