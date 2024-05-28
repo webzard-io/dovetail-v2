@@ -76,6 +76,14 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
     scrollUpdateWasRequested: boolean;
   }) => {
     const { scrollOffsetToBottom, scrollUpdateWasRequested } = params;
+
+    // scrollOffsetToBottom will be -1 when LogViewer re-renders
+    if (scrollOffsetToBottom === -1) {
+      setTimeout(() => {
+        logViewerRef.current?.scrollToBottom();
+      }, 16);
+    }
+
     if (!scrollUpdateWasRequested) {
       if (scrollOffsetToBottom > 0) {
         setPaused(true);
