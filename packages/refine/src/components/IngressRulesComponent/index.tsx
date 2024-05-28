@@ -1,26 +1,8 @@
 import { useUIKit } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
 import React from 'react';
+import { LinkFallback } from 'src/components/LinkFallback';
 import { IngressModel } from '../../models';
 import { ResourceLink } from '../ResourceLink';
-
-const LinkStyle = css`
-  padding: 0 !important;
-`;
-
-export function IngressFullPath({ fullPath }: { fullPath: string }) {
-  const kit = useUIKit();
-
-  if (fullPath.includes('http') && !fullPath.includes('*')) {
-    return (
-      <kit.Link className={LinkStyle} href={fullPath} target="_blank">
-        {fullPath}
-      </kit.Link>
-    );
-  }
-
-  return <span>{fullPath}</span>;
-}
 
 export const IngressRulesComponent: React.FC<{
   ingress: IngressModel;
@@ -35,7 +17,7 @@ export const IngressRulesComponent: React.FC<{
         key={r.fullPath}
         content={
           <>
-            <IngressFullPath fullPath={r.fullPath} />
+            <LinkFallback fullPath={r.fullPath} />
             <span>{divider}</span>
             {r.serviceName ? (
               <>
