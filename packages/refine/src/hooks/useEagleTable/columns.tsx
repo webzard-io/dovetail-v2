@@ -134,12 +134,12 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 
 export const StateDisplayColumnRenderer = <
   Model extends
-    | WorkloadModel
-    | CronJobModel
-    | PodModel
-    | ServiceModel
-    | DaemonSetModel
-    | JobModel,
+  | WorkloadModel
+  | CronJobModel
+  | PodModel
+  | ServiceModel
+  | DaemonSetModel
+  | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -365,6 +365,7 @@ export const ServiceInClusterAccessColumnRenderer = <
     display: true,
     dataIndex: [],
     width: 160,
+    sorter: undefined,
     render(_, record) {
       return <ServiceInClusterAccessComponent service={record} />;
     },
@@ -409,6 +410,7 @@ export const ServiceOutClusterAccessColumnRenderer = <
     display: true,
     dataIndex: [],
     width: 160,
+    sorter: undefined,
     render(_, record) {
       return <ServiceOutClusterAccessComponent service={record} />;
     },
@@ -453,7 +455,7 @@ export const IngressRulesColumnRenderer = <Model extends IngressModel>(
     display: true,
     dataIndex,
     sortable: true,
-    sorter: CommonSorter(dataIndex),
+    sorter: undefined,
     width: 300,
     render(_, record) {
       return <IngressRulesComponent ingress={record} />;
@@ -562,6 +564,7 @@ export const DataKeysColumnRenderer = <Model extends ResourceModel>(
     },
     width: 300,
     sortable: true,
+    sorter: undefined,
   };
 };
 
@@ -578,6 +581,7 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(
     display: true,
     dataIndex: ['displayPortMapping'],
     width: 300,
+    sorter: undefined,
     render(value, record) {
       const content = record.displayPortMapping?.map(v => (
         <OverflowTooltip
