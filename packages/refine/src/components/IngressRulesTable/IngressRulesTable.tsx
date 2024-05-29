@@ -1,6 +1,7 @@
 import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import { LinkFallback } from 'src/components/LinkFallback';
 import BaseTable from 'src/components/Table';
 import ValueDisplay from 'src/components/ValueDisplay';
 import ComponentContext from 'src/contexts/component';
@@ -41,6 +42,9 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       title: t('dovetail.path'),
       width: 478,
       sortable: true,
+      render(value: string) {
+        return <LinkFallback fullPath={value} />;
+      }
     },
     {
       key: 'serviceName',
