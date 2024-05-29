@@ -1,4 +1,4 @@
-import { Typo, useUIKit, Icon } from '@cloudtower/eagle';
+import { Typo, useUIKit, Icon, AntdRowProps } from '@cloudtower/eagle';
 import { ArrowChevronLeft16BoldTertiaryIcon, ArrowChevronLeftSmall16BoldBlueIcon, EditPen16GradientBlueIcon } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useParsed, useResource, useShow, useNavigation, useGo, CanAccess } from '@refinedev/core';
@@ -138,12 +138,14 @@ type Props<Model extends ResourceModel> = {
   Dropdown?: React.FC<{ record: Model }>;
 };
 
+type ShowGroupComponentProps = React.PropsWithChildren<{
+  title: string;
+  className?: string;
+  operationEle?: React.ReactElement | null;
+}>
+
 export function ShowGroupComponent(
-  props: React.PropsWithChildren<{
-    title: string;
-    className?: string;
-    operationEle?: React.ReactElement | null;
-  }>
+  props: ShowGroupComponentProps
 ) {
   const { title, className, children, operationEle } = props;
 
@@ -286,12 +288,14 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
                 tab.groups?.map(group => {
                   const GroupContainer = group.title ? ShowGroupComponent : React.Fragment;
                   const FieldContainer = group.title ? kit.row : React.Fragment;
+                  const groupContainerProps = group.title ? { title: group.title || '' } : {};
+                  const fieldContainerProps = group.title ? { gutter: [24, 8] } : {};
 
                   return (
-                    <GroupContainer key={group.title} title={group.title || ''}>
+                    <GroupContainer key={group.title} {...groupContainerProps as ShowGroupComponentProps}>
                       {group.areas.map((area, index) => (
                         <>
-                          <FieldContainer key={index} gutter={[24, 8]}>
+                          <FieldContainer key={index} {...fieldContainerProps as AntdRowProps}>
                             {renderFields(area.fields, area.type, !!group.title)}
                           </FieldContainer>
                           {index !== group.areas.length - 1 ? <kit.divider style={{ margin: '8px 0 12px 0' }} /> : null}

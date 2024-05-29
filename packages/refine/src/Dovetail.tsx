@@ -86,9 +86,6 @@ export const Dovetail: React.FC<Props> = props => {
                 warnWhenUnsavedChanges: true,
                 liveMode: 'auto',
                 disableTelemetry: true,
-                overtime: {
-                  interval: Number.MAX_SAFE_INTEGER
-                }
               }}
               accessControlProvider={accessControlProvider}
               resources={resourcesConfig.map(c => {
