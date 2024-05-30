@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Tag, Space } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import React from 'react';
 import ValueDisplay from 'src/components/ValueDisplay';
@@ -32,7 +32,6 @@ type Props = {
 
 export const Tags: React.FC<Props> = props => {
   const { value } = props;
-  const kit = useUIKit();
 
   if (!value) {
     return <ValueDisplay value="" />;
@@ -40,7 +39,7 @@ export const Tags: React.FC<Props> = props => {
 
   const tags = Object.keys(value).map(key => {
     return (
-      <kit.tag.SplitTag
+      <Tag.SplitTag
         className={TagStyle}
         primaryContent={key}
         secondaryContent={value[key]}
@@ -52,8 +51,8 @@ export const Tags: React.FC<Props> = props => {
   });
 
   return (
-    <kit.space className={TagWrapper} size={8}>
+    <Space className={TagWrapper} size={8}>
       {tags}
-    </kit.space>
+    </Space>
   );
 };

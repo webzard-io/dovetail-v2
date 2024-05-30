@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Space, Input, TextArea, Form, Button } from '@cloudtower/eagle';
 import React, { useCallback, useMemo } from 'react';
 import type { FormWidgetProps } from './widget';
 
@@ -14,7 +14,6 @@ type KeyValueInputProps = React.PropsWithChildren<{
 
 function KeyValueInput(props: KeyValueInputProps) {
   const { children, item } = props;
-  const kit = useUIKit();
 
   const onKeyChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,11 +39,11 @@ function KeyValueInput(props: KeyValueInputProps) {
   );
 
   return (
-    <kit.space>
-      <kit.input value={item.key} onChange={onKeyChange} />
-      <kit.textArea value={item.value} onChange={onValueChange} />
+    <Space>
+      <Input value={item.key} onChange={onKeyChange} />
+      <TextArea value={item.value} onChange={onValueChange} />
       {children}
-    </kit.space>
+    </Space>
   );
 }
 
@@ -53,7 +52,6 @@ export type KeyValueListWidgetProps = FormWidgetProps<Record<string, string>> & 
 };
 
 export function KeyValueListWidget(props: KeyValueListWidgetProps) {
-  const kit = useUIKit();
   const { value } = props;
 
   const items: Item[] = useMemo(() => {
@@ -102,22 +100,22 @@ export function KeyValueListWidget(props: KeyValueListWidgetProps) {
               onChange(temp);
             }}
           >
-            <kit.button
+            <Button
               onClick={() => {
                 onRemove(index);
               }}
               danger
             >
               Remove
-            </kit.button>
+            </Button>
           </KeyValueInput>
         );
       })}
-      <kit.form.Item>
-        <kit.button type="primary" onClick={onAdd}>
+      <Form.Item>
+        <Button type="primary" onClick={onAdd}>
           Add
-        </kit.button>
-      </kit.form.Item>
+        </Button>
+      </Form.Item>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Space, Tooltip } from '@cloudtower/eagle';
 import { Icon } from '@cloudtower/eagle';
 import {
   ClipboardCopy16GradientGrayIcon,
@@ -80,7 +80,6 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
       eleRef,
       className,
     } = props;
-    const kit = useUIKit();
     const { t } = useTranslation();
     const [isCollapsed, setIsCollapsed] = useState(
       collapsable ? isDefaultCollapsed : false
@@ -140,13 +139,13 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
         data-is-error={!!errorMsgs.length}
         ref={eleRef}
       >
-        <kit.space
+        <Space
           className={cx(ToolBarStyle, isCollapsed ? 'collapsed' : '')}
           direction="vertical"
           size={0}
         >
-          <kit.space className={ToolBarHeaderStyle}>
-            <kit.space size={8}>
+          <Space className={ToolBarHeaderStyle}>
+            <Space size={8}>
               {collapsable && (
                 <Icon
                   src={HierarchyTriangleRight16GrayIcon}
@@ -160,11 +159,11 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
               <div className={cx(TitleStyle, 'yaml-editor-title')}>
                 {title || t('dovetail.configure_file')}
               </div>
-            </kit.space>
-            <kit.space size={14}>
+            </Space>
+            <Space size={14}>
               {isDiff ? undefined : (
                 <>
-                  <kit.tooltip
+                  <Tooltip
                     title={isCollapsed ? '' : copyTooltip}
                     onVisibleChange={visible => {
                       if (!visible) {
@@ -188,9 +187,9 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                         }
                       }}
                     />
-                  </kit.tooltip>
+                  </Tooltip>
                   <Separator />
-                  <kit.tooltip
+                  <Tooltip
                     title={isCollapsed ? '' : resetTooltip}
                     onVisibleChange={visible => {
                       if (!visible) {
@@ -214,11 +213,11 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                         }
                       }}
                     />
-                  </kit.tooltip>
+                  </Tooltip>
                   <Separator />
                 </>
               )}
-              <kit.tooltip
+              <Tooltip
                 title={
                   isCollapsed
                     ? ''
@@ -248,11 +247,11 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                     onClick={() => (isCollapsed ? undefined : setIsDiff(true))}
                   />
                 )}
-              </kit.tooltip>
-            </kit.space>
-          </kit.space>
+              </Tooltip>
+            </Space>
+          </Space>
           {errorMsgs.length ? (
-            <kit.space className={ErrorWrapperStyle} size={8} align="start">
+            <Space className={ErrorWrapperStyle} size={8} align="start">
               <XmarkFailedSeriousWarningFill16RedIcon className={ErrorIconStyle} />
               <div>
                 {errorMsgs.map((errorMsg, index) => (
@@ -262,9 +261,9 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                   </pre>
                 ))}
               </div>
-            </kit.space>
+            </Space>
           ) : undefined}
-        </kit.space>
+        </Space>
         <div
           style={{
             display: isCollapsed ? 'none' : 'block',
