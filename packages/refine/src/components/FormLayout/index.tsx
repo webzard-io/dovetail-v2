@@ -1,4 +1,4 @@
-import { useUIKit, Typo, ButtonProps } from '@cloudtower/eagle';
+import { Divider, Form, Button, Typo, ButtonProps } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useResource } from '@refinedev/core';
 import React from 'react';
@@ -20,7 +20,6 @@ type FormLayoutProps = {
 
 function FormLayout(props: React.PropsWithChildren<FormLayoutProps>) {
   const { saveButtonProps } = props;
-  const kit = useUIKit();
   const { resource, action } = useResource();
   const { t } = useTranslation();
 
@@ -30,13 +29,13 @@ function FormLayout(props: React.PropsWithChildren<FormLayoutProps>) {
         {resource?.meta?.kind}:{' '}
         {action === 'create' ? t('dovetail.create') : t('dovetail.edit')}
       </span>
-      <kit.divider />
+      <Divider />
       {props.children}
-      <kit.form.Item>
-        <kit.button type="primary" {...saveButtonProps}>
+      <Form.Item>
+        <Button type="primary" {...saveButtonProps}>
           {t('dovetail.save')}
-        </kit.button>
-      </kit.form.Item>
+        </Button>
+      </Form.Item>
     </div>
   );
 }

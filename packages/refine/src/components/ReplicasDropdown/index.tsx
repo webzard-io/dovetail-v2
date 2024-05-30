@@ -1,4 +1,4 @@
-import { Icon, useUIKit, usePushModal } from '@cloudtower/eagle';
+import { Icon, Menu, usePushModal } from '@cloudtower/eagle';
 import { EditPen16PrimaryIcon } from '@cloudtower/icons-react';
 import { useResource, useCan } from '@refinedev/core';
 import React, { useRef } from 'react';
@@ -17,7 +17,6 @@ type Props<Model extends WorkloadModel> = {
 
 export function ReplicasDropdown<Model extends WorkloadModel>(props: React.PropsWithChildren<Props<Model>>) {
   const { record, size, children } = props;
-  const kit = useUIKit();
   const { t } = useTranslation();
   const pushModal = usePushModal();
   const formRef = useRef(null);
@@ -32,7 +31,7 @@ export function ReplicasDropdown<Model extends WorkloadModel>(props: React.Props
     <WorkloadDropdown record={record} size={size}>
       {
         isInShowPage || canEditData?.can === false ? null : (
-          <kit.menu.Item
+          <Menu.Item
             onClick={() => {
               const modalProps = {
                 formRef,
@@ -56,7 +55,7 @@ export function ReplicasDropdown<Model extends WorkloadModel>(props: React.Props
             }}
           >
             <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_replicas')}</Icon>
-          </kit.menu.Item>
+          </Menu.Item>
         )
       }
       {children}

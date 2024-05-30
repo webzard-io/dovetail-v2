@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Select, SearchInput, OverflowTooltip, AntdOption, AntdSelectOptGroup, Loading, Token, Tooltip, Divider } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useList, useResource } from '@refinedev/core';
 import { last, debounce } from 'lodash-es';
@@ -123,7 +123,6 @@ interface NamespaceFilterProps {
 }
 
 export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) => {
-  const kit = useUIKit();
   const { t } = useTranslation();
   const [search, setSearch] = useState<string>('');
   const [tagMaxWidth, setTagMaxWidth] = useState<string>('');
@@ -173,7 +172,7 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
 
   return (
     <div className={WRAPPER_CLASS}>
-      <kit.select
+      <Select
         loading={isLoading}
         className={cx(SelectStyle, SELECT_CLASS, className)}
         style={
@@ -194,14 +193,14 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
         }}
         dropdownRender={(menu) => (
           <div className={SelectContentStyle}>
-            <kit.searchInput
+            <SearchInput
               style={{ width: '100%' }}
               className={SearchInputStyle}
               onChange={debouncedSetSearch}
               placeholder={t('dovetail.please_input')}
             />
             {menu}
-            {isLoading ? <kit.loading /> : null}
+            {isLoading ? <Loading /> : null}
           </div>
         )}
         tagRender={({ label, value: namespaceValue, closable, onClose }) => {
@@ -214,24 +213,24 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
                 isAll ? (
                   <span style={{ marginLeft: 8 }}>{label}</span>
                 ) : (
-                  <kit.token
+                  <Token
                     className={cx(isCountToken ? CountTokenStyle : TokenStyle, isCountToken ? '' : 'closable-token')}
                     closable={closable}
                     size='medium'
                     onClose={onClose}
                   >
 
-                    <kit.overflowTooltip
+                    <OverflowTooltip
                       content={
                         isCountToken ?
                           (
-                            <kit.tooltip
+                            <Tooltip
                               title={(
                                 isCountToken ? value.slice(MAX_TAG_COUNT).map((namespace, index) => (
                                   <>
                                     <div>{namespace}</div>
                                     {
-                                      index !== value.length - 1 - MAX_TAG_COUNT ? <kit.divider style={{ margin: '6px 0', borderColor: 'rgba(107, 128, 167, 0.60)' }} /> : null
+                                      index !== value.length - 1 - MAX_TAG_COUNT ? <Divider style={{ margin: '6px 0', borderColor: 'rgba(107, 128, 167, 0.60)' }} /> : null
                                     }
                                   </>
                                 )) : null
@@ -239,12 +238,12 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
                               trigger={['hover']}
                             >
                               <span>{label.replace(/[\s\.]/g, '')}</span>
-                            </kit.tooltip>
+                            </Tooltip>
                           ) :
                           label
                       }
                     />
-                  </kit.token>
+                  </Token>
                 )
               }
             </span>
@@ -258,23 +257,23 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
         onDropdownVisibleChange={(open) => { setOpen(open); }}
         multiple
       >
-        <kit.option key="_all" value="_all" label={t('dovetail.all_namespaces')} className={AllNamespaceOptionStyle}>
-          <kit.overflowTooltip content={t('dovetail.all_namespaces')} className={LabelWrapperStyle}>
-          </kit.overflowTooltip>
-        </kit.option>
-        <kit.selectOptGroup label="" className={SelectOptionGroupStyle}>
+        <AntdOption key="_all" value="_all" label={t('dovetail.all_namespaces')} className={AllNamespaceOptionStyle}>
+          <OverflowTooltip content={t('dovetail.all_namespaces')} className={LabelWrapperStyle}>
+          </OverflowTooltip>
+        </AntdOption>
+        <AntdSelectOptGroup label="" className={SelectOptionGroupStyle}>
           {data?.data.map(namespace => {
             const { name } = namespace.metadata;
 
             return (
-              <kit.option key={name} value={name} label={name} className={OptionStyle}>
-                <kit.overflowTooltip content={name} className={LabelWrapperStyle}>
-                </kit.overflowTooltip>
-              </kit.option>
+              <AntdOption key={name} value={name} label={name} className={OptionStyle}>
+                <OverflowTooltip content={name} className={LabelWrapperStyle}>
+                </OverflowTooltip>
+              </AntdOption>
             );
           })}
-        </kit.selectOptGroup>
-      </kit.select>
+        </AntdSelectOptGroup>
+      </Select>
     </div>
   );
 };
