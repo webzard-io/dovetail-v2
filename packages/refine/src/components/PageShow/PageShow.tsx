@@ -23,6 +23,7 @@ export const PageShow = <Model extends ResourceModel>(props: Props<Model>) => {
     },
     errorNotification: () => {
       return {
+        key: 'resource-non-exist',
         message: i18n.t('dovetail.fail_get_detail', {
           resource: resource?.name,
           name: parsed?.params?.id,
