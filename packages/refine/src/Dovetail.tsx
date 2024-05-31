@@ -58,6 +58,10 @@ export const Dovetail: React.FC<Props> = props => {
     type NoticeType = 'info' | 'success' | 'error' | 'warning' | 'loading';
     const provider: NotificationProvider = {
       open: ({ message, key, type }) => {
+        const EXCLUDE = ['getList', 'getOne', 'getMany'];
+
+        if (EXCLUDE.some(excludeKey => key?.includes(excludeKey))) return;
+
         msg.open({
           content: message,
           key,
