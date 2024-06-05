@@ -57,9 +57,6 @@ export class IngressModel extends ResourceModel<IngressTypes> {
     const hostValue = rule.host || '';
     const protocal = this._rawYaml.spec.tls ? 'https://' : 'http://';
     const portText = port ? `:${port}` : '';
-    if (path[path.length - 1] === '/') {
-      path = path.slice(0, -1);
-    }
-    return `${protocal}${hostValue}${path}${portText}`;
+    return `${protocal}${hostValue}${portText}${path}`;
   }
 }
