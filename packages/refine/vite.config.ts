@@ -12,13 +12,16 @@ export default defineConfig({
     proxy: {
       // '/proxy-k8s': getProxyConfig(),
       '/api': {
-        target: process.env.API_HOST || 'http://192.168.28.26',
+        target: process.env.API_HOST || 'http://192.168.27.59',
         ws: true,
         headers: {
           'x-skip-auth-verify': 'true',
         },
       },
     },
+  },
+  optimizeDeps: {
+    exclude: ['monaco-yaml/yaml.worker.js']
   },
   build: {
     minify: false,

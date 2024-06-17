@@ -17,6 +17,10 @@ import {
   StatefulSetModel,
   NetworkPolicyModel,
   ServiceModel,
+  NodeModel,
+  StorageClassModel,
+  PersistentVolumeModel,
+  PersistentVolumeClaimModel,
 } from '../models';
 
 const ModelMap = {
@@ -30,6 +34,10 @@ const ModelMap = {
   Ingress: IngressModel,
   NetworkPolicy: NetworkPolicyModel,
   Service: ServiceModel,
+  Node: NodeModel,
+  StorageClass: StorageClassModel,
+  PersistentVolume: PersistentVolumeModel,
+  PersistentVolumeClaim: PersistentVolumeClaimModel,
 };
 
 class ModelPlugin implements IProviderPlugin<ResourceModel> {

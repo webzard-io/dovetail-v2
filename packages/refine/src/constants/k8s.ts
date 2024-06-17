@@ -539,3 +539,23 @@ export const SECRET_CUSTOM_INIT_VALUE = {
   'type': '',
   'data': {}
 };
+
+export const NODE_INIT_VALUE = {
+  'apiVersion': 'v1',
+  'kind': 'Node',
+  'metadata': {
+    'name': 'example',
+    'namespace': 'default'
+  },
+  'spec': {}
+};
+
+export const STORAGE_CLASS_INIT_VALUE = {
+  'apiVersion': 'storage.k8s.io/v1',
+  'kind': 'StorageClass',
+  'metadata': {
+    'name': 'example',
+    'namespace': 'default'
+  },
+  'spec': {}
+};

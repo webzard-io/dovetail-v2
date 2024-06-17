@@ -13,3 +13,7 @@ export * from './deployment-model';
 export * from './daemonset-model';
 export * from './statefulset-model';
 export * from './service-model';
+export * from './node-model';
+export * from './storage-class';
+export * from './persistent-volume';
+export * from './persistent-volume-claim';

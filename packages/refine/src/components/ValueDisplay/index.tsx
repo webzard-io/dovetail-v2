@@ -25,7 +25,7 @@ interface ValueDisplayProps {
   className?: string;
 }
 
-function ValueDisplay(props: ValueDisplayProps) {
+export function ValueDisplay(props: ValueDisplayProps) {
   const { value, useOverflow = true, className, style } = props;
 
   return EMPTY_VALUES.includes(value) ? (

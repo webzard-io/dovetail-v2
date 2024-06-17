@@ -40,3 +40,4 @@ export * from './PodLog';
 export * from './NetworkPolicyRulesViewer';
 export * from './Tabs';
 export * as ValueDisplay from './ValueDisplay';
+export * from './ResourceSelect';
