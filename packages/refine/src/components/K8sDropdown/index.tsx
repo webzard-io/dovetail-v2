@@ -25,7 +25,7 @@ interface K8sDropdownProps {
   size?: DropdownSize;
 }
 
-function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
+export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const { record, size = 'normal' } = props;
   const { globalStore } = useGlobalStore();
   const useResourceResult = useResource();

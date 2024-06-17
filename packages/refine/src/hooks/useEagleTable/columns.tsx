@@ -30,6 +30,8 @@ import {
   IngressModel,
   ServiceModel,
   DaemonSetModel,
+  StorageClassModel,
+  PersistentVolumeModel
 } from '../../models';
 
 const DashedTitleStyle = css`
@@ -609,5 +611,97 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(
 
       return <ValueDisplay value={content} />;
     },
+  };
+};
+
+
+export const ProvisionerColumnRenderer = <Model extends StorageClassModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'provisioner',
+    display: true,
+    dataIndex: ['provisioner'],
+    title: i18n.t('dovetail.provisioner'),
+    width: 120,
+    sortable: true,
+  };
+};
+
+export const FsTypeColumnRenderer = <Model extends StorageClassModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'fstype',
+    display: true,
+    dataIndex: ['parameters', 'csi.storage.k8s.io/fstype'],
+    title: i18n.t('dovetail.file_system'),
+    width: 120,
+    sortable: true,
+  };
+};
+
+export const PVCapacityColumnRenderer = <Model extends PersistentVolumeModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'capacity',
+    display: true,
+    dataIndex: ['spec', 'capacity', 'storage'],
+    title: i18n.t('dovetail.capacity'),
+    width: 120,
+    sortable: true,
+  };
+};
+
+export const PVStorageClassColumnRenderer = <Model extends PersistentVolumeModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'storageClass',
+    display: true,
+    dataIndex: ['spec', 'storageClassName'],
+    title: i18n.t('dovetail.storage_class'),
+    width: 120,
+    sortable: true,
+  };
+};
+
+export const PVPhaseColumnRenderer = <Model extends PersistentVolumeModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'phase',
+    display: true,
+    dataIndex: ['status', 'phase'],
+    title: i18n.t('dovetail.phase'),
+    width: 120,
+    sortable: true,
+  };
+};
+
+export const PVModeColumnRenderer = <Model extends PersistentVolumeModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'mode',
+    display: true,
+    dataIndex: ['spec', 'volumeMode'],
+    title: i18n.t('dovetail.volume_mode'),
+    width: 120,
+    sortable: true,
+  };
+};
+
+export const PVAccessModeColumnRenderer = <Model extends PersistentVolumeModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'accessMode',
+    display: true,
+    dataIndex: ['spec', 'accessModes'],
+    title: i18n.t('dovetail.access_mode'),
+    width: 120,
+    sortable: true,
   };
 };
