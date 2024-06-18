@@ -52,7 +52,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     transformInitValues?: (values: Unstructured) => Unstructured;
     transformApplyValues?: (values: Unstructured) => Unstructured;
     formTitle?: string | ((action: 'create' | 'edit') => string);
-    formDesc?: string;
+    formDesc?: string | ((action: 'create' | 'edit') => string);
     formatError?: (errorBody: any) => string;
     refineCoreProps?: UseFormProps['refineCoreProps'];
   };
