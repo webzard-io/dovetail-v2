@@ -87,6 +87,9 @@ function App() {
         initValue: SERVER_INSTANCE_INIT_VALUE,
         noShow: true,
         formConfig: {
+          useFormProps: {
+            mode: 'onTouched',
+          },
           fields: () => [
             {
               path: ['metadata', 'name'],
