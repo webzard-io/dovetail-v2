@@ -55,5 +55,6 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     formDesc?: string | ((action: 'create' | 'edit') => string);
     formatError?: (errorBody: any) => string;
     refineCoreProps?: UseFormProps['refineCoreProps'];
+    useFormProps?: UseFormProps;
   };
 };
