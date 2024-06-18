@@ -72,7 +72,7 @@ export function FormModal(props: FormModalProps) {
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
   const [yamlSaveButtonProps, setYamlSaveButtonProps] = useState<{
-    loading?: boolean | { delay?: number | undefined; };
+    loading?: boolean | { delay?: number | undefined };
     onClick?: () => void;
   }>({});
   const [isError, setIsError] = useState<boolean>(false);
@@ -175,6 +175,16 @@ export function FormModal(props: FormModalProps) {
     });
   }, [action, config.formConfig, config?.kind, i18n, id]);
 
+  const desc = useMemo(() => {
+    if (typeof config.formConfig?.formDesc === 'string')
+      return config.formConfig?.formDesc;
+
+    if (typeof config.formConfig?.formDesc === 'function') {
+      return config.formConfig?.formDesc(action);
+    }
+    return '';
+  }, [action, config.formConfig]);
+
   return (
     <Modal
       className={cx(FullscreenModalStyle, isYamlForm ? '' : MaxWidthModalStyle)}
@@ -192,7 +202,7 @@ export function FormModal(props: FormModalProps) {
       okButtonProps={{
         ...saveButtonProps,
         children: config.formConfig?.saveButtonText,
-        onClick: onOk
+        onClick: onOk,
       }}
       closeIcon={<CloseCircleFilled />}
       okText={okText}
@@ -200,9 +210,7 @@ export function FormModal(props: FormModalProps) {
       destroyOnClose
       fullscreen
     >
-      {config.formConfig?.formDesc ? (
-        <div className={FormDescStyle}>{config.formConfig?.formDesc}</div>
-      ) : undefined}
+      {desc ? <div className={FormDescStyle}>{desc}</div> : undefined}
       {formEle}
     </Modal>
   );
