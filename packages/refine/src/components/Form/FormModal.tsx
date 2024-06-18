@@ -10,6 +10,10 @@ import { RefineFormContent } from './RefineFormContent';
 import { useRefineForm } from './useRefineForm';
 import { YamlForm, YamlFormProps } from './YamlForm';
 
+const FormDescStyle = css`
+  margin-bottom: 16px;
+`;
+
 const FullscreenModalStyle = css`
   &.ant-modal.fullscreen {
     .ant-modal-header {
@@ -36,7 +40,8 @@ const MaxWidthModalStyle = css`
   }
 
   .ant-modal-body {
-    max-width: 656px;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     padding: 0 4px !important;
     margin: auto;
@@ -49,9 +54,13 @@ const MaxWidthModalStyle = css`
       margin: auto !important;
     }
   }
-`;
-const FormDescStyle = css`
-  margin-bottom: 16px;
+
+  .${FormDescStyle} {
+    max-width: 648px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 const ErrorStyle = css`
   display: flex;
