@@ -14,7 +14,7 @@ const FormDescStyle = css`
   margin-bottom: 16px;
 `;
 
-const FullscreenModalStyle = css`
+export const FullscreenModalStyle = css`
   &.ant-modal.fullscreen {
     .ant-modal-header {
       padding: 60px 128px 32px 128px;

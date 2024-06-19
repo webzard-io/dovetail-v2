@@ -1,6 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { PodDropdown } from 'src/components/PodDropdown';
 import { PageShow } from '../../../components/PageShow';
 import { BasicGroup, ConditionsGroup, PodContainersGroup, PodLogTab, EventsTab } from '../../../components/ShowContent';
 import { PodModel } from '../../../models';
@@ -48,6 +49,7 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
           PodLogTab(i18n),
         ],
       }}
+      Dropdown={PodDropdown}
     />
   );
 };
