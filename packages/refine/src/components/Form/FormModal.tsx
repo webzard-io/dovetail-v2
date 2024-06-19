@@ -10,6 +10,10 @@ import { RefineFormContent } from './RefineFormContent';
 import { useRefineForm } from './useRefineForm';
 import { YamlForm, YamlFormProps } from './YamlForm';
 
+const FormDescStyle = css`
+  margin-bottom: 16px;
+`;
+
 const FullscreenModalStyle = css`
   &.ant-modal.fullscreen {
     .ant-modal-header {
@@ -36,7 +40,8 @@ const MaxWidthModalStyle = css`
   }
 
   .ant-modal-body {
-    max-width: 656px;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     padding: 0 4px !important;
     margin: auto;
@@ -49,9 +54,13 @@ const MaxWidthModalStyle = css`
       margin: auto !important;
     }
   }
-`;
-const FormDescStyle = css`
-  margin-bottom: 16px;
+
+  .${FormDescStyle} {
+    max-width: 648px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 const ErrorStyle = css`
   display: flex;
@@ -72,7 +81,7 @@ export function FormModal(props: FormModalProps) {
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
   const [yamlSaveButtonProps, setYamlSaveButtonProps] = useState<{
-    loading?: boolean | { delay?: number | undefined; };
+    loading?: boolean | { delay?: number | undefined };
     onClick?: () => void;
   }>({});
   const [isError, setIsError] = useState<boolean>(false);
@@ -175,6 +184,16 @@ export function FormModal(props: FormModalProps) {
     });
   }, [action, config.formConfig, config?.kind, i18n, id]);
 
+  const desc = useMemo(() => {
+    if (typeof config.formConfig?.formDesc === 'string')
+      return config.formConfig?.formDesc;
+
+    if (typeof config.formConfig?.formDesc === 'function') {
+      return config.formConfig?.formDesc(action);
+    }
+    return '';
+  }, [action, config.formConfig]);
+
   return (
     <Modal
       className={cx(FullscreenModalStyle, isYamlForm ? '' : MaxWidthModalStyle)}
@@ -192,7 +211,7 @@ export function FormModal(props: FormModalProps) {
       okButtonProps={{
         ...saveButtonProps,
         children: config.formConfig?.saveButtonText,
-        onClick: onOk
+        onClick: onOk,
       }}
       closeIcon={<CloseCircleFilled />}
       okText={okText}
@@ -200,9 +219,7 @@ export function FormModal(props: FormModalProps) {
       destroyOnClose
       fullscreen
     >
-      {config.formConfig?.formDesc ? (
-        <div className={FormDescStyle}>{config.formConfig?.formDesc}</div>
-      ) : undefined}
+      {desc ? <div className={FormDescStyle}>{desc}</div> : undefined}
       {formEle}
     </Modal>
   );

@@ -8,6 +8,7 @@ export const useRefineForm = (props: {
   config: ResourceConfig;
   id?: string;
   refineProps?: UseFormProps['refineCoreProps'];
+  useFormProps?: UseFormProps;
 }) => {
   const { config, id, refineProps } = props;
   const [responseErrorMsg, setResponseErrorMsg] = useState<string>('');
@@ -39,6 +40,7 @@ export const useRefineForm = (props: {
       ...refineProps,
     },
     defaultValues: config?.initValue,
+    ...config.formConfig?.useFormProps,
   });
 
   // set request error message
