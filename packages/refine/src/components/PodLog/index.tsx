@@ -97,7 +97,12 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
     abortControllerRef.current = new AbortController();
     const { signal } = abortControllerRef.current;
 
-    fetch(url, { signal }).then(async (response) => {
+    fetch(url, {
+      signal, headers: {
+        'Accept-Encoding': 'identity',
+        Connection: 'Upgrade'
+      }
+    }).then(async (response) => {
       if (response.status !== 200) {
         setLogs([]);
         return;

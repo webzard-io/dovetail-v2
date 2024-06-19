@@ -89,7 +89,7 @@ export function EditField(props: EditField) {
         className={EditButtonStyle}
         type="link"
         onClick={() => {
-          pushModal<"EditFieldModal">({
+          pushModal<'EditFieldModal'>({
             component: EditFieldModal,
             props: modalProps
           });
