@@ -1,7 +1,7 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Space } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
-import React, { useMemo, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import ComponentContext from 'src/contexts/component';
@@ -32,7 +32,6 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   hideToolbar,
 }) => {
   const { i18n } = useTranslation();
-  const kit = useUIKit();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
@@ -81,7 +80,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   }
 
   return (
-    <kit.space
+    <Space
       direction="vertical"
       className={css`
         width: 100%;
@@ -98,6 +97,6 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
         defaultSize={currentSize}
         showMenuColumn={false}
       />
-    </kit.space>
+    </Space>
   );
 };

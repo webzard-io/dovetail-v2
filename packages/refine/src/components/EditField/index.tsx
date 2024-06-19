@@ -1,4 +1,4 @@
-import { useUIKit, usePushModal, usePopModal, } from '@cloudtower/eagle';
+import { Modal, Button, usePushModal, usePopModal, } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useResource, CanAccess } from '@refinedev/core';
 import React, { useCallback } from 'react';
@@ -28,7 +28,6 @@ export interface EditFieldModalProps {
 
 export function EditFieldModal(props: EditFieldModalProps) {
   const { title, formRef: form, renderContent } = props;
-  const kit = useUIKit();
   const { i18n } = useTranslation();
   const popModal = usePopModal();
   const {
@@ -49,7 +48,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
   }, [reset]);
 
   return (
-    <kit.modal
+    <Modal
       className={ModalStyle}
       title={title || i18n.t('dovetail.edit')}
       confirmLoading={submitting}
@@ -65,7 +64,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
         errorMsgs={errorMsgs}
         isEdit
       />
-    </kit.modal>
+    </Modal>
   );
 }
 
@@ -75,7 +74,6 @@ export interface EditField {
 
 export function EditField(props: EditField) {
   const { modalProps } = props;
-  const kit = useUIKit();
   const { i18n } = useTranslation();
   const { resource } = useResource();
   const pushModal = usePushModal();
@@ -85,16 +83,16 @@ export function EditField(props: EditField) {
       resource={resource?.name}
       action={AccessControlAuth.Edit}
     >
-      <kit.button
+      <Button
         className={EditButtonStyle}
         type="link"
         onClick={() => {
-          pushModal<"EditFieldModal">({
+          pushModal<'EditFieldModal'>({
             component: EditFieldModal,
             props: modalProps
           });
         }}
-      >{i18n.t('dovetail.edit')}</kit.button>
+      >{i18n.t('dovetail.edit')}</Button>
     </CanAccess>
   );
 }

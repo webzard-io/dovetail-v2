@@ -1,9 +1,8 @@
-import { useUIKit, Typo } from '@cloudtower/eagle';
+import { Layout as BaseLayout, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { PropsWithChildren, useState } from 'react';
 import React from 'react';
 import { Menu } from '../Menu';
-import { NamespacesFilter } from '../NamespacesFilter';
 
 const HeaderStyle = css`
   &.ant-layout-header {
@@ -38,16 +37,15 @@ const ContentStyle = css`
 export const Layout: React.FC<PropsWithChildren<Record<string, unknown>>> = ({
   children,
 }) => {
-  const kit = useUIKit();
   const [collapsed, setCollapsed] = useState(false);
-  const { Header, Content, Sider } = kit.layout;
+  const { Header, Content, Sider } = BaseLayout;
 
   return (
-    <kit.layout style={{ height: '100%' }}>
+    <BaseLayout style={{ height: '100%' }}>
       <Header className={cx(HeaderStyle, Typo.Heading.h1_bold_title)}>
         Dovetail 2
       </Header>
-      <kit.layout className={ContentLayoutStyle}>
+      <BaseLayout className={ContentLayoutStyle}>
         <Sider
           width={256}
           className={SiderStyle}
@@ -58,7 +56,7 @@ export const Layout: React.FC<PropsWithChildren<Record<string, unknown>>> = ({
           <Menu />
         </Sider>
         <Content className={ContentStyle}>{children}</Content>
-      </kit.layout>
-    </kit.layout>
+      </BaseLayout>
+    </BaseLayout>
   );
 };

@@ -1,4 +1,4 @@
-import { Icon, useUIKit } from '@cloudtower/eagle';
+import { Icon, Divider, Dropdown, Menu, Modal, Button } from '@cloudtower/eagle';
 import {
   EditPen16PrimaryIcon,
   MoreEllipsis324BoldSecondaryIcon,
@@ -27,7 +27,6 @@ interface K8sDropdownProps {
 
 function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const { record, size = 'normal' } = props;
-  const kit = useUIKit();
   const { globalStore } = useGlobalStore();
   const useResourceResult = useResource();
   const resource = useResourceResult.resource;
@@ -49,19 +48,19 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
 
   return (
     <>
-      <kit.dropdown
+      <Dropdown
         overlay={
-          <kit.menu>
+          <Menu>
             {
               isInShowPage || canEditData?.can === false ? null : (
-                <kit.menuItem
+                <Menu.Item
                   onClick={openForm}
                 >
                   <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_yaml')}</Icon>
-                </kit.menuItem>
+                </Menu.Item>
               )
             }
-            <kit.menu.Item
+            <Menu.Item
               onClick={() => {
                 if (record.id) {
                   download({
@@ -72,26 +71,26 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
               }}
             >
               <Icon src={Download16GradientBlueIcon}>{t('dovetail.download_yaml')}</Icon>
-            </kit.menu.Item>
+            </Menu.Item>
             {props.children}
-            {canDeleteData?.can !== false ? <kit.divider style={{ margin: 0 }} /> : null}
+            {canDeleteData?.can !== false ? <Divider style={{ margin: 0 }} /> : null}
             {
               canDeleteData?.can !== false ? (
-                <kit.menuItem
+                <Menu.Item
                   danger={true}
                   onClick={() => {
                     openDeleteConfirmModal(record.id);
                   }}
                 >
                   <Icon src={TrashBinDelete16Icon}>{t('dovetail.delete')}</Icon>
-                </kit.menuItem>
+                </Menu.Item>
               ) : null
             }
-          </kit.menu>
+          </Menu>
         }
         trigger={['click']}
       >
-        <kit.button
+        <Button
           type="quiet"
           size={size === 'large' ? 'middle' : 'small'}
           prefixIcon={size === 'large' ? <Icon
@@ -101,9 +100,9 @@ function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
             iconHeight={24}
           /> : <Icon src={MoreEllipsis316BoldBlueIcon} />}
         >
-        </kit.button>
-      </kit.dropdown>
-      {visible ? <kit.modal {...modalProps} /> : null}
+        </Button>
+      </Dropdown>
+      {visible ? <Modal {...modalProps} /> : null}
     </>
   );
 }

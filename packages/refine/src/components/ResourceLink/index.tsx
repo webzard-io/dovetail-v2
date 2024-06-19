@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Link } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useGo, useNavigation } from '@refinedev/core';
 
@@ -16,7 +16,6 @@ const LinkStyle = css`
 
 export const ResourceLink: React.FC<Props> = props => {
   const { name, namespace, resourceId } = props;
-  const kit = useUIKit();
   const navigation = useNavigation();
   const go = useGo();
 
@@ -33,8 +32,8 @@ export const ResourceLink: React.FC<Props> = props => {
   };
 
   return (
-    <kit.Link className={LinkStyle} onClick={onClick}>
+    <Link className={LinkStyle} onClick={onClick}>
       {resourceId}
-    </kit.Link>
+    </Link>
   );
 };

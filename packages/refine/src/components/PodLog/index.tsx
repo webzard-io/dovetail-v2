@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { SegmentControl, Select, AntdOption, Checkbox, Button } from '@cloudtower/eagle';
 import {
   SuspendedPause16GradientBlueIcon,
   RecoverContinue16GradientBlueIcon
@@ -40,7 +40,6 @@ const ContentStyle = css`
 `;
 
 export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
-  const kit = useUIKit();
   const [selectedContainer, setSelectedContainer] = useState(
     pod.spec?.containers[0]?.name || ''
   );
@@ -179,7 +178,7 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
     <div className={WrapperStyle}>
       <div className={ToolbarStyle}>
         <span className={ToolbarAreaStyle}>
-          <kit.SegmentedControl
+          <SegmentControl
             options={[
               {
                 label: t('dovetail.realtime_log'),
@@ -196,7 +195,7 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
               setLogs([]);
             }}
           />
-          <kit.select
+          <Select
             input={{
               onChange: newValue => {
                 stopFetchingLogs();
@@ -209,28 +208,28 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
             }}
             style={{ width: 200 }}
           >
-            <kit.option value="" disabled>
+            <AntdOption value="" disabled>
               {t('dovetail.select_container')}
-            </kit.option>
+            </AntdOption>
             {(pod.spec?.containers || []).map(container => (
-              <kit.option key={container.name} value={container.name}>
+              <AntdOption key={container.name} value={container.name}>
                 {container.name}
-              </kit.option>
+              </AntdOption>
             ))}
-          </kit.select>
+          </Select>
         </span>
         <span className={ToolbarAreaStyle}>
-          <kit.checkbox checked={wrap} onChange={e => setWrap(e.target.checked)}>
+          <Checkbox checked={wrap} onChange={e => setWrap(e.target.checked)}>
             {t('dovetail.auto_wrap')}
-          </kit.checkbox>
+          </Checkbox>
 
-          <kit.button
+          <Button
             onClick={() => setPaused(prev => !prev)}
             prefixIcon={paused ? <RecoverContinue16GradientBlueIcon /> : <SuspendedPause16GradientBlueIcon />}
             size="middle"
           >
             {paused ? t('dovetail.resume') : t('dovetail.suspend')}
-          </kit.button>
+          </Button>
         </span>
 
       </div>

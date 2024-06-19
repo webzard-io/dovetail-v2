@@ -1,4 +1,4 @@
-import { useUIKit, Tooltip, OverflowTooltip, Divider, Link } from '@cloudtower/eagle';
+import { Button, Time as BaseTime, Tooltip, OverflowTooltip, Divider, Link } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
@@ -46,13 +46,12 @@ const ServiceClusterTooltipStyle = css`
 
 const NameLink: React.FC<{ id: string; name: string; resource?: string }> = props => {
   const { name, id, resource } = props;
-  const kit = useUIKit();
   const go = useGo();
   const navigation = useNavigation();
   const parsed = useParsed();
   const resourceName = resource || parsed.resource?.name || '';
   return (
-    <kit.button
+    <Button
       type="link"
       onClick={() => {
         go({
@@ -68,7 +67,7 @@ const NameLink: React.FC<{ id: string; name: string; resource?: string }> = prop
       title={name}
     >
       {name}
-    </kit.button>
+    </Button>
   );
 };
 
@@ -221,7 +220,6 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
   { isRelativeTime = true }: { isRelativeTime?: boolean } = {}
 ): Column<Model> => {
   const dataIndex = ['metadata', 'creationTimestamp'];
-  const kit = useUIKit();
 
   return {
     key: 'creationTimestamp',
@@ -236,7 +234,7 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
       ) : (
         <ValueDisplay
           value={
-            <kit.time date={value} timeTemplate="HH:mm:ss" dateTemplate="YYYY-MM-DD" />
+            <BaseTime date={value} timeTemplate="HH:mm:ss" dateTemplate="YYYY-MM-DD" />
           }
         />
       );

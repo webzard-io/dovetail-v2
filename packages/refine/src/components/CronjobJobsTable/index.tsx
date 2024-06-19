@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Space } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { OwnerReference } from 'kubernetes-types/meta/v1';
 import React, { useState, useContext, useMemo } from 'react';
@@ -50,7 +50,6 @@ export const CronjobJobsTable: React.FC<{
   hideToolBar?: boolean;
 }> = ({ owner, hideToolBar }) => {
   const { i18n } = useTranslation();
-  const kit = useUIKit();
   const [selectedKeys] = useState<string[]>([]);
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
@@ -93,7 +92,7 @@ export const CronjobJobsTable: React.FC<{
   }
 
   return (
-    <kit.space
+    <Space
       direction="vertical"
       className={WrapperStyle}
     >
@@ -103,6 +102,6 @@ export const CronjobJobsTable: React.FC<{
         tableKey="cronjobs"
         showMenuColumn={false}
       />
-    </kit.space>
+    </Space>
   );
 };

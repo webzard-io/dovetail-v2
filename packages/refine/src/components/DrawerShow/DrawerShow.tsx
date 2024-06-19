@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Loading } from '@cloudtower/eagle';
 import { useNavigation, useParsed, useShow } from '@refinedev/core';
 import { Drawer } from 'antd';
 import React from 'react';
@@ -13,7 +13,6 @@ type Props<Model extends ResourceModel> = {
 export const DrawerShow = <Model extends ResourceModel>(
   props: Props<Model>
 ) => {
-  const kit = useUIKit();
   const parsed = useParsed();
   const nav = useNavigation();
   const { queryResult } = useShow({ id: parsed?.params?.id });
@@ -27,7 +26,7 @@ export const DrawerShow = <Model extends ResourceModel>(
       width="50%"
       visible={!!parsed?.params?.id}
     >
-      {isLoading ? <kit.loading /> : <ShowContent {...props} />}
+      {isLoading ? <Loading /> : <ShowContent {...props} />}
     </Drawer>
   );
 };

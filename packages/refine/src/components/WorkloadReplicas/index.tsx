@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { useUIKit, Typo } from '@cloudtower/eagle';
+import { Typo, DonutChart, Form, Fields } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useResource, useUpdate } from '@refinedev/core';
 import React, { useState, useMemo, useCallback, useImperativeHandle, useRef } from 'react';
@@ -59,7 +59,6 @@ interface WorkloadReplicasFormHandler {
 
 export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, WorkloadReplicasFormProps>(function WorkloadReplicasForm(props, ref) {
   const { defaultValue, record, label } = props;
-  const kit = useUIKit();
   const { resource } = useResource();
   const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
@@ -97,11 +96,11 @@ export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler
   }), [submit]);
 
   return (
-    <kit.form.Item
+    <Form.Item
       label={<span style={{ width: '134px' }}>{label}</span>}
       colon={false}
     >
-      <kit.fields.Integer
+      <Fields.Integer
         style={{ width: '142px' }}
         input={{
           name: 'replicas',
@@ -116,7 +115,7 @@ export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler
         meta={{}}
         controls
       />
-    </kit.form.Item>
+    </Form.Item>
   );
 });
 
@@ -126,7 +125,6 @@ export interface WorkloadReplicasProps {
 }
 
 export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
-  const kit = useUIKit();
   const { t } = useTranslation();
   const formRef = useRef<WorkloadReplicasFormHandler | null>(null);
 
@@ -157,7 +155,7 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
   return (
     <span className={WorkloadReplicasWrapperStyle}>
       <div className={DonutChartWrapperStyle}>
-        <kit.DonutChart
+        <DonutChart
           className={DonutChartStyle}
           data={donutData}
           width={70}
@@ -173,7 +171,7 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
           widthPadding={false}
           showLegend={false}
         >
-        </kit.DonutChart>
+        </DonutChart>
       </div>
       <div className={ContentWrapperStyle}>
         <tr>

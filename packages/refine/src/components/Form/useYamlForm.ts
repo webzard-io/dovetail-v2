@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Form } from '@cloudtower/eagle';
 import {
   HttpError,
   BaseRecord,
@@ -161,7 +161,6 @@ const useYamlForm = <
   > | null>(null);
   const useResourceResult = useResource();
   const { globalStore } = useGlobalStore();
-  const kit = useUIKit();
   const {
     schema,
     loading: isLoadingSchema,
@@ -170,7 +169,7 @@ const useYamlForm = <
   } = useSchema({
     skip: editorOptions?.isSkipSchema,
   });
-  const [formAnt] = kit.form.useForm();
+  const [formAnt] = Form.useForm();
   const formSF = useFormSF({
     form: formAnt,
   });

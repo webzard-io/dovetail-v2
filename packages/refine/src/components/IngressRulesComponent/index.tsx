@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { OverflowTooltip } from '@cloudtower/eagle';
 import React from 'react';
 import { LinkFallback } from 'src/components/LinkFallback';
 import { IngressModel } from '../../models';
@@ -7,13 +7,11 @@ import { ResourceLink } from '../ResourceLink';
 export const IngressRulesComponent: React.FC<{
   ingress: IngressModel;
 }> = ({ ingress }) => {
-  const kit = useUIKit();
-
   const result = ingress.flattenedRules.map(r => {
     const divider = ' > ';
 
     return (
-      <kit.overflowTooltip
+      <OverflowTooltip
         key={r.fullPath}
         content={
           <>

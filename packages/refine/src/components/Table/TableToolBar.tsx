@@ -1,4 +1,4 @@
-import { useUIKit, Typo } from '@cloudtower/eagle';
+import { Typo, Space } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useResource, CanAccess } from '@refinedev/core';
 import React from 'react';
@@ -27,14 +27,13 @@ const DescriptionStyle = css`
 `;
 
 export const TableToolBar: React.FC<Props> = ({ description, selectedKeys, hideCreate }) => {
-  const kit = useUIKit();
   const { resource } = useResource();
 
   return (
     <div className={cx(ToolbarWrapperStyle, 'table-toolbar')}>
-      <kit.space className={ToolbarStyle}>
+      <Space className={ToolbarStyle}>
         <span className={cx(Typo.Display.d2_regular_title, TitleStyle)}>{resource?.meta?.kind}</span>
-        <kit.space>
+        <Space>
           {selectedKeys.length > 0 ? <DeleteManyButton ids={selectedKeys} /> : undefined}
           <CanAccess
             resource={resource?.name}
@@ -42,8 +41,8 @@ export const TableToolBar: React.FC<Props> = ({ description, selectedKeys, hideC
           >
             {!hideCreate ? <CreateButton /> : null}
           </CanAccess>
-        </kit.space>
-      </kit.space>
+        </Space>
+      </Space>
       {description ? <div className={DescriptionStyle}>{description}</div> : null}
     </div>
   );

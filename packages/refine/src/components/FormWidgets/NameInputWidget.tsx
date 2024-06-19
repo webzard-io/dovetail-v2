@@ -1,12 +1,11 @@
-import { useUIKit, AntdInputProps } from '@cloudtower/eagle';
+import { Input, AntdInputProps } from '@cloudtower/eagle';
 import { useResource } from '@refinedev/core';
 import React from 'react';
 
 export function NameInputWidget(props: AntdInputProps) {
-  const kit = useUIKit();
   const { action } = useResource();
 
-  return <kit.input {...props} disabled={action === 'edit'} />;
+  return <Input {...props} disabled={action === 'edit'} />;
 }
 
 export const dnsSubDomainRules = [
