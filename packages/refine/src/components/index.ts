@@ -7,6 +7,7 @@ export * from './FormLayout';
 export * from './PodContainersTable';
 export * from './WorkloadDropdown';
 export * from './ReplicasDropdown';
+export * from './PodDropdown';
 export * from './CreateButton';
 export * from './ImageNames';
 export * from './ResourceCRUD';
