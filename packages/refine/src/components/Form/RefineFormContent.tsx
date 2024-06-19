@@ -135,7 +135,9 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
       size={16}
       className={css`
         flex-basis: 58%;
+        max-width: 648px;
         width: 100%;
+        margin: 0 auto;
       `}
     >
       {fields}
