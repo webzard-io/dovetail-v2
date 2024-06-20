@@ -22,6 +22,7 @@ import { IngressConfig } from './pages/ingresses';
 import { JobConfig } from './pages/jobs';
 import { NetworkPolicyConfig } from './pages/networkPolicies';
 import { NodeList, NodeShow } from './pages/nodes';
+import { PersistentVolumeConfig } from './pages/persistentvolumes';
 import { PodShow, PodList, PodForm } from './pages/pods';
 import { SecretsConfig } from './pages/secrets';
 import { ServicesConfig } from './pages/services';
@@ -91,6 +92,7 @@ function App() {
         isCustom: true,
       },
       StorageClassConfig(i18n),
+      PersistentVolumeConfig(i18n),
       {
         name: 'serverinstances',
         basePath: '/apis/kubesmart.smtx.io/v1alpha1',
@@ -152,7 +154,6 @@ function App() {
       ConfigMapConfig(i18n),
       SecretsConfig(i18n),
       ServicesConfig(i18n),
-
     ];
   }, []);
 

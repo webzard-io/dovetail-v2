@@ -1,5 +1,5 @@
 import { i18n as I18n } from 'i18next';
-import { BasicGroup } from 'src/components/ShowContent/groups';
+import { BasicGroup, StorageClassPvGroup } from 'src/components/ShowContent/groups';
 import { STORAGE_CLASS_INIT_VALUE } from 'src/constants/k8s';
 import {
   NameSpaceColumnRenderer,
@@ -8,6 +8,7 @@ import {
   AgeColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import { RESOURCE_GROUP } from 'src/types';
+import { StorageClassFsTypeField, StorageClassProvisionerField } from '../../components';
 import { generateStorageClassFormConfig } from './form';
 
 export const StorageClassConfig = (i18n: I18n) => ({
@@ -20,7 +21,7 @@ export const StorageClassConfig = (i18n: I18n) => ({
   formConfig: generateStorageClassFormConfig({
     isEnabledZbs: true,
     isEnabledElf: false,
-    isVmKsc: true
+    isVmKsc: true,
   }),
   columns: () => [
     NameSpaceColumnRenderer(i18n),
@@ -35,8 +36,16 @@ export const StorageClassConfig = (i18n: I18n) => ({
         key: 'detail',
         groups: [
           BasicGroup(i18n, {
-            basicFields: [],
+            downAreas: [
+              {
+                fields: [
+                  StorageClassProvisionerField(i18n),
+                  StorageClassFsTypeField(i18n),
+                ],
+              },
+            ],
           }),
+          StorageClassPvGroup(i18n),
         ],
       },
     ],
