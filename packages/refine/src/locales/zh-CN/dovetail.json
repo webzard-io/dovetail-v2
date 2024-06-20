@@ -154,5 +154,8 @@
   "only_support_one_yaml": "一次仅支持输入一个 YAML 配置。",
   "not_support": "不支持",
   "stopped": "已停止",
-  "any_node_ip": "任意节点 IP"
+  "storage_class": "存储类",
+  "persistent_volumn": "持久卷",
+  "provisioner": "制备器",
+  "file_system": "文件系统"
 }

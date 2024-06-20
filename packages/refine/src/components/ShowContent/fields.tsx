@@ -24,6 +24,8 @@ import {
   IngressModel,
   ServiceModel,
   ServiceType,
+  StorageClassModel,
+  PersistentVolumeModel,
 } from '../../models';
 import { ExtendObjectMeta } from '../../plugins/relation-plugin';
 import { ConditionsTable } from '../ConditionsTable';
@@ -32,6 +34,7 @@ import { EventsTable } from '../EventsTable';
 import { ImageNames } from '../ImageNames';
 import { IngressRulesTable } from '../IngressRulesTable';
 import { KeyValue, KeyValueAnnotation, KeyValueSecret } from '../KeyValue';
+import { ResourceLink } from '../ResourceLink';
 import { Time } from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
@@ -373,6 +376,46 @@ export const DurationField = <Model extends JobModel | CronJobModel>(
     title: i18n.t('dovetail.duration'),
     renderContent: v => {
       return <DurationTime value={v as number} />;
+    },
+  };
+};
+
+export const StorageClassProvisionerField = <Model extends StorageClassModel>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'provisioner',
+    path: ['provisioner'],
+    title: i18n.t('dovetail.provisioner'),
+  };
+};
+
+export const StorageClassFsTypeField = <Model extends StorageClassModel>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'fstype',
+    path: ['parameters', 'csi.storage.k8s.io/fstype'],
+    title: i18n.t('dovetail.file_system'),
+  };
+};
+
+export const StorageClassPvField = <
+  Model extends StorageClassModel,
+>(): ShowField<Model> => {
+  return {
+    key: 'pvs',
+    path: ['pvs'],
+    renderContent: pvs => {
+      return (pvs as PersistentVolumeModel[]).map(pv => (
+        <div key={pv.metadata.name}>
+          <ResourceLink
+            resourceName={'persistentvolumes'}
+            namespace={pv.metadata.namespace || ''}
+            resourceId={pv.id}
+          />
+        </div>
+      ));
     },
   };
 };

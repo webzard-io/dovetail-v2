@@ -56,7 +56,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       render: (serviceName: string, record: RuleItem) => {
         return record.serviceName ? (
           <ResourceLink
-            name="services"
+            resourceName="services"
             namespace={ingress.metadata.namespace || 'default'}
             resourceId={serviceName}
           />
@@ -82,7 +82,7 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
 
         return secretName ? (
           <ResourceLink
-            name="secrets"
+            resourceName="secrets"
             namespace={ingress.metadata.namespace || 'default'}
             resourceId={secretName}
           />
