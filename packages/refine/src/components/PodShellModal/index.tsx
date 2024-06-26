@@ -3,7 +3,8 @@ import { Modal, usePopModal } from '@cloudtower/eagle';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FullscreenModalStyle } from 'src/components/Form/FormModal';
-import { PodShell, SocketStatus } from './PodShell';
+import { SocketStatus } from 'src/components/Shell';
+import { PodShell } from './PodShell';
 
 interface PodShellModalProps {
   id: string;
