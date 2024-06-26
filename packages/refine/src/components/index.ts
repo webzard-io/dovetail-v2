@@ -43,3 +43,4 @@ export * from './ResourceFiledDisplays';
 export * from './Tabs';
 export * as ValueDisplay from './ValueDisplay';
 export * from './ResourceSelect';
+export * from './Shell';
