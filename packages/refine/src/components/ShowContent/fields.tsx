@@ -45,6 +45,7 @@ export type ShowField<Model extends ResourceModel> = {
   path: string[];
   labelWidth?: string;
   col?: number;
+  hidden?: boolean;
   render?: (
     val: unknown,
     record: Model,
@@ -80,6 +81,8 @@ export type ShowTab<Model extends ResourceModel> = {
 
 export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
   tabs?: ShowTab<Model>[];
+  renderExtraButton?: (record: Model) => React.ReactNode;
+  hideEditYamlButton?: boolean;
 }
 
 export const ImageField = <Model extends WorkloadBaseModel>(
