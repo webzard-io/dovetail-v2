@@ -1,4 +1,4 @@
-import { Icon, useUIKit } from '@cloudtower/eagle';
+import { Icon, Menu } from '@cloudtower/eagle';
 import {
   Pause16GradientBlueIcon,
   RecoverContinue16GradientBlueIcon,
@@ -20,7 +20,6 @@ type Props<Model extends CronJobModel> = {
 export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>) {
   const { record, size } = props;
   const { spec } = record as CronJob;
-  const kit = useUIKit();
   const { resource } = useResource();
   const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
@@ -35,7 +34,7 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
     <K8sDropdown record={record} size={size}>
       {
         canEditData?.can !== false ? (
-          <kit.menu.Item
+          <Menu.Item
             onClick={async () => {
               const v = suspended ? record.resume() : record.suspend();
               const id = record.id;
@@ -75,7 +74,7 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
             <Icon src={suspended ? RecoverContinue16GradientBlueIcon : Pause16GradientBlueIcon}>
               {t(suspended ? 'dovetail.resume' : 'dovetail.suspend')}
             </Icon>
-          </kit.menu.Item>
+          </Menu.Item>
         ) : null
       }
     </K8sDropdown >

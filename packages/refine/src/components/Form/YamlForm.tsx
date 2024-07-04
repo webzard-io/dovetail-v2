@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Form, Loading } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { FormAction, useResource } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
@@ -94,7 +94,6 @@ export function YamlForm(props: YamlFormProps) {
     },
     ...useFormProps,
   });
-  const kit = useUIKit();
   const { t, i18n } = useTranslation();
 
   const FormWrapper = isShowLayout ? FormLayout : React.Fragment;
@@ -136,7 +135,7 @@ export function YamlForm(props: YamlFormProps) {
 
   return (
     <FormWrapper {...formWrapperProps}>
-      <kit.form
+      <Form
         {...formProps}
         initialValues={formProps.initialValues}
         layout="horizontal"
@@ -145,20 +144,20 @@ export function YamlForm(props: YamlFormProps) {
       >
         {(() => {
           if (isLoadingSchema || (queryResult?.isLoading && action === 'edit')) {
-            return <kit.loading />;
+            return <Loading />;
           }
 
           return editorProps.schema || schemaStrategy !== SchemaStrategy.Required ? (
             <>
-              <kit.form.Item style={{ flex: 1 }}>
+              <Form.Item style={{ flex: 1 }}>
                 <YamlEditorComponent
                   {...editorProps}
                   className={EditorStyle}
                   schema={schema}
                   collapsable={false}
                 />
-              </kit.form.Item>
-              <kit.form.Item>
+              </Form.Item>
+              <Form.Item>
                 {mutationResult.error && (
                   <FormErrorAlert
                     errorMsgs={
@@ -168,7 +167,7 @@ export function YamlForm(props: YamlFormProps) {
                     isEdit={action === 'edit'}
                   />
                 )}
-              </kit.form.Item>
+              </Form.Item>
             </>
           ) : (
             <ErrorContent
@@ -177,7 +176,7 @@ export function YamlForm(props: YamlFormProps) {
             ></ErrorContent>
           );
         })()}
-      </kit.form>
+      </Form>
     </FormWrapper>
   );
 }

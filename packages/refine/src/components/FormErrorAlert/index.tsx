@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Alert } from '@cloudtower/eagle';
 import { first } from 'lodash-es';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,10 +13,9 @@ interface FormErrorAlertProps {
 export function FormErrorAlert(props: FormErrorAlertProps) {
   const { errorMsgs, style, className, isEdit } = props;
   const { i18n } = useTranslation();
-  const kit = useUIKit();
 
   return errorMsgs.length ? (
-    <kit.alert
+    <Alert
       message={
         (
           <>

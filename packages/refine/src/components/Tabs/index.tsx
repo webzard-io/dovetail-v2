@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Tabs as BaseTabs, TabsTabPane } from '@cloudtower/eagle';
 import React from 'react';
 
 export type TabsProps = {
@@ -12,17 +12,16 @@ export type TabsProps = {
 
 export function Tabs(props: TabsProps) {
   const { tabs, className } = props;
-  const kit = useUIKit();
 
   return (
-    <kit.tabs className={className}>
+    <BaseTabs className={className}>
       {tabs.map(tab => {
         return (
-          <kit.tabsTabPane tab={tab.title} key={tab.title}>
+          <TabsTabPane tab={tab.title} key={tab.title}>
             {tab.children}
-          </kit.tabsTabPane>
+          </TabsTabPane>
         );
       })}
-    </kit.tabs>
+    </BaseTabs>
   );
 }

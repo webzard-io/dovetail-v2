@@ -1,4 +1,4 @@
-import { useUIKit, TableProps as BaseTableProps, RequiredColumnProps } from '@cloudtower/eagle';
+import { TableProps as BaseTableProps, RequiredColumnProps, Table as BaseTable, Pagination, Loading } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -53,7 +53,6 @@ export type TableProps<Data extends { id: string; }> = {
 };
 
 function Table<Data extends { id: string; }>(props: TableProps<Data>) {
-  const kit = useUIKit();
   const { t } = useTranslation();
   const {
     loading,
@@ -104,7 +103,7 @@ function Table<Data extends { id: string; }>(props: TableProps<Data>) {
   }, [columns, RowMenu]);
 
   if (loading) {
-    return <kit.loading />;
+    return <Loading />;
   } else if (error) {
     return (
       <ErrorContent
@@ -125,7 +124,7 @@ function Table<Data extends { id: string; }>(props: TableProps<Data>) {
       ref={wrapperRef}
       className={cx(TableContainerStyle, props.className, 'table-wrapper')}
     >
-      <kit.table
+      <BaseTable
         tableLayout="fixed"
         columns={finalColumns}
         dataSource={dataSource}
@@ -136,7 +135,7 @@ function Table<Data extends { id: string; }>(props: TableProps<Data>) {
         scroll={scroll}
       />
       <AuxiliaryLine ref={auxiliaryLineRef}></AuxiliaryLine>
-      <kit.pagination
+      <Pagination
         current={currentPage}
         size={defaultSize}
         count={total}

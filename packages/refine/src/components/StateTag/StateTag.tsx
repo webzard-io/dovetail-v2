@@ -1,4 +1,4 @@
-import { StatusCapsuleColor, useUIKit } from '@cloudtower/eagle';
+import { StatusCapsuleColor, StatusCapsule } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,6 @@ type Props = {
 };
 
 export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATING, hideBackground, className }) => {
-  const kit = useUIKit();
   const { t } = useTranslation();
 
   const statusMap: Record<WorkloadState, StatusCapsuleColor | 'loading'> = {
@@ -42,11 +41,11 @@ export const StateTag: React.FC<Props> = ({ state = WorkloadState.UPDATING, hide
     stopped: 'gray',
   };
 
-  return <kit.statusCapsule
+  return <StatusCapsule
     className={cx(className, StateTagStyle, hideBackground && 'no-background')}
     color={statusMap[state] !== 'loading' ? statusMap[state] as StatusCapsuleColor : undefined}
     loading={statusMap[state] === 'loading'}
   >
     {t(`dovetail.${state || 'updating'}`)}
-  </kit.statusCapsule>;
+  </StatusCapsule>;
 };

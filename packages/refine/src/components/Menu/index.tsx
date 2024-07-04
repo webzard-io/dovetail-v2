@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Menu as BaseMenu, MenuItemGroup } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useMenu, ITreeMenu } from '@refinedev/core';
 import React from 'react';
@@ -29,26 +29,25 @@ const MenuStyle = css`
 `;
 
 export const Menu = () => {
-  const kit = useUIKit();
   const { menuItems, selectedKey } = useMenu();
 
   function renderMenuItems(items: ITreeMenu[]) {
     return items.map(item =>
       item.list ? (
-        <kit.menuItem key={item.key}>
+        <BaseMenu.Item key={item.key}>
           <NavLink to={item.route || ''}>{item.label}</NavLink>
-        </kit.menuItem>
+        </BaseMenu.Item>
       ) : (
-        <kit.menuItemGroup key={item.key} title={item.name}>
+        <MenuItemGroup key={item.key} title={item.name}>
           {renderMenuItems(item.children)}
-        </kit.menuItemGroup>
+        </MenuItemGroup>
       )
     );
   }
 
   return (
-    <kit.menu className={MenuStyle} theme="light" selectedKeys={[selectedKey]}>
+    <BaseMenu className={MenuStyle} theme="light" selectedKeys={[selectedKey]}>
       {renderMenuItems(menuItems)}
-    </kit.menu>
+    </BaseMenu>
   );
 };

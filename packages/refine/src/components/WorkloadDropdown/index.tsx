@@ -1,4 +1,4 @@
-import { Icon, useUIKit } from '@cloudtower/eagle';
+import { Icon, Menu } from '@cloudtower/eagle';
 import { Retry16GradientBlueIcon } from '@cloudtower/icons-react';
 import { useResource, useUpdate, useCan } from '@refinedev/core';
 import React from 'react';
@@ -15,7 +15,6 @@ type Props<Model extends WorkloadModel> = {
 
 export function WorkloadDropdown<Model extends WorkloadModel>(props: React.PropsWithChildren<Props<Model>>) {
   const { record, size, children } = props;
-  const kit = useUIKit();
   const { resource } = useResource();
   const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
@@ -28,7 +27,7 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: React.Props
     <K8sDropdown record={record} size={size}>
       {
         canEditData?.can !== false ? (
-          <kit.menu.Item
+          <Menu.Item
             onClick={async () => {
               const v = record.redeploy();
               const id = v.id;
@@ -65,7 +64,7 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: React.Props
             }}
           >
             <Icon src={Retry16GradientBlueIcon}>{t('dovetail.redeploy')}</Icon>
-          </kit.menu.Item>
+          </Menu.Item>
 
         ) : null
       }
