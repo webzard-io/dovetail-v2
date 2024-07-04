@@ -1,4 +1,4 @@
-import { useUIKit } from '@cloudtower/eagle';
+import { Button, Modal } from '@cloudtower/eagle';
 import { useResource } from '@refinedev/core';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +6,6 @@ import { useDeleteManyModal } from '../../hooks/useDeleteModal/useDeleteManyModa
 
 export const DeleteManyButton: React.FC<{ ids: string[] }> = props => {
   const { resource } = useResource();
-  const kit = useUIKit();
   const { t } = useTranslation();
   const { modalProps, visible, setVisible } = useDeleteManyModal(
     resource?.name || '',
@@ -19,10 +18,10 @@ export const DeleteManyButton: React.FC<{ ids: string[] }> = props => {
 
   return (
     <>
-      <kit.button type="primary" danger onClick={onClick}>
+      <Button type="primary" danger onClick={onClick}>
         {t('dovetail.delete')}
-      </kit.button>
-      {visible ? <kit.modal {...modalProps} /> : null}
+      </Button>
+      {visible ? <Modal {...modalProps} /> : null}
     </>
   );
 };

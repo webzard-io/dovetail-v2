@@ -1,4 +1,4 @@
-import { Typo, useUIKit, Icon, AntdRowProps } from '@cloudtower/eagle';
+import { Typo, Icon, AntdRowProps, Divider, Space, Col, Row, Button } from '@cloudtower/eagle';
 import { ArrowChevronLeft16BoldTertiaryIcon, ArrowChevronLeftSmall16BoldBlueIcon, EditPen16GradientBlueIcon } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useParsed, useResource, useShow, useNavigation, useGo, CanAccess } from '@refinedev/core';
@@ -162,7 +162,6 @@ export function ShowGroupComponent(
 
 export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) => {
   const { showConfig, formatter, Dropdown = K8sDropdown } = props;
-  const kit = useUIKit();
   const parsed = useParsed();
   const { resource } = useResource();
   const id = parsed?.params?.id;
@@ -199,7 +198,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       }
 
       return hasCol ? (
-        <kit.col
+        <Col
           flex={areaType === AreaType.Inline ? 'none' : ''}
           span={field.col || 24}
           key={field.path.join()}
@@ -229,7 +228,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
               </span>
             </div>
           )}
-        </kit.col>
+        </Col>
       ) : (
         <ValueDisplay
           style={{ height: '100%' }}
@@ -255,25 +254,25 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           <span className="button-text">{resource?.meta?.kind}</span>
         </Icon>
       </span>
-      <kit.space className={TopBarStyle}>
+      <Space className={TopBarStyle}>
         <div style={{ display: 'flex' }}>
           <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>
             {record?.metadata?.name}
           </span>
           {stateDisplay ? <StateTag state={stateDisplay} /> : undefined}
         </div>
-        <kit.space>
+        <Space>
           <CanAccess
             resource={resource?.name}
             action={AccessControlAuth.Edit}
           >
-            <kit.button style={{ marginRight: 8 }} onClick={openForm} prefixIcon={<EditPen16GradientBlueIcon />}>
+            <Button style={{ marginRight: 8 }} onClick={openForm} prefixIcon={<EditPen16GradientBlueIcon />}>
               {t('dovetail.edit_yaml')}
-            </kit.button>
+            </Button>
           </CanAccess>
           <Dropdown record={record} size="large" />
-        </kit.space>
-      </kit.space>
+        </Space>
+      </Space>
     </div>
   );
   const tabs = (
@@ -287,7 +286,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
               {
                 tab.groups?.map(group => {
                   const GroupContainer = group.title ? ShowGroupComponent : React.Fragment;
-                  const FieldContainer = group.title ? kit.row : React.Fragment;
+                  const FieldContainer = group.title ? Row : React.Fragment;
                   const groupContainerProps = group.title ? { title: group.title || '' } : {};
                   const fieldContainerProps = group.title ? { gutter: [24, 8] } : {};
 
@@ -298,7 +297,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
                           <FieldContainer key={index} {...fieldContainerProps as AntdRowProps}>
                             {renderFields(area.fields, area.type, !!group.title)}
                           </FieldContainer>
-                          {index !== group.areas.length - 1 ? <kit.divider style={{ margin: '8px 0 12px 0' }} /> : null}
+                          {index !== group.areas.length - 1 ? <Divider style={{ margin: '8px 0 12px 0' }} /> : null}
                         </>
                       ))}
                     </GroupContainer>
@@ -315,9 +314,9 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
 
   return (
     <div className={ShowContentWrapperStyle}>
-      <kit.space direction="vertical" className={ShowContentHeaderStyle}>
+      <Space direction="vertical" className={ShowContentHeaderStyle}>
         {topBar}
-      </kit.space>
+      </Space>
       {tabs}
     </div>
   );
