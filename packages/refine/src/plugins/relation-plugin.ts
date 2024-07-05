@@ -21,7 +21,7 @@ export type ExtendObjectMeta = ObjectMeta & {
   relations?: Relation[];
 };
 
-class RelationPlugin {
+export class RelationPlugin {
   private globalStore?: GlobalStore;
 
   init(globalStore: GlobalStore) {
