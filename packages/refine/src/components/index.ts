@@ -44,3 +44,4 @@ export * from './Tabs';
 export * as ValueDisplay from './ValueDisplay';
 export * from './ResourceSelect';
 export * from './Shell';
+export * from './PodShellModal';
