@@ -32,7 +32,7 @@ export function PodDropdown<Model extends PodModel>(props: React.PropsWithChildr
               pushModal<'PodShellModal'>({
                 component: PodShellModal,
                 props: {
-                  id: record.id
+                  pod: record
                 }
               });
             }}

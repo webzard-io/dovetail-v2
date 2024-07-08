@@ -1,4 +1,8 @@
+import { CanvasAddon } from '@xterm/addon-canvas';
 import { FitAddon } from '@xterm/addon-fit';
+import { SearchAddon } from '@xterm/addon-search';
+import { WebLinksAddon } from '@xterm/addon-web-links';
+import { WebglAddon } from '@xterm/addon-webgl';
 import { Terminal } from '@xterm/xterm';
 import copyToClipboard from 'copy-to-clipboard';
 import React, { useRef, useState, useEffect, useCallback, useImperativeHandle } from 'react';
@@ -10,33 +14,72 @@ export enum SocketStatus {
   Disconnected = 'Disconnected'
 }
 
-export interface ShellProps {
+export type ShellProps = React.PropsWithChildren<{
   url: string;
   protocols?: string;
   encode: (input: string) => string | ArrayBufferLike | Blob | ArrayBufferView;
   decode?: (output: string | ArrayBufferLike | Blob | ArrayBufferView) => string | ArrayBuffer;
+  fit?: (layout: { rows: number; cols: number }) => void;
+  onSocketInit?: (socket: WebSocket) => void;
+  onTermInit?: (term: Terminal) => void;
   onSocketMessage?: (e: MessageEvent, socket: WebSocket, term: Terminal | null) => void;
   onSocketOpen?: (socket: WebSocket) => void;
   onSocketClose?: (socket: WebSocket, term: Terminal | null) => void;
   onSocketStatusChange?: (socketStatus: SocketStatus) => void;
-}
+}>
 
 export interface ShellHandler {
   clear: () => void;
+  send: (data: string | ArrayBufferLike | Blob | ArrayBufferView) => void;
   setSocketStatus: React.Dispatch<React.SetStateAction<SocketStatus>>;
+  searchNext: (search: string) => void;
+  searchPrevious: (search: string) => void;
 }
 
 export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(props: ShellProps, ref) {
-  const { url, protocols, encode, decode, onSocketStatusChange } = props;
+  const { url, protocols, encode, decode, onSocketStatusChange, onTermInit, onSocketInit, children } = props;
   const terminalRef = useRef<HTMLDivElement>(null);
   const termInstanceRef = useRef<Terminal | null>(null);
+  const fitAddonRef = useRef<FitAddon | null>(null);
+  const searchAddonRef = useRef<SearchAddon | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
+  const backlogRef = useRef<(string | ArrayBufferLike | Blob | ArrayBufferView)[]>([]);
   const [socketStatus, setSocketStatus] = useState<SocketStatus>(SocketStatus.Opening);
 
   const reset = useCallback(() => {
     termInstanceRef.current?.clear();
     termInstanceRef.current?.reset();
   }, []);
+  const send = useCallback((message: string | ArrayBufferLike | Blob | ArrayBufferView) => {
+    if (socketRef.current && socketRef.current.readyState === socketRef.current.OPEN) {
+      socketRef.current.send(message);
+    } else {
+      backlogRef.current.push(message);
+    }
+  }, []);
+  const fit = useCallback(() => {
+    if (!fitAddonRef.current) return;
+
+    fitAddonRef.current.fit();
+
+    const { rows, cols } = fitAddonRef.current.proposeDimensions() || {};
+
+    if (rows && cols) {
+      props.fit?.({
+        rows,
+        cols
+      });
+    }
+  }, [encode, send, props.fit]);
+  const flush = useCallback(() => {
+    const backlog = backlogRef.current.slice();
+
+    backlogRef.current = [];
+
+    for (const data of backlog) {
+      send(data);
+    }
+  }, [send]);
   const connect = useCallback(() => {
     if (socketRef.current) {
       socketRef.current.close();
@@ -50,8 +93,10 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
         console.log(e);
       }
       function onSocketOpen() {
-        setSocketStatus(SocketStatus.Open);
         props.onSocketOpen?.(socket);
+        setSocketStatus(SocketStatus.Open);
+        fit();
+        flush();
       }
       function onSocketClose() {
         if (props.onSocketClose) {
@@ -75,12 +120,12 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       reset();
       setSocketStatus(SocketStatus.Opening);
 
+      onSocketInit?.(socket);
       socket.addEventListener('open', onSocketOpen);
       socket.addEventListener('message', onSocketMessage);
       socket.addEventListener('close', onSocketClose);
       socket.addEventListener('error', onSocketError);
       socketRef.current = socket;
-
 
       return function disconnect() {
         if (socket) {
@@ -93,12 +138,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
         }
       };
     }
-  }, [url, protocols, decode, props.onSocketClose, props.onSocketMessage, props.onSocketOpen, reset]);
-  const send = useCallback((message: string | ArrayBufferLike | Blob | ArrayBufferView) => {
-    if (socketRef.current && socketRef.current.readyState === socketRef.current.OPEN) {
-      socketRef.current.send(message);
-    }
-  }, []);
+  }, [url, protocols, decode, props.onSocketClose, props.onSocketMessage, props.onSocketOpen, reset, flush, fit, onSocketInit]);
   const setupTerminal = useCallback(() => {
     if (terminalRef.current) {
       if (termInstanceRef.current) {
@@ -110,11 +150,22 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
         cursorBlink: true,
         cols: 150,
       });
-      const fitAddon = new FitAddon();
+      let renderAddon = null;
 
-      term.loadAddon(fitAddon);
+      try {
+        renderAddon = new WebglAddon();
+      } catch {
+        renderAddon = new CanvasAddon();
+      }
+
+      onTermInit?.(term);
+      term.loadAddon(fitAddonRef.current = new FitAddon());
+      term.loadAddon(searchAddonRef.current = new SearchAddon());
+      term.loadAddon(new WebLinksAddon());
+      term.loadAddon(renderAddon);
       term.open(terminalRef.current);
-      fitAddon.fit();
+      fit();
+      flush();
 
       function onKeyDown(event: KeyboardEvent) {
         if (event.ctrlKey && event.shiftKey && event.key === 'C') {
@@ -123,7 +174,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
         }
       }
       function onResize() {
-        fitAddon.fit();
+        fit();
       }
 
       document.addEventListener('keydown', onKeyDown);
@@ -137,11 +188,19 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
         document.removeEventListener('keydown', onKeyDown);
         window.removeEventListener('resize', onResize);
         termInstanceRef.current = null;
+        fitAddonRef.current = null;
+        searchAddonRef.current = null;
         term.clear();
         term.dispose();
       };
     }
-  }, [send, encode]);
+  }, [send, encode, onTermInit, fit, flush]);
+  const searchNext = useCallback((search: string) => {
+    searchAddonRef.current?.findNext(search || '');
+  }, []);
+  const searchPrevious = useCallback((search: string) => {
+    searchAddonRef.current?.findPrevious(search || '');
+  }, []);
 
   useEffect(() => {
     const destroy = setupTerminal();
@@ -166,9 +225,12 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       termInstanceRef.current?.clear();
     },
     setSocketStatus,
-  }), []);
+    send,
+    searchNext,
+    searchPrevious
+  }), [send, searchNext, searchPrevious]);
 
   return (
-    <div ref={terminalRef}></div>
+    <div ref={terminalRef}>{children}</div>
   );
 });
