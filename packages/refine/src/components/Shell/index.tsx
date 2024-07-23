@@ -31,6 +31,7 @@ export type ShellProps = React.PropsWithChildren<{
 export interface ShellHandler {
   clear: () => void;
   send: (data: string | ArrayBufferLike | Blob | ArrayBufferView) => void;
+  getAllTerminalContents: () => string[];
   setSocketStatus: React.Dispatch<React.SetStateAction<SocketStatus>>;
   searchNext: (search: string) => void;
   searchPrevious: (search: string) => void;
@@ -201,6 +202,21 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
   const searchPrevious = useCallback((search: string) => {
     searchAddonRef.current?.findPrevious(search || '');
   }, []);
+  const getAllTerminalContents = useCallback(() => {
+    if (!termInstanceRef.current) return [];
+
+    const buffer = termInstanceRef.current.buffer.active;
+    const lines = [];
+
+    for (let i = 0; i < buffer.length; i++) {
+      const line = buffer.getLine(i);
+      if (line) {
+        lines.push(line.translateToString(true));
+      }
+    }
+
+    return lines;
+  }, []);
 
   useEffect(() => {
     const destroy = setupTerminal();
@@ -208,6 +224,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     return () => {
       destroy?.();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     const disconnect = connect();
@@ -215,9 +232,11 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     return () => {
       disconnect?.();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, protocols]);
   useEffect(() => {
     onSocketStatusChange?.(socketStatus);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socketStatus]);
 
   useImperativeHandle(ref, () => ({
@@ -227,8 +246,9 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     setSocketStatus,
     send,
     searchNext,
-    searchPrevious
-  }), [send, searchNext, searchPrevious]);
+    searchPrevious,
+    getAllTerminalContents
+  }), [send, searchNext, searchPrevious, getAllTerminalContents]);
 
   return (
     <div ref={terminalRef}>{children}</div>
