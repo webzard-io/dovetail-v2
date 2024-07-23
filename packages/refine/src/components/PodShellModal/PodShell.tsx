@@ -1,6 +1,6 @@
 import { Select, AntdOption, SearchInput, Button, Space } from '@cloudtower/eagle';
 import { Terminal } from '@xterm/xterm';
-import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useMemo, useCallback, useImperativeHandle } from 'react';
 import { Shell, SocketStatus, ShellHandler } from 'src/components/Shell';
 import '@xterm/xterm/css/xterm.css';
 import { PodModel } from 'src/models/pod-model';
@@ -17,6 +17,9 @@ interface PodShellProps {
   onSocketStatusChange?: (socketStatus: SocketStatus) => void;
 }
 
+interface PodShellHandler {
+  getAllTerminalContents: () => string[];
+}
 
 const BACKUP_SHELLS = [OS.Windows, OS.Linux];
 
@@ -29,7 +32,7 @@ const COMMANDS = {
   [OS.Windows]: ['cmd']
 };
 
-export function PodShell(props: PodShellProps) {
+export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(function PodShell(props: PodShellProps, ref) {
   const { pod, basePath, onSocketStatusChange } = props;
   const id = pod.id;
   const [namespace, name] = useMemo(() => id.split('/'), [id]);
@@ -154,13 +157,34 @@ export function PodShell(props: PodShellProps) {
         }
       };
     }
-  }, [container, pod.id, basePath]);
+  }, [container, pod.id]);
+  const onDownloadContent = useCallback(() => {
+    const content = (shellRef.current?.getAllTerminalContents() || []).join('\n');
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'term';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 0);
+  }, []);
 
   useEffect(() => {
     if (!container && containers.length) {
       setContainer(containers[0]);
     }
   }, [containers, container]);
+
+  useImperativeHandle(ref, () => ({
+    getAllTerminalContents: () => {
+      return shellRef.current?.getAllTerminalContents() || [];
+    }
+  }), []);
 
   return (
     <>
@@ -192,6 +216,7 @@ export function PodShell(props: PodShellProps) {
           }}
           type="primary"
         >Clear</Button>
+        <Button onClick={onDownloadContent}>Download</Button>
       </Space>
       <Shell
         ref={shellRef}
@@ -205,4 +230,4 @@ export function PodShell(props: PodShellProps) {
       />
     </>
   );
-}
+});
