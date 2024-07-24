@@ -1,3 +1,6 @@
+import React from 'react';
+import { Control } from 'react-hook-form';
+
 export type RefineFormValidator = (
   value: unknown,
   formValue: unknown
@@ -8,7 +11,7 @@ export type RefineFormField = {
   key: string;
   label: string;
   placeholder?: string;
-  helperText?: string;
+  helperText?: React.ReactNode;
   type?: 'number';
   validators?: RefineFormValidator[];
   disabledWhenEdit?: boolean;
@@ -17,6 +20,7 @@ export type RefineFormField = {
     onChange: (event: unknown) => void,
     formValue: unknown,
     onBlur: () => void,
-    action: 'edit' | 'create'
+    action: 'edit' | 'create',
+    control: Control,
   ) => React.ReactElement;
 };
