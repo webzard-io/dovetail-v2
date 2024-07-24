@@ -17,23 +17,33 @@ import {
   StatefulSetModel,
   NetworkPolicyModel,
   ServiceModel,
+  NodeModel,
+  StorageClassModel,
+  PersistentVolumeModel,
+  PersistentVolumeClaimModel,
 } from '../models';
 
-const ModelMap = {
-  Deployment: DeploymentModel,
-  DaemonSet: DaemonSetModel,
-  StatefulSet: StatefulSetModel,
-  CronJob: CronJobModel,
-  Job: JobModel,
-  Pod: PodModel,
-  Event: EventModel,
-  Ingress: IngressModel,
-  NetworkPolicy: NetworkPolicyModel,
-  Service: ServiceModel,
-};
-
-class ModelPlugin implements IProviderPlugin<ResourceModel> {
+export class ModelPlugin implements IProviderPlugin<ResourceModel> {
   _globalStore?: GlobalStore;
+
+  private ModelMap = new Map(
+    Object.entries({
+      Deployment: DeploymentModel,
+      DaemonSet: DaemonSetModel,
+      StatefulSet: StatefulSetModel,
+      CronJob: CronJobModel,
+      Job: JobModel,
+      Pod: PodModel,
+      Event: EventModel,
+      Ingress: IngressModel,
+      NetworkPolicy: NetworkPolicyModel,
+      Service: ServiceModel,
+      Node: NodeModel,
+      StorageClass: StorageClassModel,
+      PersistentVolume: PersistentVolumeModel,
+      PersistentVolumeClaim: PersistentVolumeClaimModel,
+    })
+  );
 
   init(globalStore: GlobalStore) {
     this._globalStore = globalStore;
@@ -56,7 +66,7 @@ class ModelPlugin implements IProviderPlugin<ResourceModel> {
   }
 
   async processItem(item: Unstructured): Promise<ResourceModel> {
-    const Model = ModelMap[item.kind as keyof typeof ModelMap] || ResourceModel;
+    const Model = this.ModelMap.get(item.kind!) || ResourceModel;
     const result = new Model(item as never, this._globalStore!);
     await result.init();
     return result as ResourceModel;
@@ -70,6 +80,10 @@ class ModelPlugin implements IProviderPlugin<ResourceModel> {
 
   restoreItem(item: ResourceModel): Unstructured {
     return item._rawYaml;
+  }
+
+  setModelMap(key: string, model: ResourceModel) {
+    this.ModelMap.set(key, model as any);
   }
 }
 

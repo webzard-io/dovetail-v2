@@ -10,6 +10,7 @@ import {
   DEPLOYMENT_INIT_VALUE,
   POD_INIT_VALUE,
   SERVER_INSTANCE_INIT_VALUE,
+  NODE_INIT_VALUE,
 } from './constants/k8s';
 import { Dovetail } from './Dovetail';
 import i18n from './i18n';
@@ -20,10 +21,13 @@ import { DeploymentList, DeploymentShow } from './pages/deployments';
 import { IngressConfig } from './pages/ingresses';
 import { JobConfig } from './pages/jobs';
 import { NetworkPolicyConfig } from './pages/networkPolicies';
+import { NodeList, NodeShow } from './pages/nodes';
+import { PersistentVolumeConfig } from './pages/persistentvolumes';
 import { PodShow, PodList, PodForm } from './pages/pods';
 import { SecretsConfig } from './pages/secrets';
 import { ServicesConfig } from './pages/services';
 import { StatefulSetConfig } from './pages/statefulsets';
+import { StorageClassConfig } from './pages/storageclasses';
 import { ProviderPlugins } from './plugins';
 import { RESOURCE_GROUP, ResourceConfig, FormType } from './types';
 
@@ -78,6 +82,17 @@ function App() {
         initValue: POD_INIT_VALUE,
         isCustom: true,
       },
+      {
+        name: 'nodes',
+        basePath: '/api/v1',
+        kind: 'Node',
+        parent: RESOURCE_GROUP.WORKLOAD,
+        label: 'Nodes',
+        initValue: NODE_INIT_VALUE,
+        isCustom: true,
+      },
+      StorageClassConfig(i18n),
+      PersistentVolumeConfig(i18n),
       {
         name: 'serverinstances',
         basePath: '/apis/kubesmart.smtx.io/v1alpha1',
@@ -202,6 +217,12 @@ function App() {
           </Route>
           <Route path="/pods/edit">
             <PodForm />
+          </Route>
+          <Route path="/nodes" exact>
+            <NodeList />
+          </Route>
+          <Route path="/nodes/show">
+            <NodeShow />
           </Route>
         </Router>
       </Dovetail>

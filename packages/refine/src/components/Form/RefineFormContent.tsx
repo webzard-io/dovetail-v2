@@ -83,6 +83,11 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
             ele = <div>{value}</div>;
           }
 
+
+          if (c?.render) {
+            ele = c.render(value, onChange, formValue, onBlur, action, control);
+          }
+
           // add helper text
           if (c.helperText) {
             ele = (
@@ -106,10 +111,6 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
                 </div>
               </Space>
             );
-          }
-
-          if (c?.render) {
-            ele = c.render(value, onChange, formValue, onBlur, action);
           }
 
           return (

@@ -27,7 +27,7 @@ export const ReferenceLink: React.FC<Props> = props => {
   return (
     <ResourceLink
       resourceId={ownerReference.name}
-      name={resource.name || ''}
+      resourceName={resource.name || ''}
       namespace={namespace}
     />
   );

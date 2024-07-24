@@ -16,7 +16,8 @@ import {
   CronJobModel,
   PodModel,
   IngressModel,
-  ServiceType
+  ServiceType,
+  StorageClassModel,
 } from 'src/models';
 import {
   ShowField,
@@ -34,7 +35,8 @@ import {
   IngressRulesTableTabField,
   PodSelectorField,
   PortsTableField,
-  DataField
+  DataField,
+  StorageClassPvField,
 } from './fields';
 
 export const BasicGroup = <Model extends ResourceModel>(
@@ -135,28 +137,44 @@ export const JobsGroup = <Model extends JobModel | CronJobModel>(): ShowGroup<Mo
   ],
 });
 
-export const IngressRulesGroup = <Model extends IngressModel>(i18n: I18nType): ShowGroup<Model> => ({
+export const IngressRulesGroup = <Model extends IngressModel>(
+  i18n: I18nType
+): ShowGroup<Model> => ({
   title: i18n.t('dovetail.rule'),
-  areas: [{
-    fields: [IngressRulesTableTabField()],
-  }]
+  areas: [
+    {
+      fields: [IngressRulesTableTabField()],
+    },
+  ],
 });
 
-export const PodSelectorGroup = <Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>>(i18n: I18nType): ShowGroup<Model> => ({
+export const PodSelectorGroup = <
+  Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>,
+>(
+  i18n: I18nType
+): ShowGroup<Model> => ({
   title: i18n.t('dovetail.pod_selector'),
-  areas: [{
-    fields: [PodSelectorField()],
-  }]
+  areas: [
+    {
+      fields: [PodSelectorField()],
+    },
+  ],
 });
 
-export const PortsGroup = <Model extends ServiceModel>(i18n: I18nType): ShowGroup<Model> => ({
+export const PortsGroup = <Model extends ServiceModel>(
+  i18n: I18nType
+): ShowGroup<Model> => ({
   title: i18n.t('dovetail.port'),
-  areas: [{
-    fields: [PortsTableField()],
-  }]
+  areas: [
+    {
+      fields: [PortsTableField()],
+    },
+  ],
 });
 
-export const DataGroup = <Model extends ResourceModel>(i18n: I18nType): ShowGroup<Model> => ({
+export const DataGroup = <Model extends ResourceModel>(
+  i18n: I18nType
+): ShowGroup<Model> => ({
   title: i18n.t('dovetail.data'),
   areas: [
     {
@@ -209,6 +227,17 @@ export const NetworkPolicyEgressRulesGroup = <Model extends ResourceModel>(
           },
         },
       ],
+    },
+  ],
+});
+
+export const StorageClassPvGroup = <Model extends StorageClassModel>(
+  i18n: I18nType
+): ShowGroup<Model> => ({
+  title: i18n.t('dovetail.persistent_volumn'),
+  areas: [
+    {
+      fields: [StorageClassPvField()],
     },
   ],
 });

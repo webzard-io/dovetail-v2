@@ -5,7 +5,7 @@ import { useGo, useNavigation } from '@refinedev/core';
 import React from 'react';
 
 type Props = {
-  name: string;
+  resourceName: string;
   namespace: string;
   resourceId: string;
 };
@@ -15,15 +15,14 @@ const LinkStyle = css`
 `;
 
 export const ResourceLink: React.FC<Props> = props => {
-  const { name, namespace, resourceId } = props;
+  const { resourceName, namespace, resourceId } = props;
   const navigation = useNavigation();
   const go = useGo();
-
   const onClick = () => {
     go({
-      to: navigation.showUrl(name, ''),
+      to: navigation.showUrl(resourceName, ''),
       query: {
-        id: `${namespace}/${resourceId}`,
+        id: namespace ? `${namespace}/${resourceId}` : resourceId,
       },
       options: {
         keepQuery: true,

@@ -1,7 +1,27 @@
-import { Typo, Icon, AntdRowProps, Divider, Space, Col, Row, Button } from '@cloudtower/eagle';
-import { ArrowChevronLeft16BoldTertiaryIcon, ArrowChevronLeftSmall16BoldBlueIcon, EditPen16GradientBlueIcon } from '@cloudtower/icons-react';
+import {
+  Typo,
+  Icon,
+  AntdRowProps,
+  Divider,
+  Space,
+  Col,
+  Row,
+  Button,
+} from '@cloudtower/eagle';
+import {
+  ArrowChevronLeft16BoldTertiaryIcon,
+  ArrowChevronLeftSmall16BoldBlueIcon,
+  EditPen16GradientBlueIcon,
+} from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
-import { useParsed, useResource, useShow, useNavigation, useGo, CanAccess } from '@refinedev/core';
+import {
+  useParsed,
+  useResource,
+  useShow,
+  useNavigation,
+  useGo,
+  CanAccess,
+} from '@refinedev/core';
 import { get } from 'lodash-es';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,7 +55,7 @@ const BackButton = css`
   align-self: flex-start;
 
   &:hover {
-    color: #0080FF;
+    color: #0080ff;
   }
 `;
 const ToolBarWrapper = css`
@@ -45,7 +65,7 @@ const ToolBarWrapper = css`
   background-color: #fff;
 `;
 const NameStyle = css`
-  color: #00122E;
+  color: #00122e;
   margin-right: 8px;
 `;
 const TopBarStyle = css`
@@ -105,7 +125,7 @@ const TabContentStyle = css`
   min-width: 904px;
 `;
 const ValueStyle = css`
-  color: #00122E;
+  color: #00122e;
 `;
 const TabsStyle = css`
   &.ant-tabs {
@@ -142,11 +162,9 @@ type ShowGroupComponentProps = React.PropsWithChildren<{
   title: string;
   className?: string;
   operationEle?: React.ReactElement | null;
-}>
+}>;
 
-export function ShowGroupComponent(
-  props: ShowGroupComponentProps
-) {
+export function ShowGroupComponent(props: ShowGroupComponentProps) {
   const { title, className, children, operationEle } = props;
 
   return (
@@ -188,6 +206,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
     if (!record) return null;
 
     return fields.map(field => {
+      if (field.hidden) return null;
       let content;
       const value = get(record, field.path);
 
@@ -230,11 +249,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           )}
         </Col>
       ) : (
-        <ValueDisplay
-          style={{ height: '100%' }}
-          value={content}
-          useOverflow={false}
-        />
+        <ValueDisplay style={{ height: '100%' }} value={content} useOverflow={false} />
       );
     });
   }
@@ -250,7 +265,11 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           });
         }}
       >
-        <Icon src={ArrowChevronLeft16BoldTertiaryIcon} hoverSrc={ArrowChevronLeftSmall16BoldBlueIcon} style={{ marginRight: 4 }}>
+        <Icon
+          src={ArrowChevronLeft16BoldTertiaryIcon}
+          hoverSrc={ArrowChevronLeftSmall16BoldBlueIcon}
+          style={{ marginRight: 4 }}
+        >
           <span className="button-text">{resource?.meta?.kind}</span>
         </Icon>
       </span>
@@ -262,14 +281,18 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           {stateDisplay ? <StateTag state={stateDisplay} /> : undefined}
         </div>
         <Space>
-          <CanAccess
-            resource={resource?.name}
-            action={AccessControlAuth.Edit}
-          >
-            <Button style={{ marginRight: 8 }} onClick={openForm} prefixIcon={<EditPen16GradientBlueIcon />}>
-              {t('dovetail.edit_yaml')}
-            </Button>
-          </CanAccess>
+          {showConfig.renderExtraButton?.(record)}
+          {!showConfig.hideEditYamlButton ? (
+            <CanAccess resource={resource?.name} action={AccessControlAuth.Edit}>
+              <Button
+                style={{ marginRight: 8 }}
+                onClick={openForm}
+                prefixIcon={<EditPen16GradientBlueIcon />}
+              >
+                {t('dovetail.edit_yaml')}
+              </Button>
+            </CanAccess>
+          ) : null}
           <Dropdown record={record} size="large" />
         </Space>
       </Space>
@@ -282,28 +305,41 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           title: tab.title,
           key: tab.key,
           children: (
-            <div className={cx(TabContentStyle, tab.groups.length <= 1 && FullTabContentStyle)}>
-              {
-                tab.groups?.map(group => {
-                  const GroupContainer = group.title ? ShowGroupComponent : React.Fragment;
-                  const FieldContainer = group.title ? Row : React.Fragment;
-                  const groupContainerProps = group.title ? { title: group.title || '' } : {};
-                  const fieldContainerProps = group.title ? { gutter: [24, 8] } : {};
+            <div
+              className={cx(
+                TabContentStyle,
+                tab.groups.length <= 1 && FullTabContentStyle
+              )}
+            >
+              {tab.groups?.map(group => {
+                const GroupContainer = group.title ? ShowGroupComponent : React.Fragment;
+                const FieldContainer = group.title ? Row : React.Fragment;
+                const groupContainerProps = group.title
+                  ? { title: group.title || '' }
+                  : {};
+                const fieldContainerProps = group.title ? { gutter: [24, 8] } : {};
 
-                  return (
-                    <GroupContainer key={group.title} {...groupContainerProps as ShowGroupComponentProps}>
-                      {group.areas.map((area, index) => (
-                        <>
-                          <FieldContainer key={index} {...fieldContainerProps as AntdRowProps}>
-                            {renderFields(area.fields, area.type, !!group.title)}
-                          </FieldContainer>
-                          {index !== group.areas.length - 1 ? <Divider style={{ margin: '8px 0 12px 0' }} /> : null}
-                        </>
-                      ))}
-                    </GroupContainer>
-                  );
-                })
-              }
+                return (
+                  <GroupContainer
+                    key={group.title}
+                    {...(groupContainerProps as ShowGroupComponentProps)}
+                  >
+                    {group.areas.map((area, index) => (
+                      <>
+                        <FieldContainer
+                          key={index}
+                          {...(fieldContainerProps as AntdRowProps)}
+                        >
+                          {renderFields(area.fields, area.type, !!group.title)}
+                        </FieldContainer>
+                        {index !== group.areas.length - 1 ? (
+                          <Divider style={{ margin: '8px 0 12px 0' }} />
+                        ) : null}
+                      </>
+                    ))}
+                  </GroupContainer>
+                );
+              })}
             </div>
           ),
         };
