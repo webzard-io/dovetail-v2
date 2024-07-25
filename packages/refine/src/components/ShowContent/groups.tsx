@@ -234,7 +234,7 @@ export const NetworkPolicyEgressRulesGroup = <Model extends ResourceModel>(
 export const StorageClassPvGroup = <Model extends StorageClassModel>(
   i18n: I18nType
 ): ShowGroup<Model> => ({
-  title: i18n.t('dovetail.persistent_volumn'),
+  title: i18n.t('dovetail.persistent_volume'),
   areas: [
     {
       fields: [StorageClassPvField()],

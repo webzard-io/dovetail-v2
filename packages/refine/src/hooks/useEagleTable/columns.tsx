@@ -1,4 +1,12 @@
-import { Button, Time as BaseTime, Tooltip, OverflowTooltip, Divider, Link } from '@cloudtower/eagle';
+import {
+  Button,
+  Time as BaseTime,
+  Tooltip,
+  OverflowTooltip,
+  Divider,
+  Link,
+  Units,
+} from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
@@ -11,6 +19,9 @@ import { useTranslation } from 'react-i18next';
 import { DurationTime } from 'src/components/DurationTime';
 import ValueDisplay from 'src/components/ValueDisplay';
 import {
+  PVPhaseDisplay,
+  PVVolumeModeDisplay,
+  ResourceLink,
   ServiceInClusterAccessComponent,
   ServiceOutClusterAccessComponent,
 } from '../../components';
@@ -31,8 +42,10 @@ import {
   ServiceModel,
   DaemonSetModel,
   StorageClassModel,
-  PersistentVolumeModel
+  PersistentVolumeModel,
+  PersistentVolumeClaimModel,
 } from '../../models';
+import { parseSi } from '../../utils/unit';
 
 const DashedTitleStyle = css`
   border-bottom: 1px dashed rgba(107, 128, 167, 0.6);
@@ -135,12 +148,12 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 
 export const StateDisplayColumnRenderer = <
   Model extends
-  | WorkloadModel
-  | CronJobModel
-  | PodModel
-  | ServiceModel
-  | DaemonSetModel
-  | JobModel,
+    | WorkloadModel
+    | CronJobModel
+    | PodModel
+    | ServiceModel
+    | DaemonSetModel
+    | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -614,7 +627,6 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(
   };
 };
 
-
 export const ProvisionerColumnRenderer = <Model extends StorageClassModel>(
   i18n: I18nType
 ): Column<Model> => {
@@ -623,19 +635,6 @@ export const ProvisionerColumnRenderer = <Model extends StorageClassModel>(
     display: true,
     dataIndex: ['provisioner'],
     title: i18n.t('dovetail.provisioner'),
-    width: 120,
-    sortable: true,
-  };
-};
-
-export const FsTypeColumnRenderer = <Model extends StorageClassModel>(
-  i18n: I18nType
-): Column<Model> => {
-  return {
-    key: 'fstype',
-    display: true,
-    dataIndex: ['parameters', 'csi.storage.k8s.io/fstype'],
-    title: i18n.t('dovetail.file_system'),
     width: 120,
     sortable: true,
   };
@@ -651,10 +650,33 @@ export const PVCapacityColumnRenderer = <Model extends PersistentVolumeModel>(
     title: i18n.t('dovetail.capacity'),
     width: 120,
     sortable: true,
+    align:'right',
+    render(value) {
+      return <Units.Byte rawValue={parseSi(value)} decimals={1} />;
+    },
   };
 };
 
-export const PVStorageClassColumnRenderer = <Model extends PersistentVolumeModel>(
+export const PVCStorageColumnRenderer = <Model extends PersistentVolumeClaimModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'storage',
+    display: true,
+    dataIndex: ['spec', 'resources', 'requests', 'storage'],
+    title: i18n.t('dovetail.capacity'),
+    width: 120,
+    sortable: true,
+    align:'right',
+    render(value) {
+      return <Units.Byte rawValue={parseSi(value)} decimals={1} />;
+    },
+  };
+};
+
+export const PVStorageClassColumnRenderer = <
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+>(
   i18n: I18nType
 ): Column<Model> => {
   return {
@@ -664,10 +686,17 @@ export const PVStorageClassColumnRenderer = <Model extends PersistentVolumeModel
     title: i18n.t('dovetail.storage_class'),
     width: 120,
     sortable: true,
+    render(value) {
+      return (
+        <ResourceLink resourceName="storageclasses" namespace="" resourceId={value} />
+      );
+    },
   };
 };
 
-export const PVPhaseColumnRenderer = <Model extends PersistentVolumeModel>(
+export const PVPhaseColumnRenderer = <
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+>(
   i18n: I18nType
 ): Column<Model> => {
   return {
@@ -677,10 +706,15 @@ export const PVPhaseColumnRenderer = <Model extends PersistentVolumeModel>(
     title: i18n.t('dovetail.phase'),
     width: 120,
     sortable: true,
+    render(value) {
+      return <PVPhaseDisplay value={value} />;
+    },
   };
 };
 
-export const PVModeColumnRenderer = <Model extends PersistentVolumeModel>(
+export const PVVolumeModeColumnRenderer = <
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+>(
   i18n: I18nType
 ): Column<Model> => {
   return {
@@ -690,10 +724,15 @@ export const PVModeColumnRenderer = <Model extends PersistentVolumeModel>(
     title: i18n.t('dovetail.volume_mode'),
     width: 120,
     sortable: true,
+    render(value) {
+      return <PVVolumeModeDisplay value={value} />;
+    },
   };
 };
 
-export const PVAccessModeColumnRenderer = <Model extends PersistentVolumeModel>(
+export const PVAccessModeColumnRenderer = <
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+>(
   i18n: I18nType
 ): Column<Model> => {
   return {

@@ -38,6 +38,7 @@ export * from './Tags';
 export * from './TextTags';
 export * from './PodLog';
 export * from './NetworkPolicyRulesViewer';
+export * from './ResourceFiledDisplays';
 export * from './Tabs';
 export * as ValueDisplay from './ValueDisplay';
 export * from './ResourceSelect';
