@@ -45,10 +45,11 @@ const NamespaceFilterStyle = css`
 interface ListPageProps<T extends ResourceModel> {
   selectedKeys: string[];
   tableProps: TableProps<T>;
+  contentClassName?: string;
 }
 
 export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
-  const { selectedKeys, tableProps } = props;
+  const { selectedKeys, tableProps, contentClassName } = props;
   const { Table: TableComponent } = useContext(ComponentContext);
   const { t } = useTranslation();
   const Table = TableComponent || BaseTable;
@@ -60,7 +61,10 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
     <div className={ListPageStyle}>
       {!config.hideListToolBar ? (
         <>
-          <TableToolBar selectedKeys={selectedKeys} description={config?.description} />
+          <TableToolBar
+            selectedKeys={selectedKeys}
+            description={config?.description}
+          />
           <Divider
             style={{
               margin: 0,
@@ -72,7 +76,7 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
         </>
       ) : undefined}
 
-      <div className={ListContentStyle}>
+      <div className={cx(ListContentStyle, contentClassName)}>
         {!config.hideNamespacesFilter ? (
           <NamespacesFilter className={NamespaceFilterStyle} />
         ) : undefined}
