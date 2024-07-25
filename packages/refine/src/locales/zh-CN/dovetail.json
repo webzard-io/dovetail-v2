@@ -154,8 +154,19 @@
   "only_support_one_yaml": "一次仅支持输入一个 YAML 配置。",
   "not_support": "不支持",
   "stopped": "已停止",
+  "any_node_ip": "任意节点 IP",
   "storage_class": "存储类",
-  "persistent_volumn": "持久卷",
+  "persistent_volume": "持久卷",
   "provisioner": "制备器",
-  "file_system": "文件系统"
+  "file_system": "文件系统",
+  "capacity": "容量",
+  "phase": "阶段",
+  "volume_mode": "卷模式",
+  "access_mode": "访问模式",
+  "block": "块",
+  "pv_phase_available": "可用",
+  "pv_phase_bound": "已绑定",
+  "pv_phase_released": "已释放",
+  "pv_phase_failed": "失败",
+  "pv_phase_pending": "等待中"
 }

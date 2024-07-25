@@ -1,3 +1,4 @@
+import { Units } from '@cloudtower/eagle';
 import { i18n as I18nType } from 'i18next';
 import { Unstructured } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
@@ -26,14 +27,17 @@ import {
   ServiceType,
   StorageClassModel,
   PersistentVolumeModel,
+  PersistentVolumeClaimModel,
 } from '../../models';
 import { ExtendObjectMeta } from '../../plugins/relation-plugin';
+import { parseSi } from '../../utils/unit';
 import { ConditionsTable } from '../ConditionsTable';
 import { CronjobJobsTable } from '../CronjobJobsTable';
 import { EventsTable } from '../EventsTable';
 import { ImageNames } from '../ImageNames';
 import { IngressRulesTable } from '../IngressRulesTable';
 import { KeyValue, KeyValueAnnotation, KeyValueSecret } from '../KeyValue';
+import { PVPhaseDisplay, PVVolumeModeDisplay } from '../ResourceFiledDisplays';
 import { ResourceLink } from '../ResourceLink';
 import { Time } from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
@@ -393,16 +397,6 @@ export const StorageClassProvisionerField = <Model extends StorageClassModel>(
   };
 };
 
-export const StorageClassFsTypeField = <Model extends StorageClassModel>(
-  i18n: I18nType
-): ShowField<Model> => {
-  return {
-    key: 'fstype',
-    path: ['parameters', 'csi.storage.k8s.io/fstype'],
-    title: i18n.t('dovetail.file_system'),
-  };
-};
-
 export const StorageClassPvField = <
   Model extends StorageClassModel,
 >(): ShowField<Model> => {
@@ -420,5 +414,90 @@ export const StorageClassPvField = <
         </div>
       ));
     },
+  };
+};
+
+export const PVCapacityField = <Model extends PersistentVolumeModel>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'capacity',
+    path: ['spec', 'capacity', 'storage'],
+    title: i18n.t('dovetail.capacity'),
+    renderContent(value) {
+      return <Units.Byte rawValue={parseSi(value as string)} decimals={1} />;
+    },
+  };
+};
+
+export const PVCStorageField = <Model extends PersistentVolumeClaimModel>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'storage',
+    path: ['spec', 'resources', 'requests', 'storage'],
+    title: i18n.t('dovetail.capacity'),
+    renderContent(value) {
+      return <Units.Byte rawValue={parseSi(value as string)} decimals={1} />;
+    },
+  };
+};
+
+export const PVStorageClassField = <
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'storageClass',
+    path: ['spec', 'storageClassName'],
+    title: i18n.t('dovetail.storage_class'),
+    renderContent(value) {
+      return (
+        <ResourceLink resourceName="storageclasses" namespace="" resourceId={value as string} />
+      );
+    },
+  };
+};
+
+export const PVPhaseField = <
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'phase',
+    path: ['status', 'phase'],
+    title: i18n.t('dovetail.phase'),
+    renderContent(value) {
+      return <PVPhaseDisplay value={value as string} />;
+    },
+  };
+};
+
+export const PVVolumeModeField = <
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'mode',
+    path: ['spec', 'volumeMode'],
+    title: i18n.t('dovetail.volume_mode'),
+    renderContent(value) {
+      return <PVVolumeModeDisplay value={value as string} />;
+    },
+  };
+};
+
+export const PVAccessModeField = <
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'accessMode',
+    path: ['spec', 'accessModes'],
+    title: i18n.t('dovetail.access_mode'),
   };
 };

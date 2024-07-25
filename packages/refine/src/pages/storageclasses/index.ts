@@ -4,11 +4,10 @@ import { STORAGE_CLASS_INIT_VALUE } from 'src/constants/k8s';
 import {
   NameSpaceColumnRenderer,
   ProvisionerColumnRenderer,
-  FsTypeColumnRenderer,
   AgeColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import { RESOURCE_GROUP } from 'src/types';
-import { StorageClassFsTypeField, StorageClassProvisionerField } from '../../components';
+import { StorageClassProvisionerField } from '../../components';
 import { generateStorageClassFormConfig } from './form';
 
 export const StorageClassConfig = (i18n: I18n) => ({
@@ -26,7 +25,6 @@ export const StorageClassConfig = (i18n: I18n) => ({
   columns: () => [
     NameSpaceColumnRenderer(i18n),
     ProvisionerColumnRenderer(i18n),
-    FsTypeColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
   ],
   showConfig: () => ({
@@ -38,10 +36,7 @@ export const StorageClassConfig = (i18n: I18n) => ({
           BasicGroup(i18n, {
             downAreas: [
               {
-                fields: [
-                  StorageClassProvisionerField(i18n),
-                  StorageClassFsTypeField(i18n),
-                ],
+                fields: [StorageClassProvisionerField(i18n)],
               },
             ],
           }),
