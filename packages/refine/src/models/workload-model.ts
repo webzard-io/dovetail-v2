@@ -16,7 +16,7 @@ export class WorkloadModel extends WorkloadBaseModel {
 
   constructor(
     public _rawYaml: WorkloadTypes,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
   }

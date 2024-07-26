@@ -12,7 +12,7 @@ export enum NodeRole {
 export class NodeModel extends WorkloadBaseModel {
   constructor(
     public _rawYaml: RequiredNode,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
   }

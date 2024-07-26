@@ -7,7 +7,7 @@ type NetworkPolicyTypes = Required<NetworkPolicy> & Unstructured;
 export class NetworkPolicyModel extends ResourceModel<NetworkPolicyTypes> {
   constructor(
     public _rawYaml: NetworkPolicyTypes,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
   }

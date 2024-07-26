@@ -7,7 +7,7 @@ type RequiredPersistentVolume = Required<PersistentVolume> & Unstructured;
 export class PersistentVolumeModel extends ResourceModel {
   constructor(
     public _rawYaml: RequiredPersistentVolume,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
   }
