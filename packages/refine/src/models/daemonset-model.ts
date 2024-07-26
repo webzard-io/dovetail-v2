@@ -11,7 +11,7 @@ export class DaemonSetModel extends WorkloadModel {
 
   constructor(
     public _rawYaml: RequiredDaemonSet,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
   }

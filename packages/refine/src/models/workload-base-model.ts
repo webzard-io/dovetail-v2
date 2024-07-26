@@ -13,7 +13,7 @@ type WorkloadBaseTypes = Required<
 export class WorkloadBaseModel extends ResourceModel<WorkloadBaseTypes> {
   constructor(
     public _rawYaml: WorkloadBaseTypes,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
   }

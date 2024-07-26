@@ -15,7 +15,7 @@ export enum ServiceTypeEnum {
 export class ServiceModel extends ResourceModel<ServiceType> {
   constructor(
     public _rawYaml: ServiceType,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
   }

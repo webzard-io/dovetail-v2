@@ -18,7 +18,7 @@ export class IngressModel extends ResourceModel<IngressTypes> {
   flattenedRules: RuleItem[] = [];
   constructor(
     public _rawYaml: IngressTypes,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
   }
