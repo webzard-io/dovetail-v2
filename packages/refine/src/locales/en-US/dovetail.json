@@ -153,5 +153,19 @@
   "only_support_one_yaml": "Only one YAML configuration is supported at a time.",
   "not_support": "Not supported",
   "stopped": "Stopped",
-  "any_node_ip": "Any node IP"
+  "any_node_ip": "Any node IP",
+  "storage_class": "Storage class",
+  "persistent_volume": "Persistent volume",
+  "provisioner": "Provisioner",
+  "file_system": "File system",
+  "capacity": "Capacity",
+  "phase": "Phase",
+  "volume_mode": "Volume mode",
+  "access_mode": "Access mode",
+  "block": "Block",
+  "pv_phase_available": "Available",
+  "pv_phase_bound": "Bound",
+  "pv_phase_released": "Released",
+  "pv_phase_failed": "Failed",
+  "pv_phase_pending": "Pending"
 }
