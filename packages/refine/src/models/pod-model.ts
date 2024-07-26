@@ -16,7 +16,7 @@ export class PodModel extends WorkloadBaseModel {
 
   constructor(
     public _rawYaml: RequiredPod,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
 
