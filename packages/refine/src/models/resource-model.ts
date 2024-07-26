@@ -1,4 +1,4 @@
- import { GlobalStore, Unstructured } from 'k8s-api-provider';
+import { GlobalStore, Unstructured } from 'k8s-api-provider';
 
 export type IResourceModel = Unstructured & ResourceModel;
 
@@ -7,17 +7,26 @@ export class ResourceModel<T extends Unstructured = Unstructured> {
   public apiVersion!: T['apiVersion'];
   public kind!: T['kind'];
   public metadata!: T['metadata'];
+  declare public _globalStore: GlobalStore;
 
-  constructor(public _rawYaml: T, public _globalStore: GlobalStore) {
+  constructor(public _rawYaml: T, _globalStore: GlobalStore) {
     Object.keys(_rawYaml).forEach(key => {
       Object.defineProperty(this, key, {
-        value: _rawYaml[key as keyof T],
+        get() {
+          return _rawYaml[key as keyof T];
+        },
       });
+    });
+    Object.defineProperty(this, '_globalStore', {
+      get() {
+        return _globalStore;
+      },
+      enumerable: false,
     });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async init() {}
+  async init() { }
 
   get name() {
     return this._rawYaml.metadata?.name;

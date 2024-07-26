@@ -7,7 +7,7 @@ type RequiredPersistentClaimVolume = Required<PersistentVolumeClaim> & Unstructu
 export class PersistentVolumeClaimModel extends ResourceModel {
   constructor(
     public _rawYaml: RequiredPersistentClaimVolume,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
   }

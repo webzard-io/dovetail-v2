@@ -11,7 +11,7 @@ export class StatefulSetModel extends WorkloadModel {
 
   constructor(
     public _rawYaml: RequiredStatefulSet,
-    public _globalStore: GlobalStore
+    _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
   }
