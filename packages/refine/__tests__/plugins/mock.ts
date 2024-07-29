@@ -1,6 +1,6 @@
 import { DeploymentList } from 'kubernetes-types/apps/v1';
 import { PodList } from 'kubernetes-types/core/v1';
-import { PodModel } from '../../src/models';
+import { PodModel, ResourceModel } from '../../src/models';
 
 export const mockGlobalStore: any = {
   get() {
@@ -9,6 +9,9 @@ export const mockGlobalStore: any = {
       items: RawPodList.items.map(pod => new PodModel(pod as any, {} as any)),
     };
   },
+  restoreItem(model: ResourceModel) {
+    return model._rawYaml;
+  }
 };
 
 export const RawPodList: PodList = {

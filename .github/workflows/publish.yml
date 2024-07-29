@@ -1,0 +1,47 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [16]
+    name: Publish on Node ${{ matrix.node }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Setup yarn
+        run: npm install -g yarn
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+        timeout-minutes: 15
+      - name: Go to refine
+        run: cd packages/refine
+      - name: Build
+        run: cd packages/refine && yarn build 
+      - name: Write .npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.MY_NPM_TOKEN }}
+        run: |
+          echo //registry.npmjs.org/:_authToken=$NPM_TOKEN > ~/.npmrc
+      - name: Publish
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 10  # 设置超时时间，单位为分钟
+          max_attempts: 3  # 设置最大重试次数
+          command: cd packages/refine && npm publish
+      - name: sync cnpm
+        run: curl --location --request PUT 'http://192.168.26.29:7002/sync/@dovetail-v2/refine?sync_upstream=true'
+      - name: Clean .npmrc
+        if: always()
+        run: rm ~/.npmrc
