@@ -1469,13 +1469,13 @@
   resolved "https://registry.npmmirror.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cloudtower/eagle@^0.29.22":
-  version "0.29.22"
-  resolved "http://172.21.254.200:31873/@cloudtower/eagle/-/eagle-0.29.22.tgz#c5740c996dfc50546033cfc29195f31cf0bf5b9c"
-  integrity sha1-xXQMmW38UFRgM8/CkZXzHPC/W5w=
+"@cloudtower/eagle@^0.29.29":
+  version "0.29.29"
+  resolved "https://registry.npmjs.org/@cloudtower/eagle/-/eagle-0.29.29.tgz#20199f7a6e617f0c923f5433aa24c31814f19116"
+  integrity sha512-quCtSTr+SX28V+xBDUhk7dBNpo/pgBa8Pt28RaRqSuQePdNsy1um1+QyXJT1DK+dNkbkKcRuH7o30+eqY/gIOg==
   dependencies:
-    "@cloudtower/icons-react" "0.29.22"
-    "@cloudtower/parrot" "0.29.22"
+    "@cloudtower/icons-react" "0.29.29"
+    "@cloudtower/parrot" "0.29.29"
     "@cloudtower/rc-notification" "^4.6.1"
     "@linaria/core" "^4.2.2"
     "@linaria/react" "^4.3.0"
@@ -1493,15 +1493,15 @@
     redux "^4.2.0"
     timezones.json "^1.6.1"
 
-"@cloudtower/icons-react@0.29.22", "@cloudtower/icons-react@^0.29.22":
-  version "0.29.22"
-  resolved "http://172.21.254.200:31873/@cloudtower/icons-react/-/icons-react-0.29.22.tgz#4ddc6f30ab35343dd667f1946e65e79d788428fb"
-  integrity sha1-TdxvMKs1ND3WZ/GUbmXnnXiEKPs=
+"@cloudtower/icons-react@0.29.29", "@cloudtower/icons-react@^0.29.29":
+  version "0.29.29"
+  resolved "https://registry.npmjs.org/@cloudtower/icons-react/-/icons-react-0.29.29.tgz#9748b2b2cdaa6557161a51b2fa5b040093440d7b"
+  integrity sha512-Nvsurt3DLe1vrKK4OdvoYqHDxQ2rsXr8BSK9tR+K3SqLz/udshW3TdyJOVapwBw2GVeRclo3EO2vjSwOxR3k/Q==
 
-"@cloudtower/parrot@0.29.22":
-  version "0.29.22"
-  resolved "http://172.21.254.200:31873/@cloudtower/parrot/-/parrot-0.29.22.tgz#b4503950aad8e021c8f326f4703bf73b4e81106e"
-  integrity sha1-tFA5UKrY4CHI8yb0cDv3O06BEG4=
+"@cloudtower/parrot@0.29.29":
+  version "0.29.29"
+  resolved "https://registry.npmjs.org/@cloudtower/parrot/-/parrot-0.29.29.tgz#eaf10de1729a7f2c17d70957254df5523c348b28"
+  integrity sha512-T6z4fwPwF1+OdlUc7pQNAQf0CeRTWc2V+SHByGwUvxExnLi5YbiIJKsu26SDqzF8oTEuETgeOwTaIubDOW5LXw==
   dependencies:
     i18next "^23.2.3"
     lodash.merge "^4.6.2"
