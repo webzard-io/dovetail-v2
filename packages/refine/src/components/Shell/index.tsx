@@ -17,6 +17,7 @@ export enum SocketStatus {
 export type ShellProps = React.PropsWithChildren<{
   url: string;
   protocols?: string;
+  className?: string;
   encode: (input: string) => string | ArrayBufferLike | Blob | ArrayBufferView;
   decode?: (output: string | ArrayBufferLike | Blob | ArrayBufferView) => string | ArrayBuffer;
   fit?: (layout: { rows: number; cols: number }) => void;
@@ -31,6 +32,7 @@ export type ShellProps = React.PropsWithChildren<{
 export interface ShellHandler {
   clear: () => void;
   send: (data: string | ArrayBufferLike | Blob | ArrayBufferView) => void;
+  fit: () => void;
   getAllTerminalContents: () => string[];
   setSocketStatus: React.Dispatch<React.SetStateAction<SocketStatus>>;
   searchNext: (search: string) => void;
@@ -38,7 +40,7 @@ export interface ShellHandler {
 }
 
 export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(props: ShellProps, ref) {
-  const { url, protocols, encode, decode, onSocketStatusChange, onTermInit, onSocketInit, children } = props;
+  const { className, url, protocols, encode, decode, onSocketStatusChange, onTermInit, onSocketInit, children } = props;
   const terminalRef = useRef<HTMLDivElement>(null);
   const termInstanceRef = useRef<Terminal | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
@@ -244,13 +246,14 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       termInstanceRef.current?.clear();
     },
     setSocketStatus,
+    fit,
     send,
     searchNext,
     searchPrevious,
     getAllTerminalContents
-  }), [send, searchNext, searchPrevious, getAllTerminalContents]);
+  }), [send, searchNext, searchPrevious, getAllTerminalContents, fit]);
 
   return (
-    <div ref={terminalRef}>{children}</div>
+    <div ref={terminalRef} className={className}>{children}</div>
   );
 });

@@ -19,7 +19,7 @@ export default defineConfig({
     proxy: {
       // '/proxy-k8s': getProxyConfig(),
       '/api': {
-        target: process.env.API_HOST || 'http://192.168.27.59',
+        target: process.env.API_HOST || 'http://192.168.24.89',
         ws: true,
         headers: {
           'x-skip-auth-verify': 'true',
@@ -39,9 +39,6 @@ export default defineConfig({
         secure: false,
       },
     },
-  },
-  optimizeDeps: {
-    exclude: ['monaco-yaml/yaml.worker.js']
   },
   build: {
     minify: false,
