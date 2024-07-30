@@ -162,8 +162,8 @@ function App() {
   const globalStore = useMemo(() => {
     return new GlobalStore(
       {
-        apiUrl: '/api/sks-proxy/api/v1/clusters/vm-workload/proxy',
-        watchWsApiUrl: 'api/sks-ws/sks-proxy/api/v1/clusters/vm-workload/proxy',
+        apiUrl: '/api/sks-proxy/api/v1/clusters/physical-cluster/proxy',
+        watchWsApiUrl: 'api/sks-ws/sks-proxy/api/v1/clusters/physical-cluster/proxy',
         prefix: 'default',
       },
       ProviderPlugins
