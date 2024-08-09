@@ -15,6 +15,7 @@ export class ResourceModel<T extends Unstructured = Unstructured> {
         get() {
           return _rawYaml[key as keyof T];
         },
+        enumerable: true
       });
     });
     Object.defineProperty(this, '_globalStore', {
