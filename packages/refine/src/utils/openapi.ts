@@ -2,6 +2,7 @@ import { JSONSchema7 } from 'json-schema';
 import { getApiVersion } from 'src/utils/k8s';
 import { resolveRef } from 'src/utils/schema';
 
+// Define OpenAPI response structure
 interface OpenAPIResponse {
   openapi: string;
   paths: {
@@ -33,33 +34,51 @@ interface OpenAPIResponse {
 }
 
 class K8sOpenAPI {
-  response: OpenAPIResponse | null = null;
-  apiVersion: string;
+  // private response: OpenAPIResponse | null = null;
+  private apiVersion: string;
+  private schemas: Array<OpenAPIResponse['components']['schemas'][string]> | null = null;
 
-  constructor(public resourceBasePath: string) {
+  constructor(private resourceBasePath: string) {
     this.apiVersion = getApiVersion(resourceBasePath);
   }
 
-  public async fetch(): Promise<OpenAPIResponse> {
-    const response = await fetch(
-      `/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3${this.resourceBasePath}`
-    );
+  // Fetch and process OpenAPI schemas
+  public async fetch(): Promise<Array<OpenAPIResponse['components']['schemas'][string]> | null> {
+    try {
+      const response = await fetch(
+        `/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3${this.resourceBasePath}`
+      );
 
-    return response.json();
+      const result = await response.json() as OpenAPIResponse;
+
+      this.schemas = Object.values(result.components.schemas);
+
+      if (this.schemas) {
+        this.processSchemas(result.components.schemas);
+      }
+
+      return this.schemas;
+    } catch (error) {
+      console.error('Failed to fetch OpenAPI schemas:', error);
+      return null;
+    }
   }
 
-  public async findSchema(kind: string) {
-    const result = this.response || (await this.fetch());
-    const schema = Object.values(result.components.schemas).find(schema =>
+  // Find schema by kind and version
+  public findSchema(kind: string): JSONSchema7 | undefined {
+    return this.schemas?.find(schema =>
       schema['x-kubernetes-group-version-kind']?.some(
         ({ kind: schemaKind, version: schemaVersion, group: schemaGroup }) =>
           kind === schemaKind &&
           this.apiVersion === `${schemaGroup ? schemaGroup + '/' : ''}${schemaVersion}`
       )
     );
+  }
 
-    if (schema) {
-      resolveRef(schema, result.components.schemas, {
+  // Process and clean up schemas
+  private processSchemas(schemaMap: OpenAPIResponse['components']['schemas']): void {
+    this.schemas?.forEach(schema => {
+      resolveRef(schema, schemaMap, {
         prune: {
           description: true,
           optional: false,
@@ -68,14 +87,12 @@ class K8sOpenAPI {
           xProperty: true,
         },
       });
-    }
 
-    // ignore the status schema
-    if (schema?.properties?.status) {
-      delete schema?.properties.status;
-    }
-
-    return schema;
+      // Remove status property from schema
+      if (schema?.properties?.status) {
+        delete schema.properties.status;
+      }
+    });
   }
 }
 

@@ -99,9 +99,9 @@ export function YamlForm(props: YamlFormProps) {
   const FormWrapper = isShowLayout ? FormLayout : React.Fragment;
   const formWrapperProps = isShowLayout ? { saveButtonProps } : {};
   // use useMemo to keep {} the same
-  const schema = useMemo(() => {
-    return editorProps.schema || {};
-  }, [editorProps.schema]);
+  const schemas = useMemo(() => {
+    return editorProps.schemas || [];
+  }, [editorProps.schemas]);
   const responseErrors = useMemo(() => (
     errorResponseBody
       ? getCommonErrors(errorResponseBody, i18n)
@@ -147,13 +147,13 @@ export function YamlForm(props: YamlFormProps) {
             return <Loading />;
           }
 
-          return editorProps.schema || schemaStrategy !== SchemaStrategy.Required ? (
+          return editorProps.schemas || schemaStrategy !== SchemaStrategy.Required ? (
             <>
               <Form.Item style={{ flex: 1 }}>
                 <YamlEditorComponent
                   {...editorProps}
                   className={EditorStyle}
-                  schema={schema}
+                  schemas={schemas}
                   collapsable={false}
                 />
               </Form.Item>
