@@ -97,7 +97,10 @@ export function resolveRef(
   options: ResolveOptions
 ) {
   const { prune } = options;
-
+  const kindObj = (schema as any)['x-kubernetes-group-version-kind'];
+  if (kindObj) {
+    schema!.properties!.kind = {const: kindObj[0].kind};
+  }
   if (schema.$ref) {
     const refKey = schema.$ref.replace('#/components/schemas/', '');
 
