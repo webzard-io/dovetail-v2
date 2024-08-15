@@ -173,6 +173,11 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
       window.URL.revokeObjectURL(url);
     }, 0);
   }, []);
+  const onChangeFontSize = useCallback(() => {
+    shellRef?.current?.setOptions({
+      fontSize: 16,
+    });
+  }, []);
 
   useEffect(() => {
     if (!container && containers.length) {
@@ -217,6 +222,7 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
           type="primary"
         >Clear</Button>
         <Button onClick={onDownloadContent}>Download</Button>
+        <Button onClick={onChangeFontSize}>Up Size</Button>
       </Space>
       <Shell
         ref={shellRef}
