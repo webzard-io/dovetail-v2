@@ -4,6 +4,7 @@ import { SearchAddon } from '@xterm/addon-search';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import { WebglAddon } from '@xterm/addon-webgl';
 import { Terminal } from '@xterm/xterm';
+import { ITerminalOptions } from '@xterm/xterm';
 import copyToClipboard from 'copy-to-clipboard';
 import React, { useRef, useState, useEffect, useCallback, useImperativeHandle } from 'react';
 import '@xterm/xterm/css/xterm.css';
@@ -37,6 +38,7 @@ export interface ShellHandler {
   setSocketStatus: React.Dispatch<React.SetStateAction<SocketStatus>>;
   searchNext: (search: string) => void;
   searchPrevious: (search: string) => void;
+  setOptions: (options: Record<string, unknown>) => void;
 }
 
 export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(props: ShellProps, ref) {
@@ -250,7 +252,15 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     send,
     searchNext,
     searchPrevious,
-    getAllTerminalContents
+    getAllTerminalContents,
+    setOptions(options) {
+      Object.entries(options).forEach(([key, value]) => {
+        if (termInstanceRef.current) {
+          termInstanceRef.current.options[key as keyof ITerminalOptions] = value;
+        }
+      });
+      fit();
+    }
   }), [send, searchNext, searchPrevious, getAllTerminalContents, fit]);
 
   return (
