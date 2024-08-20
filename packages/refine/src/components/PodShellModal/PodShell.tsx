@@ -193,7 +193,7 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
 
   return (
     <>
-      <Space direction="horizontal" style={{ marginBottom: '16px' }}>
+      {/* <Space direction="horizontal" style={{ marginBottom: '16px' }}>
         <Select
           input={{
             value: container,
@@ -223,7 +223,7 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
         >Clear</Button>
         <Button onClick={onDownloadContent}>Download</Button>
         <Button onClick={onChangeFontSize}>Up Size</Button>
-      </Space>
+      </Space> */}
       <Shell
         ref={shellRef}
         url={url}
