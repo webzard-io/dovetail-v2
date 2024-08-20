@@ -1,3 +1,4 @@
+import { css, cx } from '@linaria/core';
 import { CanvasAddon } from '@xterm/addon-canvas';
 import { FitAddon } from '@xterm/addon-fit';
 import { SearchAddon } from '@xterm/addon-search';
@@ -6,8 +7,18 @@ import { WebglAddon } from '@xterm/addon-webgl';
 import { Terminal } from '@xterm/xterm';
 import { ITerminalOptions } from '@xterm/xterm';
 import copyToClipboard from 'copy-to-clipboard';
-import React, { useRef, useState, useEffect, useCallback, useImperativeHandle } from 'react';
+import React, { useRef, useMemo, useState, useEffect, useCallback, useImperativeHandle } from 'react';
+import ShellToolbar, { ShellToolbarProps } from './ShellToolbar';
 import '@xterm/xterm/css/xterm.css';
+
+const ContainerStyle = css`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+const ShellStyle = css`
+  flex: 1;
+`;
 
 export enum SocketStatus {
   Opening = 'Opening',
@@ -19,6 +30,7 @@ export type ShellProps = React.PropsWithChildren<{
   url: string;
   protocols?: string;
   className?: string;
+  operations?: ShellToolbarProps['operations'];
   encode: (input: string) => string | ArrayBufferLike | Blob | ArrayBufferView;
   decode?: (output: string | ArrayBufferLike | Blob | ArrayBufferView) => string | ArrayBuffer;
   fit?: (layout: { rows: number; cols: number }) => void;
@@ -42,14 +54,24 @@ export interface ShellHandler {
 }
 
 export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(props: ShellProps, ref) {
-  const { className, url, protocols, encode, decode, onSocketStatusChange, onTermInit, onSocketInit, children } = props;
+  const { className, url, protocols, operations, encode, decode, onSocketStatusChange, onTermInit, onSocketInit, children } = props;
   const terminalRef = useRef<HTMLDivElement>(null);
   const termInstanceRef = useRef<Terminal | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
   const searchAddonRef = useRef<SearchAddon | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const backlogRef = useRef<(string | ArrayBufferLike | Blob | ArrayBufferView)[]>([]);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [socketStatus, setSocketStatus] = useState<SocketStatus>(SocketStatus.Opening);
+
+  const searchOptions = useMemo(() => ({
+    decorations: {
+      activeMatchColorOverviewRuler: '#00ffff',
+      matchOverviewRuler: '#0000ff',
+      activeMatchBackground: '#ff6600',
+      matchBackground: '#ff0'
+    }
+  }), []);
 
   const reset = useCallback(() => {
     termInstanceRef.current?.clear();
@@ -154,6 +176,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       const term = new Terminal({
         cursorBlink: true,
         cols: 150,
+        allowProposedApi: true,
       });
       let renderAddon = null;
 
@@ -201,11 +224,11 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     }
   }, [send, encode, onTermInit, fit, flush]);
   const searchNext = useCallback((search: string) => {
-    searchAddonRef.current?.findNext(search || '');
-  }, []);
+    searchAddonRef.current?.findNext(search || '', searchOptions);
+  }, [searchOptions]);
   const searchPrevious = useCallback((search: string) => {
-    searchAddonRef.current?.findPrevious(search || '');
-  }, []);
+    searchAddonRef.current?.findPrevious(search || '', searchOptions);
+  }, [searchOptions]);
   const getAllTerminalContents = useCallback(() => {
     if (!termInstanceRef.current) return [];
 
@@ -221,6 +244,24 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
 
     return lines;
   }, []);
+  const clear = useCallback(() => {
+    termInstanceRef.current?.clear();
+  }, []);
+  const downloadContent = useCallback(() => {
+    const content = (getAllTerminalContents() || []).join('\n');
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'term';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }, 0);
+  }, [getAllTerminalContents]);
 
   useEffect(() => {
     const destroy = setupTerminal();
@@ -242,11 +283,20 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     onSocketStatusChange?.(socketStatus);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socketStatus]);
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      fit();
+    });
+
+    resizeObserver.observe(containerRef.current);
+
+    return () => resizeObserver.disconnect();
+  }, [fit]);
 
   useImperativeHandle(ref, () => ({
-    clear() {
-      termInstanceRef.current?.clear();
-    },
+    clear,
     setSocketStatus,
     fit,
     send,
@@ -261,9 +311,18 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       });
       fit();
     }
-  }), [send, searchNext, searchPrevious, getAllTerminalContents, fit]);
+  }), [send, searchNext, searchPrevious, getAllTerminalContents, fit, clear]);
 
   return (
-    <div ref={terminalRef} className={className}>{children}</div>
+    <div ref={containerRef} className={ContainerStyle}>
+      <ShellToolbar
+        operations={operations}
+        onSearchNext={searchNext}
+        onSearchPre={searchPrevious}
+        onClear={clear}
+        onDownloadLog={downloadContent}
+      />
+      <div ref={terminalRef} className={cx(ShellStyle, className)}>{children}</div>
+    </div>
   );
 });
