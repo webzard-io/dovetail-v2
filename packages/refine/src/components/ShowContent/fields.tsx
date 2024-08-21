@@ -361,12 +361,12 @@ export const ServiceInnerClusterAccessField = <
 
 export const ServiceOutClusterAccessField = <
   Model extends ServiceModel,
->(): ShowField<Model> => ({
+>(clusterVip: string): ShowField<Model> => ({
   key: 'innerClusterAccess',
   title: <ServiceOutClusterAccessTitle />,
   path: [],
   renderContent: (_, record) => {
-    return <ServiceOutClusterAccessComponent service={record} breakLine={false} />;
+    return <ServiceOutClusterAccessComponent service={record} breakLine={false} clusterVip={clusterVip} />;
   },
 });
 
