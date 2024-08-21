@@ -1,4 +1,4 @@
-import { OverflowTooltip, Typo } from '@cloudtower/eagle';
+import { OverflowTooltip, Typo, Link } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,10 +27,19 @@ const BreakLineStyle = css`
     display: block;
   }
 `;
+const LinkStyle = css`
+  &.ant-btn-link.ant-btn {
+    padding: 0;
+    height: 22px;
+  }
+`;
 
 export const ServiceOutClusterAccessComponent: React.FC<
-  Props & { breakLine?: boolean }
-> = ({ service, breakLine = true }) => {
+  Props & {
+    breakLine?: boolean;
+    clusterVip: string;
+  }
+> = ({ service, breakLine = true, clusterVip }) => {
   const { i18n } = useTranslation();
   const spec = service._rawYaml.spec;
   const status = service._rawYaml.status;
@@ -41,8 +50,29 @@ export const ServiceOutClusterAccessComponent: React.FC<
       if (!breakLine) {
         content = spec.ports
           ?.filter(v => !!v)
-          .map(p => `${i18n.t('dovetail.any_node_ip')}:${p.nodePort}`)
-          .join(', ');
+          .map(p => ([
+            <Link
+              href={`//${clusterVip}:${p.nodePort}`}
+              target="_blank"
+              key={p.name}
+              className={cx(LinkStyle, Typo.Label.l4_regular_title)}
+            >
+              {`${clusterVip}:${p.nodePort}`}
+            </Link>
+          ]));
+
+        if (content && content instanceof Array) {
+          const result = [];
+
+          for (let i = 0; i < content.length; i++) {
+            result.push(content[i]);
+            if (i < content.length - 1) {
+              result.push(',');
+            }
+          }
+
+          content = result;
+        }
         break;
       }
 
@@ -52,9 +82,13 @@ export const ServiceOutClusterAccessComponent: React.FC<
           <OverflowTooltip
             key={p.nodePort}
             content={
-              <span className={cx(Typo.Label.l4_regular_title, BreakLineStyle)}>
-                {i18n.t('dovetail.any_node_ip')}:{p.nodePort}
-              </span>
+              <Link
+                href={`//${clusterVip}:${p.nodePort}`}
+                target="_blank"
+                className={cx(Typo.Label.l4_regular_title, BreakLineStyle, LinkStyle)}
+              >
+                {clusterVip}:{p.nodePort}
+              </Link>
             }
             tooltip={`${i18n.t('dovetail.any_node_ip')}:${p.nodePort}`}
           />
