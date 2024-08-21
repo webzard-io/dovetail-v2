@@ -148,12 +148,12 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 
 export const StateDisplayColumnRenderer = <
   Model extends
-    | WorkloadModel
-    | CronJobModel
-    | PodModel
-    | ServiceModel
-    | DaemonSetModel
-    | JobModel,
+  | WorkloadModel
+  | CronJobModel
+  | PodModel
+  | ServiceModel
+  | DaemonSetModel
+  | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -416,7 +416,7 @@ export function ServiceOutClusterAccessTitle() {
 }
 export const ServiceOutClusterAccessColumnRenderer = <
   Model extends ServiceModel,
->(): Column<Model> => {
+>(clusterVip: string): Column<Model> => {
   return {
     key: 'outClusterAccess',
     title: <ServiceOutClusterAccessTitle />,
@@ -425,7 +425,7 @@ export const ServiceOutClusterAccessColumnRenderer = <
     width: 160,
     sorter: undefined,
     render(_, record) {
-      return <ServiceOutClusterAccessComponent service={record} />;
+      return <ServiceOutClusterAccessComponent service={record} clusterVip={clusterVip} />;
     },
   };
 };
@@ -583,7 +583,6 @@ export const DataKeysColumnRenderer = <Model extends ResourceModel>(
 
 export const PortMappingColumnRenderer = <Model extends ServiceModel>(
   i18n: I18nType,
-  clusterVip: string
 ): Column<Model> => {
   return {
     key: 'displayPortMapping',
@@ -601,19 +600,7 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(
         <OverflowTooltip
           content={
             <span style={{ whiteSpace: 'pre' }}>
-              {record.displayType === 'NodePort' ? (
-                <Link
-                  href={`//${clusterVip}:${v.nodePort}`}
-                  target="_blank"
-                  className={css`
-                    padding: 0 !important;
-                  `}
-                >
-                  {v.servicePort}
-                </Link>
-              ) : (
-                v.servicePort
-              )}{' '}
+              {v.servicePort}{' '}
               &gt; {v.targetPort}/{v.protocol}
             </span>
           }
@@ -650,7 +637,7 @@ export const PVCapacityColumnRenderer = <Model extends PersistentVolumeModel>(
     title: i18n.t('dovetail.capacity'),
     width: 120,
     sortable: true,
-    align:'right',
+    align: 'right',
     render(value) {
       return <Units.Byte rawValue={parseSi(value)} decimals={1} />;
     },
@@ -667,7 +654,7 @@ export const PVCStorageColumnRenderer = <Model extends PersistentVolumeClaimMode
     title: i18n.t('dovetail.capacity'),
     width: 120,
     sortable: true,
-    align:'right',
+    align: 'right',
     render(value) {
       return <Units.Byte rawValue={parseSi(value)} decimals={1} />;
     },

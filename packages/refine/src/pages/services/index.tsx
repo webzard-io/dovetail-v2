@@ -32,7 +32,7 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
   columns: () => [
     ServiceTypeColumnRenderer(i18n),
     ServiceInClusterAccessColumnRenderer(),
-    ServiceOutClusterAccessColumnRenderer(),
+    ServiceOutClusterAccessColumnRenderer('192.168.1.1'),
     {
       key: 'dnsRecord',
       title: i18n.t('dovetail.dns_record'),
@@ -67,7 +67,7 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
                 path: ['dnsRecord'],
               },
               ServiceInnerClusterAccessField(),
-              ServiceOutClusterAccessField(),
+              ServiceOutClusterAccessField('192.168.1.1'),
             ],
           }),
           PodSelectorGroup(i18n),
