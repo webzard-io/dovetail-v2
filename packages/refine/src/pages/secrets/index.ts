@@ -25,6 +25,18 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
   initValue: SECRET_OPAQUE_INIT_VALUE,
   columns: () => [DataKeysColumnRenderer(i18n), AgeColumnRenderer(i18n)],
   formConfig: {
+    transformInitValues: (value) => {
+      const data = (value as Secret).data || {};
+
+      return {
+        ...value,
+        data: Object.keys(data).reduce((result: Record<string, string>, key) => {
+          result[key] = window.atob(data[key]);
+
+          return result;
+        }, {})
+      };
+    },
     transformApplyValues: (value) => {
       const data = (value as Secret).data || {};
 
