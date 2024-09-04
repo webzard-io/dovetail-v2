@@ -1,4 +1,4 @@
-import { SearchInput, Icon } from '@cloudtower/eagle';
+import { SearchInput, Icon, Tooltip, DropdownMenu } from '@cloudtower/eagle';
 import {
   LogCollection16GrayIcon,
   LogCollection16GradientBlueIcon,
@@ -6,13 +6,13 @@ import {
   InfoICircle16GradientGrayIcon,
   InfoICircle16GradientBlueIcon,
 } from '@cloudtower/icons-react';
-import { css } from '@linaria/core';
+import { css, cx } from '@linaria/core';
 import React, { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ToolbarStyle = css`
   display: flex;
   justify-content: space-between;
-  padding: 4px 8px;
   height: 32px;
 `;
 const ToolbarAreaStyle = css`
@@ -36,11 +36,13 @@ const DividerStyle = css`
 type OperationType = ('fontSize' | 'downloadLog' | 'clear');
 
 export interface ShellToolbarProps {
+  className?: string;
   leftSlot?: React.ReactNode;
   operations?: (OperationType | React.ReactNode)[];
+  searchMatchedTotal: number;
   onSearchNext: (search: string) => void;
   onSearchPre: (search: string) => void;
-  onUpFontSize?: () => void;
+  onSetFontSize?: (size: number) => void;
   onDownFontSize?: () => void;
   onDownloadLog?: () => void;
   onClear?: () => void;
@@ -49,44 +51,66 @@ export interface ShellToolbarProps {
 
 function ShellToolbar(props: ShellToolbarProps) {
   const {
+    className,
     leftSlot,
     operations = ['fontSize', 'downloadLog', 'clear'],
+    searchMatchedTotal,
+    onSetFontSize,
     onSearchNext,
     onSearchPre,
     onDownloadLog,
     onClear,
   } = props;
-  const [search, setSearch] = useState('');
+  const { t } = useTranslation();
+  const fontSizeOptions = [12, 13, 14, 16, 20];
   const operationMap: Record<string, React.ReactNode> = {
-    fontSize: <Icon
-      className={IconStyle}
-      src={InfoICircle16GradientGrayIcon}
-      hoverSrc={InfoICircle16GradientBlueIcon}
-    />,
-    downloadLog: <Icon
-      className={IconStyle}
-      src={LogCollection16GrayIcon}
-      hoverSrc={LogCollection16GradientBlueIcon}
-      onClick={onDownloadLog}
-    />,
-    clear: <Icon
-      className={IconStyle}
-      src={TrashBinDelete16Icon}
-      onClick={onClear}
-    />
+    fontSize: (
+      <DropdownMenu
+        trigger={['click']}
+        items={fontSizeOptions.map(size => ({
+          key: `${size}`,
+          title: `${size}px`,
+          text: `${size}px`,
+          onClick: () => { onSetFontSize?.(size); }
+        }))}
+        slotsElements={{
+          trigger: () => (
+            <Tooltip title={t('dovetail.font_size')}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Icon
+                  className={IconStyle}
+                  src={InfoICircle16GradientGrayIcon}
+                  hoverSrc={InfoICircle16GradientBlueIcon}
+                />
+              </div>
+            </Tooltip>
+          )
+        }}
+      />
+    ),
+    downloadLog: (
+      <Tooltip title={t('dovetail.download_shell_content')}>
+        <Icon
+          className={IconStyle}
+          src={LogCollection16GrayIcon}
+          hoverSrc={LogCollection16GradientBlueIcon}
+          onClick={onDownloadLog}
+        />
+      </Tooltip>
+    ),
+    clear: (
+      <Tooltip title={t('dovetail.clear_shell')}>
+        <Icon
+          className={IconStyle}
+          src={TrashBinDelete16Icon}
+          onClick={onClear}
+        />
+      </Tooltip>
+    )
   };
 
-  const onSearch = useCallback((str: string | unknown) => {
-    if (typeof str === 'string') {
-      setSearch(str);
-      onSearchNext(str);
-    } else {
-      onSearchNext(search);
-    }
-  }, [search, onSearchNext]);
-
   return (
-    <div className={ToolbarStyle}>
+    <div className={cx(ToolbarStyle, className)}>
       <div className={ToolbarAreaStyle}>
         {leftSlot}
       </div>
@@ -94,8 +118,16 @@ function ShellToolbar(props: ShellToolbarProps) {
         <SearchInput
           placeholder="Search..."
           size="small"
-          onChange={onSearch}
-          onPressEnter={onSearch}
+          total={searchMatchedTotal}
+          onChange={(str) => {
+            onSearchNext(str);
+          }}
+          onSearchNext={(str) => {
+            onSearchNext(str);
+          }}
+          onSearchPrev={(str) => {
+            onSearchPre(str);
+          }}
         />
         <div className={DividerStyle}></div>
         <div className={IconWrapperStyle}>

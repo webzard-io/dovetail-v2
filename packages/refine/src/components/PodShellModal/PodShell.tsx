@@ -1,4 +1,4 @@
-import { Select, AntdOption, SearchInput, Button, Space } from '@cloudtower/eagle';
+import { Select, AntdOption, } from '@cloudtower/eagle';
 import { Terminal } from '@xterm/xterm';
 import React, { useRef, useState, useEffect, useMemo, useCallback, useImperativeHandle } from 'react';
 import { Shell, SocketStatus, ShellHandler } from 'src/components/Shell';
@@ -37,13 +37,10 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
   const id = pod.id;
   const [namespace, name] = useMemo(() => id.split('/'), [id]);
   const shellRef = useRef<ShellHandler | null>(null);
-  const uploadRef = useRef<HTMLInputElement | null>(null);
   const errorMsgRef = useRef('');
 
   const [osIndex, setOsIndex] = useState<number>(0);
   const [container, setContainer] = useState('');
-  const [search, setSearch] = useState('');
-
 
   const containers = useMemo(() => {
     return (pod?._rawYaml.status?.containerStatuses || [])
@@ -79,8 +76,6 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
       }
     } else {
       shellRef.current?.setSocketStatus(SocketStatus.Disconnected);
-      term?.writeln('');
-      term?.writeln('\u001b[31m[!] Lost connection');
     }
   }, [osIndex]);
   const onSocketMessage = useCallback((e: MessageEvent, socket: WebSocket, term: Terminal | null) => {
@@ -106,78 +101,6 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
     shellRef.current?.send(message);
   }, []);
   const encode = useCallback((input) => `0${base64Encode(input)}`, []);
-  const onSearch = useCallback((str: string) => {
-    setSearch(str);
-    shellRef.current?.searchNext(str);
-  }, []);
-  const onSearchNext = useCallback(() => {
-    shellRef.current?.searchNext(search);
-  }, [search]);
-  const onSearchPrevious = useCallback(() => {
-    shellRef.current?.searchPrevious(search);
-  }, [search]);
-  const onUpload = useCallback(() => {
-    const files = uploadRef.current?.files || [];
-
-    for (const file of files) {
-      const reader = new FileReader();
-
-      reader.readAsBinaryString(file);
-
-      reader.onload = (event) => {
-        const fileContent = event.target?.result;
-
-        if (fileContent && typeof fileContent === 'string') {
-          const [namespace, podName] = pod.id.split('/');
-          const execCommand = [
-            'sh'
-          ];
-
-          const wsUrl = addParams(
-            `ws://${location.host}/api/sks-proxy/api/v1/clusters/vm-workload/proxy/api/v1/namespaces/${namespace}/pods/${podName}/exec`,
-            {
-              container,
-              stdout: 'true',
-              stdin: 'true',
-              stderr: 'true',
-              tty: 'false',
-              command: execCommand,
-            }
-          );
-          const ws = new WebSocket(wsUrl, 'base64.channel.k8s.io');
-
-          // shellRef.current?.send(`0${base64Encode('sh -c cat > /usr/test.yaml\n')}`);
-          // shellRef.current?.send(`0${base64Encode(fileContent)}`);
-
-          ws.onopen = () => {
-            ws.send(`0${base64Encode('sh -c cat > /usr/test.yaml\n')}`);
-            ws.send(`0${base64Encode(fileContent)}`);
-            ws.close();
-          };
-        }
-      };
-    }
-  }, [container, pod.id]);
-  const onDownloadContent = useCallback(() => {
-    const content = (shellRef.current?.getAllTerminalContents() || []).join('\n');
-
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'term';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    }, 0);
-  }, []);
-  const onChangeFontSize = useCallback(() => {
-    shellRef?.current?.setOptions({
-      fontSize: 16,
-    });
-  }, []);
 
   useEffect(() => {
     if (!container && containers.length) {
@@ -192,8 +115,13 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
   }), []);
 
   return (
-    <>
-      {/* <Space direction="horizontal" style={{ marginBottom: '16px' }}>
+    <Shell
+      ref={shellRef}
+      url={url}
+      protocols="base64.channel.k8s.io"
+      encode={encode}
+      fit={fit}
+      toolbarLeftSlot={(
         <Select
           input={{
             value: container,
@@ -202,8 +130,9 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
             }
           }}
           style={{
-            width: '240px',
+            width: '200px',
           }}
+          size="small"
         >
           {
             containers.map((containerName) => (
@@ -211,29 +140,10 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
             ))
           }
         </Select>
-        <SearchInput onChange={onSearch} />
-        <Button onClick={onSearchNext}>Next</Button>
-        <Button onClick={onSearchPrevious}>Previous</Button>
-        <input ref={uploadRef} type="file" onChange={onUpload} />
-        <Button
-          onClick={() => {
-            shellRef.current?.clear();
-          }}
-          type="primary"
-        >Clear</Button>
-        <Button onClick={onDownloadContent}>Download</Button>
-        <Button onClick={onChangeFontSize}>Up Size</Button>
-      </Space> */}
-      <Shell
-        ref={shellRef}
-        url={url}
-        protocols="base64.channel.k8s.io"
-        encode={encode}
-        fit={fit}
-        onSocketMessage={onSocketMessage}
-        onSocketClose={onSocketClose}
-        onSocketStatusChange={onSocketStatusChange}
-      />
-    </>
+      )}
+      onSocketMessage={onSocketMessage}
+      onSocketClose={onSocketClose}
+      onSocketStatusChange={onSocketStatusChange}
+    />
   );
 });
