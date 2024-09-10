@@ -11,3 +11,4 @@ export * from './types';
 export * from './contexts';
 export * from './models';
 export * from './plugins';
+export * from './utils';
