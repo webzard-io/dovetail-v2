@@ -140,6 +140,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       socketRef.current.send(message);
       callback?.();
     } else {
+      /** if the socket is not ready, the message will saved in the backlog and be sent after the socket ready */
       backlogRef.current.push({
         message,
         callback,
@@ -265,6 +266,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
         renderAddon = new CanvasAddon();
       }
 
+      // init and setup addons
       onTermInit?.(term);
       term.loadAddon(fitAddonRef.current = new FitAddon());
       term.loadAddon(searchAddonRef.current = new SearchAddon());
@@ -290,6 +292,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
         setSearchMatchedTotal(resultCount);
       });
       term.onData((input) => {
+        // send hte terminal input to websocket
         send(encode(input));
       });
       termInstanceRef.current = term;
@@ -367,6 +370,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     return () => {
       disconnect?.();
     };
+    // reconnect when the url or protocols is changed
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, protocols]);
   useEffect(() => {

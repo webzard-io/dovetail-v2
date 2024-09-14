@@ -1,13 +1,14 @@
 import { SearchInput, Icon, Tooltip, DropdownMenu } from '@cloudtower/eagle';
 import {
+  FontSize16GrayIcon,
+  FontSize16BlueIcon,
   LogCollection16GrayIcon,
   LogCollection16GradientBlueIcon,
-  TrashBinDelete16Icon,
-  InfoICircle16GradientGrayIcon,
-  InfoICircle16GradientBlueIcon,
+  TrashBinDeletePermanently16GrayIcon,
+  TrashBinDeletePermanently16BlueIcon,
 } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const ToolbarStyle = css`
@@ -79,8 +80,8 @@ function ShellToolbar(props: ShellToolbarProps) {
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Icon
                   className={IconStyle}
-                  src={InfoICircle16GradientGrayIcon}
-                  hoverSrc={InfoICircle16GradientBlueIcon}
+                  src={FontSize16GrayIcon}
+                  hoverSrc={FontSize16BlueIcon}
                 />
               </div>
             </Tooltip>
@@ -102,7 +103,8 @@ function ShellToolbar(props: ShellToolbarProps) {
       <Tooltip title={t('dovetail.clear_shell')}>
         <Icon
           className={IconStyle}
-          src={TrashBinDelete16Icon}
+          src={TrashBinDeletePermanently16GrayIcon}
+          hoverSrc={TrashBinDeletePermanently16BlueIcon}
           onClick={onClear}
         />
       </Tooltip>
