@@ -2,10 +2,10 @@ import { CloseCircleFilled } from '@ant-design/icons';
 import { Modal, usePopModal } from '@cloudtower/eagle';
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FullscreenModalStyle } from 'src/components/Form/FormModal';
 import { SocketStatus } from 'src/components/Shell';
 import GlobalStoreContext from 'src/contexts/global-store';
 import { PodModel } from 'src/models';
+import { FullscreenModalStyle } from 'src/styles/modal';
 import { PodShell } from './PodShell';
 
 interface PodShellModalProps {

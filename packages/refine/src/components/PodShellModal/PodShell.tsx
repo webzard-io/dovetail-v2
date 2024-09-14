@@ -21,6 +21,14 @@ interface PodShellHandler {
   getAllTerminalContents: () => string[];
 }
 
+enum Channel {
+  STDIN = '0',
+  STDOUT = '1',
+  STDERR = '2',
+  ERR = '3',
+  RESIZE = '4'
+}
+
 const BACKUP_SHELLS = [OS.Windows, OS.Linux];
 
 const COMMANDS = {
@@ -68,9 +76,11 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
   const onSocketClose = useCallback((socket: WebSocket, term: Terminal | null) => {
     if (errorMsgRef.current) {
       if (osIndex + 1 < BACKUP_SHELLS.length) {
+        // try other shells
         setOsIndex(osIndex + 1);
       } else {
-        term?.writeln(`\u001b[31m${errorMsgRef.current}`);
+        // ansi color: https://codehs.com/tutorial/ryan/add-color-with-ansi-in-javascript
+        term?.writeln(`\u001b[38;2;255;82;82m${errorMsgRef.current}`);
         shellRef.current?.setSocketStatus(SocketStatus.Disconnected);
         errorMsgRef.current = '';
       }
@@ -82,16 +92,16 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
     const type = e.data.substr(0, 1);
     const msg = base64Decode(e.data.substr(1));
 
-    if (`${type}` === '1') {
+    if (`${type}` === Channel.STDOUT) {
       term?.write(msg);
     } else {
-      if (`${type}` === '3') {
+      if (`${type}` === Channel.ERR) {
         errorMsgRef.current = msg;
       }
     }
   }, []);
   const fit = useCallback(({ rows, cols }: { rows: number; cols: number; }) => {
-    const message = `4${base64Encode(
+    const message = `${Channel.RESIZE}${base64Encode(
       JSON.stringify({
         Width: Math.floor(cols),
         Height: Math.floor(rows),
@@ -100,7 +110,7 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
 
     shellRef.current?.send(message);
   }, []);
-  const encode = useCallback((input) => `0${base64Encode(input)}`, []);
+  const encode = useCallback((input) => `${Channel.STDIN}${base64Encode(input)}`, []);
 
   useEffect(() => {
     if (!container && containers.length) {
@@ -130,7 +140,7 @@ export const PodShell = React.forwardRef<PodShellHandler, PodShellProps>(functio
             }
           }}
           style={{
-            width: '200px',
+            width: '256px',
           }}
           size="small"
         >
