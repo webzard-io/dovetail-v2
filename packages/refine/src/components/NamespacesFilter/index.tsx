@@ -258,8 +258,7 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
         multiple
       >
         <AntdOption key="_all" value="_all" label={t('dovetail.all_namespaces')} className={AllNamespaceOptionStyle}>
-          <OverflowTooltip content={t('dovetail.all_namespaces')} className={LabelWrapperStyle}>
-          </OverflowTooltip>
+          <OverflowTooltip content={t('dovetail.all_namespaces')} className={LabelWrapperStyle} />
         </AntdOption>
         <AntdSelectOptGroup label="" className={SelectOptionGroupStyle}>
           {data?.data.map(namespace => {
@@ -267,8 +266,7 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
 
             return (
               <AntdOption key={name} value={name} label={name} className={OptionStyle}>
-                <OverflowTooltip content={name} className={LabelWrapperStyle}>
-                </OverflowTooltip>
+                <OverflowTooltip content={name} className={LabelWrapperStyle} />
               </AntdOption>
             );
           })}

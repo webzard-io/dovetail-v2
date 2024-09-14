@@ -6,6 +6,7 @@ import { useResource } from '@refinedev/core';
 import React, { useState, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
+import { FullscreenModalStyle } from 'src/styles/modal';
 import { RefineFormContent } from './RefineFormContent';
 import { useRefineForm } from './useRefineForm';
 import { YamlForm, YamlFormProps } from './YamlForm';
@@ -14,23 +15,6 @@ const FormDescStyle = css`
   margin-bottom: 16px;
 `;
 
-const FullscreenModalStyle = css`
-  &.ant-modal.fullscreen {
-    .ant-modal-header {
-      padding: 60px 128px 32px 128px;
-    }
-
-    .ant-modal-body {
-      padding: 0 128px;
-    }
-
-    .ant-modal-footer {
-      .footer-content {
-        margin: 0 128px;
-      }
-    }
-  }
-`;
 const MaxWidthModalStyle = css`
   .ant-modal-header {
     max-width: 648px;

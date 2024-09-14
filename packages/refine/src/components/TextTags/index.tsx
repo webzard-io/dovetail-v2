@@ -15,8 +15,7 @@ export const TextTags: React.FC<Props> = props => {
   const tags = Object.keys(value).map(key => {
     return (
       <li key={key}>
-        <OverflowTooltip content={`${key}=${value[key]}`}>
-        </OverflowTooltip>
+        <OverflowTooltip content={`${key}=${value[key]}`} />
       </li>
     );
   });
