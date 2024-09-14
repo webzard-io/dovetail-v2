@@ -1,18 +1,71 @@
 import { useResource, type IResourceItem } from '@refinedev/core';
 import { JSONSchema7 } from 'json-schema';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import OpenAPI from 'src/utils/openapi';
 
 type UseSchemaOptions = {
   resource?: IResourceItem;
   skip?: boolean;
-}
+};
 
 type UseSchemaResult = {
   schema: JSONSchema7 | null;
   loading: boolean;
   error: Error | null;
-  fetchSchema: ()=> void;
+  fetchSchema: () => void;
+};
+
+export function useApiGroupSchema(apiGroups: string[]) {
+  const [state, setState] = useState<{
+    schemas: JSONSchema7[] | null;
+    schemasMap: Record<string, JSONSchema7[]>;
+    loading: boolean;
+    error: Error | null;
+  }>({
+    schemas: null,
+    schemasMap: {},
+    loading: false,
+    error: null,
+  });
+
+  const fetchSchema = useCallback(async () => {
+    setState(prev => ({ ...prev, loading: true, error: null }));
+
+    try {
+      const results = await Promise.all(
+        apiGroups.map(async (apiGroup) => {
+          if (state.schemasMap[apiGroup]) {
+            return { apiGroup, schemas: state.schemasMap[apiGroup] };
+          }
+          const openapi = new OpenAPI(apiGroup);
+          const groupSchemas = await openapi.fetch();
+          return { apiGroup, schemas: groupSchemas || [] };
+        })
+      );
+
+      const newSchemasMap = results.reduce((acc, { apiGroup, schemas }) => {
+        acc[apiGroup] = schemas;
+        return acc;
+      }, {} as Record<string, JSONSchema7[]>);
+
+      const allSchemas = results.flatMap(({ schemas }) => schemas);
+
+      setState({
+        schemas: allSchemas,
+        schemasMap: newSchemasMap,
+        loading: false,
+        error: null,
+      });
+    } catch (e) {
+      setState(prev => ({ ...prev, loading: false, error: e as Error }));
+    }
+  }, [apiGroups, state.schemasMap]);
+
+  useEffect(() => {
+    fetchSchema();
+  }, [fetchSchema]);
+
+  return { ...state, fetchSchema };
 }
 
 export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
@@ -30,6 +83,7 @@ export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
     setLoading(true);
     setError(null);
     try {
+      await openapi.fetch();
       const schema = await openapi.findSchema(resource?.meta?.kind);
 
       setSchema(schema || null);
@@ -45,7 +99,7 @@ export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
     if (options?.skip) return;
 
     fetchSchema();
-  }, [fetchSchema]);
+  }, [fetchSchema, options?.skip]);
 
   return {
     schema,
