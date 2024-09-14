@@ -26,9 +26,8 @@ import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
 import { useGlobalStore } from '../../hooks/useGlobalStore';
 
-type EditorProps = Omit<YamlEditorProps, 'schema'> & {
+type EditorProps = YamlEditorProps & {
   ref: React.RefObject<YamlEditorHandle>;
-  schema: JSONSchema7 | null;
 };
 
 export type UseFormProps<
@@ -79,13 +78,15 @@ export type UseFormReturnType<
   formProps: Omit<FormProps, 'onFinish'> & {
     onFinish: (
       values?: TVariables
-    ) => Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void> | undefined;
+    ) =>
+      | Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void>
+      | undefined;
   };
   saveButtonProps: ButtonProps & {
     onClick: () => void;
   };
   editorProps: EditorProps;
-  schema: JSONSchema7 | null;
+  schemas: JSONSchema7[] | null;
   isLoadingSchema: boolean;
   loadSchemaError: Error | null;
   fetchSchema: () => void;
@@ -266,14 +267,18 @@ const useYamlForm = <
     [formLoading, form]
   );
 
-  const editorProps: EditorProps = useMemo(
-    () => ({
+  const schemas = useMemo(() => {
+    return schema ? [schema] : [];
+  }, [schema]);
+
+  const editorProps: EditorProps = useMemo(() => {
+    return {
       ref: editor,
       defaultValue:
         schema && editorOptions?.isGenerateAnnotations
           ? generateYamlBySchema(initialValues || {}, schema)
           : yaml.dump(initialValues),
-      schema: schema,
+      schemas,
       id: useResourceResult.resource?.name || '',
       errorMsgs: editorErrors,
       onValidate(yamlValid: boolean, schemaValid: boolean) {
@@ -293,17 +298,8 @@ const useYamlForm = <
           fold(editorInstance);
         }
       },
-    }),
-    [
-      editorErrors,
-      editorOptions,
-      initialValues,
-      schema,
-      useResourceResult.resource?.name,
-      action,
-      fold,
-    ]
-  );
+    };
+  }, [schema, editorOptions?.isGenerateAnnotations, initialValues, schemas, useResourceResult.resource?.name, editorErrors, action, fold]);
 
   return {
     form: formSF.form,
@@ -330,7 +326,9 @@ const useYamlForm = <
           return onFinish(finalValues as TVariables);
         } catch (error: unknown) {
           if (error instanceof Error) {
-            if (error.message === 'expected a single document in the stream, but found more') {
+            if (
+              error.message === 'expected a single document in the stream, but found more'
+            ) {
               setEditorErrors([t('dovetail.only_support_one_yaml')]);
               return;
             } else {
@@ -348,7 +346,7 @@ const useYamlForm = <
     editorProps,
     enableEditor,
     errorResponseBody,
-    schema,
+    schemas: schema ? [schema] : [],
     isLoadingSchema,
     loadSchemaError,
     fetchSchema,

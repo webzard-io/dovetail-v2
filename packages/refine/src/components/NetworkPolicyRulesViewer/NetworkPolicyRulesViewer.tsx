@@ -37,7 +37,7 @@ export const NetworkPolicyRulesViewer: React.FC<Props> = ({ ingressOrEgress, kin
   }
 
   return <MonacoYamlEditor
-    schema={{}}
+    schemas={[]}
     defaultValue={yaml.dump(ingressOrEgress)}
     height="300px"
     className={EditorStyle}

@@ -46,7 +46,7 @@ export type YamlEditorProps = {
   title?: string;
   defaultValue?: string;
   errorMsgs?: string[];
-  schema: JSONSchema7;
+  schemas?: JSONSchema7[] | null;
   id?: string;
   className?: string;
   height?: string;
@@ -76,7 +76,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
       height,
       readOnly,
       errorMsgs = [],
-      schema,
+      schemas,
       eleRef,
       className,
     } = props;
@@ -283,7 +283,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                 onValidate={onValidate}
                 onEditorCreate={onEditorCreate}
                 onBlur={props.onBlur}
-                schema={schema}
+                schemas={schemas}
                 readOnly={readOnly}
               />
             </div>
