@@ -168,5 +168,12 @@
   "pv_phase_bound": "已绑定",
   "pv_phase_released": "已释放",
   "pv_phase_failed": "失败",
-  "pv_phase_pending": "等待中"
+  "pv_phase_pending": "等待中",
+  "font_size": "字体大小",
+  "download_shell_content": "下载控制台日志",
+  "clear_shell": "清空命令行",
+  "disconnected": "连接异常。",
+  "connecting": "正在连接...",
+  "reconnect": "重新连接",
+  "search": "搜索"
 }

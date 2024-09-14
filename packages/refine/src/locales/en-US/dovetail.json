@@ -167,5 +167,6 @@
   "pv_phase_bound": "Bound",
   "pv_phase_released": "Released",
   "pv_phase_failed": "Failed",
-  "pv_phase_pending": "Pending"
+  "pv_phase_pending": "Pending",
+  "exec_pod": "Execute shell"
 }

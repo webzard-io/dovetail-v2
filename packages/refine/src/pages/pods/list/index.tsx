@@ -2,6 +2,7 @@ import { IResourceComponentsProps, useList } from '@refinedev/core';
 import { compact } from 'lodash-es';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PodDropdown } from 'src/components/PodDropdown';
 import { Column } from '../../../components';
 import { ListPage } from '../../../components/ListPage';
 import { useEagleTable } from '../../../hooks/useEagleTable';
@@ -90,6 +91,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
     tableProps: {
       defaultSize: 10,
     },
+    Dropdown: PodDropdown,
   });
 
   return <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />;
