@@ -15,7 +15,7 @@ type UseSchemaResult = {
   fetchSchema: () => void;
 };
 
-export function useApiGroupSchema(apiGroups: string[]) {
+export function useApiGroupSchema() {
   const [state, setState] = useState<{
     schemas: JSONSchema7[] | null;
     schemasMap: Record<string, JSONSchema7[]>;
@@ -28,7 +28,7 @@ export function useApiGroupSchema(apiGroups: string[]) {
     error: null,
   });
 
-  const fetchSchema = useCallback(async () => {
+  const fetchSchema = useCallback(async (apiGroups: string[]) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
@@ -59,11 +59,7 @@ export function useApiGroupSchema(apiGroups: string[]) {
     } catch (e) {
       setState(prev => ({ ...prev, loading: false, error: e as Error }));
     }
-  }, [apiGroups, state.schemasMap]);
-
-  useEffect(() => {
-    fetchSchema();
-  }, [fetchSchema]);
+  }, [state.schemasMap]);
 
   return { ...state, fetchSchema };
 }
