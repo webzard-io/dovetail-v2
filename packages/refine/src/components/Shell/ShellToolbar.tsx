@@ -33,6 +33,9 @@ const DividerStyle = css`
   background: rgba(172, 186, 211, 0.60);
   margin: 0 16px;
 `;
+const TooltipStyle = css`
+  white-space: nowrap;
+`;
 
 type OperationType = ('fontSize' | 'downloadLog' | 'clear');
 
@@ -76,7 +79,7 @@ function ShellToolbar(props: ShellToolbarProps) {
         }))}
         slotsElements={{
           trigger: () => (
-            <Tooltip title={t('dovetail.font_size')}>
+            <Tooltip title={<span className={TooltipStyle}>{t('dovetail.font_size')}</span>}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Icon
                   className={IconStyle}
@@ -90,7 +93,7 @@ function ShellToolbar(props: ShellToolbarProps) {
       />
     ),
     downloadLog: (
-      <Tooltip title={t('dovetail.download_shell_content')}>
+      <Tooltip title={<span className={TooltipStyle}>{t('dovetail.download_shell_content')}</span>}>
         <Icon
           className={IconStyle}
           src={LogCollection16GrayIcon}
@@ -100,7 +103,7 @@ function ShellToolbar(props: ShellToolbarProps) {
       </Tooltip>
     ),
     clear: (
-      <Tooltip title={t('dovetail.clear_shell')}>
+      <Tooltip title={<span className={TooltipStyle}>{t('dovetail.clear_shell')}</span>}>
         <Icon
           className={IconStyle}
           src={TrashBinDeletePermanently16GrayIcon}
@@ -118,7 +121,7 @@ function ShellToolbar(props: ShellToolbarProps) {
       </div>
       <div className={ToolbarAreaStyle}>
         <SearchInput
-          placeholder="Search..."
+          placeholder={t('dovetail.search')}
           size="small"
           total={searchMatchedTotal}
           onChange={(str) => {

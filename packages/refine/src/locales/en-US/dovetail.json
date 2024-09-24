@@ -168,5 +168,6 @@
   "pv_phase_released": "Released",
   "pv_phase_failed": "Failed",
   "pv_phase_pending": "Pending",
-  "exec_pod": "Execute shell"
+  "exec_pod": "Execute shell",
+  "search": "Search"
 }
