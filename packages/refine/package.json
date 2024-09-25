@@ -1,6 +1,6 @@
 {
   "name": "@dovetail-v2/refine",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "type": "module",
   "files": [
     "dist",
@@ -78,8 +78,8 @@
     "vite-plugin-commonjs": "^0.10.0"
   },
   "peerDependencies": {
-    "@cloudtower/eagle": "^0.31.7",
-    "@cloudtower/icons-react": "^0.31.7",
+    "@cloudtower/eagle": "^0.31.8",
+    "@cloudtower/icons-react": "^0.31.8",
     "@refinedev/core": "^4.47.2",
     "antd": "4.5.0",
     "i18next": "^23.2.3",
