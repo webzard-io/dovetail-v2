@@ -406,7 +406,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
   return (
     <div ref={containerRef} className={ContainerStyle}>
       {!!error ? <Alert
-        style={{ margin: '4px 8px' }}
+        style={{ margin: 8, marginBottom: 4 }}
         message={(
           <span className={ErrorAlertStyle}>
             {t('dovetail.disconnected')}
