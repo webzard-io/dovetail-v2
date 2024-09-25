@@ -56,10 +56,10 @@ export function generateValueFromSchema(
     case Array.isArray(schema.type) &&
       'oneOf' in schema &&
       Boolean(schema.oneOf?.length): {
-      const subSchema = (schema.anyOf || schema.oneOf)?.[0];
+        const subSchema = (schema.anyOf || schema.oneOf)?.[0];
 
-      return generateValueFromSchema(subSchema as JSONSchema7, options);
-    }
+        return generateValueFromSchema(subSchema as JSONSchema7, options);
+      }
     case 'allOf' in schema && Boolean(schema.allOf?.length):
       return generateValueFromSchema(schema.allOf?.[0] as JSONSchema7, options);
     default:
@@ -89,6 +89,7 @@ type ResolveOptions = {
     fields: string[];
     xProperty: boolean;
   };
+  prePath?: string;
 };
 
 export function resolveRef(
@@ -96,13 +97,15 @@ export function resolveRef(
   schemas: Record<string, JSONSchema7>,
   options: ResolveOptions
 ) {
-  const { prune } = options;
+  const { prune, prePath = '#/components/schemas/' } = options;
   const kindObj = (schema as any)['x-kubernetes-group-version-kind'];
+
   if (kindObj) {
-    schema!.properties!.kind = {const: kindObj[0].kind};
+    schema!.properties!.kind = { const: kindObj[0].kind };
   }
+
   if (schema.$ref) {
-    const refKey = schema.$ref.replace('#/components/schemas/', '');
+    const refKey = schema.$ref.replace(prePath, '');
 
     Object.assign(schema, schemas[refKey]);
 
