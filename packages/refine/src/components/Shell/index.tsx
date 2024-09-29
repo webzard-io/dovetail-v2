@@ -85,6 +85,7 @@ export interface ShellHandler {
   setOptions: (options: Record<string, unknown>) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: unknown) => void;
+  writeln: (data: string) => void;
 }
 
 export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(props: ShellProps, ref) {
@@ -161,7 +162,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       });
     }
   }, [encode, send, props.fit]);
-  const debouncedFit = debounce(fit, 200);
+  const debouncedFit = useCallback(() => debounce(fit, 200), [fit]);
   const flush = useCallback(() => {
     const backlog = backlogRef.current.slice();
 
@@ -355,6 +356,9 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     });
     fit();
   }, [fit]);
+  const writeln = useCallback((data: string) => {
+    termInstanceRef.current?.writeln(data);
+  }, []);
 
   useEffect(() => {
     const destroy = setupTerminal();
@@ -401,7 +405,8 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     setOptions,
     setLoading,
     setError,
-  }), [send, searchNext, searchPrevious, getAllTerminalContents, fit, clear, connect, setOptions]);
+    writeln,
+  }), [send, searchNext, searchPrevious, getAllTerminalContents, fit, clear, connect, setOptions, writeln]);
 
   return (
     <div ref={containerRef} className={ContainerStyle}>
