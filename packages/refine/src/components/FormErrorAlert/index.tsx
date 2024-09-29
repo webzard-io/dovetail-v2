@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface FormErrorAlertProps {
+  title?: string;
   errorMsgs: string[];
   style?: React.CSSProperties;
   className?: string;
@@ -11,7 +12,7 @@ interface FormErrorAlertProps {
 }
 
 export function FormErrorAlert(props: FormErrorAlertProps) {
-  const { errorMsgs, style, className, isEdit } = props;
+  const { title, errorMsgs, style, className, isEdit } = props;
   const { i18n } = useTranslation();
 
   return errorMsgs.length ? (
@@ -19,7 +20,7 @@ export function FormErrorAlert(props: FormErrorAlertProps) {
       message={
         (
           <>
-            <div>{i18n.t(isEdit ? 'dovetail.save_failed_tip' : 'dovetail.create_failed_tip')}</div>
+            <div>{ title || i18n.t(isEdit ? 'dovetail.save_failed_tip' : 'dovetail.create_failed_tip')}</div>
             {
               errorMsgs.length > 1 ? (
                 <ul>
