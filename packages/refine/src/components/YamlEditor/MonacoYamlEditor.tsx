@@ -87,6 +87,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
         alwaysConsumeMouseWheel: false, // https://github.com/microsoft/monaco-editor/issues/2007
       },
       tabSize: 2,
+      lineNumbersMinChars: 7,
       readOnly: readOnly,
       autoIndent: import.meta.env.VITE_IS_TEST ? 'none' : 'advanced',
     });
