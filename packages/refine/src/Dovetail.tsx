@@ -1,9 +1,14 @@
-import { KitStoreProvider, ModalStack, useMessage } from '@cloudtower/eagle';
+import {
+  ConfigProvider,
+  KitStoreProvider,
+  ModalStack,
+  useMessage,
+} from '@cloudtower/eagle';
 import { NotificationProvider, Refine, AccessControlProvider } from '@refinedev/core';
 import { History } from 'history';
 import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import { keyBy } from 'lodash-es';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Router } from 'react-router-dom';
 import { ResourceCRUD } from './components/ResourceCRUD';
 import ConfigsContext from './contexts/configs';
@@ -24,6 +29,7 @@ type Props = {
   globalStore: GlobalStore;
   accessControlProvider?: AccessControlProvider;
   routerProvider?: any;
+  antdGetPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement;
 };
 
 export const Dovetail: React.FC<Props> = props => {
@@ -36,8 +42,13 @@ export const Dovetail: React.FC<Props> = props => {
     globalStore,
     accessControlProvider,
     routerProvider: customRouterProvider,
+    antdGetPopupContainer,
   } = props;
   const msg = useMessage();
+
+  useEffect(() => {
+    msg.config({ getContainer: antdGetPopupContainer });
+  }, [msg, antdGetPopupContainer]);
 
   const notCustomResources = useMemo(() => {
     return resourcesConfig.filter(c => !c.isCustom);
@@ -80,43 +91,52 @@ export const Dovetail: React.FC<Props> = props => {
   return (
     <Router history={history}>
       <KitStoreProvider>
-        <GlobalStoreContext.Provider value={{ globalStore }}>
-          <ConfigsContext.Provider value={keyBy(resourcesConfig, 'name')}>
-            <ConstantsContext.Provider value={{ schemaUrlPrefix }}>
-              <Refine
-                dataProvider={{
-                  default: dataProvider(globalStore),
-                }}
-                routerProvider={customRouterProvider || routerProvider}
-                liveProvider={liveProvider(globalStore)}
-                notificationProvider={notificationProvider}
-                options={{
-                  warnWhenUnsavedChanges: true,
-                  liveMode: 'auto',
-                  disableTelemetry: true,
-                }}
-                accessControlProvider={accessControlProvider}
-                resources={resourcesConfig.map(c => {
-                  return {
-                    name: c.name,
-                    meta: {
-                      resourceBasePath: c.basePath,
-                      kind: c.kind,
-                      parent: c.parent,
-                      label: `${c.kind}s`,
-                    },
-                    list: `${urlPrefix}/${c.name}`,
-                    show: `${urlPrefix}/${c.name}/show`,
-                    create: `${urlPrefix}/${c.name}/create`,
-                    edit: `${urlPrefix}/${c.name}/edit`,
-                  };
-                })}
-              >
-                {content}
-              </Refine>
-            </ConstantsContext.Provider>
-          </ConfigsContext.Provider>
-        </GlobalStoreContext.Provider>
+        <ConfigsContext.Provider value={keyBy(resourcesConfig, 'name')}>
+          <ConstantsContext.Provider value={{ schemaUrlPrefix }}>
+            <ConfigProvider
+              antd5Configs={{
+                getPopupContainer: antdGetPopupContainer || (() => document.body),
+              }}
+              antd4Configs={{
+                getPopupContainer: antdGetPopupContainer || (() => document.body),
+              }}
+            >
+              <GlobalStoreContext.Provider value={{ globalStore }}>
+                <Refine
+                  dataProvider={{
+                    default: dataProvider(globalStore),
+                  }}
+                  routerProvider={customRouterProvider || routerProvider}
+                  liveProvider={liveProvider(globalStore)}
+                  notificationProvider={notificationProvider}
+                  options={{
+                    warnWhenUnsavedChanges: true,
+                    liveMode: 'auto',
+                    disableTelemetry: true,
+                  }}
+                  accessControlProvider={accessControlProvider}
+                  resources={resourcesConfig.map(c => {
+                    return {
+                      name: c.name,
+                      meta: {
+                        resourceBasePath: c.basePath,
+                        kind: c.kind,
+                        parent: c.parent,
+                        label: `${c.kind}s`,
+                      },
+                      list: `${urlPrefix}/${c.name}`,
+                      show: `${urlPrefix}/${c.name}/show`,
+                      create: `${urlPrefix}/${c.name}/create`,
+                      edit: `${urlPrefix}/${c.name}/edit`,
+                    };
+                  })}
+                >
+                  {content}
+                </Refine>
+              </GlobalStoreContext.Provider>
+            </ConfigProvider>
+          </ConstantsContext.Provider>
+        </ConfigsContext.Provider>
       </KitStoreProvider>
     </Router>
   );

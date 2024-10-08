@@ -39,7 +39,6 @@ export const EditLabelForm = React.forwardRef<EditLabelFormHandler, EditLabelFor
       });
       const newYaml = resourceModel.updateLabel(newLabels);
       pruneBeforeEdit(newYaml);
-      console.log('newYaml', newYaml);
       return mutateAsync({
         id: resourceModel.id,
         resource: resourceModel.name || '',
