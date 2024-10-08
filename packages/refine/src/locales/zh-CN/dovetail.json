@@ -179,5 +179,9 @@
   "edit_form": "编辑表单",
   "exit_yaml_tip": "返回编辑表单，不会保留对 YAML 文件做出的所有更改。",
   "form": "表单",
-  "yaml": "YAML"
+  "yaml": "YAML",
+  "edit_label": "编辑标签",
+  "edit_label_success_toast": "编辑资源 {{name}} 的标签成功",
+  "edit_annotation": "编辑注解",
+  "edit_annotation_success_toast": "编辑资源 {{name}} 的注解成功"
 }

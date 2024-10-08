@@ -1,12 +1,13 @@
-import { Modal, Button, usePushModal, usePopModal, } from '@cloudtower/eagle';
+import { Modal, Button, usePushModal, usePopModal } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useResource, CanAccess } from '@refinedev/core';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormErrorAlert } from 'src/components/FormErrorAlert';
-import { AccessControlAuth } from 'src/constants/auth';
-import { SmallModalStyle } from 'src/styles/modal';
-import { useSubmitForm } from 'src/hooks/useSubmitForm';
+import { FormErrorAlert } from '../../components/FormErrorAlert';
+import { AccessControlAuth } from '../../constants/auth';
+import { useSubmitForm } from '../../hooks/useSubmitForm';
+import { SmallModalStyle } from '../../styles/modal';
+import { FullscreenModalStyle } from '../../styles/modal';
 
 const EditButtonStyle = css`
   &.ant-btn.ant-btn-link {
@@ -21,25 +22,21 @@ export interface EditFieldModalProps {
   submitting?: boolean;
   errorMsgs?: string[];
   formRef: React.MutableRefObject<{
-    submit: () => (Promise<unknown> | undefined);
+    submit: () => Promise<unknown> | undefined;
   } | null>;
   renderContent: () => React.ReactNode;
+  fullscreen?: boolean;
 }
 
 export function EditFieldModal(props: EditFieldModalProps) {
-  const { title, formRef: form, renderContent } = props;
+  const { title, formRef: form, renderContent, fullscreen } = props;
   const { i18n } = useTranslation();
   const popModal = usePopModal();
-  const {
-    submitting,
-    errorMsgs,
-    reset,
-    onSubmit,
-  } = useSubmitForm({
+  const { submitting, errorMsgs, reset, onSubmit } = useSubmitForm({
     formRef: form,
     onSubmitSuccess: () => {
       popModal();
-    }
+    },
   });
 
   const close = useCallback(() => {
@@ -49,7 +46,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
 
   return (
     <Modal
-      className={SmallModalStyle}
+      className={fullscreen ? FullscreenModalStyle : SmallModalStyle}
       title={title || i18n.t('dovetail.edit')}
       confirmLoading={submitting}
       onOk={onSubmit}
@@ -57,13 +54,10 @@ export function EditFieldModal(props: EditFieldModalProps) {
       okText={i18n.t('dovetail.save')}
       normal
       destroyOnClose
+      fullscreen={fullscreen}
     >
       {renderContent()}
-      <FormErrorAlert
-        style={{ marginTop: 16 }}
-        errorMsgs={errorMsgs}
-        isEdit
-      />
+      <FormErrorAlert style={{ marginTop: 16 }} errorMsgs={errorMsgs} isEdit />
     </Modal>
   );
 }
@@ -79,20 +73,19 @@ export function EditField(props: EditField) {
   const pushModal = usePushModal();
 
   return (
-    <CanAccess
-      resource={resource?.name}
-      action={AccessControlAuth.Edit}
-    >
+    <CanAccess resource={resource?.name} action={AccessControlAuth.Edit}>
       <Button
         className={EditButtonStyle}
         type="link"
         onClick={() => {
           pushModal<'EditFieldModal'>({
             component: EditFieldModal,
-            props: modalProps
+            props: modalProps,
           });
         }}
-      >{i18n.t('dovetail.edit')}</Button>
+      >
+        {i18n.t('dovetail.edit')}
+      </Button>
     </CanAccess>
   );
 }
