@@ -7,6 +7,7 @@ import { FormErrorAlert } from 'src/components/FormErrorAlert';
 import { AccessControlAuth } from 'src/constants/auth';
 import { ModalStyle } from 'src/hooks/useDeleteModal';
 import { useSubmitForm } from 'src/hooks/useSubmitForm';
+import { FullscreenModalStyle } from '../../styles/modal';
 
 const EditButtonStyle = css`
   &.ant-btn.ant-btn-link {
@@ -24,10 +25,11 @@ export interface EditFieldModalProps {
     submit: () => (Promise<unknown> | undefined);
   } | null>;
   renderContent: () => React.ReactNode;
+  fullscreen?: boolean;
 }
 
 export function EditFieldModal(props: EditFieldModalProps) {
-  const { title, formRef: form, renderContent } = props;
+  const { title, formRef: form, renderContent, fullscreen } = props;
   const { i18n } = useTranslation();
   const popModal = usePopModal();
   const {
@@ -49,7 +51,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
 
   return (
     <Modal
-      className={ModalStyle}
+      className={fullscreen ? FullscreenModalStyle : ModalStyle}
       title={title || i18n.t('dovetail.edit')}
       confirmLoading={submitting}
       onOk={onSubmit}
@@ -57,6 +59,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
       okText={i18n.t('dovetail.save')}
       normal
       destroyOnClose
+      fullscreen={fullscreen}
     >
       {renderContent()}
       <FormErrorAlert
