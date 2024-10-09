@@ -2,7 +2,7 @@ import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import type { DaemonSet, Deployment, StatefulSet } from 'kubernetes-types/apps/v1';
 import { PodList } from 'kubernetes-types/core/v1';
 import { cloneDeep, get, set, sumBy } from 'lodash';
-import { TIMESTAMP_LABEL } from '../constants';
+import { REDEPLOY_TIMESTAMP_KEY } from '../constants';
 import { matchSelector } from '../utils/match-selector';
 import { PodModel } from './pod-model';
 import { WorkloadBaseModel } from './workload-base-model';
@@ -52,7 +52,7 @@ export class WorkloadModel extends WorkloadBaseModel {
     const annotations = get(newOne, path, {});
     set(newOne, path, {
       ...annotations,
-      [TIMESTAMP_LABEL]: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
+      [REDEPLOY_TIMESTAMP_KEY]: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
     });
     return newOne as WorkloadTypes;
   }
