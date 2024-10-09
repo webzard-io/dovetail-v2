@@ -159,6 +159,7 @@ function App() {
         Layout={Layout}
         history={history}
         globalStore={globalStore}
+        schemaUrlPrefix='/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3'
       >
         <Router history={history}>
           <Route path="/cronjobs" exact>
