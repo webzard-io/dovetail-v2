@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { Router } from 'react-router-dom';
 import { ResourceCRUD } from './components/ResourceCRUD';
 import ConfigsContext from './contexts/configs';
+import ConstantsContext from './contexts/constants';
 import GlobalStoreContext from './contexts/global-store';
 import { routerProvider } from './providers/router-provider';
 import { ResourceConfig } from './types';
@@ -15,6 +16,7 @@ import './styles.css';
 
 type Props = {
   resourcesConfig: ResourceConfig[];
+  schemaUrlPrefix: string;
   useHashUrl?: boolean;
   urlPrefix?: string;
   Layout?: React.FC<unknown>;
@@ -28,6 +30,7 @@ export const Dovetail: React.FC<Props> = props => {
   const {
     resourcesConfig,
     urlPrefix = '',
+    schemaUrlPrefix,
     Layout,
     history,
     globalStore,
@@ -79,37 +82,39 @@ export const Dovetail: React.FC<Props> = props => {
       <KitStoreProvider>
         <GlobalStoreContext.Provider value={{ globalStore }}>
           <ConfigsContext.Provider value={keyBy(resourcesConfig, 'name')}>
-            <Refine
-              dataProvider={{
-                default: dataProvider(globalStore),
-              }}
-              routerProvider={customRouterProvider || routerProvider}
-              liveProvider={liveProvider(globalStore)}
-              notificationProvider={notificationProvider}
-              options={{
-                warnWhenUnsavedChanges: true,
-                liveMode: 'auto',
-                disableTelemetry: true,
-              }}
-              accessControlProvider={accessControlProvider}
-              resources={resourcesConfig.map(c => {
-                return {
-                  name: c.name,
-                  meta: {
-                    resourceBasePath: c.basePath,
-                    kind: c.kind,
-                    parent: c.parent,
-                    label: `${c.kind}s`,
-                  },
-                  list: `${urlPrefix}/${c.name}`,
-                  show: `${urlPrefix}/${c.name}/show`,
-                  create: `${urlPrefix}/${c.name}/create`,
-                  edit: `${urlPrefix}/${c.name}/edit`,
-                };
-              })}
-            >
-              {content}
-            </Refine>
+            <ConstantsContext.Provider value={{ schemaUrlPrefix }}>
+              <Refine
+                dataProvider={{
+                  default: dataProvider(globalStore),
+                }}
+                routerProvider={customRouterProvider || routerProvider}
+                liveProvider={liveProvider(globalStore)}
+                notificationProvider={notificationProvider}
+                options={{
+                  warnWhenUnsavedChanges: true,
+                  liveMode: 'auto',
+                  disableTelemetry: true,
+                }}
+                accessControlProvider={accessControlProvider}
+                resources={resourcesConfig.map(c => {
+                  return {
+                    name: c.name,
+                    meta: {
+                      resourceBasePath: c.basePath,
+                      kind: c.kind,
+                      parent: c.parent,
+                      label: `${c.kind}s`,
+                    },
+                    list: `${urlPrefix}/${c.name}`,
+                    show: `${urlPrefix}/${c.name}/show`,
+                    create: `${urlPrefix}/${c.name}/create`,
+                    edit: `${urlPrefix}/${c.name}/edit`,
+                  };
+                })}
+              >
+                {content}
+              </Refine>
+            </ConstantsContext.Provider>
           </ConfigsContext.Provider>
         </GlobalStoreContext.Provider>
       </KitStoreProvider>
