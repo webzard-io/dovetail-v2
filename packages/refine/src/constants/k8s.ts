@@ -459,7 +459,7 @@ export const SERVER_INSTANCE_INIT_VALUE = {
   },
 };
 
-export const TIMESTAMP_LABEL = 'sks.user.kubesmart.smtx.io/timestamp';
+export const REDEPLOY_TIMESTAMP_KEY = 'kubectl.kubernetes.io/restartedAt';
 
 export const SECRET_OPAQUE_INIT_VALUE = {
   'apiVersion': 'v1',
