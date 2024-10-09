@@ -1,19 +1,20 @@
 import { useResource, type IResourceItem } from '@refinedev/core';
 import { JSONSchema7 } from 'json-schema';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import OpenAPI from 'src/utils/openapi';
+import ConstantsContext from '../contexts/constants';
 
 type UseSchemaOptions = {
   resource?: IResourceItem;
   skip?: boolean;
-}
+};
 
 type UseSchemaResult = {
   schema: JSONSchema7 | null;
   loading: boolean;
   error: Error | null;
-  fetchSchema: ()=> void;
-}
+  fetchSchema: () => void;
+};
 
 export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
   const [schema, setSchema] = useState<JSONSchema7 | null>(null);
@@ -21,9 +22,10 @@ export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
   const [error, setError] = useState<Error | null>(null);
   const useResourceResult = useResource();
   const resource = options?.resource || useResourceResult.resource;
+  const { schemaUrlPrefix } = useContext(ConstantsContext);
   const openapi = useMemo(
-    () => new OpenAPI(resource?.meta?.resourceBasePath),
-    [resource?.meta?.resourceBasePath]
+    () => new OpenAPI(resource?.meta?.resourceBasePath, schemaUrlPrefix),
+    [resource?.meta?.resourceBasePath, schemaUrlPrefix]
   );
 
   const fetchSchema = useCallback(async () => {
