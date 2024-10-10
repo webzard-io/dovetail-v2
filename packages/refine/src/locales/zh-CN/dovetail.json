@@ -175,5 +175,9 @@
   "disconnected": "连接异常。",
   "connecting": "正在连接...",
   "reconnect": "重新连接",
-  "search": "搜索"
+  "search": "搜索",
+  "edit_label": "编辑标签",
+  "edit_label_success_toast": "编辑资源 {{name}} 的标签成功",
+  "edit_annotation": "编辑注解",
+  "edit_annotation_success_toast": "编辑资源 {{name}} 的注解成功"
 }
