@@ -40,7 +40,7 @@ const DropdownStyle = css`
   border-radius: 6px;
 `;
 const SearchInputStyle = css`
-  &&.ant-input-affix-wrapper {
+  &.ant-input-affix-wrapper.ant-input-affix-wrapper {
     border: unset;
     border-bottom: 1px solid rgba(211, 218, 235, .6);
     border-radius: unset;

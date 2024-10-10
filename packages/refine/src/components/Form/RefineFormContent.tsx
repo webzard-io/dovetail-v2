@@ -1,12 +1,12 @@
 import { Fields, Form, Space, Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
-import { useList, useShow } from '@refinedev/core';
 import { UseFormReturnType } from '@refinedev/react-hook-form';
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { ResourceModel } from '../../models';
-import { ResourceConfig } from '../../types';
+import { ResourceModel } from 'src/models';
+import { ResourceConfig } from 'src/types';
 import { FormErrorAlert } from '../FormErrorAlert';
+import useFieldsConfig from './useFieldsConfig';
 
 type Props<Model extends ResourceModel> = {
   config?: ResourceConfig<Model>;
@@ -19,24 +19,8 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
   const { config, formResult, resourceId, errorMsg } = props;
   const { control, getValues } = formResult;
   const action = resourceId ? 'edit' : 'create';
-  const listQuery = useList<Model>({
-    resource: config?.name,
-    meta: { resourceBasePath: config?.basePath, kind: config?.kind },
-    pagination: {
-      mode: 'off',
-    },
-  });
-  const showQuery = useShow<Model>({
-    resource: config?.name,
-    meta: { resourceBasePath: config?.basePath, kind: config?.kind },
-    id: resourceId,
-  });
 
-  const formFieldsConfig = config?.formConfig?.fields?.({
-    record: showQuery.queryResult.data?.data,
-    records: listQuery.data?.data || [],
-    action,
-  });
+  const formFieldsConfig = useFieldsConfig(config, resourceId);
 
   const fields = formFieldsConfig?.map(c => {
     return (
@@ -136,7 +120,6 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
       size={16}
       className={css`
         flex-basis: 58%;
-        max-width: 648px;
         width: 100%;
         margin: 0 auto;
       `}
