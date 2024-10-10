@@ -38,7 +38,7 @@ class K8sOpenAPI {
   private apiVersion: string;
   private schemas: Array<OpenAPIResponse['components']['schemas'][string]> | null = null;
 
-  constructor(private resourceBasePath: string) {
+  constructor(private resourceBasePath: string, private pathPrefix: string) {
     this.apiVersion = getApiVersion(resourceBasePath);
   }
 
@@ -46,7 +46,7 @@ class K8sOpenAPI {
   public async fetch(): Promise<Array<OpenAPIResponse['components']['schemas'][string]> | null> {
     try {
       const response = await fetch(
-        `/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3${this.resourceBasePath}`
+      `${this.pathPrefix}${this.resourceBasePath}`
       );
 
       const result = await response.json() as OpenAPIResponse;
