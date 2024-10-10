@@ -1,7 +1,8 @@
 import { useResource, type IResourceItem } from '@refinedev/core';
 import { JSONSchema7 } from 'json-schema';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import OpenAPI from 'src/utils/openapi';
+import ConstantsContext from '../contexts/constants';
 
 type UseSchemaOptions = {
   resource?: IResourceItem;
@@ -28,7 +29,7 @@ export function useApiGroupSchema() {
     error: null,
   });
 
-  const fetchSchema = useCallback(async (apiGroups: string[]) => {
+  const fetchSchema = useCallback(async (apiGroups: string[], schemaUrlPrefix: string) => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
@@ -37,7 +38,7 @@ export function useApiGroupSchema() {
           if (state.schemasMap[apiGroup]) {
             return { apiGroup, schemas: state.schemasMap[apiGroup] };
           }
-          const openapi = new OpenAPI(apiGroup);
+          const openapi = new OpenAPI(apiGroup, schemaUrlPrefix);
           const groupSchemas = await openapi.fetch();
           return { apiGroup, schemas: groupSchemas || [] };
         })
@@ -70,9 +71,10 @@ export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
   const [error, setError] = useState<Error | null>(null);
   const useResourceResult = useResource();
   const resource = options?.resource || useResourceResult.resource;
+  const { schemaUrlPrefix } = useContext(ConstantsContext);
   const openapi = useMemo(
-    () => new OpenAPI(resource?.meta?.resourceBasePath),
-    [resource?.meta?.resourceBasePath]
+    () => new OpenAPI(resource?.meta?.resourceBasePath, schemaUrlPrefix),
+    [resource?.meta?.resourceBasePath, schemaUrlPrefix]
   );
 
   const fetchSchema = useCallback(async () => {
