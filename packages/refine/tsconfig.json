@@ -1,6 +1,8 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src", "vite.config.ts"],
+  "include": [
+    "src"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"
@@ -8,7 +10,9 @@
   ],
   "compilerOptions": {
     "paths": {
-      "src/*": ["./src/*"]
+      "src/*": [
+        "./src/*"
+      ]
     },
     "declaration": true,
     "declarationDir": "lib"
