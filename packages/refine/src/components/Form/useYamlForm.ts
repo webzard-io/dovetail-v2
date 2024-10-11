@@ -25,9 +25,16 @@ import { pruneBeforeEdit } from 'src/utils/k8s';
 import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
 import { useGlobalStore } from '../../hooks/useGlobalStore';
+import { RefineFormValidator } from 'src/components/Form/type'
+import { get, uniq } from 'lodash-es';
 
 type EditorProps = YamlEditorProps & {
   ref: React.RefObject<YamlEditorHandle>;
+};
+
+export type YamlFormRule = {
+  path: string[];
+  validators?: RefineFormValidator[];
 };
 
 export type UseFormProps<
@@ -55,8 +62,10 @@ export type UseFormProps<
     isSkipSchema?: boolean;
   };
   initialValuesForCreate?: Record<string, unknown>;
+  initialValuesForEdit?: Record<string, unknown>;
   transformInitValues?: (values: Unstructured) => Unstructured;
   transformApplyValues?: (values: Unstructured) => Unstructured;
+  rules?: YamlFormRule[];
 };
 
 export type UseFormReturnType<
@@ -133,8 +142,10 @@ const useYamlForm = <
   overtimeOptions,
   editorOptions,
   initialValuesForCreate,
+  initialValuesForEdit,
   transformInitValues,
   transformApplyValues,
+  rules,
 }: UseFormProps<
   TQueryFnData,
   TError,
@@ -156,6 +167,7 @@ const useYamlForm = <
   const [isYamlValid, setIsYamlValid] = useState(true);
   const [isSchemaValid, setIsSchemaValid] = useState(true);
   const [editorErrors, setEditorErrors] = useState<string[]>([]);
+  const [rulesErrors, setRulesErrors] = useState<string[]>([]);
   const [errorResponseBody, setErrorResponseBody] = useState<Record<
     string,
     unknown
@@ -186,7 +198,17 @@ const useYamlForm = <
     TResponseError
   >({
     onMutationSuccess: onMutationSuccessProp ? onMutationSuccessProp : undefined,
-    onMutationError,
+    onMutationError: (error, ...restParams) => {
+      const response = error.response;
+
+      if (response && !response?.bodyUsed) {
+        response.json?.().then((body: Record<string, unknown>) => {
+          setErrorResponseBody(body);
+        });
+      }
+
+      onMutationError?.(error, ...restParams);
+    },
     redirect,
     action: actionFromProps,
     resource,
@@ -217,10 +239,14 @@ const useYamlForm = <
   const warnWhenUnsavedChanges =
     warnWhenUnsavedChangesProp ?? warnWhenUnsavedChangesRefine;
 
+  const action = useMemo(
+    () => actionFromProps || useResourceResult.action,
+    [actionFromProps, useResourceResult.action]
+  );
   const initialValues = useMemo(() => {
     const initialValues =
-      (queryResult?.data?.data
-        ? globalStore?.restoreItem(queryResult.data.data)
+      (action === 'edit' && queryResult?.data?.data
+        ? (initialValuesForEdit || globalStore?.restoreItem(queryResult.data.data))
         : initialValuesForCreate) || {};
 
     if (initialValues) {
@@ -229,20 +255,9 @@ const useYamlForm = <
 
     return transformInitValues?.(initialValues as Unstructured) || initialValues;
   }, [queryResult, globalStore, initialValuesForCreate, transformInitValues]);
-  const action = useMemo(
-    () => actionFromProps || useResourceResult.action,
-    [actionFromProps, useResourceResult.action]
-  );
-
-  React.useEffect(() => {
-    const response = useFormCoreResult.mutationResult.error?.response;
-
-    if (response && !response?.bodyUsed) {
-      response.json?.().then((body: Record<string, unknown>) => {
-        setErrorResponseBody(body);
-      });
-    }
-  }, [useFormCoreResult.mutationResult]);
+  const finalErrors = useMemo(() => {
+    return uniq([...editorErrors, ...rulesErrors]);
+  }, [editorErrors, rulesErrors]);
 
   const onKeyUp = (event: React.KeyboardEvent<HTMLFormElement>) => {
     if (submitOnEnter && event.key === 'Enter') {
@@ -255,6 +270,33 @@ const useYamlForm = <
       setWarnWhen(true);
     }
     return changeValues;
+  };
+
+  const validateYaml = (yamlValue: string) => {
+    const errorMap: Record<string, string> = {};
+
+    if (rules && isYamlValid && isSchemaValid) {
+      const formValue = yaml.load(yamlValue || '');
+
+      rules.forEach(rule => {
+        const { path, validators } = rule;
+        const value = get(formValue, path);
+
+        for (const validator of (validators || [])) {
+          const { isValid, errorMsg } = validator(value, formValue);
+
+          if (!isValid) {
+            errorMap[path.join('.')] = `${errorMsg}(${path.join('.')})`;
+            break;
+          }
+        }
+      });
+
+    }
+
+    setRulesErrors(uniq(Object.values(errorMap)));
+
+    return errorMap;
   };
 
   const saveButtonProps = useMemo(
@@ -280,7 +322,7 @@ const useYamlForm = <
           : yaml.dump(initialValues),
       schemas,
       id: useResourceResult.resource?.name || '',
-      errorMsgs: editorErrors,
+      errorMsgs: finalErrors,
       onValidate(yamlValid: boolean, schemaValid: boolean) {
         setIsYamlValid(yamlValid);
         setIsSchemaValid(schemaValid);
@@ -299,7 +341,7 @@ const useYamlForm = <
         }
       },
     };
-  }, [schema, editorOptions?.isGenerateAnnotations, initialValues, schemas, useResourceResult.resource?.name, editorErrors, action, fold]);
+  }, [schema, editorOptions?.isGenerateAnnotations, initialValues, schemas, useResourceResult.resource?.name, editorErrors, action, finalErrors, fold]);
 
   return {
     form: formSF.form,
@@ -313,6 +355,13 @@ const useYamlForm = <
 
         if (errors.length) {
           setEditorErrors(errors);
+          return;
+        }
+
+        const rulesErrors = validateYaml(editor.current?.getEditorValue() || '');
+
+        if (Object.keys(rulesErrors).length) {
+          setRulesErrors(Object.values(rulesErrors));
           return;
         }
 

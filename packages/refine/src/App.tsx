@@ -66,7 +66,7 @@ function App() {
           renderForm: (formProps: YamlFormProps) => (
             <YamlForm
               {...formProps}
-              initialValues={DEPLOYMENT_INIT_VALUE}
+              initialValuesForCreate={DEPLOYMENT_INIT_VALUE}
               isShowLayout={false}
             />
           ),
@@ -107,6 +107,7 @@ function App() {
           useFormProps: {
             mode: 'onTouched',
           },
+          isDisabledChangeMode: true,
           fields: () => [
             {
               path: ['metadata', 'name'],
