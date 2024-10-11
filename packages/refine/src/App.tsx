@@ -162,11 +162,7 @@ function App() {
 
   const globalStore = useMemo(() => {
     return new GlobalStore(
-      {
-        apiUrl: '/api/sks-proxy/api/v1/clusters/physical-cluster/proxy',
-        watchWsApiUrl: 'api/sks-ws/sks-proxy/api/v1/clusters/physical-cluster/proxy',
-        prefix: 'default',
-      },
+      { apiUrl: '/api/k8s', watchWsApiUrl: 'api/sks-ws/k8s', prefix: 'default' },
       ProviderPlugins
     );
   }, []);
