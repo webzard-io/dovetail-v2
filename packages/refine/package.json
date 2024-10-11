@@ -8,7 +8,7 @@
   ],
   "main": "./dist/refine.umd.js",
   "module": "./dist/refine.js",
-  "types": "./lib/src/index.d.ts",
+  "types": "./lib/index.d.ts",
   "dependencies": {
     "@cloudtower/eagle": "^0.31.7",
     "@cloudtower/icons-react": "^0.31.7",
