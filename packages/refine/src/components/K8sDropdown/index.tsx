@@ -8,6 +8,8 @@ import {
   Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
 import { useResource, useCan } from '@refinedev/core';
+import { Unstructured } from 'k8s-api-provider';
+import { Node } from 'kubernetes-types/core/v1';
 import { omit } from 'lodash-es';
 import React, { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +19,11 @@ import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useOpenForm } from 'src/hooks/useOpenForm';
 import { useGlobalStore } from '../../hooks';
 import { ResourceModel } from '../../models';
-import { EditAnnotationDropdownMenuItem, EditLabelDropdownMenuItem } from '../DropdownMenuItems';
+import {
+  EditAnnotationDropdownMenuItem,
+  EditLabelDropdownMenuItem,
+} from '../DropdownMenuItems';
+import { EditNodeTaintDropdownMenuItem } from '../DropdownMenuItems/EditNodeTaintDropdownMenuItem';
 
 export type DropdownSize = 'normal' | 'large';
 
@@ -58,6 +64,14 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
       <EditAnnotationDropdownMenuItem formRef={formRef} resourceModel={record} />
     ) : null;
 
+  const editNodeTaintDropdown =
+    canEditData?.can !== false && resource?.name === 'nodes' ? (
+      <EditNodeTaintDropdownMenuItem
+        formRef={formRef}
+        resourceModel={record as ResourceModel<Node & Unstructured>}
+      />
+    ) : null;
+
   return (
     <>
       <Dropdown
@@ -82,6 +96,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
             </Menu.Item>
             {editLabelMenuItem}
             {editAnnotationMenuItem}
+            {editNodeTaintDropdown}
             {props.children}
             {canDeleteData?.can !== false ? <Divider style={{ margin: 0 }} /> : null}
             {canDeleteData?.can !== false ? (
