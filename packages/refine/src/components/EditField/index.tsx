@@ -5,7 +5,7 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormErrorAlert } from 'src/components/FormErrorAlert';
 import { AccessControlAuth } from 'src/constants/auth';
-import { ModalStyle } from 'src/hooks/useDeleteModal';
+import { SmallModalStyle } from 'src/styles/modal';
 import { useSubmitForm } from 'src/hooks/useSubmitForm';
 
 const EditButtonStyle = css`
@@ -49,7 +49,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
 
   return (
     <Modal
-      className={ModalStyle}
+      className={SmallModalStyle}
       title={title || i18n.t('dovetail.edit')}
       confirmLoading={submitting}
       onOk={onSubmit}

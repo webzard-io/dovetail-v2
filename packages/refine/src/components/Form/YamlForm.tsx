@@ -11,6 +11,7 @@ import { YamlEditorComponent } from 'src/components/YamlEditor/YamlEditorCompone
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
 import { getCommonErrors } from 'src/utils/error';
 import useYamlForm from './useYamlForm';
+import { YamlFormRule } from './useYamlForm';
 
 const FormStyle = css``;
 const EditorStyle = css`
@@ -28,10 +29,12 @@ export enum SchemaStrategy {
 export interface YamlFormProps {
   id?: string;
   action?: FormAction;
-  initialValues?: Record<string, unknown>;
+  initialValuesForCreate?: Record<string, unknown>;
+  initialValuesForEdit?: Record<string, unknown>;
   schemaStrategy?: SchemaStrategy;
   isShowLayout?: boolean;
   useFormProps?: Parameters<typeof useYamlForm>[0];
+  rules?: YamlFormRule[];
   transformInitValues?: (values: Unstructured) => Unstructured;
   transformApplyValues?: (values: Unstructured) => Unstructured;
   onSaveButtonPropsChange?: (saveButtonProps: {
@@ -53,7 +56,8 @@ export function YamlForm(props: YamlFormProps) {
     transformInitValues,
     transformApplyValues,
     onSaveButtonPropsChange,
-    onErrorsChange
+    onErrorsChange,
+    rules,
   } = props;
   const { action: actionFromResource, resource } = useResource();
   const action = actionFromProps || actionFromResource;
@@ -73,7 +77,9 @@ export function YamlForm(props: YamlFormProps) {
       isSkipSchema: schemaStrategy === SchemaStrategy.None,
     },
     liveMode: 'off',
-    initialValuesForCreate: props.initialValues ?? BASE_INIT_VALUE,
+    initialValuesForCreate: props.initialValuesForCreate ?? BASE_INIT_VALUE,
+    initialValuesForEdit: props.initialValuesForEdit,
+    rules,
     successNotification(data) {
       return {
         message: i18n.t(action === 'create' ? 'dovetail.create_success_toast' : 'dovetail.save_yaml_success_toast', {
