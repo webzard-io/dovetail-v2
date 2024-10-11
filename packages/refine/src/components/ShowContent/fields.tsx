@@ -1,4 +1,5 @@
 import { Units } from '@cloudtower/eagle';
+import { useTable, CrudFilters } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
 import { Unstructured } from 'k8s-api-provider';
 import { Condition } from 'kubernetes-types/meta/v1';
@@ -39,9 +40,11 @@ import { IngressRulesTable } from '../IngressRulesTable';
 import { KeyValue, KeyValueAnnotation, KeyValueSecret } from '../KeyValue';
 import { PVPhaseDisplay, PVVolumeModeDisplay } from '../ResourceFiledDisplays';
 import { ResourceLink } from '../ResourceLink';
+import { ResourceTable } from '../ResourceTable';
 import { Time } from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
+import PVCDistributeStorage from 'src/components/PVCDistributeStorage'
 
 export type ShowField<Model extends ResourceModel> = {
   key: string;
@@ -403,16 +406,23 @@ export const StorageClassPvField = <
   return {
     key: 'pvs',
     path: ['pvs'],
-    renderContent: pvs => {
-      return (pvs as PersistentVolumeModel[]).map(pv => (
-        <div key={pv.metadata.name}>
-          <ResourceLink
-            resourceName={'persistentvolumes'}
-            namespace={pv.metadata.namespace || ''}
-            resourceId={pv.id}
-          />
-        </div>
-      ));
+    renderContent: (_, sc) => {
+      return (
+        <ResourceTable
+          resource="persistentvolumes"
+          useTableParams={{
+            filters: {
+              permanent: [{
+                field: '',
+                value: '',
+                fn(pv: PersistentVolumeModel) {
+                  return sc.filterPV(pv, sc.metadata.name);
+                }
+              }] as unknown as CrudFilters
+            }
+          }}
+        />
+      );
     },
   };
 };
@@ -436,10 +446,20 @@ export const PVCStorageField = <Model extends PersistentVolumeClaimModel>(
   return {
     key: 'storage',
     path: ['spec', 'resources', 'requests', 'storage'],
-    title: i18n.t('dovetail.capacity'),
-    renderContent(value) {
-      return <Units.Byte rawValue={parseSi(value as string)} decimals={1} />;
+    title: i18n.t('dovetail.distributed'),
+    renderContent(value, pvc) {
+      return <PVCDistributeStorage pvc={pvc} editable />;
     },
+  };
+};
+
+export const PVRefField = <Model extends PersistentVolumeClaimModel>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'pv',
+    path: ['pv'],
+    title: i18n.t('dovetail.pv'),
   };
 };
 
@@ -467,8 +487,8 @@ export const PVPhaseField = <
 ): ShowField<Model> => {
   return {
     key: 'phase',
-    path: ['status', 'phase'],
-    title: i18n.t('dovetail.phase'),
+    path: ['phase'],
+    title: i18n.t('dovetail.state'),
     renderContent(value) {
       return <PVPhaseDisplay value={value as string} />;
     },
@@ -501,3 +521,98 @@ export const PVAccessModeField = <
     title: i18n.t('dovetail.access_mode'),
   };
 };
+
+export const PVCRefField = <
+  Model extends PersistentVolumeModel,
+>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'pvc',
+    path: ['pvc'],
+    title: i18n.t('dovetail.pvc'),
+  };
+};
+
+export const PVCSIRefField = <
+  Model extends PersistentVolumeModel,
+>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'csi',
+    path: ['csi'],
+    title: i18n.t('dovetail.csi'),
+  };
+};
+
+export const IsDefaultSCField = <
+  Model extends StorageClassModel,
+>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'isDefaultSC',
+    path: ['isDefaultSC'],
+    title: i18n.t('dovetail.default_sc'),
+    renderContent(val) {
+      return val ? i18n.t('dovetail.true') : i18n.t('dovetail.false');
+    }
+  };
+};
+
+export const SCReclaimPolicyField = <
+  Model extends StorageClassModel,
+>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'reclaimPolicy',
+    path: ['reclaimPolicy'],
+    title: i18n.t('dovetail.reclaim_policy'),
+    renderContent(val) {
+      const map: Record<string, string> = {
+        Delete: i18n.t('dovetail.delete'),
+        Retain: i18n.t('dovetail.retain'),
+      };
+
+      return map[val as string] || val;
+    },
+  };
+};
+
+export const IsSCAllowVolumeExpansionField = <
+  Model extends StorageClassModel,
+>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: '​​allowVolumeExpansion',
+    path: ['​allowVolumeExpansion'],
+    title: i18n.t('dovetail.allow_expand'),
+    renderContent(val) {
+      return val ? i18n.t('dovetail.support') : i18n.t('dovetail.not_support');
+    },
+  };
+};
+
+export const ResourceTableField = <
+  Model extends ResourceModel,
+>(
+  resource: string,
+  useTableParams?: Parameters<typeof useTable<Model>>[0],
+): ShowField<Model> => {
+  return {
+    key: resource,
+    path: [],
+    renderContent() {
+      return (
+        <ResourceTable
+          resource={resource}
+          useTableParams={useTableParams}
+        />
+      );
+    },
+  };
+};
+

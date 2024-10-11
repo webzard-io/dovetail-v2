@@ -152,6 +152,7 @@
   "out_cluster_lb_desc": "LoadBalancer 展示 <strong>ingress[*].ip</strong>。",
   "out_external_name_desc": "ExternalName 展示 <strong>external-ip</strong>。",
   "only_support_one_yaml": "一次仅支持输入一个 YAML 配置。",
+  "support": "支持",
   "not_support": "不支持",
   "stopped": "已停止",
   "any_node_ip": "任意节点 IP",
@@ -160,7 +161,7 @@
   "provisioner": "制备器",
   "file_system": "文件系统",
   "capacity": "容量",
-  "phase": "阶段",
+  "distributed": "分配量",
   "volume_mode": "卷模式",
   "access_mode": "访问模式",
   "block": "块",
@@ -183,5 +184,15 @@
   "edit_label": "编辑标签",
   "edit_label_success_toast": "编辑资源 {{name}} 的标签成功",
   "edit_annotation": "编辑注解",
-  "edit_annotation_success_toast": "编辑资源 {{name}} 的注解成功"
+  "edit_annotation_success_toast": "编辑资源 {{name}} 的注解成功",
+  "pvc": "持久卷申领",
+  "pv": "持久卷",
+  "csi": "CSI",
+  "retain": "保留",
+  "default_sc": "默认存储类",
+  "reclaim_policy": "回收策略",
+  "allow_expand": "卷扩容",
+  "edit_distribute_storage": "编辑分配量",
+  "edit_distribute_storage_success_toast": "编辑分配量成功",
+  "edit_distribute_storage_failed_toast": "编辑分配量失败"
 }

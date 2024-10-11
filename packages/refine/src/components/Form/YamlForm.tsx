@@ -35,7 +35,7 @@ export interface YamlFormProps {
   isShowLayout?: boolean;
   useFormProps?: Parameters<typeof useYamlForm>[0];
   rules?: YamlFormRule[];
-  transformInitValues?: (values: Unstructured) => Unstructured;
+  transformInitValues?: (values: Record<string, unknown>) => Record<string, unknown>;
   transformApplyValues?: (values: Unstructured) => Unstructured;
   onSaveButtonPropsChange?: (saveButtonProps: {
     disabled?: boolean;

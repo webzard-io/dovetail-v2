@@ -554,8 +554,49 @@ export const STORAGE_CLASS_INIT_VALUE = {
   'apiVersion': 'storage.k8s.io/v1',
   'kind': 'StorageClass',
   'metadata': {
+    'name': 'example'
+  },
+  'parameters': {},
+  'provisioner': 'example',
+  'reclaimPolicy': 'Delete',
+  'allowVolumeExpansion': true,
+  'volumeBindingMode': 'Immediate'
+};
+
+export const PV_INIT_VALUE = {
+  'apiVersion': 'v1',
+  'kind': 'PersistentVolume',
+  'metadata': {
+    'name': 'example'
+  },
+  'spec': {
+    'accessModes': [
+      'ReadWriteOnce'
+    ],
+    'capacity': {
+      'storage': '40Gi'
+    },
+    'persistentVolumeReclaimPolicy': 'Delete',
+    'volumeMode': 'Filesystem'
+  }
+};
+
+export const PVC_INIT_VALUE = {
+  'apiVersion': 'v1',
+  'kind': 'PersistentVolumeClaim',
+  'metadata': {
     'name': 'example',
     'namespace': 'default'
   },
-  'spec': {}
+  'spec': {
+    'accessModes': [
+      'ReadWriteOnce'
+    ],
+    'resources': {
+      'requests': {
+        'storage': '40Gi'
+      }
+    },
+    'storageClassName': 'example'
+  }
 };
