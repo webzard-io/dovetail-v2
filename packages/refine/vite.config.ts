@@ -1,14 +1,17 @@
 import path from 'path';
-import linaria from '@linaria/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import commonjs from 'vite-plugin-commonjs';
+import linaria from './tools/linaria';
 
 export default defineConfig({
   plugins: [
     commonjs(),
     react(),
-    linaria(),
+    linaria({
+      preprocessor: 'none',
+      extension: 'scss'
+    }),
   ],
   optimizeDeps: {
     exclude: ['monaco-yaml/yaml.worker.js']
@@ -75,4 +78,11 @@ export default defineConfig({
       src: path.resolve(__dirname, 'src'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@import "@cloudtower/eagle/dist/variables.scss";\r\n'
+      }
+    }
+  }
 });

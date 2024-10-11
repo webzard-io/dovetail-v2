@@ -175,5 +175,9 @@
   "disconnected": "连接异常。",
   "connecting": "正在连接...",
   "reconnect": "重新连接",
-  "search": "搜索"
+  "search": "搜索",
+  "edit_form": "编辑表单",
+  "exit_yaml_tip": "返回编辑表单，不会保留对 YAML 文件做出的所有更改。",
+  "form": "表单",
+  "yaml": "YAML"
 }
