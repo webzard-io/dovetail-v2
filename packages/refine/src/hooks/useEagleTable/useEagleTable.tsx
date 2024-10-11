@@ -9,6 +9,7 @@ import { ResourceModel } from '../../models';
 
 type Params<Model extends ResourceModel> = {
   useTableParams: Parameters<typeof useTable<Model>>[0];
+  resource?: string;
   columns: Column<Model>[];
   tableProps?: Partial<TableProps<Model>>;
   formatter?: (d: Model) => Model;
@@ -39,7 +40,7 @@ export function addDefaultRenderToColumns<Data, Col extends RequiredColumnProps<
 }
 
 export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>) => {
-  const { columns, tableProps, formatter, Dropdown = K8sDropdown } = params;
+  const { columns, tableProps, formatter, Dropdown = K8sDropdown, resource: resourceFromParams } = params;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
   const { resource } = useResource();
@@ -52,9 +53,10 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
         pageSize: currentSize,
         mode: 'server',
       },
+      resource: resourceFromParams || resource?.name,
     });
     return mergedParams;
-  }, [params.useTableParams, currentSize]);
+  }, [params.useTableParams, currentSize, resourceFromParams, resource]);
   const finalColumns: Column<Model>[] = useMemo(() =>
     addDefaultRenderToColumns<Model, Column<Model>>(columns),
     [columns]
@@ -86,7 +88,7 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
   const finalDataSource = formatter ? data?.map(formatter) : data;
 
   const finalProps: TableProps<Model> = {
-    tableKey: resource?.name || 'table',
+    tableKey: resourceFromParams || resource?.name || 'table',
     loading: table.tableQueryResult.isLoading,
     data: finalDataSource || [],
     columns: finalColumns,

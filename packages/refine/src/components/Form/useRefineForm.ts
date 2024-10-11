@@ -40,6 +40,7 @@ export const useRefineForm = (props: {
       ...refineProps,
     },
     defaultValues: config?.initValue,
+    transformApplyValues: config.formConfig?.transformApplyValues,
     ...config.formConfig?.useFormProps,
   });
 

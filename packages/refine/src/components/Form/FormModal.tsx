@@ -13,6 +13,7 @@ import { RefineFormContent } from './RefineFormContent';
 import useFieldsConfig from './useFieldsConfig';
 import { useRefineForm } from './useRefineForm';
 import { YamlForm, YamlFormProps } from './YamlForm';
+import { Unstructured } from 'k8s-api-provider';
 
 const FormDescStyle = css`
   margin-bottom: 16px;
@@ -106,31 +107,35 @@ export function FormModal(props: FormModalProps) {
     },
   });
   const yamlFormProps: YamlFormProps = useMemo(
-    () => ({
-      ...props.formProps,
-      transformInitValues: config.formConfig?.transformInitValues,
-      transformApplyValues: config.formConfig?.transformApplyValues,
-      initialValuesForCreate: isYamlMode ?
-        refineFormResult.formResult.getValues() :
-        (props.formProps?.initialValuesForCreate || config?.initValue),
-      initialValuesForEdit: isYamlMode ?
-        refineFormResult.formResult.getValues() : undefined,
-      id,
-      action,
-      isShowLayout: false,
-      useFormProps: {
-        redirect: false,
-      },
-      rules: isYamlMode ? fieldsConfig?.map((config) => ({
-        path: config.path,
-        validators: config.validators,
-      })) : undefined,
-      onSaveButtonPropsChange: setYamlSaveButtonProps,
-      onErrorsChange(errors) {
-        setIsError(!!errors.length);
-      },
-      onFinish: popModal,
-    }),
+    () => {
+      const transformApplyValues = config.formConfig?.transformApplyValues || ((v: Record<string, unknown>) => v as Unstructured);
+
+      return {
+        ...props.formProps,
+        transformInitValues: config.formConfig?.transformInitValues,
+        transformApplyValues,
+        initialValuesForCreate: isYamlMode ?
+          transformApplyValues(refineFormResult.formResult.getValues()) :
+          (props.formProps?.initialValuesForCreate || config?.initValue),
+        initialValuesForEdit: isYamlMode ?
+          transformApplyValues(refineFormResult.formResult.getValues()) : undefined,
+        id,
+        action,
+        isShowLayout: false,
+        useFormProps: {
+          redirect: false,
+        },
+        rules: isYamlMode ? fieldsConfig?.map((config) => ({
+          path: config.path,
+          validators: config.validators,
+        })) : undefined,
+        onSaveButtonPropsChange: setYamlSaveButtonProps,
+        onErrorsChange(errors) {
+          setIsError(!!errors.length);
+        },
+        onFinish: popModal,
+      }
+    },
     [
       props.formProps,
       config.formConfig?.transformInitValues,

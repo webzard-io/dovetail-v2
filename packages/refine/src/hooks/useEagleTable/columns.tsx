@@ -148,12 +148,12 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 
 export const StateDisplayColumnRenderer = <
   Model extends
-    | WorkloadModel
-    | CronJobModel
-    | PodModel
-    | ServiceModel
-    | DaemonSetModel
-    | JobModel,
+  | WorkloadModel
+  | CronJobModel
+  | PodModel
+  | ServiceModel
+  | DaemonSetModel
+  | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -650,7 +650,7 @@ export const PVCapacityColumnRenderer = <Model extends PersistentVolumeModel>(
     title: i18n.t('dovetail.capacity'),
     width: 120,
     sortable: true,
-    align:'right',
+    align: 'right',
     render(value) {
       return <Units.Byte rawValue={parseSi(value)} decimals={1} />;
     },
@@ -664,13 +664,26 @@ export const PVCStorageColumnRenderer = <Model extends PersistentVolumeClaimMode
     key: 'storage',
     display: true,
     dataIndex: ['spec', 'resources', 'requests', 'storage'],
-    title: i18n.t('dovetail.capacity'),
+    title: i18n.t('dovetail.distributed'),
     width: 120,
     sortable: true,
-    align:'right',
+    align: 'right',
     render(value) {
       return <Units.Byte rawValue={parseSi(value)} decimals={1} />;
     },
+  };
+};
+
+export const PVRefColumnRenderer = <Model extends PersistentVolumeClaimModel>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'pv',
+    display: true,
+    dataIndex: ['pv'],
+    title: i18n.t('dovetail.pv'),
+    width: 120,
+    sortable: true,
   };
 };
 
@@ -702,13 +715,43 @@ export const PVPhaseColumnRenderer = <
   return {
     key: 'phase',
     display: true,
-    dataIndex: ['status', 'phase'],
-    title: i18n.t('dovetail.phase'),
+    dataIndex: ['phase'],
+    title: i18n.t('dovetail.state'),
     width: 120,
     sortable: true,
     render(value) {
       return <PVPhaseDisplay value={value} />;
     },
+  };
+};
+
+export const PVCRefColumnRenderer = <
+  Model extends PersistentVolumeModel,
+>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'pvc',
+    display: true,
+    dataIndex: ['pvc'],
+    title: i18n.t('dovetail.pvc'),
+    width: 120,
+    sortable: true,
+  };
+};
+
+export const PVCSIRefColumnRenderer = <
+  Model extends PersistentVolumeModel,
+>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'csi',
+    display: true,
+    dataIndex: ['csi'],
+    title: i18n.t('dovetail.csi'),
+    width: 120,
+    sortable: true,
   };
 };
 
@@ -742,5 +785,46 @@ export const PVAccessModeColumnRenderer = <
     title: i18n.t('dovetail.access_mode'),
     width: 120,
     sortable: true,
+  };
+};
+
+export const IsDefaultSCColumnRenderer = <
+  Model extends StorageClassModel,
+>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'isDefaultSC',
+    display: true,
+    dataIndex: ['isDefaultSC'],
+    title: i18n.t('dovetail.default_sc'),
+    width: 120,
+    sortable: true,
+    render(val) {
+      return val ? i18n.t('dovetail.true') : i18n.t('dovetail.false');
+    }
+  };
+};
+
+export const SCReclaimPolicyColumnRenderer = <
+  Model extends StorageClassModel,
+>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: 'reclaimPolicy',
+    display: true,
+    dataIndex: ['reclaimPolicy'],
+    title: i18n.t('dovetail.reclaim_policy'),
+    width: 120,
+    sortable: true,
+    render(val) {
+      const map: Record<string, string> = {
+        Delete: i18n.t('dovetail.delete'),
+        Retain: i18n.t('dovetail.retain'),
+      };
+
+      return map[val as string] || val;
+    }
   };
 };

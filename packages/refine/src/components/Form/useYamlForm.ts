@@ -63,7 +63,7 @@ export type UseFormProps<
   };
   initialValuesForCreate?: Record<string, unknown>;
   initialValuesForEdit?: Record<string, unknown>;
-  transformInitValues?: (values: Unstructured) => Unstructured;
+  transformInitValues?: (values: Record<string, unknown>) => Record<string, unknown>;
   transformApplyValues?: (values: Unstructured) => Unstructured;
   rules?: YamlFormRule[];
 };

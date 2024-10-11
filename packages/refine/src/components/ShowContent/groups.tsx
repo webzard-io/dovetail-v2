@@ -37,6 +37,7 @@ import {
   PortsTableField,
   DataField,
   StorageClassPvField,
+  ResourceTableField,
 } from './fields';
 
 export const BasicGroup = <Model extends ResourceModel>(
@@ -238,6 +239,18 @@ export const StorageClassPvGroup = <Model extends StorageClassModel>(
   areas: [
     {
       fields: [StorageClassPvField()],
+    },
+  ],
+});
+
+export const ResourceTableGroup = <Model extends StorageClassModel>(
+  resource: string,
+  title: string
+): ShowGroup<Model> => ({
+  title,
+  areas: [
+    {
+      fields: [ResourceTableField(resource)],
     },
   ],
 });
