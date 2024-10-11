@@ -1,10 +1,11 @@
 import { ModalType } from '@cloudtower/eagle';
 import { EditFieldModalProps } from 'src/components/EditField';
-import { FormModalProps } from 'src/components/FormModal';
+import { FormModalProps, ConfirmModalProps } from 'src/components/FormModal';
 import { PodShellModal } from 'src/components/PodShellModal';
 
 type ModalProps = {
   FormModal: FormModalProps;
+  ConfirmModal: ConfirmModalProps;
   EditFieldModal: EditFieldModalProps;
   PodShellModal: PodShellModal;
 };

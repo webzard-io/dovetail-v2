@@ -1,56 +1,67 @@
 import { CloseCircleFilled } from '@ant-design/icons';
-import { usePopModal, Modal } from '@cloudtower/eagle';
+import { usePopModal, usePushModal, Modal, SegmentControl, Typo } from '@cloudtower/eagle';
 import { ExclamationErrorCircleFill16RedIcon } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useResource } from '@refinedev/core';
 import React, { useState, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
+import { WarningButtonStyle } from 'src/styles/button';
 import { FullscreenModalStyle } from 'src/styles/modal';
+import { SmallModalStyle } from 'src/styles/modal';
 import { RefineFormContent } from './RefineFormContent';
+import useFieldsConfig from './useFieldsConfig';
 import { useRefineForm } from './useRefineForm';
 import { YamlForm, YamlFormProps } from './YamlForm';
 
 const FormDescStyle = css`
   margin-bottom: 16px;
-`;
-
-const MaxWidthModalStyle = css`
-  .ant-modal-header {
-    max-width: 648px;
-    width: 100%;
-    padding: 60px 0 32px 0 !important;
-    margin: auto;
-  }
-
-  .ant-modal-body {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 0 4px !important;
-    margin: auto;
-  }
-
-  .ant-modal-footer {
-    .footer-content {
-      max-width: 648px;
-      width: 100%;
-      margin: auto !important;
-    }
-  }
-
-  .${FormDescStyle} {
-    max-width: 648px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  max-width: var(--max-modal-width, 1024px);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 `;
 const ErrorStyle = css`
   display: flex;
   align-items: center;
   gap: 4px;
 `;
+const TitleWrapperStyle = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export interface ConfirmModalProps {
+  onOk?: () => void;
+}
+
+function ConfirmModal({ onOk }: ConfirmModalProps) {
+  const { t } = useTranslation();
+  const popModal = usePopModal();
+
+  return (
+    <Modal
+      className={SmallModalStyle}
+      width="414px"
+      title={t('dovetail.edit_form')}
+      okButtonProps={{
+        type: 'primary',
+        className: WarningButtonStyle,
+      }}
+      onOk={() => {
+        onOk?.();
+        popModal();
+      }}
+      onCancel={popModal}
+      destroyOnClose
+    >
+      <div className={Typo.Label.l2_regular}>
+        {t('dovetail.exit_yaml_tip')}
+      </div>
+    </Modal>
+  );
+}
 
 export type FormModalProps = {
   resource?: string;
@@ -58,6 +69,11 @@ export type FormModalProps = {
   formProps?: YamlFormProps;
   renderForm?: (props: YamlFormProps) => React.ReactNode;
 };
+
+enum Mode {
+  Form = 'form',
+  Yaml = 'yaml'
+}
 
 export function FormModal(props: FormModalProps) {
   const { resource: resourceFromProps, id, renderForm } = props;
@@ -69,23 +85,46 @@ export function FormModal(props: FormModalProps) {
     onClick?: () => void;
   }>({});
   const [isError, setIsError] = useState<boolean>(false);
+  const [mode, setMode] = useState<Mode>(Mode.Form);
+  const isYamlMode = mode === Mode.Yaml;
   const popModal = usePopModal();
-
+  const pushModal = usePushModal();
   const config = configs[resourceFromProps || resource?.name || ''];
+  const isDisabledChangeMode = config.formConfig?.isDisabledChangeMode;
   const okText = i18n.t(id ? 'dovetail.save' : 'dovetail.create');
   const action = id ? 'edit' : 'create';
+  const fieldsConfig = useFieldsConfig(config, id);
+  const refineFormResult = useRefineForm({
+    config,
+    id,
+    refineProps: {
+      onMutationSuccess: () => {
+        popModal();
+      },
+      redirect: false,
+      ...config.formConfig?.refineCoreProps,
+    },
+  });
   const yamlFormProps: YamlFormProps = useMemo(
     () => ({
       ...props.formProps,
       transformInitValues: config.formConfig?.transformInitValues,
       transformApplyValues: config.formConfig?.transformApplyValues,
-      initialValues: props.formProps?.initialValues || config?.initValue,
+      initialValuesForCreate: isYamlMode ?
+        refineFormResult.formResult.getValues() :
+        (props.formProps?.initialValuesForCreate || config?.initValue),
+      initialValuesForEdit: isYamlMode ?
+        refineFormResult.formResult.getValues() : undefined,
       id,
       action,
       isShowLayout: false,
       useFormProps: {
         redirect: false,
       },
+      rules: isYamlMode ? fieldsConfig?.map((config) => ({
+        path: config.path,
+        validators: config.validators,
+      })) : undefined,
       onSaveButtonPropsChange: setYamlSaveButtonProps,
       onErrorsChange(errors) {
         setIsError(!!errors.length);
@@ -99,21 +138,12 @@ export function FormModal(props: FormModalProps) {
       config?.initValue,
       id,
       action,
+      refineFormResult.formResult,
+      isYamlMode,
+      fieldsConfig,
       popModal,
     ]
   );
-
-  const refineFormResult = useRefineForm({
-    config,
-    id,
-    refineProps: {
-      onMutationSuccess: () => {
-        popModal();
-      },
-      redirect: false,
-      ...config.formConfig?.refineCoreProps,
-    },
-  });
 
   const isYamlForm = !config.formConfig?.fields;
 
@@ -122,7 +152,7 @@ export function FormModal(props: FormModalProps) {
       return renderForm(yamlFormProps);
     }
 
-    if (isYamlForm) return <YamlForm {...yamlFormProps} />;
+    if (isYamlForm || isYamlMode) return <YamlForm {...yamlFormProps} />;
 
     return (
       <RefineFormContent
@@ -134,7 +164,7 @@ export function FormModal(props: FormModalProps) {
     );
   })();
 
-  const saveButtonProps = isYamlForm
+  const saveButtonProps = isYamlForm || isYamlMode
     ? yamlSaveButtonProps
     : refineFormResult.formResult.saveButtonProps;
 
@@ -149,6 +179,20 @@ export function FormModal(props: FormModalProps) {
     },
     [saveButtonProps]
   );
+  const onChangeMode = useCallback((value: Mode) => {
+    if (value === Mode.Form) {
+      pushModal<'ConfirmModal'>({
+        component: ConfirmModal,
+        props: {
+          onOk: () => {
+            setMode(Mode.Form);
+          },
+        },
+      });
+    } else {
+      setMode(value);
+    }
+  }, [pushModal]);
 
   const errorText = (() => {
     if (!!refineFormResult.responseErrorMsg || isError) {
@@ -180,9 +224,33 @@ export function FormModal(props: FormModalProps) {
 
   return (
     <Modal
-      className={cx(FullscreenModalStyle, isYamlForm ? '' : MaxWidthModalStyle)}
+      className={cx(
+        FullscreenModalStyle,
+      )}
+      style={{ '--max-modal-width': isYamlForm || !isDisabledChangeMode ? '1024px' : '648px' } as React.CSSProperties}
       width="calc(100vw - 16px)"
-      title={title}
+      title={(
+        <div className={TitleWrapperStyle}>
+          <span>{title}</span>
+          {
+            !(isYamlForm || isDisabledChangeMode) ? (
+              <SegmentControl
+                value={mode}
+                options={[{
+                  value: Mode.Form,
+                  label: i18n.t('dovetail.form')
+                }, {
+                  value: Mode.Yaml,
+                  label: i18n.t('dovetail.yaml')
+                }]}
+                onChange={(val) => {
+                  onChangeMode(val as Mode);
+                }}
+              />
+            ) : null
+          }
+        </div>
+      )}
       error={
         errorText ? (
           <div className={ErrorStyle}>
