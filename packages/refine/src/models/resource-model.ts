@@ -7,15 +7,18 @@ export class ResourceModel<T extends Unstructured = Unstructured> {
   public apiVersion!: T['apiVersion'];
   public kind!: T['kind'];
   public metadata!: T['metadata'];
-  declare public _globalStore: GlobalStore;
+  public declare _globalStore: GlobalStore;
 
-  constructor(public _rawYaml: T, _globalStore: GlobalStore) {
+  constructor(
+    public _rawYaml: T,
+    _globalStore: GlobalStore
+  ) {
     Object.keys(_rawYaml).forEach(key => {
       Object.defineProperty(this, key, {
         get() {
           return _rawYaml[key as keyof T];
         },
-        enumerable: true
+        enumerable: true,
       });
     });
     Object.defineProperty(this, '_globalStore', {
@@ -27,7 +30,7 @@ export class ResourceModel<T extends Unstructured = Unstructured> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  async init() { }
+  async init() {}
 
   get name() {
     return this._rawYaml.metadata?.name;
@@ -44,5 +47,17 @@ export class ResourceModel<T extends Unstructured = Unstructured> {
 
   restore() {
     return this._rawYaml;
+  }
+
+  updateLabel(labels: Record<string, string>) {
+    const newYaml = this._globalStore.restoreItem(this);
+    newYaml.metadata.labels = labels;
+    return newYaml;
+  }
+
+  updateAnnotation(annotations: Record<string, string>) {
+    const newYaml = this._globalStore.restoreItem(this);
+    newYaml.metadata.annotations = annotations;
+    return newYaml;
   }
 }
