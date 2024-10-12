@@ -1,16 +1,16 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import useNamespaceRefineFilter from 'src/hooks/useNamespaceRefineFilter';
-import { useEagleTable } from '../../../hooks/useEagleTable';
+import { Column } from 'src/components/Table';
+import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   NameColumnRenderer,
   PlainTextNameColumnRenderer,
-} from '../../../hooks/useEagleTable/columns';
-import { ResourceModel } from '../../../models';
-import { ResourceConfig } from '../../../types';
+} from 'src/hooks/useEagleTable/columns';
+import useNamespaceRefineFilter from 'src/hooks/useNamespaceRefineFilter';
+import { ResourceModel } from 'src/models';
+import { ResourceConfig } from 'src/types';
 import { ListPage } from '../../ListPage';
-import { Column } from '../../Table';
 
 type Props<Model extends ResourceModel> = IResourceComponentsProps & {
   config: ResourceConfig<Model>;

@@ -1,5 +1,4 @@
 import { UseFormProps } from '@refinedev/react-hook-form';
-import { Unstructured } from 'k8s-api-provider';
 import { YamlFormProps } from '../components';
 import { RefineFormField } from '../components/Form';
 import { ShowConfig } from '../components/ShowContent';
@@ -51,8 +50,8 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     saveButtonText?: string;
     renderForm?: (props: YamlFormProps) => React.ReactNode;
     formType?: FormType;
-    transformInitValues?: (values: Unstructured) => Unstructured;
-    transformApplyValues?: (values: Unstructured) => Unstructured;
+    transformInitValues?: (values: Record<string, unknown>) => Record<string, unknown>;
+    transformApplyValues?: (values: Record<string, unknown>) => Model['_rawYaml'];
     formTitle?: string | ((action: 'create' | 'edit') => string);
     formDesc?: string | ((action: 'create' | 'edit') => string);
     formatError?: (errorBody: unknown) => string;

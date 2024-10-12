@@ -78,6 +78,7 @@ export type UseFormProps<
    * @see {@link https://refine.dev/docs/advanced-tutorials/forms/server-side-form-validation/}
    */
   disableServerSideValidation?: boolean;
+  transformApplyValues?: (values: TVariables) => TVariables;
 } & UseHookFormProps<TVariables, TContext>;
 
 export const useForm = <
@@ -92,6 +93,7 @@ export const useForm = <
   refineCoreProps,
   warnWhenUnsavedChanges: warnWhenUnsavedChangesProp,
   disableServerSideValidation: disableServerSideValidationProp = false,
+  transformApplyValues,
   ...rest
 }: UseFormProps<
   TQueryFnData,
@@ -258,7 +260,10 @@ export const useForm = <
   const saveButtonProps = {
     disabled: formLoading,
     onClick: (e: React.BaseSyntheticEvent) => {
-      handleSubmit(onFinish, () => false)(e);
+      handleSubmit(
+        (v) => onFinish(transformApplyValues ? transformApplyValues(v) : v),
+        () => false
+      )(e);
     },
   };
 

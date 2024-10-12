@@ -1,4 +1,5 @@
 import { i18n } from 'i18next';
+import { Unstructured } from 'k8s-api-provider';
 import { Secret } from 'kubernetes-types/core/v1';
 import { SECRET_OPAQUE_INIT_VALUE } from 'src/constants/k8s';
 import { SecretDataGroup, BasicGroup } from '../../components/ShowContent';
@@ -29,7 +30,7 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
       const data = (value as Secret).data || {};
 
       return {
-        ...value,
+        ...(value as Unstructured),
         data: Object.keys(data).reduce((result: Record<string, string>, key) => {
           result[key] = window.atob(data[key]);
 
@@ -41,7 +42,7 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
       const data = (value as Secret).data || {};
 
       return {
-        ...value,
+        ...(value as Unstructured),
         data: Object.keys(data).reduce((result: Record<string, string>, key) => {
           const value = data[key];
 
