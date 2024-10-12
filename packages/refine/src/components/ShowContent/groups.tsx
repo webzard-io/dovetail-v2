@@ -38,6 +38,7 @@ import {
   DataField,
   StorageClassPvField,
   ResourceTableField,
+  NodeTaintsField,
 } from './fields';
 
 export const BasicGroup = <Model extends ResourceModel>(
@@ -117,6 +118,17 @@ export const ConditionsGroup = <Model extends ResourceModel>(
   areas: [
     {
       fields: [ConditionsField()],
+    },
+  ],
+});
+
+export const NodeTaintsGroup = (
+  i18n: I18nType
+): ShowGroup<ResourceModel<Node & Unstructured>> => ({
+  title: i18n.t('dovetail.taint'),
+  areas: [
+    {
+      fields: [NodeTaintsField()],
     },
   ],
 });

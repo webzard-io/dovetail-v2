@@ -104,6 +104,7 @@
   "protocol": "协议",
   "key": "键",
   "value": "值",
+  "effect": "效果",
   "show_data_value": "显示数值",
   "hide_data_value": "隐藏数值",
   "path_type": "路径类型",
@@ -197,7 +198,8 @@
   "edit_distribute_storage_failed_toast": "编辑分配量失败",
   "edit_node_taint": "编辑节点污点",
   "edit_node_taint_success_toast": "编辑节点 {{name}} 的污点成功",
-  "node_taint_NoSchedule": "仅阻止调度（NoSchedule）",
-  "node_taint_PreferNoSchedule": "尽可能阻止调度（PreferNoSchedule）",
-  "node_taint_NoExecute": "阻止调度并驱逐 Pod"
+  "node_taint_NoSchedule": "仅阻止调度",
+  "node_taint_PreferNoSchedule": "尽可能阻止调度",
+  "node_taint_NoExecute": "阻止调度并驱逐 Pod",
+  "taint": "污点"
 }
