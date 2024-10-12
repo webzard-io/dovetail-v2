@@ -159,7 +159,6 @@
   "provisioner": "Provisioner",
   "file_system": "File system",
   "capacity": "Capacity",
-  "phase": "Phase",
   "volume_mode": "Volume mode",
   "access_mode": "Access mode",
   "block": "Block",
