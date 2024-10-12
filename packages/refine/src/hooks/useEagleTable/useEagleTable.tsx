@@ -3,7 +3,7 @@ import { useTable, useResource } from '@refinedev/core';
 import { merge } from 'lodash-es';
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import ValueDisplay from 'src/components/ValueDisplay';
-import K8sDropdown from '../../components/K8sDropdown';
+import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
 import { Column, TableProps, SorterOrder } from '../../components/Table';
 import { ResourceModel } from '../../models';
 

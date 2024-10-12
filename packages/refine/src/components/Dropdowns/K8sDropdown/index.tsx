@@ -17,13 +17,13 @@ import { AccessControlAuth } from 'src/constants/auth';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useOpenForm } from 'src/hooks/useOpenForm';
-import { useGlobalStore } from '../../hooks';
-import { ResourceModel } from '../../models';
+import { useGlobalStore } from '../../../hooks';
+import { ResourceModel } from '../../../models';
 import {
   EditAnnotationDropdownMenuItem,
   EditLabelDropdownMenuItem,
-} from '../DropdownMenuItems';
-import { EditNodeTaintDropdownMenuItem } from '../DropdownMenuItems/EditNodeTaintDropdownMenuItem';
+} from '../../DropdownMenuItems';
+import { EditNodeTaintDropdownMenuItem } from '../../DropdownMenuItems/EditNodeTaintDropdownMenuItem';
 
 export type DropdownSize = 'normal' | 'large';
 

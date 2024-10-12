@@ -4,7 +4,7 @@ import {
   BasicGroup,
   IngressRulesGroup,
 } from 'src/components';
-import K8sDropdown from '../../components/K8sDropdown';
+import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
 import { INGRESS_INIT_VALUE } from '../../constants/k8s';
 import {
   AgeColumnRenderer,

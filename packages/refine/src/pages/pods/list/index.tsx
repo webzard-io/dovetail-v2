@@ -2,7 +2,7 @@ import { IResourceComponentsProps, useList } from '@refinedev/core';
 import { compact } from 'lodash-es';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PodDropdown } from 'src/components/PodDropdown';
+import { PodDropdown } from 'src/components/Dropdowns/PodDropdown';
 import { Column } from '../../../components';
 import { ListPage } from '../../../components/ListPage';
 import { useEagleTable } from '../../../hooks/useEagleTable';

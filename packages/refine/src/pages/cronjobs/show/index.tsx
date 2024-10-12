@@ -1,7 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { CronJobDropdown } from '../../../components/CronJobDropdown';
+import { CronJobDropdown } from '../../../components/Dropdowns/CronJobDropdown';
 import { PageShow } from '../../../components/PageShow';
 import { BasicGroup, ImageField, JobsGroup, EventsTab } from '../../../components/ShowContent';
 import { CronJobModel } from '../../../models';

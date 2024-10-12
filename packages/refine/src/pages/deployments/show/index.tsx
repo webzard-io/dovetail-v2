@@ -10,7 +10,7 @@ import {
   ConditionsGroup,
   EventsTab
 } from '../../../components/ShowContent';
-import { WorkloadDropdown } from '../../../components/WorkloadDropdown';
+import { WorkloadDropdown } from '../../../components/Dropdowns/WorkloadDropdown';
 import { WorkloadModel } from '../../../models';
 
 export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {

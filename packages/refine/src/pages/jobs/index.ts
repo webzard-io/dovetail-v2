@@ -1,7 +1,7 @@
 import { i18n } from 'i18next';
 import { FormType } from 'src/types';
 import { Column } from '../../components';
-import K8sDropdown from '../../components/K8sDropdown';
+import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
 import {
   ImageField,
   StartTimeField,
