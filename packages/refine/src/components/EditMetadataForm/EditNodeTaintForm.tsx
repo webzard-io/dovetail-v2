@@ -84,17 +84,17 @@ export const EditNodeTaintForm = React.forwardRef<
       columns={[
         {
           key: 'key',
-          title: 'Key',
+          title: t('dovetail.key'),
           type: 'input',
         },
         {
           key: 'value',
-          title: 'Value',
+          title: t('dovetail.value'),
           type: 'input',
         },
         {
           key: 'effect',
-          title: 'Effect',
+          title: t('dovetail.effect'),
           render: ({ value, onChange }) => {
             return (
               <Select
@@ -105,15 +105,15 @@ export const EditNodeTaintForm = React.forwardRef<
                 options={[
                   {
                     value: NodeTaintEffect.NoSchedule,
-                    title: t(`sks.node_taint_${NodeTaintEffect.NoSchedule}`),
+                    label: t(`dovetail.node_taint_${NodeTaintEffect.NoSchedule}`),
                   },
                   {
                     value: NodeTaintEffect.PreferNoSchedule,
-                    title: t(`sks.node_taint_${NodeTaintEffect.PreferNoSchedule}`),
+                    label: t(`dovetail.node_taint_${NodeTaintEffect.PreferNoSchedule}`),
                   },
                   {
                     value: NodeTaintEffect.NoExecute,
-                    title: t(`sks.node_taint_${NodeTaintEffect.NoExecute}`),
+                    label: t(`dovetail.node_taint_${NodeTaintEffect.NoExecute}`),
                   },
                 ]}
               />
