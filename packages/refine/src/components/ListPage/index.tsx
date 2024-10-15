@@ -2,7 +2,6 @@ import { Divider } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useResource } from '@refinedev/core';
 import React, { useContext } from 'react';
-import { useTranslation } from 'react-i18next';
 import { InternalTableProps } from 'src/components/InternalBaseTable';
 import { NamespacesFilter } from 'src/components/NamespacesFilter';
 import { Table } from 'src/components/Table';
@@ -48,7 +47,6 @@ interface ListPageProps<T extends ResourceModel> {
 
 export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
   const { selectedKeys, tableProps, contentClassName } = props;
-  const { t } = useTranslation();
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
   const config = configs[resource?.name || ''];

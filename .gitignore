@@ -29,3 +29,6 @@ lib
 
 # src/sunmao/*.json
 src/sunmao/**/*.yaml
+
+.yalc
+yalc.lock

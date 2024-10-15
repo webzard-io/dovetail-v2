@@ -17,6 +17,10 @@ const EditButtonStyle = css`
   }
 `;
 
+export interface EditFieldFormHandler {
+  submit: () => Promise<unknown> | undefined;
+}
+
 export interface EditFieldModalProps {
   title?: string;
   submitting?: boolean;
