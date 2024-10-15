@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import { Select, TableForm } from '@cloudtower/eagle';
+import { Select } from '@cloudtower/eagle';
 import { useUpdate } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
 import { Node, Taint } from 'kubernetes-types/core/v1';
-import React, { useState, useCallback, useImperativeHandle, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResourceModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
+import { KeyValueTableFormForm } from './KeyValueTableForm';
 
 interface EditNodeTaintFormProps {
   nodeModel: ResourceModel<Unstructured & Node>;
@@ -29,69 +29,55 @@ export const EditNodeTaintForm = React.forwardRef<
   const { nodeModel } = props;
   const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
-  const [value, setValue] = useState<Array<Taint>>([]);
 
   const defaultValue = useMemo(() => {
     return nodeModel._rawYaml.spec?.taints || [];
   }, [nodeModel]);
 
-  const submit = useCallback(() => {
-    const newYaml = nodeModel._globalStore.restoreItem(nodeModel) as Node;
+  const onSubmit = useCallback(
+    (_value: unknown) => {
+      const value = _value as Taint[];
+      const newYaml = nodeModel._globalStore.restoreItem(nodeModel) as Node;
 
-    if (newYaml.spec) {
-      newYaml.spec.taints = value;
-    }
+      if (newYaml.spec) {
+        newYaml.spec.taints = value;
+      }
 
-    pruneBeforeEdit(newYaml);
+      pruneBeforeEdit(newYaml);
 
-    return mutateAsync({
-      id: nodeModel.id,
-      resource: nodeModel.name || '',
-      values: newYaml,
-      meta: {
-        resourceBasePath: nodeModel.apiVersion,
-        kind: nodeModel.kind,
-      },
-      successNotification() {
-        return {
-          message: t('dovetail.edit_node_taint_success_toast', {
-            kind: nodeModel.kind,
-            name: nodeModel.metadata.name,
-            interpolation: {
-              escapeValue: false,
-            },
-          }),
-          type: 'success',
-        };
-      },
-      errorNotification: false,
-    });
-  }, [value, nodeModel, mutateAsync, t]);
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      submit,
-    }),
-    [submit]
+      return mutateAsync({
+        id: nodeModel.id,
+        resource: nodeModel.name || '',
+        values: newYaml,
+        meta: {
+          resourceBasePath: nodeModel.apiVersion,
+          kind: nodeModel.kind,
+        },
+        successNotification() {
+          return {
+            message: t('dovetail.edit_node_taint_success_toast', {
+              kind: nodeModel.kind,
+              name: nodeModel.metadata.name,
+              interpolation: {
+                escapeValue: false,
+              },
+            }),
+            type: 'success',
+          };
+        },
+        errorNotification: false,
+      });
+    },
+    [nodeModel, mutateAsync, t]
   );
 
   return (
-    <TableForm
-      onBodyChange={value => {
-        setValue(value as Taint[]);
-      }}
-      columns={[
-        {
-          key: 'key',
-          title: t('dovetail.key'),
-          type: 'input',
-        },
-        {
-          key: 'value',
-          title: t('dovetail.value'),
-          type: 'input',
-        },
+    <KeyValueTableFormForm
+      ref={ref}
+      defaultValue={defaultValue}
+      onSubmit={onSubmit}
+      addButtonText={t('dovetail.add_taint')}
+      extraColumns={[
         {
           key: 'effect',
           title: t('dovetail.effect'),
@@ -119,16 +105,11 @@ export const EditNodeTaintForm = React.forwardRef<
               />
             );
           },
+          validator: ({ value }) => {
+            if (!value) return t('dovetail.taint_effect_empty_text');
+          },
         },
       ]}
-      disableBatchFilling
-      rowAddConfig={{
-        addible: true,
-      }}
-      defaultData={defaultValue}
-      row={{
-        deletable: true,
-      }}
     />
   );
 });
