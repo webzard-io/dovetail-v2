@@ -5,7 +5,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PodShellModal } from 'src/components/PodShellModal';
 import { AccessControlAuth } from 'src/constants/auth';
-import { PodModel } from '../../models';
+import { PodModel } from '../../../models';
 import K8sDropdown, { DropdownSize } from '../K8sDropdown';
 
 type Props<Model extends PodModel> = {

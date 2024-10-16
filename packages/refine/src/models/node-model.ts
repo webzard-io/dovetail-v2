@@ -1,6 +1,6 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import type { Node } from 'kubernetes-types/core/v1';
-import { WorkloadBaseModel } from './workload-base-model';
+import { ResourceModel } from './resource-model';
 
 type RequiredNode = Required<Node> & Unstructured;
 
@@ -9,7 +9,7 @@ export enum NodeRole {
   Worker = 'Worker',
 }
 
-export class NodeModel extends WorkloadBaseModel {
+export class NodeModel extends ResourceModel {
   constructor(
     public _rawYaml: RequiredNode,
     _globalStore: GlobalStore

@@ -37,7 +37,7 @@ export const EditAnnotationForm = React.forwardRef<EditAnnotationFormHandler, Ed
       value.forEach(({ key, value }) => {
         newAnnotations[key] = value;
       });
-      const newYaml = resourceModel.updateLabel(newAnnotations);
+      const newYaml = resourceModel.updateAnnotation(newAnnotations);
       pruneBeforeEdit(newYaml);
 
       return mutateAsync({
@@ -80,12 +80,12 @@ export const EditAnnotationForm = React.forwardRef<EditAnnotationFormHandler, Ed
         columns={[
           {
             key: 'key',
-            title: 'Key',
+            title: t('dovetail.key'),
             type: 'input',
           },
           {
             key: 'value',
-            title: 'Value',
+            title: t('dovetail.value'),
             type: 'input',
           },
         ]}

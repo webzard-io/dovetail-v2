@@ -8,7 +8,7 @@ import {
   PodSelectorGroup,
 } from 'src/components/ShowContent';
 import { Column, Tags } from '../../components';
-import K8sDropdown from '../../components/K8sDropdown';
+import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
 import { NETWORK_POLICY_INIT_VALUE } from '../../constants/k8s';
 import { AgeColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { NetworkPolicyModel } from '../../models';

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { EditFieldModal } from 'src/components/EditField';
 import { WorkloadReplicasForm } from 'src/components/WorkloadReplicas';
 import { AccessControlAuth } from 'src/constants/auth';
-import { WorkloadModel } from '../../models';
+import { WorkloadModel } from '../../../models';
 import { DropdownSize } from '../K8sDropdown';
 import { WorkloadDropdown } from '../WorkloadDropdown';
 

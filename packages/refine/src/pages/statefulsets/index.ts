@@ -1,5 +1,5 @@
 import { i18n } from 'i18next';
-import { ReplicasDropdown } from 'src/components/ReplicasDropdown';
+import { ReplicasDropdown } from 'src/components/Dropdowns/ReplicasDropdown';
 import {
   ImageField,
   ReplicaField,

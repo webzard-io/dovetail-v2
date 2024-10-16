@@ -2,7 +2,7 @@ import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ListPage } from 'src/components/ListPage';
-import { WorkloadDropdown } from 'src/components/WorkloadDropdown';
+import { WorkloadDropdown } from 'src/components/Dropdowns/WorkloadDropdown';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   AgeColumnRenderer,
