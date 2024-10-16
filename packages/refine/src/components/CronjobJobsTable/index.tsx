@@ -16,8 +16,8 @@ import {
   WorkloadImageColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { JobModel } from '../../models';
-import BaseTable, { Column } from '../Table';
-import { TableToolBar } from '../Table/TableToolBar';
+import BaseTable, { Column } from '../InternalBaseTable';
+import { TableToolBar } from '../TableToolbar';
 
 const WrapperStyle = css`
   &.ant-space {

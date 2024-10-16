@@ -1,6 +1,6 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import { StatefulSet } from 'kubernetes-types/apps/v1';
-import { WorkloadState } from '../constants';
+import { ResourceState } from '../constants';
 import { WorkloadModel } from './workload-model';
 
 type RequiredStatefulSet = Required<StatefulSet> & Unstructured;
@@ -18,10 +18,10 @@ export class StatefulSetModel extends WorkloadModel {
 
   get stateDisplay() {
     if (this.spec?.replicas === 0) {
-      return WorkloadState.STOPPED;
+      return ResourceState.STOPPED;
     } else if (this.spec?.replicas !== this.status?.readyReplicas) {
-      return WorkloadState.UPDATING;
+      return ResourceState.UPDATING;
     }
-    return WorkloadState.READY;
+    return ResourceState.READY;
   }
 }

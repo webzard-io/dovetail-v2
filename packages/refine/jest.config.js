@@ -16,7 +16,8 @@ export default {
   testMatch: ['<rootDir>/__tests__/**/**.spec.ts', '<rootDir>/src/**/**.spec.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/lib/', '<rootDir>/lib/'],
   moduleNameMapper: {
-    '^lodash-es$': 'lodash'
+    '^lodash-es$': 'lodash',
+    '^src/(.*)$': '<rootDir>/src/$1',
   },
 
   testEnvironment: 'node',
