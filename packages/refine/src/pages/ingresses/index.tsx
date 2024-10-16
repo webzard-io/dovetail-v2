@@ -20,7 +20,6 @@ export const IngressConfig = (i18n: i18n): ResourceConfig<IngressModel> => ({
   kind: 'Ingress',
   basePath: '/apis/networking.k8s.io/v1',
   apiVersion: 'networking.k8s.io/v1',
-  label: 'Ingresses',
   parent: RESOURCE_GROUP.NETWORK,
   columns: () =>
     [

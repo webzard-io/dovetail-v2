@@ -4,14 +4,13 @@ import { merge } from 'lodash-es';
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import ValueDisplay from 'src/components/ValueDisplay';
 import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
-import { Column, TableProps, SorterOrder } from '../../components/Table';
+import { Column, InternalTableProps, SorterOrder } from '../../components/InternalBaseTable';
 import { ResourceModel } from '../../models';
 
 type Params<Model extends ResourceModel> = {
   useTableParams: Parameters<typeof useTable<Model>>[0];
-  resource?: string;
   columns: Column<Model>[];
-  tableProps?: Partial<TableProps<Model>>;
+  tableProps?: Partial<InternalTableProps<Model>>;
   formatter?: (d: Model) => Model;
   Dropdown?: React.FC<{ record: Model }>;
 };
@@ -40,7 +39,7 @@ export function addDefaultRenderToColumns<Data, Col extends RequiredColumnProps<
 }
 
 export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>) => {
-  const { columns, tableProps, formatter, Dropdown = K8sDropdown, resource: resourceFromParams } = params;
+  const { columns, tableProps, formatter, Dropdown = K8sDropdown } = params;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
   const { resource } = useResource();
@@ -53,10 +52,10 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
         pageSize: currentSize,
         mode: 'server',
       },
-      resource: resourceFromParams || resource?.name,
+      resource: params.useTableParams?.resource || resource?.name,
     });
     return mergedParams;
-  }, [params.useTableParams, currentSize, resourceFromParams, resource]);
+  }, [params.useTableParams, currentSize, resource]);
   const finalColumns: Column<Model>[] = useMemo(() =>
     addDefaultRenderToColumns<Model, Column<Model>>(columns),
     [columns]
@@ -87,8 +86,8 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
   const total = table.tableQueryResult.data?.total || 0;
   const finalDataSource = formatter ? data?.map(formatter) : data;
 
-  const finalProps: TableProps<Model> = {
-    tableKey: resourceFromParams || resource?.name || 'table',
+  const finalProps: InternalTableProps<Model> = {
+    tableKey: params.useTableParams?.resource || resource?.name || 'table',
     loading: table.tableQueryResult.isLoading,
     data: finalDataSource || [],
     columns: finalColumns,

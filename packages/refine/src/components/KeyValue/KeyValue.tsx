@@ -12,7 +12,7 @@ const ContentBlockStyle = css`
   gap: 8px;
   align-self: stretch;
   border-radius: 4px;
-  background: rgba(237, 241, 250, 0.6);
+  background: $gray-a60-1;
 
   &:not(:last-of-type) {
     margin-bottom: 8px;

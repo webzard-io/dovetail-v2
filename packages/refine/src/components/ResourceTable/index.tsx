@@ -1,11 +1,9 @@
-import { cx } from '@linaria/core';
 import { useTable } from '@refinedev/core';
 import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
-import BaseTable from 'src/components/Table';
-import { Column } from 'src/components/Table';
-import ComponentContext from 'src/contexts/component';
+import { ErrorContentType } from 'src/components/ErrorContent';
+import { Column } from 'src/components/InternalBaseTable';
+import { Table } from 'src/components/Table';
 import ConfigsContext from 'src/contexts/configs';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
@@ -26,8 +24,6 @@ export function ResourceTable<Model extends ResourceModel>(props: ResourceTableP
   const config = configs[resource] as unknown as ResourceConfig<Model>;
   const { formatter, columns, Dropdown, noShow } = config;
   const { i18n } = useTranslation();
-  const { Table: TableComponent } = useContext(ComponentContext);
-  const Table = TableComponent || BaseTable;
 
   const nameRenderer: Column<Model> = noShow
     ? PlainTextNameColumnRenderer(i18n)
@@ -35,6 +31,7 @@ export function ResourceTable<Model extends ResourceModel>(props: ResourceTableP
 
   const { tableProps } = useEagleTable<Model>({
     useTableParams: {
+      resource,
       ...useTableParams,
     },
     columns: [nameRenderer, ...(columns?.() || [])],
@@ -42,7 +39,6 @@ export function ResourceTable<Model extends ResourceModel>(props: ResourceTableP
       defaultSize: 10,
       ...config.tableProps,
     },
-    resource,
     formatter,
     Dropdown,
   });
@@ -52,20 +48,13 @@ export function ResourceTable<Model extends ResourceModel>(props: ResourceTableP
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!tableProps.data?.length && !tableProps.loading) {
-    return <ErrorContent
-      errorText={tableProps.empty || i18n.t('dovetail.no_resource', { kind: ` ${config.kind}` })}
-      type={ErrorContentType.Card}
-    />;
-  }
-
   return (
     <Table
-      {...tableProps}
-      empty={
-        tableProps.empty || i18n.t('dovetail.no_resource', { kind: ` ${config.kind}` })
-      }
-      className={cx(tableProps.className)}
+      tableProps={tableProps}
+      displayName={config.displayName || config.kind}
+      errorContentProps={{
+        type: ErrorContentType.Card,
+      }}
     />
   );
 }

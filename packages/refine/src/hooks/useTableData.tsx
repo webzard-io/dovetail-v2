@@ -1,7 +1,7 @@
 import { CrudSorting } from '@refinedev/core';
 import { sortData, paginateData } from 'k8s-api-provider';
 import { useState, useCallback } from 'react';
-import { Column, SorterOrder } from 'src/components/Table';
+import { Column, SorterOrder } from 'src/components/InternalBaseTable';
 
 type UseTableDataProps<Data extends { id: string; }> = {
   pageSize?: number;

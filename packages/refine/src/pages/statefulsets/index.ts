@@ -28,7 +28,6 @@ export const StatefulSetConfig = (i18n: i18n): ResourceConfig<StatefulSetModel> 
   kind: 'StatefulSet',
   apiVersion: 'apps/v1',
   parent: RESOURCE_GROUP.WORKLOAD,
-  label: 'StatefulSets',
   initValue: STATEFULSET_INIT_VALUE,
   columns: () => ([
     StateDisplayColumnRenderer(i18n),

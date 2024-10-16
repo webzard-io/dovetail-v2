@@ -4,12 +4,12 @@ import { get } from 'lodash-es';
 import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
-import BaseTable from 'src/components/Table';
+import BaseTable from 'src/components/InternalBaseTable';
 import ValueDisplay from 'src/components/ValueDisplay';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import useTableData from 'src/hooks/useTableData';
-import { WorkloadState } from '../../constants';
+import { ResourceState } from '../../constants';
 import { CommonSorter } from '../../hooks/useEagleTable/columns';
 import { WithId } from '../../types';
 import { addId } from '../../utils/addId';
@@ -47,7 +47,7 @@ export const PodContainersTable: React.FC<Props> = ({
         sortable: true,
         sorter: CommonSorter(['state']),
         width: 120,
-        render: v => <StateTag state={Object.keys(v)[0] as WorkloadState} hideBackground />,
+        render: v => <StateTag state={Object.keys(v)[0] as ResourceState} hideBackground />,
       },
       {
         key: 'image',

@@ -19,7 +19,6 @@ export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyMod
   kind: 'NetworkPolicy',
   basePath: '/apis/networking.k8s.io/v1',
   apiVersion: 'networking.k8s.io/v1',
-  label: 'NetworkPolicies',
   parent: RESOURCE_GROUP.NETWORK,
   columns: () =>
     [

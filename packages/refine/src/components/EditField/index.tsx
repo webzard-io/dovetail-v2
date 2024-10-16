@@ -1,5 +1,5 @@
-import { Modal, Button, usePushModal, usePopModal } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
+import { Modal, Button, usePushModal, Typo, usePopModal } from '@cloudtower/eagle';
+import { css, cx } from '@linaria/core';
 import { useResource, CanAccess } from '@refinedev/core';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import { FullscreenModalStyle } from '../../styles/modal';
 const EditButtonStyle = css`
   &.ant-btn.ant-btn-link {
     font-size: 13px;
-    height: 22px;
+    height: 18px;
     margin-left: 8px;
   }
 `;
@@ -22,7 +22,7 @@ export interface EditFieldModalProps {
   submitting?: boolean;
   errorMsgs?: string[];
   formRef: React.MutableRefObject<{
-    submit: () => Promise<unknown> | undefined;
+    submit: () => Promise<unknown> | boolean | undefined;
   } | null>;
   renderContent: () => React.ReactNode;
   fullscreen?: boolean;
@@ -75,7 +75,7 @@ export function EditField(props: EditField) {
   return (
     <CanAccess resource={resource?.name} action={AccessControlAuth.Edit}>
       <Button
-        className={EditButtonStyle}
+        className={cx(EditButtonStyle, Typo.Label.l4_regular_title)}
         type="link"
         onClick={() => {
           pushModal<'EditFieldModal'>({
