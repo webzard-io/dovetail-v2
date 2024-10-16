@@ -15,9 +15,12 @@ import { AccessControlAuth } from 'src/constants/auth';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useOpenForm } from 'src/hooks/useOpenForm';
-import { useGlobalStore } from '../../hooks';
-import { ResourceModel } from '../../models';
-import { EditAnnotationDropdownMenuItem, EditLabelDropdownMenuItem } from '../DropdownMenuItems';
+import { useGlobalStore } from '../../../hooks';
+import { ResourceModel } from '../../../models';
+import {
+  EditAnnotationDropdownMenuItem,
+  EditLabelDropdownMenuItem,
+} from '../../DropdownMenuItems';
 
 export type DropdownSize = 'normal' | 'large';
 

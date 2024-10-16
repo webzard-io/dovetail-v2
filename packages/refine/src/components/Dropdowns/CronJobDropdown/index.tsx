@@ -1,20 +1,25 @@
 import { Icon, Menu } from '@cloudtower/eagle';
-import { Retry16GradientBlueIcon } from '@cloudtower/icons-react';
+import {
+  Pause16GradientBlueIcon,
+  RecoverContinue16GradientBlueIcon,
+} from '@cloudtower/icons-react';
 import { useResource, useUpdate, useCan } from '@refinedev/core';
+import { CronJob } from 'kubernetes-types/batch/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccessControlAuth } from 'src/constants/auth';
-import { WorkloadModel } from '../../models';
-import { pruneBeforeEdit } from '../../utils/k8s';
+import { CronJobModel } from '../../../models';
+import { pruneBeforeEdit } from '../../../utils/k8s';
 import K8sDropdown, { DropdownSize } from '../K8sDropdown';
 
-type Props<Model extends WorkloadModel> = {
+type Props<Model extends CronJobModel> = {
   record: Model;
   size?: DropdownSize;
 };
 
-export function WorkloadDropdown<Model extends WorkloadModel>(props: React.PropsWithChildren<Props<Model>>) {
-  const { record, size, children } = props;
+export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>) {
+  const { record, size } = props;
+  const { spec } = record as CronJob;
   const { resource } = useResource();
   const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
@@ -23,14 +28,17 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: React.Props
     action: AccessControlAuth.Edit
   });
 
+  const suspended = Boolean(spec?.suspend);
+
   return (
     <K8sDropdown record={record} size={size}>
       {
         canEditData?.can !== false ? (
           <Menu.Item
             onClick={async () => {
-              const v = record.redeploy();
-              const id = v.id;
+              const v = suspended ? record.resume() : record.suspend();
+              const id = record.id;
+
               pruneBeforeEdit(v);
               await mutateAsync({
                 id,
@@ -38,21 +46,21 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: React.Props
                 values: v,
                 successNotification() {
                   return {
-                    message: t('dovetail.redeploy_success_toast', {
+                    message: t(suspended ? 'dovetail.resume_success_toast' : 'dovetail.pause_success_toast', {
                       kind: record.kind,
-                      name: record.id,
+                      name: id,
                       interpolation: {
                         escapeValue: false,
                       }
                     }),
-                    type: 'success'
+                    type: 'success',
                   };
                 },
                 errorNotification() {
                   return {
-                    message: t('dovetail.redeploy_failed_toast', {
+                    message: t(suspended ? 'dovetail.resume_failed_toast' : 'dovetail.pause_failed_toast', {
                       kind: record.kind,
-                      name: record.id,
+                      name: id,
                       interpolation: {
                         escapeValue: false,
                       }
@@ -63,12 +71,12 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: React.Props
               });
             }}
           >
-            <Icon src={Retry16GradientBlueIcon}>{t('dovetail.redeploy')}</Icon>
+            <Icon src={suspended ? RecoverContinue16GradientBlueIcon : Pause16GradientBlueIcon}>
+              {t(suspended ? 'dovetail.resume' : 'dovetail.suspend')}
+            </Icon>
           </Menu.Item>
-
         ) : null
       }
-      {children}
-    </K8sDropdown>
+    </K8sDropdown >
   );
 }

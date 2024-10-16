@@ -1,7 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import K8sDropdown from 'src/components/K8sDropdown';
+import K8sDropdown from 'src/components/Dropdowns/K8sDropdown';
 import { ListPage } from 'src/components/ListPage';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {

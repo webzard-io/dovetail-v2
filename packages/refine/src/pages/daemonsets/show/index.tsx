@@ -1,7 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { WorkloadDropdown } from 'src/components/WorkloadDropdown';
+import { WorkloadDropdown } from 'src/components/Dropdowns/WorkloadDropdown';
 import { PageShow } from '../../../components/PageShow';
 import {
   ImageField,

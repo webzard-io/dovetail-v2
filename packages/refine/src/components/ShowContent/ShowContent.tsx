@@ -25,7 +25,7 @@ import {
 import { get } from 'lodash-es';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import K8sDropdown from 'src/components/K8sDropdown';
+import K8sDropdown from 'src/components/Dropdowns/K8sDropdown';
 import { Tabs as BaseTabs } from 'src/components/Tabs';
 import ValueDisplay from 'src/components/ValueDisplay';
 import { AccessControlAuth } from 'src/constants/auth';

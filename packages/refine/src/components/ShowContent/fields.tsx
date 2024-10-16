@@ -44,7 +44,9 @@ import { ResourceTable } from '../ResourceTable';
 import { Time } from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
-import PVCDistributeStorage from 'src/components/PVCDistributeStorage'
+import PVCDistributeStorage from 'src/components/PVCDistributeStorage';
+import { NodeTaintsTable } from '../NodeTaintsTable';
+import { Taint } from 'kubernetes-types/core/v1';
 
 export type ShowField<Model extends ResourceModel> = {
   key: string;
@@ -123,6 +125,16 @@ export const ConditionsField = <Model extends ResourceModel>(): ShowField<Model>
     path: ['status', 'conditions'],
     renderContent: value => {
       return <ConditionsTable conditions={value as Condition[]} />;
+    },
+  };
+};
+
+export const NodeTaintsField = (): ShowField<ResourceModel<Node & Unstructured>> => {
+  return {
+    key: 'NodeTaints',
+    path: ['spec', 'taints'],
+    renderContent: value => {
+      return <NodeTaintsTable taints={value as Taint[]} />;
     },
   };
 };
@@ -412,14 +424,16 @@ export const StorageClassPvField = <
           resource="persistentvolumes"
           useTableParams={{
             filters: {
-              permanent: [{
-                field: '',
-                value: '',
-                fn(pv: PersistentVolumeModel) {
-                  return sc.filterPV(pv, sc.metadata.name);
-                }
-              }] as unknown as CrudFilters
-            }
+              permanent: [
+                {
+                  field: '',
+                  value: '',
+                  fn(pv: PersistentVolumeModel) {
+                    return sc.filterPV(pv, sc.metadata.name);
+                  },
+                },
+              ] as unknown as CrudFilters,
+            },
           }}
         />
       );
@@ -474,7 +488,11 @@ export const PVStorageClassField = <
     title: i18n.t('dovetail.storage_class'),
     renderContent(value) {
       return (
-        <ResourceLink resourceName="storageclasses" namespace="" resourceId={value as string} />
+        <ResourceLink
+          resourceName="storageclasses"
+          namespace=""
+          resourceId={value as string}
+        />
       );
     },
   };
@@ -522,9 +540,7 @@ export const PVAccessModeField = <
   };
 };
 
-export const PVCRefField = <
-  Model extends PersistentVolumeModel,
->(
+export const PVCRefField = <Model extends PersistentVolumeModel>(
   i18n: I18nType
 ): ShowField<Model> => {
   return {
@@ -534,9 +550,7 @@ export const PVCRefField = <
   };
 };
 
-export const PVCSIRefField = <
-  Model extends PersistentVolumeModel,
->(
+export const PVCSIRefField = <Model extends PersistentVolumeModel>(
   i18n: I18nType
 ): ShowField<Model> => {
   return {
@@ -546,9 +560,7 @@ export const PVCSIRefField = <
   };
 };
 
-export const IsDefaultSCField = <
-  Model extends StorageClassModel,
->(
+export const IsDefaultSCField = <Model extends StorageClassModel>(
   i18n: I18nType
 ): ShowField<Model> => {
   return {
@@ -557,13 +569,11 @@ export const IsDefaultSCField = <
     title: i18n.t('dovetail.default_sc'),
     renderContent(val) {
       return val ? i18n.t('dovetail.true') : i18n.t('dovetail.false');
-    }
+    },
   };
 };
 
-export const SCReclaimPolicyField = <
-  Model extends StorageClassModel,
->(
+export const SCReclaimPolicyField = <Model extends StorageClassModel>(
   i18n: I18nType
 ): ShowField<Model> => {
   return {
@@ -581,9 +591,7 @@ export const SCReclaimPolicyField = <
   };
 };
 
-export const IsSCAllowVolumeExpansionField = <
-  Model extends StorageClassModel,
->(
+export const IsSCAllowVolumeExpansionField = <Model extends StorageClassModel>(
   i18n: I18nType
 ): ShowField<Model> => {
   return {
@@ -596,23 +604,15 @@ export const IsSCAllowVolumeExpansionField = <
   };
 };
 
-export const ResourceTableField = <
-  Model extends ResourceModel,
->(
+export const ResourceTableField = <Model extends ResourceModel>(
   resource: string,
-  useTableParams?: Parameters<typeof useTable<Model>>[0],
+  useTableParams?: Parameters<typeof useTable<Model>>[0]
 ): ShowField<Model> => {
   return {
     key: resource,
     path: [],
     renderContent() {
-      return (
-        <ResourceTable
-          resource={resource}
-          useTableParams={useTableParams}
-        />
-      );
+      return <ResourceTable resource={resource} useTableParams={useTableParams} />;
     },
   };
 };
-
