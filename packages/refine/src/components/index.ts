@@ -30,6 +30,7 @@ export * from './ListPage';
 export * from './StateTag';
 export * from './DrawerShow';
 export * from './Menu';
+export * from './InternalBaseTable';
 export * from './Table';
 export * from './EditButton';
 export * from './ReferenceLink';

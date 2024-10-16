@@ -2,17 +2,20 @@ import { Units } from '@cloudtower/eagle';
 import { useTable, CrudFilters } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
 import { Unstructured } from 'k8s-api-provider';
+import { Taint } from 'kubernetes-types/core/v1';
 import { Condition } from 'kubernetes-types/meta/v1';
 import { NetworkPolicy } from 'kubernetes-types/networking/v1';
 import React from 'react';
 import { DurationTime } from 'src/components/DurationTime';
 import { PodSelectorTable } from 'src/components/PodSelectorTable';
 import { PortsTable } from 'src/components/PortsTable';
+import PVCDistributeStorage from 'src/components/PVCDistributeStorage';
 import {
   ServiceInClusterAccessComponent,
   ServiceOutClusterAccessComponent,
 } from 'src/components/ServiceComponents';
 import { Tags } from 'src/components/Tags';
+import { ResourceState } from 'src/constants';
 import {
   ServiceOutClusterAccessTitle,
   ServiceInClusterAccessTitle,
@@ -38,15 +41,14 @@ import { EventsTable } from '../EventsTable';
 import { ImageNames } from '../ImageNames';
 import { IngressRulesTable } from '../IngressRulesTable';
 import { KeyValue, KeyValueAnnotation, KeyValueSecret } from '../KeyValue';
-import { PVPhaseDisplay, PVVolumeModeDisplay } from '../ResourceFiledDisplays';
+import { NodeTaintsTable } from '../NodeTaintsTable';
+import { PVVolumeModeDisplay } from '../ResourceFiledDisplays';
 import { ResourceLink } from '../ResourceLink';
 import { ResourceTable } from '../ResourceTable';
+import { StateTag } from '../StateTag';
 import { Time } from '../Time';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
-import PVCDistributeStorage from 'src/components/PVCDistributeStorage';
-import { NodeTaintsTable } from '../NodeTaintsTable';
-import { Taint } from 'kubernetes-types/core/v1';
 
 export type ShowField<Model extends ResourceModel> = {
   key: string;
@@ -489,9 +491,9 @@ export const PVStorageClassField = <
     renderContent(value) {
       return (
         <ResourceLink
-          resourceName="storageclasses"
+          resourceKind="storageclasses"
           namespace=""
-          resourceId={value as string}
+          name={value as string}
         />
       );
     },
@@ -505,10 +507,10 @@ export const PVPhaseField = <
 ): ShowField<Model> => {
   return {
     key: 'phase',
-    path: ['phase'],
+    path: ['stateDisplay'],
     title: i18n.t('dovetail.state'),
     renderContent(value) {
-      return <PVPhaseDisplay value={value as string} />;
+      return <StateTag state={value as ResourceState} resourceKind="PersistentVolume" hideBackground />;
     },
   };
 };
@@ -537,6 +539,25 @@ export const PVAccessModeField = <
     key: 'accessMode',
     path: ['spec', 'accessModes'],
     title: i18n.t('dovetail.access_mode'),
+    renderContent(value) {
+      return (value as string[]).join(', ');
+    }
+  };
+};
+
+export const PVCPodsField = <Model extends PersistentVolumeClaimModel>(): ShowField<Model> => {
+  return {
+    key: 'pods',
+    path: [],
+    renderContent: (_, record) => {
+      return (
+        <WorkloadPodsTable
+          filter={item => !!item.spec?.volumes?.some(v => v.persistentVolumeClaim?.claimName === record.metadata.name)}
+          namespace={record.metadata.namespace}
+          hideToolbar
+        />
+      );
+    },
   };
 };
 
@@ -547,6 +568,13 @@ export const PVCRefField = <Model extends PersistentVolumeModel>(
     key: 'pvc',
     path: ['pvc'],
     title: i18n.t('dovetail.pvc'),
+    renderContent(value, pvc) {
+      return <ResourceLink
+        resourceKind="persistentvolumeclaims"
+        namespace={pvc.pvcNamespace || 'default'}
+        name={value as string}
+      />;
+    }
   };
 };
 

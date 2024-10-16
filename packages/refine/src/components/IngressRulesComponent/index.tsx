@@ -20,9 +20,9 @@ export const IngressRulesComponent: React.FC<{
             {r.serviceName ? (
               <>
                 <ResourceLink
-                  resourceName="services"
+                  resourceKind="services"
                   namespace={ingress.metadata.namespace || 'default'}
-                  resourceId={r.serviceName}
+                  name={r.serviceName}
                 />
                 <span>:{r.servicePort}</span>
               </>

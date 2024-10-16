@@ -7,6 +7,7 @@ import { CreateButton } from '../CreateButton';
 import { DeleteManyButton } from '../DeleteManyButton';
 
 type Props = {
+  title?: string;
   description?: string;
   selectedKeys: string[];
   hideCreate?: boolean;
@@ -20,26 +21,26 @@ const ToolbarStyle = css`
   width: 100%;
 `;
 const TitleStyle = css`
-  color: #00122E;
+  color: $gray-120;
 `;
 const DescriptionStyle = css`
-  color: rgba(44, 56, 82, 0.75);
+  color: $gray-a75-8;
 `;
 
-export const TableToolBar: React.FC<Props> = ({ description, selectedKeys, hideCreate }) => {
+export const TableToolBar: React.FC<Props> = ({ title, description, selectedKeys, hideCreate }) => {
   const { resource } = useResource();
 
   return (
     <div className={cx(ToolbarWrapperStyle, 'table-toolbar')}>
       <Space className={ToolbarStyle}>
-        <span className={cx(Typo.Display.d2_regular_title, TitleStyle)}>{resource?.meta?.kind}</span>
+        <span className={cx(Typo.Display.d2_regular_title, TitleStyle)}>{title || resource?.meta?.kind}</span>
         <Space>
           {selectedKeys.length > 0 ? <DeleteManyButton ids={selectedKeys} /> : undefined}
           <CanAccess
             resource={resource?.name}
             action={AccessControlAuth.Create}
           >
-            {!hideCreate ? <CreateButton /> : null}
+            {!hideCreate ? <CreateButton label={title} /> : null}
           </CanAccess>
         </Space>
       </Space>

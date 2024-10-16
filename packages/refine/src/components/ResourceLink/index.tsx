@@ -5,9 +5,9 @@ import { useGo, useNavigation } from '@refinedev/core';
 import React from 'react';
 
 type Props = {
-  resourceName: string;
+  resourceKind: string;
   namespace: string;
-  resourceId: string;
+  name: string;
 };
 
 const LinkStyle = css`
@@ -15,7 +15,7 @@ const LinkStyle = css`
 `;
 
 export const ResourceLink: React.FC<Props> = props => {
-  const { resourceName, namespace, resourceId } = props;
+  const { resourceKind: resourceName, namespace, name: resourceId } = props;
   const navigation = useNavigation();
   const go = useGo();
   const onClick = () => {

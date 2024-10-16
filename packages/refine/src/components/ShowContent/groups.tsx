@@ -18,6 +18,7 @@ import {
   IngressModel,
   ServiceType,
   StorageClassModel,
+  PersistentVolumeClaimModel,
 } from 'src/models';
 import {
   ShowField,
@@ -39,6 +40,7 @@ import {
   StorageClassPvField,
   ResourceTableField,
   NodeTaintsField,
+  PVCPodsField,
 } from './fields';
 
 export const BasicGroup = <Model extends ResourceModel>(
@@ -51,19 +53,19 @@ export const BasicGroup = <Model extends ResourceModel>(
     upAreas?: ShowArea<Model>[];
     downAreas?: ShowArea<Model>[];
     basicFields?: ShowField<Model>[];
-  } = {}
+  } = {},
+  isShowNamespace = true
 ): ShowGroup<Model> => ({
   title: i18n.t('dovetail.basic_info'),
   areas: [
     ...upAreas,
     {
-      fields: [
-        NamespaceField(i18n),
+      fields: (isShowNamespace ? [NamespaceField<Model>(i18n)] : []).concat([
         ...basicFields,
         LabelsField(i18n),
         AnnotationsField(i18n),
         AgeField(i18n),
-      ],
+      ]),
     },
     ...downAreas,
   ],
@@ -107,6 +109,15 @@ export const ServicePodsGroup = <Model extends ServiceModel>(): ShowGroup<Model>
   areas: [
     {
       fields: [ServicePodsField()],
+    },
+  ],
+});
+
+export const PVCPodsGroup = <Model extends PersistentVolumeClaimModel>(): ShowGroup<Model> => ({
+  title: 'Pod',
+  areas: [
+    {
+      fields: [PVCPodsField()],
     },
   ],
 });

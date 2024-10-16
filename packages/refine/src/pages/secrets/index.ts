@@ -22,7 +22,6 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
   basePath: '/api/v1',
   apiVersion: 'v1',
   parent: RESOURCE_GROUP.STORAGE,
-  label: 'Secrets',
   initValue: SECRET_OPAQUE_INIT_VALUE,
   columns: () => [DataKeysColumnRenderer(i18n), AgeColumnRenderer(i18n)],
   formConfig: {

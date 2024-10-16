@@ -17,12 +17,13 @@ import {
   AgeColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { PodModel } from '../../models';
-import BaseTable, { Column } from '../Table';
-import { TableToolBar } from '../Table/TableToolBar';
+import BaseTable, { Column } from '../InternalBaseTable';
+import { TableToolBar } from '../TableToolbar';
 
 interface WorkloadPodsTableProps {
   namespace?: string;
   selector?: LabelSelector;
+  filter?: (item: PodModel) => boolean;
   hideToolbar?: boolean;
 }
 
@@ -30,6 +31,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   namespace,
   selector,
   hideToolbar,
+  filter,
 }) => {
   const { i18n } = useTranslation();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -64,7 +66,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
           field: '',
           value: '',
           fn(item: PodModel) {
-            return matchSelector(item, selector, namespace);
+            return filter ? filter(item) : matchSelector(item, selector, namespace);
           }
         }] as any
       }

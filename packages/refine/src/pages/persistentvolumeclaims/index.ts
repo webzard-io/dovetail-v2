@@ -22,9 +22,9 @@ export const PersistentVolumeClaimConfig = (i18n: I18n): ResourceConfig<Persiste
   name: 'persistentvolumeclaims',
   basePath: '/api/v1',
   apiVersion: 'v1',
-  kind: 'PersistentVolumeclaim',
+  kind: 'PersistentVolumeClaim',
   parent: RESOURCE_GROUP.STORAGE,
-  label: 'PersistentVolumeclaims',
+  displayName: i18n.t('dovetail.pvc'),
   initValue: {},
   columns: () => [
     PVCStorageColumnRenderer(i18n),

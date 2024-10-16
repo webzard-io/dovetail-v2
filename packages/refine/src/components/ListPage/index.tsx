@@ -3,12 +3,10 @@ import { css, cx } from '@linaria/core';
 import { useResource } from '@refinedev/core';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent from 'src/components/ErrorContent';
+import { InternalTableProps } from 'src/components/InternalBaseTable';
 import { NamespacesFilter } from 'src/components/NamespacesFilter';
-import BaseTable from 'src/components/Table';
-import { TableProps } from 'src/components/Table';
-import { TableToolBar } from 'src/components/Table/TableToolBar';
-import ComponentContext from 'src/contexts/component';
+import { Table } from 'src/components/Table';
+import { TableToolBar } from 'src/components/TableToolbar';
 import ConfigsContext from 'src/contexts/configs';
 import { ResourceModel } from '../../models';
 
@@ -44,15 +42,13 @@ const NamespaceFilterStyle = css`
 
 interface ListPageProps<T extends ResourceModel> {
   selectedKeys: string[];
-  tableProps: TableProps<T>;
+  tableProps: InternalTableProps<T>;
   contentClassName?: string;
 }
 
 export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
   const { selectedKeys, tableProps, contentClassName } = props;
-  const { Table: TableComponent } = useContext(ComponentContext);
   const { t } = useTranslation();
-  const Table = TableComponent || BaseTable;
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
   const config = configs[resource?.name || ''];
@@ -63,6 +59,7 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
         <>
           <TableToolBar
             selectedKeys={selectedKeys}
+            title={config?.displayName}
             description={config?.description}
           />
           <Divider
@@ -76,27 +73,21 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
         </>
       ) : undefined}
 
-      <div className={cx(ListContentStyle, contentClassName)}>
+      <div
+        className={cx(ListContentStyle, contentClassName)}
+        style={config.hideNamespacesFilter ? { paddingTop: 0 } : {}}
+      >
         {!config.hideNamespacesFilter ? (
           <NamespacesFilter className={NamespaceFilterStyle} />
         ) : undefined}
         <div className={TableStyle}>
-          {!(tableProps.data.length || tableProps.loading) ? (
-            <ErrorContent
-              errorText={
-                tableProps.empty || t('dovetail.no_resource', { kind: ` ${config.kind}` })
-              }
-            />
-          ) : (
-            <Table
-              {...tableProps}
-              empty={
-                tableProps.empty || t('dovetail.no_resource', { kind: ` ${config.kind}` })
-              }
-              className={cx(tableProps.className)}
-              scroll={{ y: 'calc(100% - 48px)' }}
-            />
-          )}
+          <Table
+            tableProps={{
+              ...tableProps,
+              scroll: { y: 'calc(100% - 48px)' },
+            }}
+            displayName={config?.displayName || config.kind}
+          />
         </div>
       </div>
     </div>

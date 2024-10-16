@@ -27,7 +27,6 @@ export const ServicesConfig = (i18n: i18n): ResourceConfig<ServiceModel> => ({
   kind: 'Service',
   basePath: '/api/v1',
   apiVersion: 'v1',
-  label: 'Services',
   parent: RESOURCE_GROUP.NETWORK,
   columns: () => [
     ServiceTypeColumnRenderer(i18n),
