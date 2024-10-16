@@ -4,15 +4,15 @@ import { CrudFilters } from '@refinedev/core';
 import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
-import { StateTagStyle } from 'src/components/StateTag';
 import ComponentContext from 'src/contexts/component';
 import { useEagleTable } from 'src/hooks/useEagleTable/useEagleTable';
+import { StateTagStyle } from 'src/styles/tag';
 import {
   AgeColumnRenderer,
   CommonSorter,
 } from '../../hooks/useEagleTable/columns';
 import { EventModel } from '../../models';
-import BaseTable from '../Table';
+import BaseTable from '../InternalBaseTable';
 
 type EventTableProps = {
   uid: string;

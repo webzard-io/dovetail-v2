@@ -19,7 +19,6 @@ import { useTranslation } from 'react-i18next';
 import { DurationTime } from 'src/components/DurationTime';
 import ValueDisplay from 'src/components/ValueDisplay';
 import {
-  PVPhaseDisplay,
   PVVolumeModeDisplay,
   ResourceLink,
   ServiceInClusterAccessComponent,
@@ -27,9 +26,9 @@ import {
 } from '../../components';
 import { ImageNames } from '../../components/ImageNames';
 import { IngressRulesComponent } from '../../components/IngressRulesComponent';
+import { Column } from '../../components/InternalBaseTable';
 import { ReferenceLink } from '../../components/ReferenceLink';
 import { StateTag } from '../../components/StateTag';
-import { Column } from '../../components/Table';
 import { Time } from '../../components/Time';
 import {
   JobModel,
@@ -682,7 +681,7 @@ export const PVRefColumnRenderer = <Model extends PersistentVolumeClaimModel>(
     display: true,
     dataIndex: ['pv'],
     title: i18n.t('dovetail.pv'),
-    width: 120,
+    width: 160,
     sortable: true,
   };
 };
@@ -697,11 +696,11 @@ export const PVStorageClassColumnRenderer = <
     display: true,
     dataIndex: ['spec', 'storageClassName'],
     title: i18n.t('dovetail.storage_class'),
-    width: 120,
+    width: 160,
     sortable: true,
     render(value) {
       return (
-        <ResourceLink resourceName="storageclasses" namespace="" resourceId={value} />
+        <ResourceLink resourceKind="storageclasses" namespace="" name={value} />
       );
     },
   };
@@ -715,12 +714,12 @@ export const PVPhaseColumnRenderer = <
   return {
     key: 'phase',
     display: true,
-    dataIndex: ['phase'],
+    dataIndex: ['stateDisplay'],
     title: i18n.t('dovetail.state'),
     width: 120,
     sortable: true,
     render(value) {
-      return <PVPhaseDisplay value={value} />;
+      return <StateTag state={value} resourceKind="PersistentVolume" hideBackground />;
     },
   };
 };
@@ -735,8 +734,15 @@ export const PVCRefColumnRenderer = <
     display: true,
     dataIndex: ['pvc'],
     title: i18n.t('dovetail.pvc'),
-    width: 120,
+    width: 160,
     sortable: true,
+    render(value, pv) {
+      return <ResourceLink
+        resourceKind="persistentvolumeclaims"
+        namespace={pv.pvcNamespace || 'default'}
+        name={value}
+      />;
+    }
   };
 };
 
@@ -750,7 +756,7 @@ export const PVCSIRefColumnRenderer = <
     display: true,
     dataIndex: ['csi'],
     title: i18n.t('dovetail.csi'),
-    width: 120,
+    width: 160,
     sortable: true,
   };
 };
@@ -785,6 +791,13 @@ export const PVAccessModeColumnRenderer = <
     title: i18n.t('dovetail.access_mode'),
     width: 120,
     sortable: true,
+    render(value) {
+      return (
+        <span style={{ whiteSpace: 'pre-wrap' }}>
+          {(value as string[]).join('\n')}
+        </span>
+      );
+    }
   };
 };
 
@@ -825,6 +838,24 @@ export const SCReclaimPolicyColumnRenderer = <
       };
 
       return map[val as string] || val;
+    }
+  };
+};
+
+export const SCAllowExpandColumnRenderer = <
+  Model extends StorageClassModel,
+>(
+  i18n: I18nType
+): Column<Model> => {
+  return {
+    key: '​​allowVolumeExpansion',
+    display: true,
+    dataIndex: ['​​allowVolumeExpansion'],
+    title: i18n.t('dovetail.allow_expand'),
+    width: 120,
+    sortable: true,
+    render(val) {
+      return val ? i18n.t('dovetail.support') : i18n.t('dovetail.not_support');
     }
   };
 };

@@ -1,6 +1,7 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import type { PersistentVolumeClaim } from 'kubernetes-types/core/v1';
 import { cloneDeep, set } from 'lodash-es';
+import { ResourceState } from 'src/constants';
 import { ResourceModel } from './resource-model';
 
 type RequiredPersistentClaimVolume = Required<PersistentVolumeClaim> & Unstructured;
@@ -21,6 +22,19 @@ export class PersistentVolumeClaimModel extends ResourceModel {
 
   get pv() {
     return this._rawYaml.spec.volumeName;
+  }
+
+  get stateDisplay() {
+    switch (this.phase) {
+      case 'Pending':
+        return ResourceState.PENDING;
+      case 'Bound':
+        return ResourceState.BOUND;
+      case 'Lost':
+        return ResourceState.LOST;
+      case 'Failed':
+        return ResourceState.FAILED;
+    }
   }
 
   public updateDistributeStorage(distributeStorage: number) {

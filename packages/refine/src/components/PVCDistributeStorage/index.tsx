@@ -1,15 +1,16 @@
-import React, { useCallback, useImperativeHandle, useRef, useState } from 'react';
-import { Button, Fields, Form, Units } from '@cloudtower/eagle';
-import { parseSi } from 'src/utils/unit';
-import { PersistentVolumeClaimModel } from 'src/models';
-import { useTranslation } from 'react-i18next';
+import { Fields, Form, Units } from '@cloudtower/eagle';
 import { useResource, useUpdate } from '@refinedev/core';
-import { pruneBeforeEdit } from 'src/utils/k8s';
+import { isNil } from 'lodash-es';
+import React, { useCallback, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { EditField } from 'src/components/EditField';
+import { PersistentVolumeClaimModel } from 'src/models';
+import { pruneBeforeEdit } from 'src/utils/k8s';
 import { transformStorageUnit, StorageUnit } from 'src/utils/storage';
+import { parseSi } from 'src/utils/unit';
 
 interface DistributeStorageFormHandler {
-  submit: () => Promise<unknown> | undefined;
+  submit: () => Promise<unknown> | boolean | undefined;
 }
 
 interface DistributeStorageFormProps {
@@ -24,8 +25,35 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
   const { t } = useTranslation();
 
   const [distributeStorage, setDistributeStorage] = useState(defaultValue);
+  const [validateResult, setValidateResult] = useState<{
+    distributeStorage: string;
+  }>({
+    distributeStorage: ''
+  });
+
+  const validators = useMemo(() => {
+    return {
+      distributeStorage(value: number) {
+        if (isNil(value)) {
+          return t('dovetail.pvc_storage_required');
+        } else if (value < 1) {
+          return t('dovetail.pvc_storage_min');
+        } else if (value < defaultValue) {
+          return t('dovetail.pvc_storage_reduce_limit');
+        }
+
+        return '';
+      }
+    };
+  }, [t, defaultValue]);
 
   const submit = useCallback(() => {
+    const isInvalid = !!validators.distributeStorage(distributeStorage);
+
+    if (isInvalid) {
+      return false;
+    }
+
     const v = pvc.updateDistributeStorage(distributeStorage);
     const id = pvc.id;
 
@@ -49,7 +77,7 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
       },
       errorNotification: false,
     });
-  }, [pvc, distributeStorage, resource?.name, mutateAsync, t]);
+  }, [pvc, distributeStorage, resource?.name, validators, mutateAsync, t]);
 
   useImperativeHandle(ref, () => ({
     submit,
@@ -59,6 +87,8 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
     <Form.Item
       label={<span style={{ width: '134px' }}>{t('dovetail.distributed')}</span>}
       colon={false}
+      help={validateResult.distributeStorage}
+      validateStatus={validateResult.distributeStorage ? 'error' : ''}
     >
       <Fields.Integer
         style={{ width: '142px' }}
@@ -66,12 +96,17 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
           name: 'distributeStorage',
           value: distributeStorage,
           onChange: (value) => {
-            setDistributeStorage(Number(value));
+            const v = Number(value);
+
+            setDistributeStorage(v);
+            setValidateResult({
+              distributeStorage: validators.distributeStorage(v)
+            });
           },
           onBlur: () => { },
           onFocus: () => { },
         }}
-        min={0}
+        min={1}
         meta={{}}
         suffix="GiB"
         controls
@@ -114,7 +149,7 @@ function PVCDistributeStorage({ pvc, editable }: PVCDistributeStorageProps) {
         )
       }
     </div>
-  )
+  );
 }
 
 export default PVCDistributeStorage;

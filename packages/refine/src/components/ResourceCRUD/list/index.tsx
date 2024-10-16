@@ -1,7 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Column } from 'src/components/Table';
+import { Column } from 'src/components/InternalBaseTable';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   NameColumnRenderer,

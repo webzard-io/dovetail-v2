@@ -1,8 +1,9 @@
 import { CloseCircleFilled } from '@ant-design/icons';
-import { usePopModal, usePushModal, Modal, SegmentControl, Typo } from '@cloudtower/eagle';
+import { usePopModal, usePushModal, Modal, SegmentControl, Typo, Alert } from '@cloudtower/eagle';
 import { ExclamationErrorCircleFill16RedIcon } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useResource } from '@refinedev/core';
+import { Unstructured } from 'k8s-api-provider';
 import React, { useState, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
@@ -13,7 +14,6 @@ import { RefineFormContent } from './RefineFormContent';
 import useFieldsConfig from './useFieldsConfig';
 import { useRefineForm } from './useRefineForm';
 import { YamlForm, YamlFormProps } from './YamlForm';
-import { Unstructured } from 'k8s-api-provider';
 
 const FormDescStyle = css`
   margin-bottom: 16px;
@@ -134,7 +134,7 @@ export function FormModal(props: FormModalProps) {
           setIsError(!!errors.length);
         },
         onFinish: popModal,
-      }
+      };
     },
     [
       props.formProps,
@@ -212,10 +212,12 @@ export function FormModal(props: FormModalProps) {
     if (typeof config.formConfig?.formTitle === 'function') {
       return config.formConfig?.formTitle(action);
     }
+    const label = config.displayName || config?.kind;
+
     return i18n.t(id ? 'dovetail.edit_resource' : 'dovetail.create_resource', {
-      resource: config?.kind,
+      resource: /^[a-zA-Z]/.test(label) ? ` ${label}` : label,
     });
-  }, [action, config.formConfig, config?.kind, i18n, id]);
+  }, [action, config.formConfig, config.displayName, config?.kind, i18n, id]);
 
   const desc = useMemo(() => {
     if (typeof config.formConfig?.formDesc === 'string')
@@ -277,6 +279,13 @@ export function FormModal(props: FormModalProps) {
       fullscreen
     >
       {desc ? <div className={FormDescStyle}>{desc}</div> : undefined}
+      {!isYamlForm && mode === Mode.Form ?
+        (<Alert
+          type="warning"
+          message={i18n.t('dovetail.change_form_mode_alert')}
+          style={{ marginBottom: '16px' }}
+        />) :
+        undefined}
       {formEle}
     </Modal>
   );

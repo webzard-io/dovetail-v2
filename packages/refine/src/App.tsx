@@ -42,7 +42,6 @@ function App() {
         basePath: '/apis/batch/v1beta1',
         kind: 'CronJob',
         parent: RESOURCE_GROUP.WORKLOAD,
-        label: 'CronJobs',
         initValue: CRONJOB_INIT_VALUE,
         isCustom: true,
       },
@@ -51,7 +50,6 @@ function App() {
         basePath: '/apis/apps/v1',
         kind: 'DaemonSet',
         parent: RESOURCE_GROUP.WORKLOAD,
-        label: 'DaemonSets',
         initValue: DAEMONSET_INIT_VALUE,
         isCustom: true,
       },
@@ -60,7 +58,6 @@ function App() {
         basePath: '/apis/apps/v1',
         kind: 'Deployment',
         parent: RESOURCE_GROUP.WORKLOAD,
-        label: 'Deployments',
         formConfig: {
           formType: FormType.MODAL,
           renderForm: (formProps: YamlFormProps) => (
@@ -79,7 +76,6 @@ function App() {
         basePath: '/api/v1',
         kind: 'Pod',
         parent: RESOURCE_GROUP.WORKLOAD,
-        label: 'Pods',
         initValue: POD_INIT_VALUE,
         isCustom: true,
       },
@@ -88,7 +84,6 @@ function App() {
         basePath: '/api/v1',
         kind: 'Node',
         parent: RESOURCE_GROUP.WORKLOAD,
-        label: 'Nodes',
         initValue: NODE_INIT_VALUE,
         isCustom: true,
       },
@@ -100,7 +95,6 @@ function App() {
         basePath: '/apis/kubesmart.smtx.io/v1alpha1',
         kind: 'ServerInstance',
         parent: RESOURCE_GROUP.NETWORK,
-        label: 'ServerInstanceList',
         initValue: SERVER_INSTANCE_INIT_VALUE,
         noShow: true,
         formConfig: {
@@ -162,7 +156,11 @@ function App() {
 
   const globalStore = useMemo(() => {
     return new GlobalStore(
-      { apiUrl: '/api/k8s', watchWsApiUrl: 'api/sks-ws/k8s', prefix: 'default' },
+      {
+        apiUrl: '/api/sks-proxy/api/v1/clusters/yangfeng-test/proxy',
+        watchWsApiUrl: 'api/sks-ws/sks-proxy/api/v1/clusters/yangfeng-test/proxy',
+        prefix: 'default',
+      },
       ProviderPlugins
     );
   }, []);

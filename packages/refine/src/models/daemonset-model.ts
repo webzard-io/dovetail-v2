@@ -1,6 +1,6 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import { DaemonSet } from 'kubernetes-types/apps/v1';
-import { WorkloadState } from '../constants';
+import { ResourceState } from '../constants';
 import { WorkloadModel } from './workload-model';
 
 type RequiredDaemonSet = Required<DaemonSet> & Unstructured;
@@ -18,9 +18,9 @@ export class DaemonSetModel extends WorkloadModel {
 
   get stateDisplay() {
     if (this.status?.desiredNumberScheduled !== this.status?.numberReady) {
-      return WorkloadState.UPDATING;
+      return ResourceState.UPDATING;
     }
-    return WorkloadState.READY;
+    return ResourceState.READY;
   }
 
   get replicas() {

@@ -30,8 +30,10 @@ import { Tabs as BaseTabs } from 'src/components/Tabs';
 import ValueDisplay from 'src/components/ValueDisplay';
 import { AccessControlAuth } from 'src/constants/auth';
 import ComponentContext from 'src/contexts/component';
+import ConfigsContext from 'src/contexts/configs';
 import { useOpenForm } from 'src/hooks/useOpenForm';
-import { WorkloadState } from '../../constants';
+import { ResourceConfig } from 'src/types';
+import { ResourceState } from '../../constants';
 import { ResourceModel } from '../../models';
 import { StateTag } from '../StateTag';
 import { ShowConfig, ShowField, AreaType } from './fields';
@@ -193,6 +195,8 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   const go = useGo();
   const openForm = useOpenForm({ id });
   const Component = useContext(ComponentContext);
+  const configs = useContext(ConfigsContext);
+  const config = configs[resource?.name || ''];
   const Tabs = Component.Tabs || BaseTabs;
 
   if (!data?.data) {
@@ -254,7 +258,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
     });
   }
 
-  const stateDisplay = get(record, 'stateDisplay') as WorkloadState;
+  const stateDisplay = get(record, 'stateDisplay') as ResourceState;
   const topBar = (
     <div className={ToolBarWrapper}>
       <span
@@ -270,7 +274,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           hoverSrc={ArrowChevronLeftSmall16BoldBlueIcon}
           style={{ marginRight: 4 }}
         >
-          <span className="button-text">{resource?.meta?.kind}</span>
+          <span className="button-text">{config?.displayName || resource?.meta?.kind}</span>
         </Icon>
       </span>
       <Space className={TopBarStyle}>
@@ -278,7 +282,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>
             {record?.metadata?.name}
           </span>
-          {stateDisplay ? <StateTag state={stateDisplay} /> : undefined}
+          {stateDisplay ? <StateTag state={stateDisplay} resourceKind={resource?.meta?.kind} /> : undefined}
         </div>
         <Space>
           {showConfig.renderExtraButton?.(record)}

@@ -2,7 +2,7 @@ import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import { Job } from 'kubernetes-types/batch/v1';
 import { PodList } from 'kubernetes-types/core/v1';
 import { sumBy } from 'lodash';
-import { WorkloadState } from '../constants';
+import { ResourceState } from '../constants';
 import { matchSelector } from '../utils/match-selector';
 import { getSecondsDiff } from '../utils/time';
 import { PodModel } from './pod-model';
@@ -70,22 +70,22 @@ export class JobModel extends WorkloadBaseModel {
 
   get stateDisplay() {
     if (!this.spec?.completions && !this.status?.succeeded) {
-      return WorkloadState.RUNNING;
+      return ResourceState.RUNNING;
     }
     if (
       this.spec?.completions === this.status?.succeeded ||
       this.status?.conditions?.some(c => c.type === 'Complete' && c.status === 'True')
     ) {
-      return WorkloadState.COMPLETED;
+      return ResourceState.COMPLETED;
     }
     if (this.status?.conditions?.some(c => c.type === 'Failed' && c.status === 'True')) {
-      return WorkloadState.FAILED;
+      return ResourceState.ABNORMAL;
     }
     if (
       this.status?.conditions?.some(c => c.type === 'Suspended' && c.status === 'True')
     ) {
-      return WorkloadState.SUSPENDED;
+      return ResourceState.SUSPENDED;
     }
-    return WorkloadState.RUNNING;
+    return ResourceState.RUNNING;
   }
 }

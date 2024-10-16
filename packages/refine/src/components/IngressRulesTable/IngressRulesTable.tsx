@@ -2,7 +2,7 @@ import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import { LinkFallback } from 'src/components/LinkFallback';
-import BaseTable from 'src/components/Table';
+import BaseTable from 'src/components/InternalBaseTable';
 import ValueDisplay from 'src/components/ValueDisplay';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
@@ -56,9 +56,9 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       render: (serviceName: string, record: RuleItem) => {
         return record.serviceName ? (
           <ResourceLink
-            resourceName="services"
+            resourceKind="services"
             namespace={ingress.metadata.namespace || 'default'}
-            resourceId={serviceName}
+            name={serviceName}
           />
         ) : record.resourceName;
       },
@@ -82,9 +82,9 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
 
         return secretName ? (
           <ResourceLink
-            resourceName="secrets"
+            resourceKind="secrets"
             namespace={ingress.metadata.namespace || 'default'}
-            resourceId={secretName}
+            name={secretName}
           />
         ) : <ValueDisplay value="" />;
       },

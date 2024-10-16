@@ -1,6 +1,6 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import type { Pod } from 'kubernetes-types/core/v1';
-import { WorkloadState } from '../constants';
+import { ResourceState } from '../constants';
 import { shortenedImage } from '../utils/string';
 import { formatSi, parseSi } from '../utils/unit';
 import { ResourceQuantity } from './types/metric';
@@ -96,8 +96,8 @@ export class PodModel extends WorkloadBaseModel {
 
   get stateDisplay() {
     if (this.metadata.deletionTimestamp) {
-      return WorkloadState.TERMINATING;
+      return ResourceState.TERMINATING;
     }
-    return this.status?.phase?.toLowerCase() || WorkloadState.UNKNOWN;
+    return this.status?.phase?.toLowerCase() || ResourceState.UNKNOWN;
   }
 }
