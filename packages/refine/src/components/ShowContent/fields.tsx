@@ -476,6 +476,13 @@ export const PVRefField = <Model extends PersistentVolumeClaimModel>(
     key: 'pv',
     path: ['pv'],
     title: i18n.t('dovetail.pv'),
+    renderContent(value) {
+      return <ResourceLink
+        resourceKind="persistentvolumes"
+        namespace=""
+        name={value as string}
+      />;
+    },
   };
 };
 

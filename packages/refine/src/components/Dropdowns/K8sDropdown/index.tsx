@@ -9,18 +9,15 @@ import {
 } from '@cloudtower/icons-react';
 import { useResource, useCan } from '@refinedev/core';
 import { omit } from 'lodash-es';
-import React, { useRef } from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AccessControlAuth } from 'src/constants/auth';
+import ConfigsContext from 'src/contexts/configs';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useOpenForm } from 'src/hooks/useOpenForm';
 import { useGlobalStore } from '../../../hooks';
 import { ResourceModel } from '../../../models';
-import {
-  EditAnnotationDropdownMenuItem,
-  EditLabelDropdownMenuItem,
-} from '../../DropdownMenuItems';
 
 export type DropdownSize = 'normal' | 'large';
 
@@ -49,17 +46,8 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
     resource: resource?.name,
     action: AccessControlAuth.Delete,
   });
-  const formRef = useRef(null);
-
-  const editLabelMenuItem =
-    canEditData?.can !== false ? (
-      <EditLabelDropdownMenuItem formRef={formRef} resourceModel={record} />
-    ) : null;
-
-  const editAnnotationMenuItem =
-    canEditData?.can !== false ? (
-      <EditAnnotationDropdownMenuItem formRef={formRef} resourceModel={record} />
-    ) : null;
+  const configs = useContext(ConfigsContext);
+  const config = configs[resource?.name || ''];
 
   return (
     <>
@@ -68,7 +56,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
           <Menu>
             {isInShowPage || canEditData?.can === false ? null : (
               <Menu.Item onClick={openForm}>
-                <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_yaml')}</Icon>
+                <Icon src={EditPen16PrimaryIcon}>{config.formConfig?.fields ? t('dovetail.edit') : t('dovetail.edit_yaml')}</Icon>
               </Menu.Item>
             )}
             <Menu.Item
@@ -83,8 +71,6 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
             >
               <Icon src={Download16GradientBlueIcon}>{t('dovetail.download_yaml')}</Icon>
             </Menu.Item>
-            {editLabelMenuItem}
-            {editAnnotationMenuItem}
             {props.children}
             {canDeleteData?.can !== false ? <Divider style={{ margin: 0 }} /> : null}
             {canDeleteData?.can !== false ? (

@@ -120,7 +120,6 @@ export const PodContainersTable: React.FC<Props> = ({
   if (dataSource.length === 0) {
     return <ErrorContent
       errorText={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.container') })}
-      style={{ padding: '15px 0' }}
       type={ErrorContentType.Card}
     />;
   }
