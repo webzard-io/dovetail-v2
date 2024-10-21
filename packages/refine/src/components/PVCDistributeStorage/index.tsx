@@ -34,10 +34,8 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
   const validators = useMemo(() => {
     return {
       distributeStorage(value: number) {
-        if (isNil(value)) {
+        if (!value) {
           return t('dovetail.pvc_storage_required');
-        } else if (value < 1) {
-          return t('dovetail.pvc_storage_min');
         } else if (value < defaultValue) {
           return t('dovetail.pvc_storage_reduce_limit');
         }

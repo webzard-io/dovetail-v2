@@ -77,7 +77,6 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
   if (ports?.length === 0) {
     return <ErrorContent
       errorText={t('dovetail.no_resource', { kind: t('dovetail.port') })}
-      style={{ padding: '15px 0' }}
       type={ErrorContentType.Card}
     />;
   }

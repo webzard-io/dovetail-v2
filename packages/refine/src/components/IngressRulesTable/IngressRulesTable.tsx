@@ -1,8 +1,8 @@
 import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
-import { LinkFallback } from 'src/components/LinkFallback';
 import BaseTable from 'src/components/InternalBaseTable';
+import { LinkFallback } from 'src/components/LinkFallback';
 import ValueDisplay from 'src/components/ValueDisplay';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
@@ -105,7 +105,6 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
   if (rows?.length === 0) {
     return <ErrorContent
       errorText={t('dovetail.no_resource', { kind: t('dovetail.rule') })}
-      style={{ padding: '15px 0' }}
       type={ErrorContentType.Card}
     />;
   }
