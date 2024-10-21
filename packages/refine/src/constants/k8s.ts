@@ -597,6 +597,6 @@ export const PVC_INIT_VALUE = {
         'storage': '40Gi'
       }
     },
-    'storageClassName': 'example'
+    'storageClassName': ''
   }
 };

@@ -94,7 +94,6 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
   if (conditionsWithId.length === 0) {
     return <ErrorContent
       errorText={t('dovetail.no_resource', { kind: t('dovetail.condition') })}
-      style={{ padding: '15px 0' }}
       type={ErrorContentType.Card}
     />;
   }

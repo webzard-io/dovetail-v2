@@ -11,7 +11,6 @@ import {
 import {
   ArrowChevronLeft16BoldTertiaryIcon,
   ArrowChevronLeftSmall16BoldBlueIcon,
-  EditPen16GradientBlueIcon,
 } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import {
@@ -32,7 +31,6 @@ import { AccessControlAuth } from 'src/constants/auth';
 import ComponentContext from 'src/contexts/component';
 import ConfigsContext from 'src/contexts/configs';
 import { useOpenForm } from 'src/hooks/useOpenForm';
-import { ResourceConfig } from 'src/types';
 import { ResourceState } from '../../constants';
 import { ResourceModel } from '../../models';
 import { StateTag } from '../StateTag';
@@ -42,14 +40,14 @@ const ShowContentWrapperStyle = css`
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #fff 0%, #edf0f7 100%);
+  background: linear-gradient(180deg, $white 0%, $gray-20 100%);
 
   .ant-row {
     margin-right: 0 !important;
   }
 `;
 const BackButton = css`
-  color: rgba(0, 21, 64, 0.3);
+  color: $gray-a30-10;
   line-height: 18px;
   cursor: pointer;
   display: inline-flex;
@@ -57,17 +55,17 @@ const BackButton = css`
   align-self: flex-start;
 
   &:hover {
-    color: #0080ff;
+    color: $blue-60;
   }
 `;
 const ToolBarWrapper = css`
   display: flex;
   flex-direction: column;
   padding: 16px 24px 8px 24px;
-  background-color: #fff;
+  background-color: $white;
 `;
 const NameStyle = css`
-  color: #00122e;
+  color: $gray-120;
   margin-right: 8px;
 `;
 const TopBarStyle = css`
@@ -81,24 +79,21 @@ const GroupStyle = css`
   padding: 12px 16px;
   padding-bottom: 4px;
   border-radius: 8px;
-  border: 1px solid rgba(211, 218, 235, 0.6);
+  border: 1px solid $gray-a60-3;
   box-shadow:
-    0px 0px 2.003px 0px rgba(107, 125, 153, 0.15),
-    0px 0px 16px 0px rgba(107, 125, 153, 0.08);
-  background-color: #fff;
+    0px 0px 2.003px 0px rgba($gray-70, 0.15),
+    0px 0px 16px 0px rgba($gray-70, 0.08);
+  background-color: $white;
   margin: 0 24px;
   overflow: auto;
   width: calc(100% - 48px);
   max-width: 1592px;
+  margin-bottom: 24px;
 
   &:first-of-type {
     margin-top: 16px;
   }
-
-  &:not(:last-of-type) {
-    margin-bottom: 24px;
-  }
-
+  
   .pagination-wrapper {
     padding-top: 12px;
     padding-bottom: 0;
@@ -106,13 +101,13 @@ const GroupStyle = css`
 `;
 const GroupTitleStyle = css`
   display: flex;
-  color: #1d326c;
+  color: $blue-100;
   margin-bottom: 10px;
   justify-content: space-between;
   align-items: center;
 `;
 const FullTabContentStyle = css`
-  background-color: #fff;
+  background-color: $white;
   height: 100%;
 `;
 const FieldWrapperStyle = css`
@@ -127,7 +122,7 @@ const TabContentStyle = css`
   min-width: 904px;
 `;
 const ValueStyle = css`
-  color: #00122e;
+  color: $gray-120;
 `;
 const TabsStyle = css`
   &.ant-tabs {
@@ -291,9 +286,8 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
               <Button
                 style={{ marginRight: 8 }}
                 onClick={openForm}
-                prefixIcon={<EditPen16GradientBlueIcon />}
               >
-                {t('dovetail.edit_yaml')}
+                {config.formConfig?.fields ? t('dovetail.edit') : t('dovetail.edit_yaml')}
               </Button>
             </CanAccess>
           ) : null}

@@ -68,7 +68,6 @@ export const NodeTaintsTable: React.FC<Props> = ({ taints = [] }) => {
     return (
       <ErrorContent
         errorText={t('dovetail.no_resource', { kind: t('dovetail.taint') })}
-        style={{ padding: '15px 0' }}
         type={ErrorContentType.Card}
       />
     );

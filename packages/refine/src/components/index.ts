@@ -49,3 +49,5 @@ export * from './ResourceSelect';
 export * from './Shell';
 export * from './PodShellModal';
 export * from './ResourceTable';
+export * from './ErrorContent';
+export { default as ErrorContent } from './ErrorContent';

@@ -54,7 +54,6 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
   if (datas.length === 0) {
     return <ErrorContent
       errorText={t('dovetail.no_resource', { kind: ` ${t('dovetail.pod_selector')}` })}
-      style={{ padding: '15px 0' }}
       type={ErrorContentType.Card}
     />;
   }

@@ -19,14 +19,20 @@ export const ErrorWrapper = styled.div`
   }
 
   &.list .title {
-    color: rgba(44, 56, 82, 0.60);
+    color: $gray-a60-8;
   }
 
-  &.card .title {
-    display: flex;
-    align-items: center;
+  &.card {
+    padding: 15px 0;
+
+    .title {
+      color: $gray-a30-10;
+    }
+  }
+
+
+  &.card .error-content {
     height: 96px;
-    color: rgba(0, 21, 64, 0.30);
   }
 `;
 
@@ -34,6 +40,7 @@ export const ErrorContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
   .title {
     margin-bottom: 8px;
@@ -66,7 +73,7 @@ const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = pro
 
   return (
     <ErrorWrapper className={cx(props.className, type)} style={props.style}>
-      <ErrorContent>
+      <ErrorContent className="error-content">
         <p className={cx(fontMap[type], 'title')}>
           {errorText || t('dovetail.obtain_data_error')}
         </p>
