@@ -31,7 +31,6 @@ export const NetworkPolicyRulesViewer: React.FC<Props> = ({ ingressOrEgress, kin
   if (!ingressOrEgress) {
     return <ErrorContent
       errorText={t('dovetail.no_resource', { kind: kind || t('dovetail.rule') })}
-      style={{ padding: '15px 0' }}
       type={ErrorContentType.Card}
     />;
   }

@@ -8,6 +8,11 @@ export class EventModel extends ResourceModel {
     _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
-    this.id = _rawYaml.metadata.uid || _rawYaml.id;
+    Object.defineProperty(this, 'id', {
+      get() {
+        return _rawYaml.metadata.uid || _rawYaml.id;
+      },
+      enumerable: true,
+    });
   }
 }
