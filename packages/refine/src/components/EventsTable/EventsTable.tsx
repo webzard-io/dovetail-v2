@@ -32,7 +32,7 @@ export const EventsTable: React.FC<EventTableProps> = ({ uid }: EventTableProps)
         width: 120,
         render(value: string) {
           const colorMap: Record<string, StatusCapsuleColor> = {
-            'Warning': 'red',
+            'Warning': 'warning',
             'Normal': 'green',
           };
 

@@ -44,9 +44,13 @@ class K8sOpenAPI {
 
   // Fetch and process OpenAPI schemas
   public async fetch(): Promise<Array<OpenAPIResponse['components']['schemas'][string]> | null> {
+    if (this.schemas) {
+      return this.schemas;
+    }
+
     try {
       const response = await fetch(
-      `${this.pathPrefix}${this.resourceBasePath}`
+        `${this.pathPrefix}${this.resourceBasePath}`
       );
 
       const result = await response.json() as OpenAPIResponse;
