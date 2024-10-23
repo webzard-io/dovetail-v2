@@ -16,8 +16,10 @@ import { FormInstance, FormProps } from 'antd/lib/form';
 import yaml from 'js-yaml';
 import { JSONSchema7 } from 'json-schema';
 import { Unstructured } from 'k8s-api-provider';
+import { get, uniq } from 'lodash-es';
 import React, { useRef, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { RefineFormValidator } from 'src/components/Form/type';
 import { type YamlEditorHandle, type YamlEditorProps } from 'src/components/YamlEditor';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
 import { useSchema } from 'src/hooks/useSchema';
@@ -25,8 +27,6 @@ import { pruneBeforeEdit } from 'src/utils/k8s';
 import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
 import { useGlobalStore } from '../../hooks/useGlobalStore';
-import { RefineFormValidator } from 'src/components/Form/type'
-import { get, uniq } from 'lodash-es';
 
 type EditorProps = YamlEditorProps & {
   ref: React.RefObject<YamlEditorHandle>;

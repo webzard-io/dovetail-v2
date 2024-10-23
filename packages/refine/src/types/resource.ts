@@ -1,8 +1,8 @@
 import { UseFormProps } from '@refinedev/react-hook-form';
 import { YamlFormProps } from '../components';
 import { RefineFormField } from '../components/Form';
-import { ShowConfig } from '../components/ShowContent';
 import { Column, InternalTableProps } from '../components/InternalBaseTable';
+import { ShowConfig } from '../components/ShowContent';
 import { ResourceModel } from '../models';
 
 export enum RESOURCE_GROUP {
