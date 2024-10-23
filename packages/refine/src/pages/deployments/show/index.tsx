@@ -1,6 +1,7 @@
 import { IResourceComponentsProps } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { WorkloadDropdown } from '../../../components/Dropdowns/WorkloadDropdown';
 import { PageShow } from '../../../components/PageShow';
 import {
   ImageField,
@@ -10,7 +11,6 @@ import {
   ConditionsGroup,
   EventsTab
 } from '../../../components/ShowContent';
-import { WorkloadDropdown } from '../../../components/Dropdowns/WorkloadDropdown';
 import { WorkloadModel } from '../../../models';
 
 export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {

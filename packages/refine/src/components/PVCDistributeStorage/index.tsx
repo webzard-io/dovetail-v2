@@ -1,6 +1,5 @@
 import { Fields, Form, Units } from '@cloudtower/eagle';
 import { useResource, useUpdate } from '@refinedev/core';
-import { isNil } from 'lodash-es';
 import React, { useCallback, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EditField } from 'src/components/EditField';
@@ -101,8 +100,8 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
               distributeStorage: validators.distributeStorage(v)
             });
           },
-          onBlur: () => { },
-          onFocus: () => { },
+          onBlur: () => undefined,
+          onFocus: () => undefined,
         }}
         min={1}
         meta={{}}

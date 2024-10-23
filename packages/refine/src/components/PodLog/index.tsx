@@ -1,7 +1,7 @@
 import { SegmentControl, Select, AntdOption, Checkbox, Button } from '@cloudtower/eagle';
 import {
   SuspendedPause16GradientBlueIcon,
-  RecoverContinue16GradientBlueIcon
+  RecoverContinue16GradientBlueIcon,
 } from '@cloudtower/icons-react';
 import { css } from '@linaria/core';
 import { LogViewer } from '@patternfly/react-log-viewer';
@@ -48,7 +48,6 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
   const [currentItemCount, setCurrentItemCount] = useState(0);
   const [paused, setPaused] = useState(false);
   const [wrap, setWrap] = useState(false);
-  const [linesBehind, setLinesBehind] = useState(0);
   const logViewerRef = useRef<{ scrollToBottom: () => void }>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -63,10 +62,6 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
       if (logViewerRef && logViewerRef.current) {
         logViewerRef.current.scrollToBottom();
       }
-    } else if (logs.length !== currentItemCount) {
-      setLinesBehind(logs.length - currentItemCount);
-    } else {
-      setLinesBehind(0);
     }
   }, [paused, logs, currentItemCount]);
 
@@ -92,11 +87,11 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
     }
   };
 
-  const fetchLogsByUrl = useCallback(async (url) => {
+  const fetchLogsByUrl = useCallback(async url => {
     abortControllerRef.current = new AbortController();
     const { signal } = abortControllerRef.current;
 
-    fetch(url, { signal }).then(async (response) => {
+    fetch(url, { signal }).then(async response => {
       if (response.status !== 200) {
         setLogs([]);
         return;
@@ -158,7 +153,14 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
     } else if (logType === 'previous') {
       fetchLogsByUrl(`${url}&previous=true`);
     }
-  }, [pod.metadata?.namespace, pod.metadata?.name, selectedContainer, logType, apiUrl, fetchLogsByUrl]);
+  }, [
+    pod.metadata?.namespace,
+    pod.metadata?.name,
+    selectedContainer,
+    logType,
+    apiUrl,
+    fetchLogsByUrl,
+  ]);
 
   const stopFetchingLogs = useCallback(() => {
     if (abortControllerRef.current) {
@@ -182,15 +184,15 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
             options={[
               {
                 label: t('dovetail.realtime_log'),
-                value: 'realtime'
+                value: 'realtime',
               },
               {
                 label: t('dovetail.previous_log'),
-                value: 'previous'
+                value: 'previous',
               },
             ]}
             value={logType}
-            onChange={(value) => {
+            onChange={value => {
               setLogType(value as 'realtime' | 'previous');
               setLogs([]);
             }}
@@ -202,7 +204,6 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
                 setSelectedContainer(newValue as string);
                 setLogs([]);
                 setPaused(false);
-                setLinesBehind(0);
               },
               value: selectedContainer,
             }}
@@ -225,34 +226,36 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
 
           <Button
             onClick={() => setPaused(prev => !prev)}
-            prefixIcon={paused ? <RecoverContinue16GradientBlueIcon /> : <SuspendedPause16GradientBlueIcon />}
+            prefixIcon={
+              paused ? (
+                <RecoverContinue16GradientBlueIcon />
+              ) : (
+                <SuspendedPause16GradientBlueIcon />
+              )
+            }
             size="middle"
           >
             {paused ? t('dovetail.resume') : t('dovetail.suspend')}
           </Button>
         </span>
-
       </div>
       <div className={ContentStyle}>
-        {
-          logType === 'previous' && !logs.length ? (
-            <ErrorContent
-              style={{ height: '100%' }}
-              errorText={t('dovetail.no_resource', { kind: t('dovetail.previous_log') })}
-            />
-          ) : (
-            <LogViewer
-              innerRef={logViewerRef}
-              height="100%"
-              hasLineNumbers={true}
-              data={logs}
-              theme="light"
-              isTextWrapped={wrap}
-              onScroll={onScroll}
-            />
-          )
-        }
-
+        {logType === 'previous' && !logs.length ? (
+          <ErrorContent
+            style={{ height: '100%' }}
+            errorText={t('dovetail.no_resource', { kind: t('dovetail.previous_log') })}
+          />
+        ) : (
+          <LogViewer
+            innerRef={logViewerRef}
+            height="100%"
+            hasLineNumbers={true}
+            data={logs}
+            theme="light"
+            isTextWrapped={wrap}
+            onScroll={onScroll}
+          />
+        )}
       </div>
     </div>
   );

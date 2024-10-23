@@ -1,5 +1,5 @@
-import { ResourceModel } from 'src/models';
 import { useList, useShow } from '@refinedev/core';
+import { ResourceModel } from 'src/models';
 import { ResourceConfig } from 'src/types';
 
 function useFieldsConfig<Model extends ResourceModel>(config?: ResourceConfig<Model>, resourceId?: string) {
