@@ -95,7 +95,7 @@ function _KeyValueTableFormForm<RowType extends KeyValuePair>(
             type: 'input',
             validator: ({ value }) => {
               if (!value) return t('dovetail.key_empty_text');
-              const { isValid, errorMessage } = validateLabelKey(value || '');
+              const { isValid } = validateLabelKey(value || '');
               if (!isValid) return t('dovetail.format_error');
             },
             render: renderTextAreaFunc,

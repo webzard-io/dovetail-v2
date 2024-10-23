@@ -1,4 +1,9 @@
-import { Select } from '@cloudtower/eagle';
+import { Select, Tooltip, getOptions, Icon } from '@cloudtower/eagle';
+import {
+  InfoICircleFill16Gray70Icon,
+  InfoICircleFill16GrayIcon,
+} from '@cloudtower/icons-react';
+import { css } from '@linaria/core';
 import { useUpdate } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
 import { Node, Taint } from 'kubernetes-types/core/v1';
@@ -7,6 +12,11 @@ import { useTranslation } from 'react-i18next';
 import { ResourceModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
 import { KeyValueTableFormForm } from './KeyValueTableForm';
+
+const UlStyle = css`
+  list-style: disc;
+  padding-left: 2em;
+`;
 
 interface EditNodeTaintFormProps {
   nodeModel: ResourceModel<Unstructured & Node>;
@@ -71,6 +81,35 @@ export const EditNodeTaintForm = React.forwardRef<
     [nodeModel, mutateAsync, t]
   );
 
+  const noScheduleTooltip = (
+    <div>
+      <b>NoSchedule</b>
+      <ul className={UlStyle}>
+        <li>{t('dovetail.taint_effect_NoSchedule_tooltip_1')}</li>
+        <li>{t('dovetail.taint_effect_NoSchedule_tooltip_2')}</li>
+      </ul>
+    </div>
+  );
+
+  const preferNoScheduleTooltip = (
+    <div>
+      <b>PreferNoSchedule</b>
+      <ul className={UlStyle}>
+        <li>{t('dovetail.taint_effect_PreferNoSchedule_tooltip_1')}</li>
+        <li>{t('dovetail.taint_effect_PreferNoSchedule_tooltip_2')}</li>
+        <li>{t('dovetail.taint_effect_PreferNoSchedule_tooltip_3')}</li>
+      </ul>
+    </div>
+  );
+
+  const noExecuteTooltip = (
+    <div>
+      <b>NoExecute</b>
+      <ul className={UlStyle}>
+        <li>{t('dovetail.taint_effect_NoExecute_tooltip_3')}</li>
+      </ul>
+    </div>
+  );
   return (
     <KeyValueTableFormForm
       ref={ref}
@@ -83,26 +122,48 @@ export const EditNodeTaintForm = React.forwardRef<
           title: t('dovetail.effect'),
           render: ({ value, onChange }) => {
             return (
-              <Select
-                input={{}}
-                value={value}
-                onChange={onChange}
-                size="small"
-                options={[
+              <Select input={{}} value={value} onChange={onChange} size="small">
+                {getOptions([
                   {
                     value: NodeTaintEffect.NoSchedule,
-                    label: t(`dovetail.node_taint_${NodeTaintEffect.NoSchedule}`),
+                    children: t(`dovetail.node_taint_${NodeTaintEffect.NoSchedule}`),
+                    suffix: (
+                      <Tooltip title={noScheduleTooltip}>
+                        <Icon
+                          src={InfoICircleFill16GrayIcon}
+                          hoverSrc={InfoICircleFill16Gray70Icon}
+                        />
+                      </Tooltip>
+                    ),
                   },
                   {
                     value: NodeTaintEffect.PreferNoSchedule,
-                    label: t(`dovetail.node_taint_${NodeTaintEffect.PreferNoSchedule}`),
+                    children: t(
+                      `dovetail.node_taint_${NodeTaintEffect.PreferNoSchedule}`
+                    ),
+                    suffix: (
+                      <Tooltip title={preferNoScheduleTooltip}>
+                        <Icon
+                          src={InfoICircleFill16GrayIcon}
+                          hoverSrc={InfoICircleFill16Gray70Icon}
+                        />
+                      </Tooltip>
+                    ),
                   },
                   {
                     value: NodeTaintEffect.NoExecute,
-                    label: t(`dovetail.node_taint_${NodeTaintEffect.NoExecute}`),
+                    children: t(`dovetail.node_taint_${NodeTaintEffect.NoExecute}`),
+                    suffix: (
+                      <Tooltip title={noExecuteTooltip}>
+                        <Icon
+                          src={InfoICircleFill16GrayIcon}
+                          hoverSrc={InfoICircleFill16Gray70Icon}
+                        />
+                      </Tooltip>
+                    ),
                   },
-                ]}
-              />
+                ])}
+              </Select>
             );
           },
           validator: ({ value }) => {
