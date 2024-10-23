@@ -28,6 +28,8 @@ jobs:
       - name: Install deps
         run: yarn install --frozen-lockfile
         timeout-minutes: 15 
+      - name: Lint
+        run: cd packages/refine && yarn lint
       - name: Test
         run: cd packages/refine && yarn jest
       - name: Build
