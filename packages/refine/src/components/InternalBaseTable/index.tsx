@@ -73,14 +73,6 @@ function Table<Data extends { id: string; }>(props: InternalTableProps<Data>) {
   const auxiliaryLineRef = useRef(null);
   const wrapperRef = useRef(null);
 
-  const pagination = useMemo(
-    () => ({
-      current: currentPage,
-      pageSize: defaultSize,
-      onChange: onPageChange,
-    }),
-    [currentPage, defaultSize, onPageChange]
-  );
   const finalColumns = useMemo(() => {
     if (RowMenu) {
       const actionColumn: Column<Data> = {
