@@ -1,7 +1,7 @@
 import { useResource, type IResourceItem } from '@refinedev/core';
 import { JSONSchema7 } from 'json-schema';
-import { useState, useEffect, useMemo, useCallback, useContext } from 'react';
-import OpenAPI from 'src/utils/openapi';
+import { useState, useEffect, useCallback, useContext } from 'react';
+import schemaStore from 'src/utils/schema-store';
 import ConstantsContext from '../contexts/constants';
 
 type UseSchemaOptions = {
@@ -38,8 +38,7 @@ export function useApiGroupSchema() {
           if (state.schemasMap[apiGroup]) {
             return { apiGroup, schemas: state.schemasMap[apiGroup] };
           }
-          const openapi = new OpenAPI(apiGroup, schemaUrlPrefix);
-          const groupSchemas = await openapi.fetch();
+          const groupSchemas = await schemaStore.fetchSchemas(apiGroup, schemaUrlPrefix);
           return { apiGroup, schemas: groupSchemas || [] };
         })
       );
@@ -72,17 +71,12 @@ export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
   const useResourceResult = useResource();
   const resource = options?.resource || useResourceResult.resource;
   const { schemaUrlPrefix } = useContext(ConstantsContext);
-  const openapi = useMemo(
-    () => new OpenAPI(resource?.meta?.resourceBasePath, schemaUrlPrefix),
-    [resource?.meta?.resourceBasePath, schemaUrlPrefix]
-  );
 
   const fetchSchema = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      await openapi.fetch();
-      const schema = await openapi.findSchema(resource?.meta?.kind);
+      const schema = await schemaStore.fetchSchema(resource?.meta?.resourceBasePath, schemaUrlPrefix, resource?.meta?.kind);
 
       setSchema(schema || null);
       setError(null);
@@ -91,7 +85,7 @@ export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
     } finally {
       setLoading(false);
     }
-  }, [resource?.meta?.kind, openapi]);
+  }, [resource?.meta?.kind, resource?.meta?.resourceBasePath, schemaUrlPrefix]);
 
   useEffect(() => {
     if (options?.skip) return;
