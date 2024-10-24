@@ -1,3 +1,5 @@
+import { Tooltip } from '@cloudtower/eagle';
+import { css } from '@linaria/core';
 import { Taint } from 'kubernetes-types/core/v1';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,23 +10,31 @@ import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import useTableData from 'src/hooks/useTableData';
 import { WithId } from 'src/types';
 import { addId } from '../../utils/addId';
+import {
+  NodeTaintEffect,
+  TaintEffectTooltip,
+} from '../EditMetadataForm/EditNodeTaintForm';
 
 type Props = {
   taints: Taint[];
 };
+
+const EffectStyle = css`
+  border-bottom: 1px dashed rgba(107, 128, 167, 0.6);
+`;
 
 export const NodeTaintsTable: React.FC<Props> = ({ taints = [] }) => {
   const { t } = useTranslation();
   const component = useContext(ComponentContext);
   const Table = component.Table || InternalBaseTable;
   const taintsWithId = addId(taints, 'key');
+
   const columns = [
     {
       key: 'key',
       display: true,
       dataIndex: 'key',
       title: t('dovetail.key'),
-      width: 120,
       sortable: true,
     },
     {
@@ -32,7 +42,6 @@ export const NodeTaintsTable: React.FC<Props> = ({ taints = [] }) => {
       display: true,
       dataIndex: 'value',
       title: t('dovetail.value'),
-      width: 120,
       sortable: true,
     },
     {
@@ -40,10 +49,13 @@ export const NodeTaintsTable: React.FC<Props> = ({ taints = [] }) => {
       display: true,
       dataIndex: 'effect',
       title: t('dovetail.effect'),
-      width: 120,
       sortable: true,
-      render: (value: string) => {
-        return t(`dovetail.node_taint_${value}`);
+      render: (value: NodeTaintEffect) => {
+        return (
+          <Tooltip title={<TaintEffectTooltip effect={value} />}>
+            <span className={EffectStyle}>{t(`dovetail.node_taint_${value}`)}</span>
+          </Tooltip>
+        );
       },
     },
   ];
