@@ -21,6 +21,7 @@ export function EditAnnotationDropdownMenuItem<Model extends ResourceModel>(
   const pushModal = usePushModal();
   return (
     <Menu.Item
+      {...props}
       className="ant-dropdown-menu-item"
       onClick={() => {
         const modalProps = {
