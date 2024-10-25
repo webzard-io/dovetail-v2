@@ -162,7 +162,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       });
     }
   }, [encode, send, props.fit]);
-  const debouncedFit = useCallback(() => debounce(fit, 200), [fit]);
+  const debouncedFit = useMemo(() => debounce(fit, 200), [fit]);
   const flush = useCallback(() => {
     const backlog = backlogRef.current.slice();
 
