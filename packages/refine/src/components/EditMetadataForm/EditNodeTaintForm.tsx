@@ -26,7 +26,7 @@ interface EditNodeTaintFormHandler {
   submit: () => Promise<unknown> | undefined;
 }
 
-enum NodeTaintEffect {
+export enum NodeTaintEffect {
   'NoSchedule' = 'NoSchedule',
   'PreferNoSchedule' = 'PreferNoSchedule',
   'NoExecute' = 'NoExecute',
@@ -80,36 +80,6 @@ export const EditNodeTaintForm = React.forwardRef<
     },
     [nodeModel, mutateAsync, t]
   );
-
-  const noScheduleTooltip = (
-    <div>
-      <b>NoSchedule</b>
-      <ul className={UlStyle}>
-        <li>{t('dovetail.taint_effect_NoSchedule_tooltip_1')}</li>
-        <li>{t('dovetail.taint_effect_NoSchedule_tooltip_2')}</li>
-      </ul>
-    </div>
-  );
-
-  const preferNoScheduleTooltip = (
-    <div>
-      <b>PreferNoSchedule</b>
-      <ul className={UlStyle}>
-        <li>{t('dovetail.taint_effect_PreferNoSchedule_tooltip_1')}</li>
-        <li>{t('dovetail.taint_effect_PreferNoSchedule_tooltip_2')}</li>
-        <li>{t('dovetail.taint_effect_PreferNoSchedule_tooltip_3')}</li>
-      </ul>
-    </div>
-  );
-
-  const noExecuteTooltip = (
-    <div>
-      <b>NoExecute</b>
-      <ul className={UlStyle}>
-        <li>{t('dovetail.taint_effect_NoExecute_tooltip_3')}</li>
-      </ul>
-    </div>
-  );
   return (
     <KeyValueTableFormForm
       ref={ref}
@@ -128,7 +98,9 @@ export const EditNodeTaintForm = React.forwardRef<
                     value: NodeTaintEffect.NoSchedule,
                     children: t(`dovetail.node_taint_${NodeTaintEffect.NoSchedule}`),
                     suffix: (
-                      <Tooltip title={noScheduleTooltip}>
+                      <Tooltip
+                        title={<TaintEffectTooltip effect={NodeTaintEffect.NoSchedule} />}
+                      >
                         <Icon
                           src={InfoICircleFill16GrayIcon}
                           hoverSrc={InfoICircleFill16Gray70Icon}
@@ -142,7 +114,11 @@ export const EditNodeTaintForm = React.forwardRef<
                       `dovetail.node_taint_${NodeTaintEffect.PreferNoSchedule}`
                     ),
                     suffix: (
-                      <Tooltip title={preferNoScheduleTooltip}>
+                      <Tooltip
+                        title={
+                          <TaintEffectTooltip effect={NodeTaintEffect.PreferNoSchedule} />
+                        }
+                      >
                         <Icon
                           src={InfoICircleFill16GrayIcon}
                           hoverSrc={InfoICircleFill16Gray70Icon}
@@ -154,7 +130,9 @@ export const EditNodeTaintForm = React.forwardRef<
                     value: NodeTaintEffect.NoExecute,
                     children: t(`dovetail.node_taint_${NodeTaintEffect.NoExecute}`),
                     suffix: (
-                      <Tooltip title={noExecuteTooltip}>
+                      <Tooltip
+                        title={<TaintEffectTooltip effect={NodeTaintEffect.NoExecute} />}
+                      >
                         <Icon
                           src={InfoICircleFill16GrayIcon}
                           hoverSrc={InfoICircleFill16Gray70Icon}
@@ -174,3 +152,44 @@ export const EditNodeTaintForm = React.forwardRef<
     />
   );
 });
+
+export const TaintEffectTooltip: React.FC<{
+  effect: NodeTaintEffect;
+}> = ({ effect }) => {
+  const { t } = useTranslation();
+
+  const TaintEffectTooltipTextConfig = {
+    [NodeTaintEffect.NoSchedule]: {
+      title: 'NoSchedule',
+      tooltips: [
+        t('dovetail.taint_effect_NoSchedule_tooltip_1'),
+        t('dovetail.taint_effect_NoSchedule_tooltip_2'),
+      ],
+    },
+    [NodeTaintEffect.PreferNoSchedule]: {
+      title: 'PreferNoSchedule',
+      tooltips: [
+        t('dovetail.taint_effect_PreferNoSchedule_tooltip_1'),
+        t('dovetail.taint_effect_PreferNoSchedule_tooltip_2'),
+        t('dovetail.taint_effect_PreferNoSchedule_tooltip_3'),
+      ],
+    },
+    [NodeTaintEffect.NoExecute]: {
+      title: 'NoExecute',
+      tooltips: [t('dovetail.taint_effect_NoExecute_tooltip_3')],
+    },
+  };
+
+  const config = TaintEffectTooltipTextConfig[effect];
+
+  return (
+    <div>
+      <b>{config.title}</b>
+      <ul className={UlStyle}>
+        {config.tooltips.map((tooltip, index) => (
+          <li key={index}>{tooltip}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
