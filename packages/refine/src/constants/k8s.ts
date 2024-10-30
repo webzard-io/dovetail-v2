@@ -557,7 +557,7 @@ export const STORAGE_CLASS_INIT_VALUE = {
     'name': 'example'
   },
   'parameters': {},
-  'provisioner': 'example',
+  'provisioner': '',
   'reclaimPolicy': 'Delete',
   'allowVolumeExpansion': true,
   'volumeBindingMode': 'Immediate'
