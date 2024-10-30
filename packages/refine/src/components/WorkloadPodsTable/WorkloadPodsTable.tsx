@@ -1,4 +1,4 @@
-import { Space } from '@cloudtower/eagle';
+import { Loading, Space } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useState, useContext } from 'react';
@@ -72,6 +72,10 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
       }
     }
   });
+
+  if (tableProps.loading) {
+    return <Loading />;
+  }
 
   if (tableProps.data?.length === 0) {
     return <ErrorContent
