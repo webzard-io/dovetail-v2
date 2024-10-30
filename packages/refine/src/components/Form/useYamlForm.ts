@@ -254,7 +254,7 @@ const useYamlForm = <
     }
 
     return transformInitValues?.(initialValues as Unstructured) || initialValues;
-  }, [queryResult, globalStore, initialValuesForCreate, transformInitValues]);
+  }, [queryResult, globalStore, initialValuesForCreate, action, initialValuesForEdit, transformInitValues]);
   const finalErrors = useMemo(() => {
     return uniq([...editorErrors, ...rulesErrors]);
   }, [editorErrors, rulesErrors]);
@@ -341,7 +341,16 @@ const useYamlForm = <
         }
       },
     };
-  }, [schema, editorOptions?.isGenerateAnnotations, initialValues, schemas, useResourceResult.resource?.name, editorErrors, action, finalErrors, fold]);
+  }, [
+    schema,
+    editorOptions?.isGenerateAnnotations,
+    initialValues,
+    schemas,
+    useResourceResult.resource?.name,
+    action,
+    finalErrors,
+    fold,
+  ]);
 
   return {
     form: formSF.form,
@@ -355,6 +364,7 @@ const useYamlForm = <
 
         if (errors.length) {
           setEditorErrors(errors);
+          setRulesErrors([]);
           return;
         }
 

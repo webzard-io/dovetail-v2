@@ -88,6 +88,7 @@ export const ErrorMsgStyle = css`
   font-size: 12px;
   line-height: 18px;
   word-break: break-all;
+  margin-bottom: 0;
 `;
 
 export const ErrorWrapperStyle = css`
