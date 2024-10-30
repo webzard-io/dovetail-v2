@@ -1,6 +1,6 @@
 {
   "name": "@dovetail-v2/refine",
-  "version": "0.1.13",
+  "version": "0.1.14-alpha.1",
   "type": "module",
   "files": [
     "dist",
@@ -10,7 +10,7 @@
   "module": "./dist/refine.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@cloudtower/eagle":  "^0.31.19",
+    "@cloudtower/eagle": "^0.31.19",
     "@cloudtower/icons-react": "^0.31.19",
     "@patternfly/react-core": "^5.1.1",
     "@patternfly/react-log-viewer": "^5.0.0",
