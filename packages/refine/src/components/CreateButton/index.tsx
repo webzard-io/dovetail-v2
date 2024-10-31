@@ -4,6 +4,7 @@ import { useResource } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOpenForm } from 'src/hooks/useOpenForm';
+import { addSpaceBeforeLetter } from 'src/utils/string';
 
 interface CreateButtonProps {
   label?: string;
@@ -21,7 +22,9 @@ export function CreateButton(props: CreateButtonProps) {
       type="primary"
       onClick={openForm}
     >
-      {t('dovetail.create_resource', { resource: /^[a-zA-Z]/.test(label) ? ` ${label}` : label })}
+      {t('dovetail.create_resource', {
+        resource: addSpaceBeforeLetter(label),
+      })}
     </Button>
   );
 }

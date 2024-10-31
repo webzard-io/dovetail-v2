@@ -7,6 +7,7 @@ import { InternalTableProps } from 'src/components/InternalBaseTable';
 import InternalBaseTable from 'src/components/InternalBaseTable';
 import { ComponentContext } from 'src/contexts';
 import { ResourceModel } from 'src/models';
+import { addSpaceBeforeLetter } from 'src/utils/string';
 
 interface TableProps<Model extends ResourceModel> {
   tableProps: InternalTableProps<Model>;
@@ -19,7 +20,7 @@ export function Table<Model extends ResourceModel>(props: TableProps<Model>) {
   const { Table: TableComponent } = useContext(ComponentContext);
   const Table = TableComponent || InternalBaseTable;
   const { i18n } = useTranslation();
-  const resourceType = /^[a-zA-Z]/.test(displayName) ? ` ${displayName}` : displayName;
+  const resourceType = addSpaceBeforeLetter(displayName);
 
   if (!tableProps.data?.length && !tableProps.loading) {
     return <ErrorContent
