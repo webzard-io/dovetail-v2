@@ -5,6 +5,7 @@ import React, { useState, useContext } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
 import { SmallModalStyle } from 'src/styles/modal';
+import { addSpaceBeforeLetter } from 'src/utils/string';
 
 const TextStyle = css`
   margin-bottom: 4px;
@@ -33,9 +34,14 @@ export const useDeleteModal = (resource: string) => {
   const navigation = useNavigation();
   const [id, setId] = useState<string>('');
   const { t } = useTranslation();
+  const displayName = config.displayName || config.kind;
+  const resourceDisplayName = addSpaceBeforeLetter(displayName);
+
   const modalProps: ModalProps = {
     className: SmallModalStyle,
-    title: t('dovetail.delete_resource', { resource: config.kind }),
+    title: t('dovetail.delete_resource', {
+      resource: resourceDisplayName,
+    }),
     okText: t('dovetail.delete'),
     okButtonProps: {
       danger: true,
@@ -49,7 +55,7 @@ export const useDeleteModal = (resource: string) => {
             i18nKey="dovetail.confirm_delete_text"
             tOptions={{
               target: id,
-              kind: config.kind,
+              kind: resourceDisplayName,
             }}
             shouldUnescape={true}
           >
@@ -71,11 +77,11 @@ export const useDeleteModal = (resource: string) => {
             return {
               message: t('dovetail.delete_success_toast', {
                 name: id,
-                kind: config.kind,
+                kind: resourceDisplayName,
                 interpolation: {
                   escapeValue: false
                 }
-              }),
+              }).trim(),
               type: 'success'
             };
           },
@@ -83,11 +89,11 @@ export const useDeleteModal = (resource: string) => {
             return {
               message: t('dovetail.delete_failed_toast', {
                 name: id,
-                kind: config.kind,
+                kind: resourceDisplayName,
                 interpolation: {
                   escapeValue: false
                 }
-              }),
+              }).trim(),
               type: 'error'
             };
           },

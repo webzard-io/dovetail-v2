@@ -13,6 +13,7 @@ import {
 import get from 'lodash/get';
 import has from 'lodash/has';
 import React, { useEffect } from 'react';
+import { DefaultValues } from 'react-hook-form';
 
 import {
   useForm as useHookForm,
@@ -79,6 +80,7 @@ export type UseFormProps<
    */
   disableServerSideValidation?: boolean;
   transformApplyValues?: (values: TVariables) => TVariables;
+  transformInitValues?: (values: Record<string, unknown>) => DefaultValues<TVariables>;
 } & UseHookFormProps<TVariables, TContext>;
 
 export const useForm = <
@@ -94,6 +96,7 @@ export const useForm = <
   warnWhenUnsavedChanges: warnWhenUnsavedChangesProp,
   disableServerSideValidation: disableServerSideValidationProp = false,
   transformApplyValues,
+  transformInitValues,
   ...rest
 }: UseFormProps<
   TQueryFnData,
@@ -125,6 +128,7 @@ export const useForm = <
 
   const useHookFormResult = useHookForm<TVariables, TContext>({
     ...rest,
+    defaultValues: transformInitValues && typeof rest.defaultValues === 'object' ? transformInitValues(rest.defaultValues) : rest.defaultValues,
   });
 
   const {
@@ -205,13 +209,14 @@ export const useForm = <
      * get registered fields from react-hook-form
      */
     const registeredFields = Object.keys(flattenObjectKeys(getValues()));
+    const transformedData = transformInitValues ? transformInitValues(data) : data;
 
     /**
      * set values from query result as default values
      */
     registeredFields.forEach(path => {
-      const hasValue = has(data, path);
-      const dataValue = get(data, path);
+      const hasValue = has(transformedData, path);
+      const dataValue = get(transformedData, path);
 
       /**
        * set value if the path exists in the query result even if the value is null
@@ -220,7 +225,7 @@ export const useForm = <
         setValue(path as Path<TVariables>, dataValue);
       }
     });
-  }, [queryResult?.data, setValue, getValues, formState.isDirty]);
+  }, [queryResult?.data, setValue, getValues, transformInitValues, formState.isDirty]);
 
   useEffect(() => {
     const subscription = watch((values: any, { type }: { type?: any }) => {
