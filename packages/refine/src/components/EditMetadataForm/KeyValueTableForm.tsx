@@ -22,13 +22,15 @@ interface KeyValueTableFormFormProps<T extends KeyValuePair> {
   onSubmit: (value: T[]) => Promise<unknown> | undefined;
   extraColumns?: TableFormColumn[];
   addButtonText?: string;
+  noValueValidation?: boolean;
 }
 
 function _KeyValueTableFormForm<RowType extends KeyValuePair>(
   props: KeyValueTableFormFormProps<RowType>,
   ref: React.ForwardedRef<EditFieldFormHandler>
 ) {
-  const { defaultValue, onSubmit, extraColumns, addButtonText } = props;
+  const { defaultValue, onSubmit, extraColumns, addButtonText, noValueValidation } =
+    props;
   const { t } = useTranslation();
   const [value, setValue] = useState<RowType[]>([]);
   const tableFormRef = useRef<TableFormHandle>(null);
@@ -105,6 +107,7 @@ function _KeyValueTableFormForm<RowType extends KeyValuePair>(
             title: t('dovetail.value_optional'),
             type: 'input',
             validator: ({ value }) => {
+              if (noValueValidation) return;
               const { isValid } = validateLabelValue(value || '');
               if (!isValid) return t('dovetail.format_error');
             },
@@ -116,14 +119,14 @@ function _KeyValueTableFormForm<RowType extends KeyValuePair>(
         hideEmptyTable
         rowAddConfig={{
           addible: true,
-          text: () => addButtonText
+          text: () => addButtonText,
         }}
         defaultData={defaultValue}
         row={{
           deletable: true,
         }}
       />
-      <LabelFormatPopover />
+      <LabelFormatPopover noValueValidation={noValueValidation} />
     </Space>
   );
 }
