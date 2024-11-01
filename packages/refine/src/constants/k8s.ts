@@ -554,11 +554,13 @@ export const STORAGE_CLASS_INIT_VALUE = {
   'apiVersion': 'storage.k8s.io/v1',
   'kind': 'StorageClass',
   'metadata': {
-    'name': 'example'
+    'name': ''
   },
-  'parameters': {},
-  'provisioner': 'example',
-  'reclaimPolicy': 'Delete',
+  'parameters': {
+    'csi.storage.k8s.io/fstype': 'ext4'
+  },
+  'provisioner': '',
+  'reclaimPolicy': '',
   'allowVolumeExpansion': true,
   'volumeBindingMode': 'Immediate'
 };
@@ -585,13 +587,11 @@ export const PVC_INIT_VALUE = {
   'apiVersion': 'v1',
   'kind': 'PersistentVolumeClaim',
   'metadata': {
-    'name': 'example',
+    'name': '',
     'namespace': 'default'
   },
   'spec': {
-    'accessModes': [
-      'ReadWriteOnce'
-    ],
+    'accessModes': [],
     'resources': {
       'requests': {
         'storage': '40Gi'
