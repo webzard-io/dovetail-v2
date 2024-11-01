@@ -68,6 +68,7 @@ export const EditAnnotationForm = React.forwardRef<
       defaultValue={defaultValue}
       onSubmit={onSubmit}
       addButtonText={t('dovetail.add_annotation')}
+      noValueValidation
     />
   );
 });
