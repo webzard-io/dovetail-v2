@@ -2,14 +2,16 @@ import { Form, Loading } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { FormAction, useResource } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
 import { FormErrorAlert } from 'src/components/FormErrorAlert';
 import FormLayout from 'src/components/FormLayout';
 import { YamlEditorComponent } from 'src/components/YamlEditor/YamlEditorComponent';
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
+import ConfigsContext from 'src/contexts/configs';
 import { getCommonErrors } from 'src/utils/error';
+import { addSpaceBeforeLetter } from 'src/utils/string';
 import useYamlForm from './useYamlForm';
 import { YamlFormRule } from './useYamlForm';
 
@@ -61,6 +63,8 @@ export function YamlForm(props: YamlFormProps) {
   } = props;
   const { action: actionFromResource, resource } = useResource();
   const action = actionFromProps || actionFromResource;
+  const configs = useContext(ConfigsContext);
+  const config = configs[resource?.name || ''];
   const {
     formProps,
     saveButtonProps,
@@ -81,14 +85,15 @@ export function YamlForm(props: YamlFormProps) {
     initialValuesForEdit: props.initialValuesForEdit,
     rules,
     successNotification(data) {
+      const displayName = config.displayName || resource?.meta?.kind;
       return {
         message: i18n.t(action === 'create' ? 'dovetail.create_success_toast' : 'dovetail.save_yaml_success_toast', {
-          kind: resource?.meta?.kind,
+          kind: addSpaceBeforeLetter(displayName),
           name: data?.data.id,
           interpolation: {
             escapeValue: false
-          }
-        }),
+          },
+        }).trim(),
         type: 'success',
       };
     },

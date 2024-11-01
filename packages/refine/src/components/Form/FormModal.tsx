@@ -10,6 +10,7 @@ import ConfigsContext from 'src/contexts/configs';
 import { WarningButtonStyle } from 'src/styles/button';
 import { FullscreenModalStyle } from 'src/styles/modal';
 import { SmallModalStyle } from 'src/styles/modal';
+import { addSpaceBeforeLetter } from 'src/utils/string';
 import { RefineFormContent } from './RefineFormContent';
 import useFieldsConfig from './useFieldsConfig';
 import { useRefineForm } from './useRefineForm';
@@ -112,8 +113,8 @@ export function FormModal(props: FormModalProps) {
 
       return {
         ...props.formProps,
-        transformInitValues: config.formConfig?.transformInitValues,
-        transformApplyValues,
+        transformInitValues: isYamlMode ? undefined : config.formConfig?.transformInitValues,
+        transformApplyValues: isYamlMode ? undefined : transformApplyValues,
         initialValuesForCreate: isYamlMode ?
           transformApplyValues(refineFormResult.formResult.getValues()) :
           (props.formProps?.initialValuesForCreate || config?.initValue),
@@ -215,7 +216,7 @@ export function FormModal(props: FormModalProps) {
     const label = config.displayName || config?.kind;
 
     return i18n.t(id ? 'dovetail.edit_resource' : 'dovetail.create_resource', {
-      resource: /^[a-zA-Z]/.test(label) ? ` ${label}` : label,
+      resource: addSpaceBeforeLetter(label),
     });
   }, [action, config.formConfig, config.displayName, config?.kind, i18n, id]);
 

@@ -1,6 +1,7 @@
 import { Unstructured } from 'k8s-api-provider';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { addSpaceBeforeLetter } from 'src/utils/string';
 import { ResourceConfig } from '../../types';
 import { useForm, UseFormProps } from './useReactHookForm';
 
@@ -20,15 +21,16 @@ export const useRefineForm = (props: {
       errorNotification: false,
       successNotification: () => {
         const formValue = result.getValues() as Unstructured;
+
         return {
           message: i18n.t(
             id ? 'dovetail.edit_resource_success' : 'dovetail.create_success_toast',
             {
-              kind: formValue.kind,
+              kind: addSpaceBeforeLetter(config.displayName || config.kind),
               name: formValue.metadata.name,
               interpolation: { escapeValue: false },
             }
-          ),
+          ).trim(),
           description: 'Success',
           type: 'success',
         };
@@ -41,6 +43,7 @@ export const useRefineForm = (props: {
     },
     defaultValues: config?.initValue,
     transformApplyValues: config.formConfig?.transformApplyValues,
+    transformInitValues: config.formConfig?.transformInitValues,
     ...config.formConfig?.useFormProps,
   });
 
