@@ -30,7 +30,7 @@ export const PodContainersTable: React.FC<Props> = ({
   const Table = component.Table || BaseTable;
   const currentSize = 10;
 
-  const columns: RequiredColumnProps<WithId<ContainerStatus>>[] = useMemo(
+  const columns: RequiredColumnProps<WithId<ContainerStatus> & { startedAt: string }>[] = useMemo(
     () => [
       {
         key: 'name',
@@ -81,13 +81,13 @@ export const PodContainersTable: React.FC<Props> = ({
       },
       {
         key: 'started',
-        dataIndex: ['state', 'running', 'startedAt'],
+        dataIndex: ['startedAt'],
         title: i18n.t('dovetail.created_time'),
         sortable: true,
-        sorter: CommonSorter(['state', 'running', 'startedAt']),
+        sorter: CommonSorter(['startedAt']),
         width: 120,
         render: (_: string, record) => {
-          const value = get(record, ['state', 'running', 'startedAt']) || get(record, ['state', 'terminated', 'startedAt']);
+          const value = record.startedAt;
 
           if (value) return <Time date={new Date(value)} />;
 
@@ -99,7 +99,10 @@ export const PodContainersTable: React.FC<Props> = ({
   );
 
   const dataSource = useMemo(
-    () => addId(containerStatuses.concat(initContainerStatuses), 'containerID'),
+    () => addId(containerStatuses.concat(initContainerStatuses), 'containerID').map(container => ({
+      ...container,
+      startedAt: get(container, ['state', 'running', 'startedAt']) || get(container, ['state', 'terminated', 'startedAt']),
+    })),
     [containerStatuses, initContainerStatuses]
   );
 
@@ -112,7 +115,7 @@ export const PodContainersTable: React.FC<Props> = ({
     data: dataSource,
     columns,
     defaultSorters: [{
-      field: 'state.running.startedAt',
+      field: 'startedAt',
       order: 'desc'
     }]
   });
@@ -125,12 +128,12 @@ export const PodContainersTable: React.FC<Props> = ({
   }
 
   return (
-    <Table<WithId<ContainerStatus>>
+    <Table<WithId<ContainerStatus> & { startedAt: string }>
       tableKey="podContainers"
       loading={false}
       data={finalData}
       total={dataSource.length}
-      columns={addDefaultRenderToColumns<WithId<ContainerStatus>>(columns)}
+      columns={addDefaultRenderToColumns<WithId<ContainerStatus> & { startedAt: string }>(columns)}
       rowKey="containerID"
       error={false}
       defaultSize={currentSize}
