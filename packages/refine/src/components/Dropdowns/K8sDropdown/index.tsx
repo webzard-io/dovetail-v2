@@ -54,7 +54,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
       <Dropdown
         overlay={
           <Menu>
-            {isInShowPage || canEditData?.can === false ? null : (
+            {isInShowPage || canEditData?.can === false || config.hideEdit ? null : (
               <Menu.Item onClick={openForm}>
                 <Icon src={EditPen16PrimaryIcon}>{config.formConfig?.fields ? t('dovetail.edit') : t('dovetail.edit_yaml')}</Icon>
               </Menu.Item>
