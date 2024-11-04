@@ -281,7 +281,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
         </div>
         <Space>
           {showConfig.renderExtraButton?.(record)}
-          {!showConfig.hideEditYamlButton ? (
+          {!config.hideEdit ? (
             <CanAccess resource={resource?.name} action={AccessControlAuth.Edit}>
               <Button
                 style={{ marginRight: 8 }}
