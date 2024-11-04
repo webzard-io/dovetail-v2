@@ -54,8 +54,47 @@ export const PodLabelFormatRulePopoverStyle = css`
   }
 `;
 
-export const LabelFormatPopover: React.FC = () => {
+export const LabelFormatPopover: React.FC<{
+  noValueValidation?: boolean;
+}> = ({ noValueValidation }) => {
   const { t } = useTranslation();
+
+  const data = [
+    {
+      object: t('dovetail.key'),
+      contains: t('dovetail.suffix'),
+      optional: t('dovetail.no'),
+      rule: [
+        t('dovetail.suffix_format_rule_1'),
+        t('dovetail.suffix_format_rule_2'),
+        t('dovetail.suffix_format_rule_3'),
+      ],
+    },
+    {
+      object: t('dovetail.key'),
+      contains: t('dovetail.name'),
+      optional: t('dovetail.yes'),
+      rule: [
+        t('dovetail.name_format_rule_1'),
+        t('dovetail.name_format_rule_2'),
+        t('dovetail.name_format_rule_3'),
+      ],
+    },
+  ];
+
+  if (!noValueValidation) {
+    data.push({
+      object: t('dovetail.value'),
+      contains: t('dovetail.name'),
+      optional: t('dovetail.no'),
+      rule: [
+        t('dovetail.name_format_rule_1'),
+        t('dovetail.name_format_rule_2'),
+        t('dovetail.name_format_rule_3'),
+      ],
+    });
+  }
+
   return (
     <Popover
       overlayClassName={PodLabelFormatRulePopoverStyle}
@@ -63,38 +102,7 @@ export const LabelFormatPopover: React.FC = () => {
       content={
         <AntdTable
           bordered
-          dataSource={[
-            {
-              object: t('dovetail.key'),
-              contains: t('dovetail.suffix'),
-              optional: t('dovetail.no'),
-              rule: [
-                t('dovetail.suffix_format_rule_1'),
-                t('dovetail.suffix_format_rule_2'),
-                t('dovetail.suffix_format_rule_3'),
-              ],
-            },
-            {
-              object: t('dovetail.key'),
-              contains: t('dovetail.name'),
-              optional: t('dovetail.yes'),
-              rule: [
-                t('dovetail.name_format_rule_1'),
-                t('dovetail.name_format_rule_2'),
-                t('dovetail.name_format_rule_3'),
-              ],
-            },
-            {
-              object: t('dovetail.value'),
-              contains: t('dovetail.name'),
-              optional: t('dovetail.no'),
-              rule: [
-                t('dovetail.name_format_rule_1'),
-                t('dovetail.name_format_rule_2'),
-                t('dovetail.name_format_rule_3'),
-              ],
-            },
-          ]}
+          dataSource={data}
           columns={[
             {
               key: 'object',
