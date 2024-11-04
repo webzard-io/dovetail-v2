@@ -37,6 +37,8 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
           return t('dovetail.pvc_storage_required');
         } else if (value < defaultValue) {
           return t('dovetail.pvc_storage_reduce_limit');
+        } else if (value > 64 * 1024) {
+          return t('dovetail.pvc_storage_max_limit');
         }
 
         return '';
