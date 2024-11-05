@@ -5,6 +5,7 @@ import {
   NameSpaceColumnRenderer,
   ProvisionerColumnRenderer,
   AgeColumnRenderer,
+  SCAllowExpandColumnRenderer
 } from 'src/hooks/useEagleTable/columns';
 import { RESOURCE_GROUP } from 'src/types';
 import { StorageClassProvisionerField } from '../../components';
@@ -25,6 +26,7 @@ export const StorageClassConfig = (i18n: I18n) => ({
   columns: () => [
     NameSpaceColumnRenderer(i18n),
     ProvisionerColumnRenderer(i18n),
+    SCAllowExpandColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
   ],
   showConfig: () => ({
