@@ -629,8 +629,8 @@ export const IsSCAllowVolumeExpansionField = <Model extends StorageClassModel>(
   i18n: I18nType
 ): ShowField<Model> => {
   return {
-    key: '​​allowVolumeExpansion',
-    path: ['​allowVolumeExpansion'],
+    key: 'allowVolumeExpansion',
+    path: ['allowVolumeExpansion'],
     title: i18n.t('dovetail.allow_expand'),
     renderContent(val) {
       return val ? i18n.t('dovetail.support') : i18n.t('dovetail.not_support');
