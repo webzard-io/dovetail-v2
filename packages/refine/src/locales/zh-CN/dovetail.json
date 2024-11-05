@@ -207,6 +207,7 @@
   "pvc_storage_required": "请填写分配量。",
   "pvc_storage_min": "请输入正整数。",
   "pvc_storage_reduce_limit": "输入值不得小于当前数值。",
+  "pvc_storage_max_limit": "分配量不能超过 64 TiB。",
   "key_empty_text": "请填写键。",
   "format_error": "格式错误。",
   "taint_effect_empty_text": "请选择效果。",
