@@ -93,7 +93,6 @@ export type ShowTab<Model extends ResourceModel> = {
 export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
   tabs?: ShowTab<Model>[];
   renderExtraButton?: (record: Model) => React.ReactNode;
-  hideEditYamlButton?: boolean;
 }
 
 export const ImageField = <Model extends WorkloadBaseModel>(
@@ -630,8 +629,8 @@ export const IsSCAllowVolumeExpansionField = <Model extends StorageClassModel>(
   i18n: I18nType
 ): ShowField<Model> => {
   return {
-    key: '​​allowVolumeExpansion',
-    path: ['​allowVolumeExpansion'],
+    key: 'allowVolumeExpansion',
+    path: ['allowVolumeExpansion'],
     title: i18n.t('dovetail.allow_expand'),
     renderContent(val) {
       return val ? i18n.t('dovetail.support') : i18n.t('dovetail.not_support');

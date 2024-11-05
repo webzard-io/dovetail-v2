@@ -31,6 +31,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   displayName?: string;
   hideListToolBar?: boolean;
   hideNamespacesFilter?: boolean;
+  hideEdit?: boolean;
   description?: string;
   parent?: RESOURCE_GROUP;
   formatter?: (v: Model) => Model;

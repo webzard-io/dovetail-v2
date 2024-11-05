@@ -848,9 +848,9 @@ export const SCAllowExpandColumnRenderer = <
   i18n: I18nType
 ): Column<Model> => {
   return {
-    key: '​​allowVolumeExpansion',
+    key: 'allowVolumeExpansion',
     display: true,
-    dataIndex: ['​​allowVolumeExpansion'],
+    dataIndex: ['allowVolumeExpansion'],
     title: i18n.t('dovetail.allow_expand'),
     width: 120,
     sortable: true,

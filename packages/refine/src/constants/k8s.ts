@@ -560,7 +560,7 @@ export const STORAGE_CLASS_INIT_VALUE = {
     'csi.storage.k8s.io/fstype': 'ext4'
   },
   'provisioner': '',
-  'reclaimPolicy': '',
+  'reclaimPolicy': 'Delete',
   'allowVolumeExpansion': true,
   'volumeBindingMode': 'Immediate'
 };
@@ -594,9 +594,10 @@ export const PVC_INIT_VALUE = {
     'accessModes': [],
     'resources': {
       'requests': {
-        'storage': '40Gi'
+        'storage': '10Gi'
       }
     },
-    'storageClassName': ''
+    'storageClassName': '',
+    'volumeMode': 'Filesystem'
   }
 };
