@@ -67,7 +67,7 @@ export const EditNodeTaintForm = React.forwardRef<
           return {
             message: t('dovetail.edit_node_taint_success_toast', {
               kind: nodeModel.kind,
-              name: nodeModel.metadata.name,
+              name: nodeModel.metadata?.name,
               interpolation: {
                 escapeValue: false,
               },

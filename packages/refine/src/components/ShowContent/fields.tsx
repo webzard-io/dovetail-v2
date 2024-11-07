@@ -265,7 +265,7 @@ export const ServicePodsField = <Model extends ResourceModel>(): ShowField<Model
               return r.kind === 'Pod' && r.type === 'selects';
             })?.selector
           }
-          namespace={record.metadata.namespace}
+          namespace={record.metadata?.namespace}
           hideToolbar
         />
       );
@@ -292,7 +292,7 @@ export const EventsTableTabField = <Model extends ResourceModel>(): ShowField<Mo
     renderContent: (_, record) => {
       return (
         <div style={{ padding: '0 24px', height: '100%' }}>
-          <EventsTable uid={record.metadata.uid as string} />
+          <EventsTable uid={record.metadata?.uid as string} />
         </div>
       );
     },
@@ -430,7 +430,7 @@ export const StorageClassPvField = <
                   field: '',
                   value: '',
                   fn(pv: PersistentVolumeModel) {
-                    return sc.filterPV(pv, sc.metadata.name);
+                    return sc.filterPV(pv, sc.metadata?.name);
                   },
                 },
               ] as unknown as CrudFilters,
@@ -558,8 +558,8 @@ export const PVCPodsField = <Model extends PersistentVolumeClaimModel>(): ShowFi
     renderContent: (_, record) => {
       return (
         <WorkloadPodsTable
-          filter={item => !!item.spec?.volumes?.some(v => v.persistentVolumeClaim?.claimName === record.metadata.name)}
-          namespace={record.metadata.namespace}
+          filter={item => !!item.spec?.volumes?.some(v => v.persistentVolumeClaim?.claimName === record.metadata?.name)}
+          namespace={record.metadata?.namespace}
           hideToolbar
         />
       );

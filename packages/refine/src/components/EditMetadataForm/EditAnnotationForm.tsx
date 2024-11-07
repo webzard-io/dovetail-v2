@@ -48,7 +48,7 @@ export const EditAnnotationForm = React.forwardRef<
           return {
             message: t('dovetail.edit_annotation_success_toast', {
               kind: resourceModel.kind,
-              name: resourceModel.metadata.name,
+              name: resourceModel.metadata?.name,
               interpolation: {
                 escapeValue: false,
               },

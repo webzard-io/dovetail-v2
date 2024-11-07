@@ -27,7 +27,7 @@ export const useRefineForm = (props: {
             id ? 'dovetail.edit_resource_success' : 'dovetail.create_success_toast',
             {
               kind: addSpaceBeforeLetter(config.displayName || config.kind),
-              name: formValue.metadata.name,
+              name: formValue.metadata?.name,
               interpolation: { escapeValue: false },
             }
           ).trim(),

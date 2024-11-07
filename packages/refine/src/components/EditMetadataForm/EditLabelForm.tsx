@@ -45,7 +45,7 @@ export const EditLabelForm = React.forwardRef<EditLabelFormHandler, EditLabelFor
             return {
               message: t('dovetail.edit_label_success_toast', {
                 kind: resourceModel.kind,
-                name: resourceModel.metadata.name,
+                name: resourceModel.metadata?.name,
                 interpolation: {
                   escapeValue: false,
                 },
