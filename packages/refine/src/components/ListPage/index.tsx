@@ -59,6 +59,7 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
             selectedKeys={selectedKeys}
             title={config?.displayName}
             description={config?.description}
+            hideCreate={config?.hideCreate}
           />
           <Divider
             style={{
