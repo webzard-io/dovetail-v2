@@ -13,7 +13,8 @@ export enum RESOURCE_GROUP {
   SERVICE = 'SERVICE',
   SERVICE_AND_NETWORK = 'SERVICE_AND_NETWORK',
   CONFIG = 'CONFIG',
-  NODE_MANAGEMENT = 'NODE_MANAGEMENT'
+  NODE_MANAGEMENT = 'NODE_MANAGEMENT',
+  PROJECT = 'PROJECT',
 }
 
 export enum FormType {
@@ -34,7 +35,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   hideEdit?: boolean;
   hideCreate?: boolean;
   description?: string;
-  parent?: RESOURCE_GROUP;
+  parent?: string;
   formatter?: (v: Model) => Model;
   initValue?: Record<string, unknown>;
   columns?: () => Column<Model>[];
