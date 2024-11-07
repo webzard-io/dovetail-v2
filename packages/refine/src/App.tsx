@@ -160,6 +160,7 @@ function App() {
         apiUrl: '/api/sks-proxy/api/v1/clusters/yangfeng-test/proxy',
         watchWsApiUrl: 'api/sks-ws/sks-proxy/api/v1/clusters/yangfeng-test/proxy',
         prefix: 'default',
+        plugins: ProviderPlugins,
       },
       ProviderPlugins
     );

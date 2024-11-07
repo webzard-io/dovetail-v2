@@ -23,7 +23,7 @@ export class StorageClassModel extends ResourceModel {
       kind: 'PersistentVolume',
     }));
     this.pvs = pvs.items.filter(
-      pv => this.filterPV(pv, this.metadata.name)
+      pv => this.filterPV(pv, this.metadata?.name)
     ) as PersistentVolumeModel[];
   }
 

@@ -8078,10 +8078,10 @@ jsprim@^1.2.2:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
-k8s-api-provider@0.0.23:
-  version "0.0.23"
-  resolved "https://registry.yarnpkg.com/k8s-api-provider/-/k8s-api-provider-0.0.23.tgz#919fe48eb46e580985d8e31cee77d2ba119debd1"
-  integrity sha512-tamAYlqGE1iqHpL7FMKWmxZ9EOOVwtOQt9+bQncuo36XEtiQnkh2qRbUhF+Ddhs6rGtHWz1sPnfJyCsrF3cIsw==
+k8s-api-provider@^0.0.25:
+  version "0.0.25"
+  resolved "https://registry.npmjs.org/k8s-api-provider/-/k8s-api-provider-0.0.25.tgz#4413140363e0ced1bef17664328e4908897b793d"
+  integrity sha512-HkjkeoKgRL6DXzTfDDHYarMJn+Pa0XEE4K2ztoJEZLV8gne5cidIa459LypUgiHidoZ7TEFwScOWd2ZatzmEQw==
   dependencies:
     kubernetes-types "^1.26.0"
     ky "^0.33.3"
