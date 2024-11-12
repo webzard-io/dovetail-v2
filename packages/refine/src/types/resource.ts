@@ -1,6 +1,6 @@
 import { UseFormProps } from '@refinedev/react-hook-form';
 import { YamlFormProps } from '../components';
-import { RefineFormField } from '../components/Form';
+import { FormModalProps, RefineFormField } from '../components/Form';
 import { Column, InternalTableProps } from '../components/InternalBaseTable';
 import { ShowConfig } from '../components/ShowContent';
 import { ResourceModel } from '../models';
@@ -61,5 +61,6 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     refineCoreProps?: UseFormProps['refineCoreProps'];
     useFormProps?: UseFormProps;
     isDisabledChangeMode?: boolean;
+    CustomFormModal?: React.FC<FormModalProps>;
   };
 };
