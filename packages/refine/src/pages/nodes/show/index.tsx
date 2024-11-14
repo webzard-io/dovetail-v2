@@ -43,7 +43,7 @@ export const NodeShow: React.FC<IResourceComponentsProps> = () => {
                             <div style={{ padding: '0 24px', height: '100%' }}>
                               <WorkloadPodsTable
                                 filter={pod => pod.spec?.nodeName === record.name}
-                                namespace={record.metadata.namespace}
+                                namespace={record.metadata?.namespace}
                                 hideToolbar
                               />
                             </div>

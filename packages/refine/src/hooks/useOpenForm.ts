@@ -24,9 +24,10 @@ export function useOpenForm(options?: UseOpenFormOptions) {
     if (resource?.name) {
       const config = configs[resource.name];
       const formType = config.formConfig?.formType;
+
       if (formType === undefined || formType === FormType.MODAL) {
         pushModal<'FormModal'>({
-          component: FormModal,
+          component: config.formConfig?.CustomFormModal || FormModal,
           props: {
             resource: resource.name,
             id: options?.id,

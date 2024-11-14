@@ -1,6 +1,6 @@
 import { UseFormProps } from '@refinedev/react-hook-form';
 import { YamlFormProps } from '../components';
-import { RefineFormField } from '../components/Form';
+import { FormModalProps, RefineFormField } from '../components/Form';
 import { Column, InternalTableProps } from '../components/InternalBaseTable';
 import { ShowConfig } from '../components/ShowContent';
 import { ResourceModel } from '../models';
@@ -13,7 +13,8 @@ export enum RESOURCE_GROUP {
   SERVICE = 'SERVICE',
   SERVICE_AND_NETWORK = 'SERVICE_AND_NETWORK',
   CONFIG = 'CONFIG',
-  NODE_MANAGEMENT = 'NODE_MANAGEMENT'
+  NODE_MANAGEMENT = 'NODE_MANAGEMENT',
+  PROJECT = 'PROJECT',
 }
 
 export enum FormType {
@@ -34,7 +35,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   hideEdit?: boolean;
   hideCreate?: boolean;
   description?: string;
-  parent?: RESOURCE_GROUP;
+  parent?: string;
   formatter?: (v: Model) => Model;
   initValue?: Record<string, unknown>;
   columns?: () => Column<Model>[];
@@ -60,5 +61,6 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     refineCoreProps?: UseFormProps['refineCoreProps'];
     useFormProps?: UseFormProps;
     isDisabledChangeMode?: boolean;
+    CustomFormModal?: React.FC<FormModalProps>;
   };
 };
