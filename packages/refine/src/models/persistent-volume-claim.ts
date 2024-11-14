@@ -1,7 +1,8 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import type { PersistentVolumeClaim } from 'kubernetes-types/core/v1';
-import { cloneDeep, set } from 'lodash-es';
+import { cloneDeep, set, get } from 'lodash-es';
 import { ResourceState } from 'src/constants';
+import { parseSi } from '../utils/unit';
 import { ResourceModel } from './resource-model';
 
 type RequiredPersistentClaimVolume = Required<PersistentVolumeClaim> & Unstructured;
@@ -35,6 +36,10 @@ export class PersistentVolumeClaimModel extends ResourceModel {
       case 'Failed':
         return ResourceState.FAILED;
     }
+  }
+
+  get storageBytes() {
+    return parseSi(get(this._rawYaml, 'spec.resources.requests.storage') || '0Gi');
   }
 
   public updateDistributeStorage(distributeStorage: number) {
