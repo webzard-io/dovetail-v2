@@ -7,13 +7,21 @@ import { ResourceState } from '../../constants';
 
 type Props = {
   state?: ResourceState;
-  resourceKind?: string;
   className?: string;
   hideBackground?: boolean;
+  customResourceStateMap?: {
+    color: Record<string, StatusCapsuleColor | 'loading'>;
+    text: Record<string, string>;
+  };
 };
 
-export const StateTag: React.FC<Props> = (props) => {
-  const { state = ResourceState.UPDATING, hideBackground, className, resourceKind } = props;
+export const StateTag: React.FC<Props> = props => {
+  const {
+    state = ResourceState.UPDATING,
+    hideBackground,
+    className,
+    customResourceStateMap,
+  } = props;
   const { t } = useTranslation();
 
   const defaultStateMap: Record<string, StatusCapsuleColor | 'loading'> = {
@@ -35,14 +43,20 @@ export const StateTag: React.FC<Props> = (props) => {
     [ResourceState.RELEASED]: 'gray',
     [ResourceState.LOST]: 'red',
   };
-  const resourceStateMap: Record<string, Record<string, StatusCapsuleColor | 'loading'>> = {};
-  const finalStateMap = resourceStateMap[resourceKind || ''] || defaultStateMap;
+  const finalColorMap = customResourceStateMap?.color || defaultStateMap;
+  const finalTextMap = customResourceStateMap?.text;
 
-  return <StatusCapsule
-    className={cx(className, StateTagStyle, hideBackground && 'no-background')}
-    color={finalStateMap[state] !== 'loading' ? finalStateMap[state] as StatusCapsuleColor : undefined}
-    loading={finalStateMap[state] === 'loading'}
-  >
-    {t(`dovetail.${state || 'updating'}_state`)}
-  </StatusCapsule>;
+  return (
+    <StatusCapsule
+      className={cx(className, StateTagStyle, hideBackground && 'no-background')}
+      color={
+        finalColorMap[state] !== 'loading'
+          ? (finalColorMap[state] as StatusCapsuleColor)
+          : undefined
+      }
+      loading={finalColorMap[state] === 'loading'}
+    >
+      {finalTextMap ? finalTextMap[state] : t(`dovetail.${state || 'updating'}_state`)}
+    </StatusCapsule>
+  );
 };
