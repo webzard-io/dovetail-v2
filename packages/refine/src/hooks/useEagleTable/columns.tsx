@@ -147,12 +147,12 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 
 export const StateDisplayColumnRenderer = <
   Model extends
-  | WorkloadModel
-  | CronJobModel
-  | PodModel
-  | ServiceModel
-  | DaemonSetModel
-  | JobModel,
+    | WorkloadModel
+    | CronJobModel
+    | PodModel
+    | ServiceModel
+    | DaemonSetModel
+    | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -699,9 +699,7 @@ export const PVStorageClassColumnRenderer = <
     width: 160,
     sortable: true,
     render(value) {
-      return (
-        <ResourceLink resourceKind="storageclasses" namespace="" name={value} />
-      );
+      return <ResourceLink resourceKind="storageclasses" namespace="" name={value} />;
     },
   };
 };
@@ -719,14 +717,12 @@ export const PVPhaseColumnRenderer = <
     width: 120,
     sortable: true,
     render(value) {
-      return <StateTag state={value} resourceKind="PersistentVolume" hideBackground />;
+      return <StateTag state={value} hideBackground />;
     },
   };
 };
 
-export const PVCRefColumnRenderer = <
-  Model extends PersistentVolumeModel,
->(
+export const PVCRefColumnRenderer = <Model extends PersistentVolumeModel>(
   i18n: I18nType
 ): Column<Model> => {
   return {
@@ -737,18 +733,18 @@ export const PVCRefColumnRenderer = <
     width: 160,
     sortable: true,
     render(value, pv) {
-      return <ResourceLink
-        resourceKind="persistentvolumeclaims"
-        namespace={pv.pvcNamespace || 'default'}
-        name={value}
-      />;
-    }
+      return (
+        <ResourceLink
+          resourceKind="persistentvolumeclaims"
+          namespace={pv.pvcNamespace || 'default'}
+          name={value}
+        />
+      );
+    },
   };
 };
 
-export const PVCSIRefColumnRenderer = <
-  Model extends PersistentVolumeModel,
->(
+export const PVCSIRefColumnRenderer = <Model extends PersistentVolumeModel>(
   i18n: I18nType
 ): Column<Model> => {
   return {
@@ -793,17 +789,13 @@ export const PVAccessModeColumnRenderer = <
     sortable: true,
     render(value) {
       return (
-        <span style={{ whiteSpace: 'pre-wrap' }}>
-          {(value as string[]).join('\n')}
-        </span>
+        <span style={{ whiteSpace: 'pre-wrap' }}>{(value as string[]).join('\n')}</span>
       );
-    }
+    },
   };
 };
 
-export const IsDefaultSCColumnRenderer = <
-  Model extends StorageClassModel,
->(
+export const IsDefaultSCColumnRenderer = <Model extends StorageClassModel>(
   i18n: I18nType
 ): Column<Model> => {
   return {
@@ -815,13 +807,11 @@ export const IsDefaultSCColumnRenderer = <
     sortable: true,
     render(val) {
       return val ? i18n.t('dovetail.true') : i18n.t('dovetail.false');
-    }
+    },
   };
 };
 
-export const SCReclaimPolicyColumnRenderer = <
-  Model extends StorageClassModel,
->(
+export const SCReclaimPolicyColumnRenderer = <Model extends StorageClassModel>(
   i18n: I18nType
 ): Column<Model> => {
   return {
@@ -838,13 +828,11 @@ export const SCReclaimPolicyColumnRenderer = <
       };
 
       return map[val as string] || val;
-    }
+    },
   };
 };
 
-export const SCAllowExpandColumnRenderer = <
-  Model extends StorageClassModel,
->(
+export const SCAllowExpandColumnRenderer = <Model extends StorageClassModel>(
   i18n: I18nType
 ): Column<Model> => {
   return {
@@ -856,6 +844,6 @@ export const SCAllowExpandColumnRenderer = <
     sortable: true,
     render(val) {
       return val ? i18n.t('dovetail.support') : i18n.t('dovetail.not_support');
-    }
+    },
   };
 };

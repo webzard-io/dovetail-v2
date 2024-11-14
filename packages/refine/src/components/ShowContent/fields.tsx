@@ -1,4 +1,4 @@
-import { Units } from '@cloudtower/eagle';
+import { StatusCapsuleColor, Units } from '@cloudtower/eagle';
 import { useTable, CrudFilters } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
 import { Unstructured } from 'k8s-api-provider';
@@ -93,6 +93,10 @@ export type ShowTab<Model extends ResourceModel> = {
 export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
   tabs?: ShowTab<Model>[];
   renderExtraButton?: (record: Model) => React.ReactNode;
+  resourceStateMap?: {
+    color: Record<string, StatusCapsuleColor | 'loading'>;
+    text: Record<string, string>;
+  };
 }
 
 export const ImageField = <Model extends WorkloadBaseModel>(
@@ -476,11 +480,13 @@ export const PVRefField = <Model extends PersistentVolumeClaimModel>(
     path: ['pv'],
     title: i18n.t('dovetail.pv'),
     renderContent(value) {
-      return <ResourceLink
-        resourceKind="persistentvolumes"
-        namespace=""
-        name={value as string}
-      />;
+      return (
+        <ResourceLink
+          resourceKind="persistentvolumes"
+          namespace=""
+          name={value as string}
+        />
+      );
     },
   };
 };
@@ -496,11 +502,7 @@ export const PVStorageClassField = <
     title: i18n.t('dovetail.storage_class'),
     renderContent(value) {
       return (
-        <ResourceLink
-          resourceKind="storageclasses"
-          namespace=""
-          name={value as string}
-        />
+        <ResourceLink resourceKind="storageclasses" namespace="" name={value as string} />
       );
     },
   };
@@ -516,7 +518,7 @@ export const PVPhaseField = <
     path: ['stateDisplay'],
     title: i18n.t('dovetail.state'),
     renderContent(value) {
-      return <StateTag state={value as ResourceState} resourceKind="PersistentVolume" hideBackground />;
+      return <StateTag state={value as ResourceState} hideBackground />;
     },
   };
 };
@@ -547,18 +549,24 @@ export const PVAccessModeField = <
     title: i18n.t('dovetail.access_mode'),
     renderContent(value) {
       return (value as string[]).join(', ');
-    }
+    },
   };
 };
 
-export const PVCPodsField = <Model extends PersistentVolumeClaimModel>(): ShowField<Model> => {
+export const PVCPodsField = <
+  Model extends PersistentVolumeClaimModel,
+>(): ShowField<Model> => {
   return {
     key: 'pods',
     path: [],
     renderContent: (_, record) => {
       return (
         <WorkloadPodsTable
-          filter={item => !!item.spec?.volumes?.some(v => v.persistentVolumeClaim?.claimName === record.metadata?.name)}
+          filter={item =>
+            !!item.spec?.volumes?.some(
+              v => v.persistentVolumeClaim?.claimName === record.metadata?.name
+            )
+          }
           namespace={record.metadata?.namespace}
           hideToolbar
         />
@@ -575,12 +583,14 @@ export const PVCRefField = <Model extends PersistentVolumeModel>(
     path: ['pvc'],
     title: i18n.t('dovetail.pvc'),
     renderContent(value, pvc) {
-      return <ResourceLink
-        resourceKind="persistentvolumeclaims"
-        namespace={pvc.pvcNamespace || 'default'}
-        name={value as string}
-      />;
-    }
+      return (
+        <ResourceLink
+          resourceKind="persistentvolumeclaims"
+          namespace={pvc.pvcNamespace || 'default'}
+          name={value as string}
+        />
+      );
+    },
   };
 };
 

@@ -93,7 +93,7 @@ const GroupStyle = css`
   &:first-of-type {
     margin-top: 16px;
   }
-  
+
   .pagination-wrapper {
     padding-top: 12px;
     padding-bottom: 0;
@@ -232,6 +232,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
                     width: field.labelWidth || '165px',
                     marginRight: 8,
                     flexShrink: 0,
+                    color: '#2C385299',
                   }}
                 >
                   {field.title}
@@ -269,7 +270,9 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           hoverSrc={ArrowChevronLeftSmall16BoldBlueIcon}
           style={{ marginRight: 4 }}
         >
-          <span className="button-text">{config?.displayName || resource?.meta?.kind}</span>
+          <span className="button-text">
+            {config?.displayName || resource?.meta?.kind}
+          </span>
         </Icon>
       </span>
       <Space className={TopBarStyle}>
@@ -277,16 +280,18 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>
             {record?.metadata?.name}
           </span>
-          {stateDisplay ? <StateTag state={stateDisplay} resourceKind={resource?.meta?.kind} /> : undefined}
+          {stateDisplay ? (
+            <StateTag
+              state={stateDisplay}
+              customResourceStateMap={showConfig.resourceStateMap}
+            />
+          ) : undefined}
         </div>
         <Space>
           {showConfig.renderExtraButton?.(record)}
           {!config.hideEdit ? (
             <CanAccess resource={resource?.name} action={AccessControlAuth.Edit}>
-              <Button
-                style={{ marginRight: 8 }}
-                onClick={openForm}
-              >
+              <Button style={{ marginRight: 8 }} onClick={openForm}>
                 {config.formConfig?.fields ? t('dovetail.edit') : t('dovetail.edit_yaml')}
               </Button>
             </CanAccess>
