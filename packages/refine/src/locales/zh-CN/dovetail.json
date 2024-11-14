@@ -189,7 +189,7 @@
   "edit_annotation_success_toast": "编辑资源 {{name}} 的注解成功",
   "pvc": "持久卷申领",
   "pv": "持久卷",
-  "csi": "CSI",
+  "csi": "CSI driver",
   "retain": "保留",
   "default_sc": "默认存储类",
   "reclaim_policy": "回收策略",
