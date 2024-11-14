@@ -243,6 +243,7 @@ export function FormModal(props: FormModalProps) {
           {
             !(isYamlForm || isDisabledChangeMode) ? (
               <SegmentControl
+                style={{ fontWeight: 'normal' }}
                 value={mode}
                 options={[{
                   value: Mode.Form,

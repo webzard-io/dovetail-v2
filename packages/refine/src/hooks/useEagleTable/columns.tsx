@@ -662,13 +662,13 @@ export const PVCStorageColumnRenderer = <Model extends PersistentVolumeClaimMode
   return {
     key: 'storage',
     display: true,
-    dataIndex: ['spec', 'resources', 'requests', 'storage'],
+    dataIndex: ['storageBytes'],
     title: i18n.t('dovetail.distributed'),
     width: 120,
     sortable: true,
     align: 'right',
     render(value) {
-      return <Units.Byte rawValue={parseSi(value)} decimals={1} />;
+      return <Units.Byte rawValue={value} decimals={1} />;
     },
   };
 };
@@ -683,6 +683,9 @@ export const PVRefColumnRenderer = <Model extends PersistentVolumeClaimModel>(
     title: i18n.t('dovetail.pv'),
     width: 160,
     sortable: true,
+    render(value) {
+      return <ResourceLink resourceKind="persistentvolumes" namespace="" name={value} />;
+    },
   };
 };
 

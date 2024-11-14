@@ -108,7 +108,6 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
         min={1}
         meta={{}}
         suffix="GiB"
-        controls
       />
     </Form.Item>
   );

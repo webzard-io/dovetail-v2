@@ -31,7 +31,7 @@ export const ResourceLink: React.FC<Props> = props => {
   };
 
   return (
-    <Link className={LinkStyle} onClick={onClick}>
+    <Link className={LinkStyle} onClick={onClick} title={resourceId}>
       {resourceId}
     </Link>
   );
