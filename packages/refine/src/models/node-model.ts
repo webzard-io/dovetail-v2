@@ -18,7 +18,7 @@ export class NodeModel extends ResourceModel {
   }
 
   get role() {
-    return 'node-role.kubernetes.io/control-plane' in (this.metadata.labels || {})
+    return 'node-role.kubernetes.io/control-plane' in (this.metadata?.labels || {})
       ? NodeRole.ControlPlane
       : NodeRole.Worker;
   }
@@ -29,7 +29,7 @@ export class NodeModel extends ResourceModel {
   }
 
   get nodeGroupName() {
-    return this.metadata.labels?.['cape.infrastructure.cluster.x-k8s.io/node-group'];
+    return this.metadata?.labels?.['cape.infrastructure.cluster.x-k8s.io/node-group'];
   }
 
   get isControlPlane() {

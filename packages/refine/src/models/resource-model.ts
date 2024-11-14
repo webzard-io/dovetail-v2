@@ -51,12 +51,18 @@ export class ResourceModel<T extends Unstructured = Unstructured> {
 
   updateLabel(labels: Record<string, string>) {
     const newYaml = this._globalStore.restoreItem(this);
+    if (!newYaml.metadata) {
+      newYaml.metadata = {};
+    }
     newYaml.metadata.labels = labels;
     return newYaml;
   }
 
   updateAnnotation(annotations: Record<string, string>) {
     const newYaml = this._globalStore.restoreItem(this);
+    if (!newYaml.metadata) {
+      newYaml.metadata = {};
+    }
     newYaml.metadata.annotations = annotations;
     return newYaml;
   }

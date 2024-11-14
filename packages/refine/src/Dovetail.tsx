@@ -4,7 +4,13 @@ import {
   ModalStack,
   useMessage,
 } from '@cloudtower/eagle';
-import { NotificationProvider, Refine, AccessControlProvider } from '@refinedev/core';
+import {
+  NotificationProvider,
+  Refine,
+  AccessControlProvider,
+  DataProvider,
+  LiveProvider,
+} from '@refinedev/core';
 import { History } from 'history';
 import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import { keyBy } from 'lodash-es';
@@ -29,6 +35,8 @@ type Props = {
   globalStore: GlobalStore;
   accessControlProvider?: AccessControlProvider;
   routerProvider?: any;
+  dataProvider?: DataProvider;
+  liveProvider?: LiveProvider;
   antdGetPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement;
 };
 
@@ -42,6 +50,8 @@ export const Dovetail: React.FC<Props> = props => {
     globalStore,
     accessControlProvider,
     routerProvider: customRouterProvider,
+    dataProvider: customDataProvider,
+    liveProvider: customLiveProvider,
     antdGetPopupContainer,
   } = props;
   const msg = useMessage();
@@ -104,10 +114,10 @@ export const Dovetail: React.FC<Props> = props => {
               <GlobalStoreContext.Provider value={{ globalStore }}>
                 <Refine
                   dataProvider={{
-                    default: dataProvider(globalStore),
+                    default: customDataProvider || dataProvider(globalStore),
                   }}
                   routerProvider={customRouterProvider || routerProvider}
-                  liveProvider={liveProvider(globalStore)}
+                  liveProvider={customLiveProvider || liveProvider(globalStore)}
                   notificationProvider={notificationProvider}
                   options={{
                     warnWhenUnsavedChanges: true,
