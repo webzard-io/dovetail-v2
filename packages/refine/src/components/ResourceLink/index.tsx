@@ -1,8 +1,9 @@
 import { Link } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useGo, useNavigation } from '@refinedev/core';
-
 import React from 'react';
+import { ValueDisplay } from '../ValueDisplay';
+
 
 type Props = {
   resourceKind: string;
@@ -30,9 +31,11 @@ export const ResourceLink: React.FC<Props> = props => {
     });
   };
 
-  return (
+  return resourceId ? (
     <Link className={LinkStyle} onClick={onClick} title={resourceId}>
       {resourceId}
     </Link>
+  ) : (
+    <ValueDisplay value="" />
   );
 };
