@@ -1,6 +1,6 @@
 {
   "name": "@dovetail-v2/refine",
-  "version": "0.1.16",
+  "version": "0.1.18-alpha.1",
   "type": "module",
   "files": [
     "dist",
