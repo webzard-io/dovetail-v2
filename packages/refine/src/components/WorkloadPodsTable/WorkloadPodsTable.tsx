@@ -25,6 +25,7 @@ interface WorkloadPodsTableProps {
   selector?: LabelSelector;
   filter?: (item: PodModel) => boolean;
   hideToolbar?: boolean;
+  hideNodeColumn?: boolean;
 }
 
 export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
@@ -32,13 +33,14 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   selector,
   hideToolbar,
   filter,
+  hideNodeColumn,
 }) => {
   const { i18n } = useTranslation();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
   const currentSize = 10;
-  const columns: Column<PodModel>[] = [
+  const columns = [
     NameColumnRenderer(i18n, 'pods'),
     StateDisplayColumnRenderer(i18n),
     {
@@ -49,12 +51,12 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
       sortable: true,
       width: 160,
     },
-    NodeNameColumnRenderer(i18n),
+    hideNodeColumn ? undefined : NodeNameColumnRenderer(i18n),
     WorkloadImageColumnRenderer(i18n),
     PodContainersNumColumnRenderer(i18n),
     RestartCountColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
-  ];
+  ].filter(v => !!v) as Column<PodModel>[];
 
   const { tableProps } = useEagleTable<PodModel>({
     columns,
