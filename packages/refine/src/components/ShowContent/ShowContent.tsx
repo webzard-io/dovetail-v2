@@ -303,7 +303,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   );
   const tabs = (
     <Tabs
-      tabs={(showConfig.tabs || []).map(tab => {
+      tabs={(showConfig.tabs || []).map((tab, tabIndex) => {
         return {
           title: tab.title,
           key: tab.key,
@@ -311,7 +311,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
             <div
               className={cx(
                 TabContentStyle,
-                tab.groups.length <= 1 && FullTabContentStyle
+                tab.groups.length <= 1 && tabIndex !== 0 && FullTabContentStyle
               )}
             >
               {tab.groups?.map(group => {

@@ -1,6 +1,8 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import type { PersistentVolume } from 'kubernetes-types/core/v1';
+import { get } from 'lodash-es';
 import { ResourceState } from 'src/constants';
+import { parseSi } from '../utils/unit';
 import { ResourceModel } from './resource-model';
 
 type RequiredPersistentVolume = Required<PersistentVolume> & Unstructured;
@@ -46,5 +48,9 @@ export class PersistentVolumeModel extends ResourceModel {
 
   get pvcNamespace() {
     return this._rawYaml.spec.claimRef?.namespace;
+  }
+
+  get storageBytes() {
+    return parseSi(get(this._rawYaml, ['spec', 'capacity', 'storage']));
   }
 }
