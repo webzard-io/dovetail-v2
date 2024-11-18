@@ -44,7 +44,6 @@ import {
   PersistentVolumeModel,
   PersistentVolumeClaimModel,
 } from '../../models';
-import { parseSi } from '../../utils/unit';
 
 const DashedTitleStyle = css`
   border-bottom: 1px dashed rgba(107, 128, 167, 0.6);
@@ -147,12 +146,12 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 
 export const StateDisplayColumnRenderer = <
   Model extends
-    | WorkloadModel
-    | CronJobModel
-    | PodModel
-    | ServiceModel
-    | DaemonSetModel
-    | JobModel,
+  | WorkloadModel
+  | CronJobModel
+  | PodModel
+  | ServiceModel
+  | DaemonSetModel
+  | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -645,13 +644,13 @@ export const PVCapacityColumnRenderer = <Model extends PersistentVolumeModel>(
   return {
     key: 'capacity',
     display: true,
-    dataIndex: ['spec', 'capacity', 'storage'],
+    dataIndex: ['storageBytes'],
     title: i18n.t('dovetail.capacity'),
     width: 120,
     sortable: true,
     align: 'right',
     render(value) {
-      return <Units.Byte rawValue={parseSi(value)} decimals={1} />;
+      return <Units.Byte rawValue={value} decimals={2} />;
     },
   };
 };

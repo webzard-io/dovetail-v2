@@ -157,8 +157,8 @@ function App() {
   const globalStore = useMemo(() => {
     return new GlobalStore(
       {
-        apiUrl: '/api/sks-proxy/api/v1/clusters/yangfeng-test/proxy',
-        watchWsApiUrl: 'api/sks-ws/sks-proxy/api/v1/clusters/yangfeng-test/proxy',
+        apiUrl: '/api/sks-proxy/api/v1/clusters/vm-workload/proxy',
+        watchWsApiUrl: 'api/sks-ws/sks-proxy/api/v1/clusters/vm-workload/proxy',
         prefix: 'default',
         plugins: ProviderPlugins,
       },
