@@ -90,6 +90,7 @@ export const EditNodeTaintForm = React.forwardRef<
         {
           key: 'effect',
           title: t('dovetail.effect'),
+          defaultValue: NodeTaintEffect.NoExecute,
           render: ({ value, onChange }) => {
             return (
               <Select input={{}} value={value} onChange={onChange} size="small">

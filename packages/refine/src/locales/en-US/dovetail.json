@@ -170,5 +170,6 @@
   "search": "Search",
   "edit_label": "Edit label",
   "csi": "CSI driver",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "no_limitation_rule": "No limitation"
 }
