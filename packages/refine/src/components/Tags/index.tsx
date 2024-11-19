@@ -6,7 +6,8 @@ import ValueDisplay from 'src/components/ValueDisplay';
 const TagWrapper = css`
   flex-wrap: wrap;
   max-width: 100%;
-  gap: 8px 8px;
+  gap: 8px 0px;
+  margin-bottom: 4px;
 `;
 
 const TagStyle = css`

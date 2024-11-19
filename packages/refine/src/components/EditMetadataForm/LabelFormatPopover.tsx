@@ -51,6 +51,14 @@ export const PodLabelFormatRulePopoverStyle = css`
     tbody > tr:last-child > td {
       border-bottom: none;
     }
+
+    .ant-table-cell {
+      padding: 4px 8px !important;
+    }
+
+    li {
+      text-indent: 8px;
+    }
   }
 `;
 
@@ -93,10 +101,18 @@ export const LabelFormatPopover: React.FC<{
         t('dovetail.name_format_rule_3'),
       ],
     });
+  } else {
+    data.push({
+      object: t('dovetail.value'),
+      contains: t('dovetail.name'),
+      optional: t('dovetail.no'),
+      rule: [t('dovetail.no_limitation_rule')],
+    });
   }
 
   return (
     <Popover
+      trigger="click"
       overlayClassName={PodLabelFormatRulePopoverStyle}
       placement="bottomRight"
       content={
