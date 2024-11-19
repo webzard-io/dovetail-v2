@@ -667,7 +667,7 @@ export const PVCStorageColumnRenderer = <Model extends PersistentVolumeClaimMode
     sortable: true,
     align: 'right',
     render(value) {
-      return <Units.Byte rawValue={value} decimals={1} />;
+      return <Units.Byte rawValue={value} decimals={2} />;
     },
   };
 };
