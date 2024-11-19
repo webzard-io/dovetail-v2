@@ -126,7 +126,7 @@ function PVCDistributeStorage({ pvc, editable }: PVCDistributeStorageProps) {
 
   return (
     <div>
-      <Units.Byte rawValue={parseSi(value as string)} decimals={1} />
+      <Units.Byte rawValue={parseSi(value as string)} decimals={2} />
       {
         editable && (
           <EditField
