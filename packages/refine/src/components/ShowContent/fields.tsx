@@ -454,7 +454,7 @@ export const PVCapacityField = <Model extends PersistentVolumeModel>(
     path: ['spec', 'capacity', 'storage'],
     title: i18n.t('dovetail.capacity'),
     renderContent(value) {
-      return <Units.Byte rawValue={parseSi(value as string)} decimals={1} />;
+      return <Units.Byte rawValue={parseSi(value as string)} decimals={2} />;
     },
   };
 };

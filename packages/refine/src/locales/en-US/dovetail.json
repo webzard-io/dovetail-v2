@@ -169,5 +169,6 @@
   "exec_pod": "Execute shell",
   "search": "Search",
   "edit_label": "Edit label",
-  "csi": "CSI driver"
+  "csi": "CSI driver",
+  "confirm": "Confirm"
 }

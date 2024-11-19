@@ -55,6 +55,7 @@ function ConfirmModal({ onOk }: ConfirmModalProps) {
         onOk?.();
         popModal();
       }}
+      okText={t('dovetail.confirm')}
       onCancel={popModal}
       destroyOnClose
     >
