@@ -270,6 +270,9 @@ export const NodeNameColumnRenderer = <Model extends PodModel>(
     sortable: true,
     width: 160,
     sorter: CommonSorter(dataIndex),
+    render: (v) => {
+      return <ResourceLink resourceKind='nodes' name={v} namespace='' />;
+    },
     ...options,
   };
 };
