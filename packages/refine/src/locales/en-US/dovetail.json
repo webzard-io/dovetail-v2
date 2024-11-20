@@ -171,5 +171,13 @@
   "edit_label": "Edit label",
   "csi": "CSI driver",
   "confirm": "Confirm",
-  "no_limitation_rule": "No limitation"
+  "no_limitation_rule": "No limitation",
+  "font_size": "Font size",
+  "download_shell_content": "Download console log",
+  "clear_shell": "Clear command line",
+  "disconnected": "Connection Error.",
+  "connecting": "Connecting...",
+  "reconnect": "Reconnect",
+  "edit_form": "Edit form",
+  "exit_yaml_tip": "If you go back to the form, any changes made to the YAML file will be lost."
 }
