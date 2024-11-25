@@ -50,6 +50,7 @@ export type InternalTableProps<Data extends { id: string; }> = {
   RowMenu?: React.FC<{ record: Data; formType?: FormType; }>;
   empty?: string;
   showMenuColumn?: boolean;
+  hideNamespacesFilter?: boolean;
 };
 
 function Table<Data extends { id: string; }>(props: InternalTableProps<Data>) {
