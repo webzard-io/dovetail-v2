@@ -105,6 +105,7 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
               labelCol={{ flex: `0 0 ${config?.formConfig?.labelWidth || '216px'}` }}
               help={fieldState.error?.message}
               validateStatus={fieldState.invalid ? 'error' : undefined}
+              data-test-id={c.key}
             >
               {ele}
             </Form.Item>
