@@ -569,14 +569,18 @@ export const PV_INIT_VALUE = {
   'apiVersion': 'v1',
   'kind': 'PersistentVolume',
   'metadata': {
-    'name': 'example'
+    'name': 'pvc-hostpath'
   },
   'spec': {
     'accessModes': [
       'ReadWriteOnce'
     ],
     'capacity': {
-      'storage': '40Gi'
+      'storage': '10Gi'
+    },
+    'hostPath': {
+      'type': 'DirectoryOrCreate',
+      'path': '/root/test'
     },
     'persistentVolumeReclaimPolicy': 'Delete',
     'volumeMode': 'Filesystem'
