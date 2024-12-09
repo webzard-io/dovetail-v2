@@ -44,6 +44,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   Dropdown?: React.FC<{ record: Model }>;
   tableProps?: Partial<InternalTableProps<Model>>;
   isCustom?: boolean;
+  createButtonText?: string;
   formConfig?: {
     fields?: (props: {
       record?: Model;
