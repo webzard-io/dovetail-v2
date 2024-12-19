@@ -70,12 +70,12 @@ export const LabelFormatPopover: React.FC<{
   const data = [
     {
       object: t('dovetail.key'),
-      contains: t('dovetail.suffix'),
+      contains: t('dovetail.prefix'),
       optional: t('dovetail.no'),
       rule: [
-        t('dovetail.suffix_format_rule_1'),
-        t('dovetail.suffix_format_rule_2'),
-        t('dovetail.suffix_format_rule_3'),
+        t('dovetail.prefix_format_rule_1'),
+        t('dovetail.prefix_format_rule_2'),
+        t('dovetail.prefix_format_rule_3'),
       ],
     },
     {
