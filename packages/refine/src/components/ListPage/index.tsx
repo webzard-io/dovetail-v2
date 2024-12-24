@@ -43,10 +43,11 @@ interface ListPageProps<T extends ResourceModel> {
   selectedKeys: string[];
   tableProps: InternalTableProps<T>;
   contentClassName?: string;
+  belowToolBarContent?: React.ReactNode;
 }
 
 export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
-  const { selectedKeys, tableProps, contentClassName } = props;
+  const { selectedKeys, tableProps, contentClassName, belowToolBarContent } = props;
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
   const config = configs[resource?.name || ''];
@@ -61,6 +62,7 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
             description={config?.description}
             hideCreate={config?.hideCreate}
           />
+          {belowToolBarContent}
           <Divider
             style={{
               margin: 0,
