@@ -36,7 +36,7 @@ export const StateTag: React.FC<Props> = props => {
     [ResourceState.TERMINATING]: 'loading',
     [ResourceState.PENDING]: 'warning',
     [ResourceState.WAITING]: 'warning',
-    [ResourceState.TERMINATED]: 'red',
+    [ResourceState.TERMINATED]: 'gray',
     [ResourceState.STOPPED]: 'gray',
     [ResourceState.AVAILABLE]: 'blue',
     [ResourceState.BOUND]: 'green',
