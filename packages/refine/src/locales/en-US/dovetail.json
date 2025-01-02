@@ -232,8 +232,8 @@
   "name_format_rule_3": "No more than 63 characters",
   "taint_effect_NoSchedule_tooltip_1": "Pods running on the node will not be evicted.",
   "taint_effect_NoSchedule_tooltip_2": "New pods will not be scheduled onto tainted nodes unless there is a matching tolerance.",
-  "taint_effect_PreferNoSchedule_tooltip_1": "Pods without taint tolerance will be immediately evicted.",
-  "taint_effect_PreferNoSchedule_tooltip_2": "Pods with tolerance but no duration set will continue running.",
-  "taint_effect_PreferNoSchedule_tooltip_3": "Pods with tolerance and a duration set will run for the specified time and then be evicted.",
-  "taint_effect_NoExecute_tooltip_3": "The control plane will try to avoid scheduling pods without taint tolerance to the node, but full avoidance isn't guaranteed."
+  "taint_effect_NoExecute_tooltip_1": "Pods without taint tolerance will be immediately evicted.",
+  "taint_effect_NoExecute_tooltip_2": "Pods with tolerance but no duration set will continue running.",
+  "taint_effect_NoExecute_tooltip_3": "Pods with tolerance and a duration set will run for the specified time and then be evicted.",
+  "taint_effect_PreferNoSchedule_tooltip": "The control plane will try to avoid scheduling pods without taint tolerance to the node, but full avoidance isn't guaranteed."
 }

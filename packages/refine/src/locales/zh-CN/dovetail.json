@@ -230,9 +230,9 @@
   "no_limitation_rule": "不限制",
   "taint_effect_NoSchedule_tooltip_1": "正在节点上运行的 Pod 不会被驱逐。",
   "taint_effect_NoSchedule_tooltip_2": "新 Pod 不会调度到污点节点，除非有匹配的容忍度。",
-  "taint_effect_PreferNoSchedule_tooltip_1": "不容忍污点的 Pod 将被立即驱逐。",
-  "taint_effect_PreferNoSchedule_tooltip_2": "容忍污点但未设置容忍时长的 Pod 将继续运行。",
-  "taint_effect_PreferNoSchedule_tooltip_3": "容忍污点并设置了容忍时长的 Pod 将按指定时间运行，时间结束后被驱逐。",
-  "taint_effect_NoExecute_tooltip_3": "控制平面将尝试避免将不能容忍污点的 Pod 调度到节点上，但无法保证完全避免。",
+  "taint_effect_NoExecute_tooltip_1": "不容忍污点的 Pod 将被立即驱逐。",
+  "taint_effect_NoExecute_tooltip_2": "容忍污点但未设置容忍时长的 Pod 将继续运行。",
+  "taint_effect_NoExecute_tooltip_3": "容忍污点并设置了容忍时长的 Pod 将按指定时间运行，时间结束后被驱逐。",
+  "taint_effect_PreferNoSchedule_tooltip": "控制平面将尝试避免将不能容忍污点的 Pod 调度到节点上，但无法保证完全避免。",
   "confirm": "确认"
 }

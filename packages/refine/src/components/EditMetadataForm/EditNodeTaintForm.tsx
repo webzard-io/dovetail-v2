@@ -160,6 +160,14 @@ export const TaintEffectTooltip: React.FC<{
   const { t } = useTranslation();
 
   const TaintEffectTooltipTextConfig = {
+    [NodeTaintEffect.NoExecute]: {
+      title: 'NoExecute',
+      tooltips: [
+        t('dovetail.taint_effect_NoExecute_tooltip_1'),
+        t('dovetail.taint_effect_NoExecute_tooltip_2'),
+        t('dovetail.taint_effect_NoExecute_tooltip_3'),
+      ],
+    },
     [NodeTaintEffect.NoSchedule]: {
       title: 'NoSchedule',
       tooltips: [
@@ -169,15 +177,7 @@ export const TaintEffectTooltip: React.FC<{
     },
     [NodeTaintEffect.PreferNoSchedule]: {
       title: 'PreferNoSchedule',
-      tooltips: [
-        t('dovetail.taint_effect_PreferNoSchedule_tooltip_1'),
-        t('dovetail.taint_effect_PreferNoSchedule_tooltip_2'),
-        t('dovetail.taint_effect_PreferNoSchedule_tooltip_3'),
-      ],
-    },
-    [NodeTaintEffect.NoExecute]: {
-      title: 'NoExecute',
-      tooltips: [t('dovetail.taint_effect_NoExecute_tooltip_3')],
+      tooltips: [t('dovetail.taint_effect_PreferNoSchedule_tooltip')],
     },
   };
 
