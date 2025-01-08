@@ -282,7 +282,7 @@ export function FormModal(props: FormModalProps) {
       fullscreen
     >
       {desc ? <div className={FormDescStyle}>{desc}</div> : undefined}
-      {!isYamlForm && mode === Mode.Form ?
+      {!isYamlForm && mode === Mode.Form && !isDisabledChangeMode ?
         (<Alert
           type="warning"
           message={i18n.t('dovetail.change_form_mode_alert')}
