@@ -25,6 +25,7 @@ const TitleStyle = css`
 `;
 const DescriptionStyle = css`
   color: $gray-a75-8;
+  margin-top: 4px;
 `;
 
 export const TableToolBar: React.FC<Props> = ({ title, description, selectedKeys, hideCreate }) => {
