@@ -31,8 +31,13 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const { globalStore } = useGlobalStore();
   const useResourceResult = useResource();
   const resource = useResourceResult.resource;
+  const configs = useContext(ConfigsContext);
+  const config = configs[resource?.name || ''];
   const { modalProps, visible, openDeleteConfirmModal } = useDeleteModal(
-    resource?.name || ''
+    resource?.name || '',
+    {
+      deleteTip: config.deleteTip,
+    }
   );
   const download = useDownloadYAML();
   const { t } = useTranslation();
@@ -46,8 +51,6 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
     resource: resource?.name,
     action: AccessControlAuth.Delete,
   });
-  const configs = useContext(ConfigsContext);
-  const config = configs[resource?.name || ''];
 
   return (
     <>

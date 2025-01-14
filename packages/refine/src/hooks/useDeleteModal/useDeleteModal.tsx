@@ -25,7 +25,7 @@ const NameStyle = css`
   }
 `;
 
-export const useDeleteModal = (resource: string) => {
+export const useDeleteModal = (resource: string, { deleteTip }: { deleteTip?: React.ReactNode } = {}) => {
   const configs = useContext(ConfigsContext);
   const config = configs[resource];
   const { mutateAsync } = useDelete();
@@ -63,7 +63,7 @@ export const useDeleteModal = (resource: string) => {
           </Trans>
         </div>
         <div className={cx(Typo.Label.l4_regular, TipStyle)}>
-          {t('dovetail.delete_tip')}
+          {deleteTip || t('dovetail.delete_tip')}
         </div>
       </>
     ),
