@@ -10,5 +10,5 @@ export function isFirstLetterEnglish(str: string) {
 }
 
 export function addSpaceBeforeLetter(str: string) {
-  return isFirstLetterEnglish(str) ? ` ${str}` : str;
+  return isFirstLetterEnglish(str) ? ` ${str.toLocaleLowerCase()}` : str;
 }

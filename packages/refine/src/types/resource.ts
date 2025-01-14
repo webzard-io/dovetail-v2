@@ -45,6 +45,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   tableProps?: Partial<InternalTableProps<Model>>;
   isCustom?: boolean;
   createButtonText?: string;
+  deleteTip?: string;
   formConfig?: {
     fields?: (props: {
       record?: Model;
