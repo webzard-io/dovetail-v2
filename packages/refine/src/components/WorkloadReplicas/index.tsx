@@ -160,8 +160,8 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
           data={donutData}
           width={70}
           height={70}
-          innerRadius={26}
-          outerRadius={32}
+          innerRadius={28}
+          outerRadius={34}
           centerRender={(
             <div className={DonutChartCenterStyle}>
               <span className={cx(ReadyValueStyle, Typo.Display.d2_bold_title)}>{readyReplicas}</span>
