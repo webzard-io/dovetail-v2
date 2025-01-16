@@ -67,6 +67,7 @@ export type ShellProps = React.PropsWithChildren<{
   onReconnect?: () => void;
   onSocketInit?: (socket: WebSocket) => void;
   onTermInit?: (term: Terminal) => void;
+  onClear?: () => void;
   onSocketMessage?: (e: MessageEvent, socket: WebSocket, term: Terminal | null) => void;
   onSocketOpen?: (socket: WebSocket) => void;
   onSocketClose?: (socket: WebSocket, term: Terminal | null) => void;
@@ -359,6 +360,10 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
   const writeln = useCallback((data: string) => {
     termInstanceRef.current?.writeln(data);
   }, []);
+  const onClear = useCallback(() => {
+    clear();
+    props.onClear?.();
+  }, [clear, props.onClear]);
 
   useEffect(() => {
     const destroy = setupTerminal();
@@ -434,7 +439,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
           operations={operations}
           onSearchNext={searchNext}
           onSearchPre={searchPrevious}
-          onClear={clear}
+          onClear={onClear}
           onDownloadLog={downloadContent}
           onSetFontSize={(fontSize) => {
             setOptions({
