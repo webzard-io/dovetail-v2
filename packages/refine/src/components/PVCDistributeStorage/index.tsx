@@ -132,7 +132,7 @@ function PVCDistributeStorage({ pvc, editable }: PVCDistributeStorageProps) {
           <EditField
             modalProps={{
               formRef,
-              title: t('dovetail.edit_replicas'),
+              title: t('dovetail.edit_distribute_storage'),
               renderContent() {
                 return (
                   <DistributeStorageForm
