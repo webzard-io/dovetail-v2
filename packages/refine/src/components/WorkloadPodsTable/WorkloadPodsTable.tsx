@@ -1,5 +1,5 @@
 import { Loading, Space } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
+import { css, cx } from '@linaria/core';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,7 @@ import BaseTable, { Column } from '../InternalBaseTable';
 import { TableToolBar } from '../TableToolbar';
 
 interface WorkloadPodsTableProps {
+  className?: string;
   namespace?: string;
   selector?: LabelSelector;
   filter?: (item: PodModel) => boolean;
@@ -31,6 +32,7 @@ interface WorkloadPodsTableProps {
 export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   namespace,
   selector,
+  className,
   hideToolbar,
   filter,
   hideNodeColumn,
@@ -89,10 +91,10 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   return (
     <Space
       direction="vertical"
-      className={css`
+      className={cx(css`
         width: 100%;
         vertical-align: top;
-      `}
+      `, className)}
     >
       {hideToolbar ? null : (
         <TableToolBar selectedKeys={selectedKeys} hideCreate />
