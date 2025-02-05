@@ -15,7 +15,9 @@ import { AccessControlAuth } from 'src/constants/auth';
 import ConfigsContext from 'src/contexts/configs';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
+import { useFailedModal } from 'src/hooks/useFailedModal';
 import { useOpenForm } from 'src/hooks/useOpenForm';
+import { getCommonErrors } from 'src/utils/error';
 import { useGlobalStore } from '../../../hooks';
 import { ResourceModel } from '../../../models';
 
@@ -33,14 +35,20 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const resource = useResourceResult.resource;
   const configs = useContext(ConfigsContext);
   const config = configs[resource?.name || ''];
-  const { modalProps, visible, openDeleteConfirmModal } = useDeleteModal(
+  const { t, i18n } = useTranslation();
+  const { modalProps: failedModalProps, visible: failedModalVisible, openFailedModal } = useFailedModal(resource?.name || '');
+  const { modalProps: deleteModalProps, visible: deleteModalVisible, openDeleteConfirmModal, setVisible: setDeleteModalVisible } = useDeleteModal(
     resource?.name || '',
     {
       deleteTip: config.deleteTip,
+      onError: async (error) => {
+        console.log(error);
+        setDeleteModalVisible(false);
+        openFailedModal(record.id, getCommonErrors(await error.response.json(), i18n));
+      }
     }
   );
   const download = useDownloadYAML();
-  const { t } = useTranslation();
   const openForm = useOpenForm({ id: record.id });
   const isInShowPage = useResourceResult.action === 'show';
   const { data: canEditData } = useCan({
@@ -107,7 +115,8 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
           }
         ></Button>
       </Dropdown>
-      {visible ? <Modal {...modalProps} /> : null}
+      {deleteModalVisible ? <Modal {...deleteModalProps} /> : null}
+      {failedModalVisible ? <Modal {...failedModalProps} /> : null}
     </>
   );
 }
