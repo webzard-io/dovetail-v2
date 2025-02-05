@@ -50,6 +50,10 @@ export class PersistentVolumeModel extends ResourceModel {
     return this._rawYaml.spec.claimRef?.namespace;
   }
 
+  get pvcUid() {
+    return this._rawYaml.spec.claimRef?.uid;
+  }
+
   get storageBytes() {
     return parseSi(get(this._rawYaml, ['spec', 'capacity', 'storage']));
   }

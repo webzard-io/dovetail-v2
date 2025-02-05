@@ -4,11 +4,11 @@ import { useGo, useNavigation } from '@refinedev/core';
 import React from 'react';
 import { ValueDisplay } from '../ValueDisplay';
 
-
 type Props = {
   resourceKind: string;
   namespace: string;
   name: string;
+  uid?: string;
 };
 
 const LinkStyle = css`
@@ -16,7 +16,7 @@ const LinkStyle = css`
 `;
 
 export const ResourceLink: React.FC<Props> = props => {
-  const { resourceKind: resourceName, namespace, name: resourceId } = props;
+  const { resourceKind: resourceName, namespace, name: resourceId, uid } = props;
   const navigation = useNavigation();
   const go = useGo();
   const onClick = () => {
@@ -24,6 +24,7 @@ export const ResourceLink: React.FC<Props> = props => {
       to: navigation.showUrl(resourceName, ''),
       query: {
         id: namespace ? `${namespace}/${resourceId}` : resourceId,
+        uid,
       },
       options: {
         keepQuery: true,

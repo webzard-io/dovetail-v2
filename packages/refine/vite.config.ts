@@ -22,7 +22,7 @@ export default defineConfig({
     proxy: {
       // '/proxy-k8s': getProxyConfig(),
       '/api': {
-        target: process.env.API_HOST || 'http://192.168.24.89',
+        target: process.env.API_HOST || 'http://192.168.30.67',
         ws: true,
         headers: {
           'x-skip-auth-verify': 'true',
