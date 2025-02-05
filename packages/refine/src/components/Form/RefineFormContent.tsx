@@ -11,12 +11,12 @@ import useFieldsConfig from './useFieldsConfig';
 type Props<Model extends ResourceModel> = {
   config?: ResourceConfig<Model>;
   formResult: UseFormReturnType;
-  errorMsg?: string;
+  errorMsgs?: string[];
   resourceId?: string;
 };
 
 export const RefineFormContent = <Model extends ResourceModel>(props: Props<Model>) => {
-  const { config, formResult, resourceId, errorMsg } = props;
+  const { config, formResult, resourceId, errorMsgs } = props;
   const { control, getValues } = formResult;
   const action = resourceId ? 'edit' : 'create';
 
@@ -127,7 +127,7 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
     >
       {fields}
       <FormErrorAlert
-        errorMsgs={errorMsg ? [errorMsg] : []}
+        errorMsgs={errorMsgs || []}
         style={{ marginBottom: 16 }}
         isEdit={action === 'edit'}
       />

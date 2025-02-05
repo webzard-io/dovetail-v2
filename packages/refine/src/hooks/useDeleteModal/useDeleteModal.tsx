@@ -5,7 +5,8 @@ import React, { useState, useContext } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
 import { SmallModalStyle } from 'src/styles/modal';
-import { addSpaceBeforeLetter } from 'src/utils/string';
+import { NameTagStyle } from 'src/styles/tag';
+import { transformResourceKindInSentence } from 'src/utils/string';
 
 const TextStyle = css`
   margin-bottom: 4px;
@@ -13,19 +14,8 @@ const TextStyle = css`
 const TipStyle = css`
   color: rgba(44, 56, 82, 0.60);
 `;
-const NameStyle = css`
-  &.ant-tag.ant-tag-gray {
-    background-color: rgba(237, 241, 250, .6);
-    border: 1px solid rgba(211, 218, 235, .6);
-    color: #00122e;
-    word-break: break-all;
-    white-space: normal;
-    display: inline;
-    font-weight: bold;
-  }
-`;
 
-export const useDeleteModal = (resource: string, { deleteTip }: { deleteTip?: React.ReactNode } = {}) => {
+export const useDeleteModal = (resource: string, { deleteTip, onError }: { deleteTip?: React.ReactNode, onError?: (error: any) => void } = {}) => {
   const configs = useContext(ConfigsContext);
   const config = configs[resource];
   const { mutateAsync } = useDelete();
@@ -33,9 +23,9 @@ export const useDeleteModal = (resource: string, { deleteTip }: { deleteTip?: Re
   const [visible, setVisible] = useState(false);
   const navigation = useNavigation();
   const [id, setId] = useState<string>('');
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const displayName = config.displayName || config.kind;
-  const resourceDisplayName = addSpaceBeforeLetter(displayName);
+  const resourceDisplayName = transformResourceKindInSentence(displayName, i18n.language);
 
   const modalProps: ModalProps = {
     className: SmallModalStyle,
@@ -59,7 +49,7 @@ export const useDeleteModal = (resource: string, { deleteTip }: { deleteTip?: Re
             }}
             shouldUnescape={true}
           >
-            <Tag color="gray" className={NameStyle}></Tag>
+            <Tag color="gray" className={NameTagStyle}></Tag>
           </Trans>
         </div>
         <div className={cx(Typo.Label.l4_regular, TipStyle)}>
@@ -85,17 +75,10 @@ export const useDeleteModal = (resource: string, { deleteTip }: { deleteTip?: Re
               type: 'success'
             };
           },
-          errorNotification() {
-            return {
-              message: t('dovetail.delete_failed_toast', {
-                name: id,
-                kind: resourceDisplayName,
-                interpolation: {
-                  escapeValue: false
-                }
-              }).trim(),
-              type: 'error'
-            };
+          errorNotification(error) {
+            onError?.(error);
+
+            return false;
           },
         });
         setVisible(false);
@@ -114,5 +97,5 @@ export const useDeleteModal = (resource: string, { deleteTip }: { deleteTip?: Re
     setVisible(true);
   }
 
-  return { modalProps, visible, openDeleteConfirmModal };
+  return { modalProps, visible, setVisible, openDeleteConfirmModal };
 };
