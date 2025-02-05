@@ -145,12 +145,12 @@ export const NameSpaceColumnRenderer = <Model extends ResourceModel>(
 
 export const StateDisplayColumnRenderer = <
   Model extends
-  | WorkloadModel
-  | CronJobModel
-  | PodModel
-  | ServiceModel
-  | DaemonSetModel
-  | JobModel,
+    | WorkloadModel
+    | CronJobModel
+    | PodModel
+    | ServiceModel
+    | DaemonSetModel
+    | JobModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -269,8 +269,8 @@ export const NodeNameColumnRenderer = <Model extends PodModel>(
     sortable: true,
     width: 160,
     sorter: CommonSorter(dataIndex),
-    render: (v) => {
-      return <ResourceLink resourceKind='nodes' name={v} namespace='' />;
+    render: v => {
+      return <ResourceLink resourceKind="nodes" name={v} namespace="" />;
     },
     ...options,
   };
@@ -414,9 +414,9 @@ export function ServiceOutClusterAccessTitle() {
     </Tooltip>
   );
 }
-export const ServiceOutClusterAccessColumnRenderer = <
-  Model extends ServiceModel,
->(clusterVip: string): Column<Model> => {
+export const ServiceOutClusterAccessColumnRenderer = <Model extends ServiceModel>(
+  clusterVip: string
+): Column<Model> => {
   return {
     key: 'outClusterAccess',
     title: <ServiceOutClusterAccessTitle />,
@@ -425,7 +425,9 @@ export const ServiceOutClusterAccessColumnRenderer = <
     width: 160,
     sorter: undefined,
     render(_, record) {
-      return <ServiceOutClusterAccessComponent service={record} clusterVip={clusterVip} />;
+      return (
+        <ServiceOutClusterAccessComponent service={record} clusterVip={clusterVip} />
+      );
     },
   };
 };
@@ -582,7 +584,7 @@ export const DataKeysColumnRenderer = <Model extends ResourceModel>(
 };
 
 export const PortMappingColumnRenderer = <Model extends ServiceModel>(
-  i18n: I18nType,
+  i18n: I18nType
 ): Column<Model> => {
   return {
     key: 'displayPortMapping',
@@ -600,8 +602,7 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(
         <OverflowTooltip
           content={
             <span style={{ whiteSpace: 'pre' }}>
-              {v.servicePort}{' '}
-              &gt; {v.targetPort}/{v.protocol}
+              {v.servicePort} &gt; {v.targetPort}/{v.protocol}
             </span>
           }
           key={v.servicePort}
@@ -729,6 +730,7 @@ export const PVCRefColumnRenderer = <Model extends PersistentVolumeModel>(
           resourceKind="persistentvolumeclaims"
           namespace={pv.pvcNamespace || 'default'}
           name={value}
+          uid={pv.pvcUid}
         />
       );
     },
