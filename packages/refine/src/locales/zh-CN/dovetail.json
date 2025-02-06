@@ -234,5 +234,8 @@
   "taint_effect_NoExecute_tooltip_2": "容忍污点但未设置容忍时长的 Pod 将继续运行。",
   "taint_effect_NoExecute_tooltip_3": "容忍污点并设置了容忍时长的 Pod 将按指定时间运行，时间结束后被驱逐。",
   "taint_effect_PreferNoSchedule_tooltip": "控制平面将尝试避免将不能容忍污点的 Pod 调度到节点上，但无法保证完全避免。",
-  "confirm": "确认"
+  "confirm": "确认",
+  "cant_delete_resource": "无法删除{{resource}}",
+  "cant_delete_resource_with_name": "无法删除{{resource}} <0>{{name}}</0> 。",
+  "close": "关闭"
 }

@@ -11,7 +11,7 @@ import { YamlEditorComponent } from 'src/components/YamlEditor/YamlEditorCompone
 import { BASE_INIT_VALUE } from 'src/constants/k8s';
 import ConfigsContext from 'src/contexts/configs';
 import { getCommonErrors } from 'src/utils/error';
-import { addSpaceBeforeLetter } from 'src/utils/string';
+import { transformResourceKindInSentence } from 'src/utils/string';
 import useYamlForm from './useYamlForm';
 import { YamlFormRule } from './useYamlForm';
 
@@ -65,6 +65,7 @@ export function YamlForm(props: YamlFormProps) {
   const action = actionFromProps || actionFromResource;
   const configs = useContext(ConfigsContext);
   const config = configs[resource?.name || ''];
+  const { t, i18n } = useTranslation();
   const {
     formProps,
     saveButtonProps,
@@ -88,7 +89,7 @@ export function YamlForm(props: YamlFormProps) {
       const displayName = config.displayName || resource?.meta?.kind;
       return {
         message: i18n.t(action === 'create' ? 'dovetail.create_success_toast' : 'dovetail.save_yaml_success_toast', {
-          kind: addSpaceBeforeLetter(displayName),
+          kind: transformResourceKindInSentence(displayName, i18n.language),
           name: data?.data.id,
           interpolation: {
             escapeValue: false
@@ -105,7 +106,6 @@ export function YamlForm(props: YamlFormProps) {
     },
     ...useFormProps,
   });
-  const { t, i18n } = useTranslation();
 
   const FormWrapper = isShowLayout ? FormLayout : React.Fragment;
   const formWrapperProps = isShowLayout ? { saveButtonProps } : {};

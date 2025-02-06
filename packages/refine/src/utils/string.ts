@@ -9,6 +9,6 @@ export function isFirstLetterEnglish(str: string) {
   return /^[a-zA-Z]/.test(str);
 }
 
-export function addSpaceBeforeLetter(str: string) {
-  return isFirstLetterEnglish(str) ? ` ${str.toLocaleLowerCase()}` : str;
+export function transformResourceKindInSentence(str: string, language: string) {
+  return isFirstLetterEnglish(str) ? ` ${language !== 'zh-CN' ? str.toLocaleLowerCase() : str}` : str;
 }
