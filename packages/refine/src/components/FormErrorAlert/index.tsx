@@ -18,24 +18,23 @@ export function FormErrorAlert(props: FormErrorAlertProps) {
   return errorMsgs.length ? (
     <Alert
       message={
-        (
-          <>
-            <div>{ title || i18n.t(isEdit ? 'dovetail.save_failed_tip' : 'dovetail.create_failed_tip')}</div>
-            {
-              errorMsgs.length > 1 ? (
-                <ul>
-                  {errorMsgs.map((errorMsg, index) => (
-                    <li key={errorMsg}>
-                      {index + 1 + '. '} {errorMsg}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                first(errorMsgs)
-              )
-            }
-          </>
-        )
+        <>
+          <div>
+            {title ||
+              i18n.t(isEdit ? 'dovetail.save_failed_tip' : 'dovetail.create_failed_tip')}
+          </div>
+          {errorMsgs.length > 1 ? (
+            <ol>
+              {errorMsgs.map((errorMsg, index) => (
+                <li key={errorMsg}>
+                  {index + 1 + '. '} {errorMsg}
+                </li>
+              ))}
+            </ol>
+          ) : (
+            first(errorMsgs)
+          )}
+        </>
       }
       type="error"
       style={style}

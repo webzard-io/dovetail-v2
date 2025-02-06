@@ -1,7 +1,8 @@
 import { Unstructured } from 'k8s-api-provider';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { addSpaceBeforeLetter } from 'src/utils/string';
+import { getCommonErrors } from 'src/utils/error';
+import { transformResourceKindInSentence } from 'src/utils/string';
 import { ResourceConfig } from '../../types';
 import { useForm, UseFormProps } from './useReactHookForm';
 
@@ -12,8 +13,8 @@ export const useRefineForm = (props: {
   useFormProps?: UseFormProps;
 }) => {
   const { config, id, refineProps } = props;
-  const [responseErrorMsg, setResponseErrorMsg] = useState<string>('');
-  const i18n = useTranslation();
+  const [responseErrorMsgs, setResponseErrorMsgs] = useState<string[]>([]);
+  const { i18n } = useTranslation();
   const result = useForm({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -26,7 +27,7 @@ export const useRefineForm = (props: {
           message: i18n.t(
             id ? 'dovetail.edit_resource_success' : 'dovetail.create_success_toast',
             {
-              kind: addSpaceBeforeLetter(config.displayName || config.kind),
+              kind: transformResourceKindInSentence(config.displayName || config.kind, i18n.language),
               name: formValue.metadata?.name,
               interpolation: { escapeValue: false },
             }
@@ -52,10 +53,10 @@ export const useRefineForm = (props: {
     const response = result.refineCore.mutationResult.error?.response;
     if (response && !response?.bodyUsed) {
       response.json?.().then((body: any) => {
-        setResponseErrorMsg(config.formConfig?.formatError?.(body) || body.message);
+        setResponseErrorMsgs(([] as string[]).concat(config.formConfig?.formatError?.(body) || getCommonErrors(body, i18n)));
       });
     }
-  }, [config.formConfig, result]);
+  }, [config.formConfig, result, i18n]);
 
-  return { formResult: result, responseErrorMsg };
+  return { formResult: result, responseErrorMsgs };
 };

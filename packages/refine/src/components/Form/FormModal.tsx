@@ -10,7 +10,7 @@ import ConfigsContext from 'src/contexts/configs';
 import { WarningButtonStyle } from 'src/styles/button';
 import { FullscreenModalStyle } from 'src/styles/modal';
 import { SmallModalStyle } from 'src/styles/modal';
-import { addSpaceBeforeLetter } from 'src/utils/string';
+import { transformResourceKindInSentence } from 'src/utils/string';
 import { RefineFormContent } from './RefineFormContent';
 import useFieldsConfig from './useFieldsConfig';
 import { useRefineForm } from './useRefineForm';
@@ -165,7 +165,7 @@ export function FormModal(props: FormModalProps) {
       <RefineFormContent
         formResult={refineFormResult.formResult}
         config={config}
-        errorMsg={refineFormResult.responseErrorMsg}
+        errorMsgs={refineFormResult.responseErrorMsgs}
         resourceId={id as string}
       />
     );
@@ -202,7 +202,7 @@ export function FormModal(props: FormModalProps) {
   }, [pushModal]);
 
   const errorText = (() => {
-    if (!!refineFormResult.responseErrorMsg || isError) {
+    if (!!refineFormResult.responseErrorMsgs.length || isError) {
       return i18n.t(id ? 'dovetail.save_failed' : 'dovetail.create_failed');
     }
   })();
@@ -217,7 +217,7 @@ export function FormModal(props: FormModalProps) {
     const label = config.displayName || config?.kind;
 
     return i18n.t(id ? 'dovetail.edit_resource' : 'dovetail.create_resource', {
-      resource: addSpaceBeforeLetter(label),
+      resource: transformResourceKindInSentence(label, i18n.language),
     });
   }, [action, config.formConfig, config.displayName, config?.kind, i18n, id]);
 

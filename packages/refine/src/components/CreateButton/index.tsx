@@ -5,14 +5,14 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ConfigsContext } from 'src/contexts';
 import { useOpenForm } from 'src/hooks/useOpenForm';
-import { addSpaceBeforeLetter } from 'src/utils/string';
+import { transformResourceKindInSentence } from 'src/utils/string';
 
 interface CreateButtonProps {
   label?: string;
 }
 
 export function CreateButton(props: CreateButtonProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const openForm = useOpenForm();
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
@@ -28,7 +28,7 @@ export function CreateButton(props: CreateButtonProps) {
     >
       {createButtonText ||
         t('dovetail.create_resource', {
-          resource: addSpaceBeforeLetter(label),
+          resource: transformResourceKindInSentence(label, i18n.language),
         })}
     </Button>
   );
