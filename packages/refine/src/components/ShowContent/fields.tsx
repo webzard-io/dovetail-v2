@@ -359,14 +359,20 @@ export const ServiceInnerClusterAccessField = <
   },
 });
 
-export const ServiceOutClusterAccessField = <
-  Model extends ServiceModel,
->(clusterVip: string): ShowField<Model> => ({
+export const ServiceOutClusterAccessField = <Model extends ServiceModel>(
+  clusterVip: string
+): ShowField<Model> => ({
   key: 'innerClusterAccess',
   title: <ServiceOutClusterAccessTitle />,
   path: [],
   renderContent: (_, record) => {
-    return <ServiceOutClusterAccessComponent service={record} breakLine={false} clusterVip={clusterVip} />;
+    return (
+      <ServiceOutClusterAccessComponent
+        service={record}
+        breakLine={false}
+        clusterVip={clusterVip}
+      />
+    );
   },
 });
 
@@ -582,12 +588,13 @@ export const PVCRefField = <Model extends PersistentVolumeModel>(
     key: 'pvc',
     path: ['pvc'],
     title: i18n.t('dovetail.pvc'),
-    renderContent(value, pvc) {
+    renderContent(value, pv) {
       return (
         <ResourceLink
           resourceKind="persistentvolumeclaims"
-          namespace={pvc.pvcNamespace || 'default'}
+          namespace={pv.pvcNamespace || 'default'}
           name={value as string}
+          uid={pv.pvcUid}
         />
       );
     },
