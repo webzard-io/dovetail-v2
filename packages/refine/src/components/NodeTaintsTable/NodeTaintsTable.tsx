@@ -1,11 +1,10 @@
 import { Tooltip } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { Taint } from 'kubernetes-types/core/v1';
-import React, { useContext } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import InternalBaseTable from 'src/components/InternalBaseTable';
-import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import useTableData from 'src/hooks/useTableData';
 import { WithId } from 'src/types';
@@ -25,8 +24,6 @@ const EffectStyle = css`
 
 export const NodeTaintsTable: React.FC<Props> = ({ taints = [] }) => {
   const { t } = useTranslation();
-  const component = useContext(ComponentContext);
-  const Table = component.Table || InternalBaseTable;
   const taintsWithId = addId(taints, 'key');
 
   const columns = [
@@ -86,7 +83,7 @@ export const NodeTaintsTable: React.FC<Props> = ({ taints = [] }) => {
   }
 
   return (
-    <Table<WithId<Taint>>
+    <InternalBaseTable<WithId<Taint>>
       tableKey="condition"
       loading={false}
       data={finalData}
