@@ -1,14 +1,11 @@
-import { StatusCapsule, StatusCapsuleColor } from '@cloudtower/eagle';
-import { cx } from '@linaria/core';
-import { Condition } from 'kubernetes-types/meta/v1';
+ import { Condition } from 'kubernetes-types/meta/v1';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/InternalBaseTable';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
-import useTableData from 'src/hooks/useTableData';
-import { StateTagStyle } from 'src/styles/tag';
+import useTableData from 'src/hooks/useTableData'; 
 import { WithId } from 'src/types';
 import { addId } from '../../utils/addId';
 import { Time } from '../Time';
@@ -36,21 +33,11 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       display: true,
       dataIndex: 'status',
       title: t('dovetail.state'),
-      render(value: string) {
-        const colorMap: Record<string, StatusCapsuleColor> = {
-          'True': 'green',
-          'False': 'red',
-          'Unknown': 'warning',
-        };
-
-        return (
-          <StatusCapsule color={colorMap[value || 'Unknown']} className={cx(StateTagStyle, 'no-background')}>
-            {t(`dovetail.${value.toLowerCase()}`)}
-          </StatusCapsule>
-        );
-      },
       width: 120,
       sortable: true,
+      render: (value: string) => {
+        return value;
+      },
     },
     {
       key: 'lastTransitionTime',
