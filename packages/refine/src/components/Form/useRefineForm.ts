@@ -16,7 +16,7 @@ export const useRefineForm = (props: {
   const [responseErrorMsgs, setResponseErrorMsgs] = useState<string[]>([]);
   const { i18n } = useTranslation();
   const result = useForm({
-    mode: 'onSubmit',
+    mode: 'onTouched',
     reValidateMode: 'onChange',
     refineCoreProps: {
       errorNotification: false,
