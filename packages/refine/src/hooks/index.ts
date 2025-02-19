@@ -1,5 +1,6 @@
 export * from './useSchema';
 export * from './useDeleteModal';
+export * from './useFailedModal';
 export * from './useEagleTable';
 export * from './useDownloadYAML';
 export * from './useEdit';
