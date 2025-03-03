@@ -32,7 +32,7 @@ export class StorageClassModel extends ResourceModel {
   }
 
   get isDefaultSC() {
-    return this._rawYaml.metadata?.annotations?.['storageclass.kubernetes.io/is-default-class'];
+    return this._rawYaml.metadata?.annotations?.['storageclass.kubernetes.io/is-default-class'] === 'true';
   }
 
   get reclaimPolicy() {
