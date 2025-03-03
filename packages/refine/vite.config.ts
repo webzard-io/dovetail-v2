@@ -24,9 +24,10 @@ export default defineConfig({
       '/api': {
         target: process.env.API_HOST || 'http://192.168.30.67',
         ws: true,
-        headers: {
-          'x-skip-auth-verify': 'true',
-          'Accept-Encoding': 'identity'
+        headers: { 
+          'Accept-Encoding': 'identity',
+          'Authorization': process.env.REACT_APP_DEV_TOKEN,
+          'Cookie': process.env.REACT_APP_DEV_COOKIE,
         },
         secure: false,
       },
@@ -36,8 +37,10 @@ export default defineConfig({
           return path.replace('/exec-proxy', '');
         },
         ws: true,
-        headers: {
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4IiwiaWF0IjoxNzE3NDk0OTIxfQ.GPW3AWxK1zqirbCP4OQJZ4VoDmLXLLgDjR_EjFcsqHQ',
+        headers: { 
+          'Accept-Encoding': 'identity',
+          'Authorization': process.env.REACT_APP_DEV_TOKEN,
+          'Cookie': process.env.REACT_APP_DEV_COOKIE,
         },
         secure: false,
       },

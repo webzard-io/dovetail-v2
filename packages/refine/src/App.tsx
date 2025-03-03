@@ -155,10 +155,11 @@ function App() {
   }, []);
 
   const globalStore = useMemo(() => {
+    const clusterName = import.meta.env.VITE_CLUSTER_NAME || 'clusterName';
     return new GlobalStore(
       {
-        apiUrl: '/api/sks-proxy/api/v1/clusters/obs/proxy',
-        watchWsApiUrl: 'api/sks-ws/sks-proxy/api/v1/clusters/obs/proxy',
+        apiUrl: `/api/sks-proxy/api/v1/clusters/${clusterName}/proxy`,
+        watchWsApiUrl: `api/sks-ws/sks-proxy/api/v1/clusters/${clusterName}/proxy`,
         prefix: 'default',
         plugins: ProviderPlugins,
       },
