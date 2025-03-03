@@ -32,3 +32,4 @@ src/sunmao/**/*.yaml
 
 .yalc
 yalc.lock
+.env
