@@ -151,6 +151,18 @@ function App() {
       ConfigMapConfig(i18n),
       SecretsConfig(i18n),
       ServicesConfig(i18n),
+      {
+        name: 'projectroles',
+        displayName: i18n.t('sks.role'),
+        parent: RESOURCE_GROUP.PROJECT,
+        basePath: '/',
+        apiVersion: 'tenant.kubesmart.smtx.io/v1alpha1',
+        kind: 'ProjectRole',
+        hideNamespacesFilter: true,
+        createButtonText: i18n.t('sks.create_custom_project_role'),
+        description: i18n.t('sks.project_role_desc'),
+        dataProviderName: 'tenant',
+      }
     ];
   }, []);
 
@@ -166,13 +178,25 @@ function App() {
       ProviderPlugins
     );
   }, []);
+  const tenantGlobalStore = useMemo(() => {
+    const clusterName = import.meta.env.VITE_CLUSTER_NAME || 'clusterName';
+    return new GlobalStore(
+      {
+        apiUrl: `/api/sks-proxy/api/v1/clusters/${clusterName}`,
+        watchWsApiUrl: `api/sks-ws/sks-proxy/api/v1/clusters/${clusterName}`,
+        prefix: 'default',
+        plugins: ProviderPlugins,
+      },
+      ProviderPlugins
+    );
+  }, []);
   return (
     <I18nextProvider i18n={i18n}>
       <Dovetail
         resourcesConfig={resourcesConfig}
         Layout={Layout}
         history={history}
-        globalStore={globalStore}
+        globalStore={{default: globalStore,tenant: tenantGlobalStore}}
         schemaUrlPrefix="/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3"
       >
         <Router history={history}>
