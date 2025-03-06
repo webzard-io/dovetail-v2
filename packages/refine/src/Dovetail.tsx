@@ -4,13 +4,7 @@ import {
   ModalStack,
   useMessage,
 } from '@cloudtower/eagle';
-import {
-  NotificationProvider,
-  Refine,
-  AccessControlProvider,
-  DataProvider,
-  LiveProvider,
-} from '@refinedev/core';
+import { NotificationProvider, Refine, RefineProps } from '@refinedev/core';
 import { History } from 'history';
 import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
 import { keyBy } from 'lodash-es';
@@ -20,7 +14,7 @@ import { ResourceCRUD } from './components/ResourceCRUD';
 import ConfigsContext from './contexts/configs';
 import ConstantsContext from './contexts/constants';
 import GlobalStoreContext from './contexts/global-store';
-import { routerProvider } from './providers/router-provider';
+import { routerProvider } from './providers';
 import { ResourceConfig } from './types';
 
 import './styles.css';
@@ -32,13 +26,9 @@ type Props = {
   urlPrefix?: string;
   Layout?: React.FC<unknown>;
   history: History;
-  globalStore: GlobalStore;
-  accessControlProvider?: AccessControlProvider;
-  routerProvider?: any;
-  dataProvider?: DataProvider;
-  liveProvider?: LiveProvider;
+  globalStore: Record<string, GlobalStore>;
   antdGetPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement;
-};
+} & Partial<RefineProps>;
 
 export const Dovetail: React.FC<Props> = props => {
   const {
@@ -49,9 +39,6 @@ export const Dovetail: React.FC<Props> = props => {
     history,
     globalStore,
     accessControlProvider,
-    routerProvider: customRouterProvider,
-    dataProvider: customDataProvider,
-    liveProvider: customLiveProvider,
     antdGetPopupContainer,
   } = props;
   const msg = useMessage();
@@ -97,7 +84,7 @@ export const Dovetail: React.FC<Props> = props => {
     };
     return provider;
   }, [msg]);
-
+  
   return (
     <Router history={history}>
       <KitStoreProvider>
@@ -111,13 +98,14 @@ export const Dovetail: React.FC<Props> = props => {
                 getPopupContainer: antdGetPopupContainer || (() => document.body),
               }}
             >
-              <GlobalStoreContext.Provider value={{ globalStore }}>
+              <GlobalStoreContext.Provider value={{ globalStore: globalStore.default }}>
                 <Refine
                   dataProvider={{
-                    default: customDataProvider || dataProvider(globalStore),
+                    default: dataProvider(globalStore.default),
+                    tenant: dataProvider(globalStore.tenant),
                   }}
-                  routerProvider={customRouterProvider || routerProvider}
-                  liveProvider={customLiveProvider || liveProvider(globalStore)}
+                  liveProvider={liveProvider(globalStore.default)}
+                  routerProvider={routerProvider}
                   notificationProvider={notificationProvider}
                   options={{
                     warnWhenUnsavedChanges: true,
@@ -129,6 +117,7 @@ export const Dovetail: React.FC<Props> = props => {
                     return {
                       name: c.name,
                       meta: {
+                        dataProviderName: c.dataProviderName,
                         resourceBasePath: c.basePath,
                         kind: c.kind,
                         parent: c.parent,
@@ -140,6 +129,7 @@ export const Dovetail: React.FC<Props> = props => {
                       edit: `${urlPrefix}/${c.name}/edit`,
                     };
                   })}
+                  {...props}
                 >
                   {content}
                 </Refine>
