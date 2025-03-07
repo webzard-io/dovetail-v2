@@ -173,7 +173,7 @@ const useYamlForm = <
     unknown
   > | null>(null);
   const useResourceResult = useResource();
-  const { globalStore } = useGlobalStore();
+  const globalStore = useGlobalStore();
   const {
     schema,
     loading: isLoadingSchema,

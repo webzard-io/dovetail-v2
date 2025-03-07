@@ -6,7 +6,7 @@ import {
 } from '@cloudtower/eagle';
 import { NotificationProvider, Refine, RefineProps } from '@refinedev/core';
 import { History } from 'history';
-import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
+import { dataProvider} from 'k8s-api-provider';
 import { keyBy } from 'lodash-es';
 import React, { useEffect, useMemo } from 'react';
 import { Router } from 'react-router-dom';
@@ -14,10 +14,11 @@ import { ResourceCRUD } from './components/ResourceCRUD';
 import ConfigsContext from './contexts/configs';
 import ConstantsContext from './contexts/constants';
 import GlobalStoreContext from './contexts/global-store';
-import { routerProvider } from './providers';
+import { routerProvider, D2LiveProvider } from './providers';
 import { ResourceConfig } from './types';
 
 import './styles.css';
+import { IGlobalStore } from './types/globalStore';
 
 type Props = {
   resourcesConfig: ResourceConfig[];
@@ -26,7 +27,7 @@ type Props = {
   urlPrefix?: string;
   Layout?: React.FC<unknown>;
   history: History;
-  globalStore: Record<string, GlobalStore>;
+  globalStoreMap: Record<string, IGlobalStore>;
   antdGetPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement;
 } & Partial<RefineProps>;
 
@@ -37,7 +38,7 @@ export const Dovetail: React.FC<Props> = props => {
     schemaUrlPrefix,
     Layout,
     history,
-    globalStore,
+    globalStoreMap,
     accessControlProvider,
     antdGetPopupContainer,
   } = props;
@@ -98,13 +99,10 @@ export const Dovetail: React.FC<Props> = props => {
                 getPopupContainer: antdGetPopupContainer || (() => document.body),
               }}
             >
-              <GlobalStoreContext.Provider value={{ globalStore: globalStore.default }}>
+              <GlobalStoreContext.Provider value={globalStoreMap}> 
                 <Refine
-                  dataProvider={{
-                    default: dataProvider(globalStore.default),
-                    tenant: dataProvider(globalStore.tenant),
-                  }}
-                  liveProvider={liveProvider(globalStore.default)}
+                  dataProvider={dataProvider(globalStoreMap.default as any)}
+                  liveProvider={D2LiveProvider(globalStoreMap)}
                   routerProvider={routerProvider}
                   notificationProvider={notificationProvider}
                   options={{

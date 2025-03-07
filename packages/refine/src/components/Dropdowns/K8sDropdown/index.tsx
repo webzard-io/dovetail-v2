@@ -30,7 +30,7 @@ interface K8sDropdownProps {
 
 export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const { record, size = 'normal' } = props;
-  const { globalStore } = useGlobalStore();
+  const globalStore = useGlobalStore();
   const useResourceResult = useResource();
   const resource = useResourceResult.resource;
   const configs = useContext(ConfigsContext);

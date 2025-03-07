@@ -196,7 +196,7 @@ function App() {
         resourcesConfig={resourcesConfig as ResourceConfig[]}
         Layout={Layout}
         history={history}
-        globalStore={{default: globalStore,tenant: tenantGlobalStore}}
+        globalStoreMap={{default: globalStore, tenant: tenantGlobalStore} as any}
         schemaUrlPrefix="/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3"
       >
         <Router history={history}>
