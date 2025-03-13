@@ -57,6 +57,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     formType?: FormType;
     transformInitValues?: (values: Record<string, unknown>) => Record<string, unknown>;
     transformApplyValues?: (values: Record<string, unknown>) => Model['_rawYaml'];
+    pathMap?: ([string[], string[]])[];
     formTitle?: string | ((action: 'create' | 'edit') => string);
     formDesc?: string | ((action: 'create' | 'edit') => string);
     labelWidth?: string;
