@@ -3,7 +3,8 @@ import { Control } from 'react-hook-form';
 
 export type RefineFormValidator = (
   value: unknown,
-  formValue: unknown
+  formValue: unknown,
+  formMode: 'yaml' | 'form'
 ) => { isValid: boolean; errorMsg: string };
 
 export type RefineFormField = {

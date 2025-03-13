@@ -33,7 +33,7 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
             const formValue = getValues();
             if (!c.validators || c.validators.length === 0) return true;
             for (const func of c.validators) {
-              const { isValid, errorMsg } = func(value, formValue);
+              const { isValid, errorMsg } = func(value, formValue, 'form');
               if (!isValid) return errorMsg;
             }
             return true;

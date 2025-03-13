@@ -283,7 +283,7 @@ const useYamlForm = <
         const value = get(formValue, path);
 
         for (const validator of (validators || [])) {
-          const { isValid, errorMsg } = validator(value, formValue);
+          const { isValid, errorMsg } = validator(value, formValue, 'yaml');
 
           if (!isValid) {
             errorMap[path.join('.')] = `${errorMsg}(${path.join('.')})`;
