@@ -237,6 +237,6 @@
   "taint_effect_NoExecute_tooltip_3": "Pods with tolerance and a duration set will run for the specified time and then be evicted.",
   "taint_effect_PreferNoSchedule_tooltip": "The control plane will try to avoid scheduling pods without taint tolerance to the node, but full avoidance isn't guaranteed.",
   "cant_delete_resource": "Unable to delete {{resource}}",
-  "cant_delete_resource_with_name": "The {{resource}} <0>{name}</0> cannot be deleted.",
+  "cant_delete_resource_with_name": "The {{resource}} <0>{{name}}</0> cannot be deleted.",
   "close": "Close"
 }

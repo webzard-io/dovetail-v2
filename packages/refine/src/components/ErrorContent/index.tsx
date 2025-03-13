@@ -56,7 +56,7 @@ export enum ErrorContentType {
 export type WidgetErrorContentProps = {
   className?: string;
   style?: React.CSSProperties;
-  errorText?: string;
+  errorText?: React.ReactNode;
   type?: ErrorContentType;
   refetch?: () => void;
 };
