@@ -1,6 +1,7 @@
 import { Unstructured } from 'k8s-api-provider';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import usePathMap from 'src/hooks/usePathMap';
 import { getCommonErrors } from 'src/utils/error';
 import { transformResourceKindInSentence } from 'src/utils/string';
 import { ResourceConfig } from '../../types';
@@ -13,6 +14,11 @@ export const useRefineForm = (props: {
   useFormProps?: UseFormProps;
 }) => {
   const { config, id, refineProps } = props;
+  const { transformInitValues, transformApplyValues } = usePathMap({
+    pathMap: config.formConfig?.pathMap,
+    transformInitValues: config.formConfig?.transformInitValues,
+    transformApplyValues: config.formConfig?.transformApplyValues,
+  });
   const [responseErrorMsgs, setResponseErrorMsgs] = useState<string[]>([]);
   const { i18n } = useTranslation();
   const result = useForm({
@@ -43,8 +49,8 @@ export const useRefineForm = (props: {
       ...refineProps,
     },
     defaultValues: config?.initValue,
-    transformApplyValues: config.formConfig?.transformApplyValues,
-    transformInitValues: config.formConfig?.transformInitValues,
+    transformApplyValues,
+    transformInitValues,
     ...config.formConfig?.useFormProps,
   });
 
