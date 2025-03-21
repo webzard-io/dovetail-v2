@@ -3,16 +3,17 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getCommonErrors } from 'src/utils/error';
 import { transformResourceKindInSentence } from 'src/utils/string';
-import { ResourceConfig } from '../../types';
+import { CommonFormConfig, RefineFormConfig, ResourceConfig } from '../../types';
 import { useForm, UseFormProps } from './useReactHookForm';
 
 export const useRefineForm = (props: {
-  config: ResourceConfig;
+  formConfig?: RefineFormConfig & CommonFormConfig;
   id?: string;
+  config: ResourceConfig;
   refineProps?: UseFormProps['refineCoreProps'];
   useFormProps?: UseFormProps;
 }) => {
-  const { config, id, refineProps } = props;
+  const { formConfig, id, refineProps, config } = props;
   const [responseErrorMsgs, setResponseErrorMsgs] = useState<string[]>([]);
   const { i18n } = useTranslation();
   const result = useForm({
@@ -43,20 +44,20 @@ export const useRefineForm = (props: {
       ...refineProps,
     },
     defaultValues: config?.initValue,
-    transformApplyValues: config.formConfig?.transformApplyValues,
-    transformInitValues: config.formConfig?.transformInitValues,
-    ...config.formConfig?.useFormProps,
+    transformApplyValues: formConfig?.transformApplyValues,
+    transformInitValues: formConfig?.transformInitValues,
+    ...formConfig?.useFormProps,
   });
 
   // set request error message
   useEffect(() => {
     const response = result.refineCore.mutationResult.error?.response;
     if (response && !response?.bodyUsed) {
-      response.json?.().then((body: any) => {
-        setResponseErrorMsgs(([] as string[]).concat(config.formConfig?.formatError?.(body) || getCommonErrors(body, i18n)));
+      response.json?.().then((body: Record<string, unknown>) => {
+        setResponseErrorMsgs(([] as string[]).concat(formConfig?.formatError?.(body) || getCommonErrors(body, i18n)));
       });
     }
-  }, [config.formConfig, result, i18n]);
+  }, [formConfig, result, i18n]);
 
   return { formResult: result, responseErrorMsgs };
 };

@@ -17,10 +17,10 @@ import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useFailedModal } from 'src/hooks/useFailedModal';
 import { useOpenForm } from 'src/hooks/useOpenForm';
+import { FormType } from 'src/types';
 import { getCommonErrors } from 'src/utils/error';
 import { useGlobalStore } from '../../../hooks';
 import { ResourceModel } from '../../../models';
-
 export type DropdownSize = 'normal' | 'large';
 
 interface K8sDropdownProps {
@@ -59,6 +59,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
     resource: resource?.name,
     action: AccessControlAuth.Delete,
   });
+  const formType = config.formConfig?.formType || FormType.FORM;
 
   return (
     <>
@@ -67,7 +68,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
           <Menu>
             {isInShowPage || canEditData?.can === false || config.hideEdit ? null : (
               <Menu.Item onClick={openForm}>
-                <Icon src={EditPen16PrimaryIcon}>{config.formConfig?.fields ? t('dovetail.edit') : t('dovetail.edit_yaml')}</Icon>
+                <Icon src={EditPen16PrimaryIcon}>{formType === FormType.FORM ? t('dovetail.edit') : t('dovetail.edit_yaml')}</Icon>
               </Menu.Item>
             )}
             <Menu.Item

@@ -5,7 +5,7 @@ import { SECRET_OPAQUE_INIT_VALUE } from 'src/constants/k8s';
 import { SecretDataGroup, BasicGroup } from '../../components/ShowContent';
 import { AgeColumnRenderer, DataKeysColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../models';
-import { RESOURCE_GROUP, ResourceConfig } from '../../types';
+import { FormType, RESOURCE_GROUP, ResourceConfig } from '../../types';
 
 function isBase64(value: string) {
   try {
@@ -25,6 +25,7 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
   initValue: SECRET_OPAQUE_INIT_VALUE,
   columns: () => [DataKeysColumnRenderer(i18n), AgeColumnRenderer(i18n)],
   formConfig: {
+    formType: FormType.FORM,
     transformInitValues: (value) => {
       const data = (value as Secret).data || {};
 

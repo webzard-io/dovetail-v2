@@ -31,11 +31,11 @@ import { AccessControlAuth } from 'src/constants/auth';
 import ComponentContext from 'src/contexts/component';
 import ConfigsContext from 'src/contexts/configs';
 import { useOpenForm } from 'src/hooks/useOpenForm';
+import { FormType } from 'src/types';
 import { ResourceState } from '../../constants';
 import { ResourceModel } from '../../models';
 import { StateTag } from '../StateTag';
 import { ShowConfig, ShowField, AreaType } from './fields';
-
 const ShowContentWrapperStyle = css`
   height: 100%;
   display: flex;
@@ -292,7 +292,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           {!config.hideEdit ? (
             <CanAccess resource={resource?.name} action={AccessControlAuth.Edit}>
               <Button style={{ marginRight: 8 }} onClick={openForm}>
-                {config.formConfig?.fields ? t('dovetail.edit') : t('dovetail.edit_yaml')}
+                {config.formConfig?.formType === FormType.FORM ? t('dovetail.edit') : t('dovetail.edit_yaml')}
               </Button>
             </CanAccess>
           ) : null}
