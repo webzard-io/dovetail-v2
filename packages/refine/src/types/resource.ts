@@ -81,7 +81,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   deleteTip?: string;
   /** 表单相关配置 */
   formConfig?: {
-    /** 
+    /**
      * 表单字段配置函数
      * @param props 包含记录和动作类型的配置对象
      * @returns 表单字段配置数组
@@ -93,34 +93,38 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
     }) => RefineFormField[];
     /** 保存按钮文本 */
     saveButtonText?: string;
-    /** 
+    /**
      * 自定义表单渲染函数
      * @param props YAML表单属性，待完善
      * @returns React节点
      */
     renderForm?: (props: YamlFormProps) => React.ReactNode;
-    /** 表单类型：页面形式或模态框形式 
+    /** 表单类型：页面形式或模态框形式
      * PAGE 或者 MODAL
     */
     formType?: FormType;
-    /** 
+    /**
      * 初始值转换函数
      * @param values 原始值
      * @returns 转换后的值
      */
     transformInitValues?: (values: Record<string, unknown>) => Record<string, unknown>;
-    /** 
+    /**
      * 提交值转换函数，转换为 YAML 格式
      * @param values 表单值
      * @returns YAML格式的数据
      */
     transformApplyValues?: (values: Record<string, unknown>) => Model['_rawYaml'];
-    /** 
+    /**
+     * 路径映射，用于在表单中映射路径
+     */
+    pathMap?: { from: string[]; to: string[] }[];
+    /**
      * 表单标题，可以是字符串或根据操作类型返回不同标题的函数
      * @param action 操作类型：create 或 edit
      */
     formTitle?: string | ((action: 'create' | 'edit') => string);
-    /** 
+    /**
      * 表单描述，可以是字符串或根据操作类型返回不同描述的函数
      * @param action 操作类型：create 或 edit
      */
@@ -129,7 +133,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
      * 默认是 216px
      */
     labelWidth?: string;
-    /** 
+    /**
      * 错误信息格式化函数，待完善
      * @param errorBody 错误信息体
      * @returns 格式化后的错误信息
