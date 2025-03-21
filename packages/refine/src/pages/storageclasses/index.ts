@@ -7,16 +7,18 @@ import {
   AgeColumnRenderer,
   SCAllowExpandColumnRenderer
 } from 'src/hooks/useEagleTable/columns';
-import { RESOURCE_GROUP } from 'src/types';
+import { StorageClassModel } from 'src/models';
+import { RESOURCE_GROUP, ResourceConfig } from 'src/types';
 import { StorageClassProvisionerField } from '../../components';
 import { generateStorageClassFormConfig } from './form';
 
-export const StorageClassConfig = (i18n: I18n) => ({
+export const StorageClassConfig = (i18n: I18n): ResourceConfig<StorageClassModel> => ({
   name: 'storageclasses',
   basePath: '/apis/storage.k8s.io/v1',
   kind: 'StorageClass',
+  apiVersion: 'storage.k8s.io/v1',
   parent: RESOURCE_GROUP.STORAGE,
-  label: 'StorageClasses',
+  displayName: i18n.t('dovetail.storage_class'),
   initValue: STORAGE_CLASS_INIT_VALUE,
   formConfig: generateStorageClassFormConfig({
     isEnabledZbs: true,

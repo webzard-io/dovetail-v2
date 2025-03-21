@@ -4,23 +4,24 @@ import { UseFormReturnType } from '@refinedev/react-hook-form';
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { ResourceModel } from 'src/models';
-import { ResourceConfig } from 'src/types';
+import { CommonFormConfig, RefineFormConfig, ResourceConfig } from 'src/types';
 import { FormErrorAlert } from '../FormErrorAlert';
 import useFieldsConfig from './useFieldsConfig';
 
 type Props<Model extends ResourceModel> = {
   config?: ResourceConfig<Model>;
+  formConfig?: CommonFormConfig & RefineFormConfig;
   formResult: UseFormReturnType;
   errorMsgs?: string[];
   resourceId?: string;
 };
 
 export const RefineFormContent = <Model extends ResourceModel>(props: Props<Model>) => {
-  const { config, formResult, resourceId, errorMsgs } = props;
+  const { config, formResult, resourceId, errorMsgs, formConfig } = props;
   const { control, getValues } = formResult;
   const action = resourceId ? 'edit' : 'create';
 
-  const formFieldsConfig = useFieldsConfig(config, resourceId);
+  const formFieldsConfig = useFieldsConfig(config, formConfig, resourceId);
 
   const fields = formFieldsConfig?.map(c => {
     return (
@@ -67,7 +68,6 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
             ele = <div>{value}</div>;
           }
 
-
           if (c?.render) {
             ele = c.render(value, onChange, formValue, onBlur, action, control);
           }
@@ -102,7 +102,7 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
               key={c.key}
               label={c.label}
               colon={false}
-              labelCol={{ flex: `0 0 ${config?.formConfig?.labelWidth || '216px'}` }}
+              labelCol={{ flex: `0 0 ${formConfig?.labelWidth || '216px'}` }}
               help={fieldState.error?.message}
               validateStatus={fieldState.invalid ? 'error' : undefined}
               data-test-id={c.key}

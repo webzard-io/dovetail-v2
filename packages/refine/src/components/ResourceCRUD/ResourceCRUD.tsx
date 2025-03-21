@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { ResourceConfig, FormType } from '../../types';
+import { ResourceConfig, FormContainerType } from '../../types';
 import { ResourceForm } from './create';
 import { ResourceList } from './list';
 import { ResourceShow } from './show';
@@ -25,7 +25,7 @@ export function ResourceCRUD(props: Props) {
             ) : null}
             {
               // the modals would render in ModalStack
-              config.formConfig?.formType === FormType.PAGE ? (
+              config.formConfig?.formContainerType === FormContainerType.PAGE ? (
                 <>
                   <Route path={`${urlPrefix}/${config.name}/create`}>
                     <ResourceForm config={config} />
