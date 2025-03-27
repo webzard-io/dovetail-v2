@@ -1,8 +1,8 @@
 import { Select, AntdOption } from '@cloudtower/eagle';
 import React from 'react';
 import i18n from 'src/i18n';
-import { ResourceModel } from 'src/models';
-import { ResourceConfig } from 'src/types';
+import { StorageClassModel } from 'src/models';
+import { FormType, ResourceConfig } from 'src/types';
 
 type GenerateStorageClassFormConfig = {
   isEnabledZbs?: boolean;
@@ -10,7 +10,7 @@ type GenerateStorageClassFormConfig = {
   isVmKsc?: boolean;
 }
 
-export function generateStorageClassFormConfig(options: GenerateStorageClassFormConfig): ResourceConfig<ResourceModel>['formConfig'] {
+export function generateStorageClassFormConfig(options: GenerateStorageClassFormConfig): ResourceConfig<StorageClassModel>['formConfig'] {
   const {
     isEnabledZbs,
     isVmKsc,
@@ -18,6 +18,7 @@ export function generateStorageClassFormConfig(options: GenerateStorageClassForm
   } = options;
 
   return {
+    formType: FormType.FORM,
     fields() {
       return [
         {
