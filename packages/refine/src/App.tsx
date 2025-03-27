@@ -3,11 +3,10 @@ import { GlobalStore } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { Route, Router } from 'react-router-dom';
-import { YamlFormProps, Layout, YamlForm } from './components';
+import { Layout } from './components';
 import {
   CRONJOB_INIT_VALUE,
   DAEMONSET_INIT_VALUE,
-  DEPLOYMENT_INIT_VALUE,
   POD_INIT_VALUE,
   SERVER_INSTANCE_INIT_VALUE,
   NODE_INIT_VALUE,
@@ -30,17 +29,18 @@ import { ServicesConfig } from './pages/services';
 import { StatefulSetConfig } from './pages/statefulsets';
 import { StorageClassConfig } from './pages/storageclasses';
 import { ProviderPlugins } from './plugins';
-import { RESOURCE_GROUP, ResourceConfig, FormType } from './types';
+import { RESOURCE_GROUP, ResourceConfig, FormContainerType, FormType } from './types';
 
 function App() {
   const history = createBrowserHistory();
 
-  const resourcesConfig = useMemo(() => {
+  const resourcesConfig = useMemo((): ResourceConfig<any>[] => {
     return [
       {
         name: 'cronjobs',
         basePath: '/apis/batch/v1beta1',
         kind: 'CronJob',
+        apiVersion: 'batch/v1beta1',
         parent: RESOURCE_GROUP.WORKLOAD,
         initValue: CRONJOB_INIT_VALUE,
         isCustom: true,
@@ -49,6 +49,7 @@ function App() {
         name: 'daemonsets',
         basePath: '/apis/apps/v1',
         kind: 'DaemonSet',
+        apiVersion: 'apps/v1',
         parent: RESOURCE_GROUP.WORKLOAD,
         initValue: DAEMONSET_INIT_VALUE,
         isCustom: true,
@@ -57,16 +58,11 @@ function App() {
         name: 'deployments',
         basePath: '/apis/apps/v1',
         kind: 'Deployment',
+        apiVersion: 'apps/v1',
         parent: RESOURCE_GROUP.WORKLOAD,
         formConfig: {
-          formType: FormType.MODAL,
-          renderForm: (formProps: YamlFormProps) => (
-            <YamlForm
-              {...formProps}
-              initialValuesForCreate={DEPLOYMENT_INIT_VALUE}
-              isShowLayout={false}
-            />
-          ),
+          formType: FormType.YAML,
+          formContainerType: FormContainerType.MODAL,
         },
         isCustom: true,
       },
@@ -75,6 +71,7 @@ function App() {
         name: 'pods',
         basePath: '/api/v1',
         kind: 'Pod',
+        apiVersion: 'v1',
         parent: RESOURCE_GROUP.WORKLOAD,
         initValue: POD_INIT_VALUE,
         isCustom: true,
@@ -83,6 +80,7 @@ function App() {
         name: 'nodes',
         basePath: '/api/v1',
         kind: 'Node',
+        apiVersion: 'v1',
         parent: RESOURCE_GROUP.WORKLOAD,
         initValue: NODE_INIT_VALUE,
         isCustom: true,
@@ -94,10 +92,12 @@ function App() {
         name: 'serverinstances',
         basePath: '/apis/kubesmart.smtx.io/v1alpha1',
         kind: 'ServerInstance',
+        apiVersion: 'kubesmart.smtx.io/v1alpha1',
         parent: RESOURCE_GROUP.NETWORK,
         initValue: SERVER_INSTANCE_INIT_VALUE,
         noShow: true,
         formConfig: {
+          formType: FormType.FORM,
           useFormProps: {
             mode: 'onTouched',
           },
@@ -109,7 +109,7 @@ function App() {
               label: i18n.t('dovetail.name'),
               disabledWhenEdit: true,
               validators: [
-                (value: string) => {
+                (value: unknown) => {
                   if (!value)
                     return {
                       isValid: false,
@@ -169,7 +169,7 @@ function App() {
   return (
     <I18nextProvider i18n={i18n}>
       <Dovetail
-        resourcesConfig={resourcesConfig as ResourceConfig[]}
+        resourcesConfig={resourcesConfig}
         Layout={Layout}
         history={history}
         globalStore={globalStore}

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Control } from 'react-hook-form';
+import { FormType } from 'src/types/resource';
 
 export type RefineFormValidator = (
   value: unknown,
   formValue: unknown,
-  formMode: 'yaml' | 'form'
+  formMode: FormType
 ) => { isValid: boolean; errorMsg: string };
 
 export type RefineFormField = {
