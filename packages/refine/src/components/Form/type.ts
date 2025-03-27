@@ -1,5 +1,5 @@
 import React from 'react';
-import { Control } from 'react-hook-form';
+import { Control, UseFormTrigger, FieldValues, ControllerRenderProps } from 'react-hook-form';
 import { FormType } from 'src/types/resource';
 
 export type RefineFormValidator = (
@@ -7,6 +7,14 @@ export type RefineFormValidator = (
   formValue: unknown,
   formMode: FormType
 ) => { isValid: boolean; errorMsg: string };
+
+export type RefineFormFieldRenderProps = {
+  field: ControllerRenderProps<FieldValues, string>;
+  fieldConfig: RefineFormField;
+  action: 'edit' | 'create';
+  control: Control;
+  trigger: UseFormTrigger<FieldValues>;
+};
 
 export type RefineFormField = {
   path: string[];
@@ -17,12 +25,11 @@ export type RefineFormField = {
   type?: 'number';
   validators?: RefineFormValidator[];
   disabledWhenEdit?: boolean;
-  render?: (
-    value: unknown,
-    onChange: (event: unknown) => void,
-    formValue: unknown,
-    onBlur: () => void,
-    action: 'edit' | 'create',
-    control: Control,
-  ) => React.ReactElement;
+  render?: (props: RefineFormFieldRenderProps) => React.ReactElement;
+  /**
+   * 表单项条件渲染函数
+   * @param formValue 表单值
+   * @returns 是否渲染
+   */
+  condition?: (formValue: Record<string, unknown>, value: unknown) => boolean;
 };
