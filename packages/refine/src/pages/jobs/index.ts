@@ -1,5 +1,5 @@
 import { i18n } from 'i18next';
-import { FormType } from 'src/types';
+import { FormContainerType } from 'src/types';
 import { Column } from '../../components';
 import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
 import {
@@ -20,7 +20,7 @@ import {
   WorkloadRestartsColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { JobModel } from '../../models';
-import { RESOURCE_GROUP, ResourceConfig } from '../../types';
+import { RESOURCE_GROUP, ResourceConfig, FormType } from '../../types';
 
 export const JobConfig = (i18n: i18n): ResourceConfig<JobModel> => ({
   name: 'jobs',
@@ -59,6 +59,7 @@ export const JobConfig = (i18n: i18n): ResourceConfig<JobModel> => ({
   initValue: JOB_INIT_VALUE,
   Dropdown: K8sDropdown,
   formConfig: {
-    formType: FormType.MODAL,
+    formType: FormType.FORM,
+    formContainerType: FormContainerType.MODAL,
   }
 });

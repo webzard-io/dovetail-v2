@@ -12,7 +12,7 @@ import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
 import { NETWORK_POLICY_INIT_VALUE } from '../../constants/k8s';
 import { AgeColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { NetworkPolicyModel } from '../../models';
-import { RESOURCE_GROUP, ResourceConfig, FormType } from '../../types';
+import { RESOURCE_GROUP, ResourceConfig, FormContainerType, FormType } from '../../types';
 
 export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyModel> => ({
   name: 'networkpolicies',
@@ -61,6 +61,7 @@ export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyMod
   initValue: NETWORK_POLICY_INIT_VALUE,
   Dropdown: K8sDropdown,
   formConfig: {
-    formType: FormType.MODAL,
+    formType: FormType.FORM,
+    formContainerType: FormContainerType.MODAL,
   },
 });
