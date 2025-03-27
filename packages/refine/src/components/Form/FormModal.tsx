@@ -7,6 +7,7 @@ import { Unstructured } from 'k8s-api-provider';
 import React, { useState, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
+import usePathMap from 'src/hooks/usePathMap';
 import { WarningButtonStyle } from 'src/styles/button';
 import { FullscreenModalStyle } from 'src/styles/modal';
 import { SmallModalStyle } from 'src/styles/modal';
@@ -108,13 +109,19 @@ export function FormModal(props: FormModalProps) {
       ...config.formConfig?.refineCoreProps,
     },
   });
+  const {
+    transformInitValues,
+    transformApplyValues,
+  } = usePathMap({
+    pathMap: config.formConfig?.pathMap,
+    transformInitValues: config.formConfig?.transformInitValues,
+    transformApplyValues: config.formConfig?.transformApplyValues || ((v: Record<string, unknown>) => v as Unstructured),
+  });
   const yamlFormProps: YamlFormProps = useMemo(
     () => {
-      const transformApplyValues = config.formConfig?.transformApplyValues || ((v: Record<string, unknown>) => v as Unstructured);
-
       return {
         ...props.formProps,
-        transformInitValues: isYamlMode ? undefined : config.formConfig?.transformInitValues,
+        transformInitValues: isYamlMode ? undefined : transformInitValues,
         transformApplyValues: isYamlMode ? undefined : transformApplyValues,
         initialValuesForCreate: isYamlMode ?
           transformApplyValues(refineFormResult.formResult.getValues()) :
@@ -140,8 +147,6 @@ export function FormModal(props: FormModalProps) {
     },
     [
       props.formProps,
-      config.formConfig?.transformInitValues,
-      config.formConfig?.transformApplyValues,
       config?.initValue,
       id,
       action,
@@ -149,6 +154,8 @@ export function FormModal(props: FormModalProps) {
       isYamlMode,
       fieldsConfig,
       popModal,
+      transformInitValues,
+      transformApplyValues,
     ]
   );
 
