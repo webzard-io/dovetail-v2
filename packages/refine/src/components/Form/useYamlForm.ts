@@ -23,6 +23,7 @@ import { RefineFormValidator } from 'src/components/Form/type';
 import { type YamlEditorHandle, type YamlEditorProps } from 'src/components/YamlEditor';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
 import { useSchema } from 'src/hooks/useSchema';
+import { FormType } from 'src/types/resource';
 import { pruneBeforeEdit } from 'src/utils/k8s';
 import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
@@ -283,7 +284,7 @@ const useYamlForm = <
         const value = get(formValue, path);
 
         for (const validator of (validators || [])) {
-          const { isValid, errorMsg } = validator(value, formValue, 'yaml');
+          const { isValid, errorMsg } = validator(value, formValue, FormType.YAML);
 
           if (!isValid) {
             errorMap[path.join('.')] = `${errorMsg}(${path.join('.')})`;

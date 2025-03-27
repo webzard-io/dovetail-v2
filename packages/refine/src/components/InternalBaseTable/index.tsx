@@ -3,7 +3,7 @@ import { css, cx } from '@linaria/core';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
-import { FormType } from 'src/types';
+import { FormContainerType } from 'src/types';
 import { AuxiliaryLine } from './TableWidgets';
 
 export type IDObject = { id: string };
@@ -47,7 +47,7 @@ export type InternalTableProps<Data extends { id: string; }> = {
   onPageChange: (page: number) => void;
   onSizeChange?: (size: number) => void;
   onSorterChange?: (order: SorterOrder | null, key?: string) => void;
-  RowMenu?: React.FC<{ record: Data; formType?: FormType; }>;
+  RowMenu?: React.FC<{ record: Data; formType?: FormContainerType; }>;
   empty?: string;
   showMenuColumn?: boolean;
   hideNamespacesFilter?: boolean;

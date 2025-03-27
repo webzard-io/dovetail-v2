@@ -1,8 +1,8 @@
 import { useList, useShow } from '@refinedev/core';
 import { ResourceModel } from 'src/models';
-import { ResourceConfig } from 'src/types';
+import { CommonFormConfig, RefineFormConfig, ResourceConfig } from 'src/types';
 
-function useFieldsConfig<Model extends ResourceModel>(config?: ResourceConfig<Model>, resourceId?: string) {
+function useFieldsConfig<Model extends ResourceModel>(config?: ResourceConfig<Model>, formConfig?: CommonFormConfig & RefineFormConfig, resourceId?: string) {
   const action = resourceId ? 'edit' : 'create';
   const listQuery = useList<Model>({
     resource: config?.name,
@@ -17,7 +17,7 @@ function useFieldsConfig<Model extends ResourceModel>(config?: ResourceConfig<Mo
     id: resourceId,
   });
 
-  return config?.formConfig?.fields?.({
+  return formConfig?.fields?.({
     record: showQuery.queryResult.data?.data,
     records: listQuery.data?.data || [],
     action,

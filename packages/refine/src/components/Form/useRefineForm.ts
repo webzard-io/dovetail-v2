@@ -4,20 +4,21 @@ import { useTranslation } from 'react-i18next';
 import usePathMap from 'src/hooks/usePathMap';
 import { getCommonErrors } from 'src/utils/error';
 import { transformResourceKindInSentence } from 'src/utils/string';
-import { ResourceConfig } from '../../types';
+import { CommonFormConfig, ErrorBody, RefineFormConfig, ResourceConfig } from '../../types';
 import { useForm, UseFormProps } from './useReactHookForm';
 
 export const useRefineForm = (props: {
-  config: ResourceConfig;
+  formConfig?: RefineFormConfig & CommonFormConfig;
   id?: string;
+  config: ResourceConfig;
   refineProps?: UseFormProps['refineCoreProps'];
   useFormProps?: UseFormProps;
 }) => {
-  const { config, id, refineProps } = props;
+  const { formConfig, config, id, refineProps } = props;
   const { transformInitValues, transformApplyValues } = usePathMap({
-    pathMap: config.formConfig?.pathMap,
-    transformInitValues: config.formConfig?.transformInitValues,
-    transformApplyValues: config.formConfig?.transformApplyValues,
+    pathMap: formConfig?.pathMap,
+    transformInitValues: formConfig?.transformInitValues,
+    transformApplyValues: formConfig?.transformApplyValues,
   });
   const [responseErrorMsgs, setResponseErrorMsgs] = useState<string[]>([]);
   const { i18n } = useTranslation();
@@ -51,18 +52,18 @@ export const useRefineForm = (props: {
     defaultValues: config?.initValue,
     transformApplyValues,
     transformInitValues,
-    ...config.formConfig?.useFormProps,
+    ...formConfig?.useFormProps,
   });
 
   // set request error message
   useEffect(() => {
     const response = result.refineCore.mutationResult.error?.response;
     if (response && !response?.bodyUsed) {
-      response.json?.().then((body: any) => {
-        setResponseErrorMsgs(([] as string[]).concat(config.formConfig?.formatError?.(body) || getCommonErrors(body, i18n)));
+      response.json?.().then((body: ErrorBody) => {
+        setResponseErrorMsgs(([] as string[]).concat(formConfig?.formatError?.(body) || getCommonErrors(body, i18n)));
       });
     }
-  }, [config.formConfig, result, i18n]);
+  }, [formConfig, result, i18n]);
 
   return { formResult: result, responseErrorMsgs };
 };

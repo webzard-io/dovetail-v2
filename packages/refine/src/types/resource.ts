@@ -1,5 +1,4 @@
 import { UseFormProps } from '@refinedev/react-hook-form';
-import { YamlFormProps } from '../components';
 import { FormModalProps, RefineFormField } from '../components/Form';
 import { Column, InternalTableProps } from '../components/InternalBaseTable';
 import { ShowConfig } from '../components/ShowContent';
@@ -17,12 +16,127 @@ export enum RESOURCE_GROUP {
   PROJECT = 'PROJECT',
 }
 
-export enum FormType {
+/**
+ * 表单容器类型
+ */
+export enum FormContainerType {
   PAGE = 'PAGE',
   MODAL = 'MODAL',
 }
 
+/**
+ * 表单类型
+ */
+export enum FormType {
+  YAML = 'YAML',
+  FORM = 'FORM',
+}
+
+/**
+ * 允许切换的表单模式
+ */
+export enum FormMode {
+  FORM = 'FORM',
+  YAML = 'YAML',
+}
+
 export type WithId<T> = T & { id: string };
+
+export type RefineFormConfig<Model extends ResourceModel = ResourceModel> = {
+  formType: FormType.FORM;
+  /**
+ * 表单字段配置函数
+ * @param props 包含记录和动作类型的配置对象
+ * @returns 表单字段配置数组
+ */
+  fields?: (props: {
+    record?: Model;
+    records: Model[];
+    action: 'create' | 'edit';
+  }) => RefineFormField[];
+  /** Refine Core 的表单属性 */
+  refineCoreProps?: UseFormProps['refineCoreProps'];
+  /** React Hook Form 的配置属性 */
+  useFormProps?: UseFormProps;
+  /** 是否禁用切换表单模式（在 YAML 和表单之间切换） */
+  isDisabledChangeMode?: boolean;
+  /** 表单标签的宽度
+   * 默认是 216px
+   */
+  labelWidth?: string;
+  /**
+ * 自定义表单渲染函数
+ * @returns React节点
+ */
+  renderForm?: () => React.ReactNode;
+};
+
+export type YamlFormConfig = {
+  formType: FormType.YAML;
+};
+
+export type ErrorBody = {
+  kind: string;
+  apiVersion: string;
+  metadata: object;
+  status: string;
+  message: string;
+  reason: string;
+  details: {
+    name: string;
+    group: string;
+    kind: string;
+    causes?: {
+      reason: string;
+      message: string;
+      field: string;
+    }[];
+  };
+  code: number;
+};
+
+export type CommonFormConfig<Model extends ResourceModel = ResourceModel> = {
+  /** 自定义表单模态框组件 */
+  CustomFormModal?: React.FC<FormModalProps>;
+  /**
+   * 初始值转换函数
+   * @param values 原始值
+   * @returns 转换后的值
+   */
+  transformInitValues?: (values: Record<string, unknown>) => Record<string, unknown>;
+  /**
+   * 提交值转换函数，转换为 YAML 格式
+   * @param values 表单值
+   * @returns YAML格式的数据
+   */
+  transformApplyValues?: (values: Record<string, unknown>) => Model['_rawYaml'];
+  /** 表单容器类型：页面形式或模态框形式
+   * PAGE 或者 MODAL
+  */
+  formContainerType?: FormContainerType;
+  /**
+   * 表单标题，可以是字符串或根据操作类型返回不同标题的函数
+   * @param action 操作类型：create 或 edit
+   */
+  formTitle?: string | ((action: 'create' | 'edit') => string);
+  /**
+   * 表单描述，可以是字符串或根据操作类型返回不同描述的函数
+   * @param action 操作类型：create 或 edit
+   */
+  formDesc?: string | ((action: 'create' | 'edit') => string);
+  /** 保存按钮文本 */
+  saveButtonText?: string;
+  /**
+   * 错误信息格式化函数，待完善
+   * @param errorBody 错误信息体
+   * @returns 格式化后的错误信息
+   */
+  formatError?: (errorBody: ErrorBody) => string;
+  /**
+   * 路径映射，用于在表单中映射路径
+   */
+  pathMap?: { from: string[]; to: string[] }[];
+};
 
 export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   /** 资源名称，用于 API 调用和路由。
@@ -80,72 +194,5 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
    */
   deleteTip?: string;
   /** 表单相关配置 */
-  formConfig?: {
-    /**
-     * 表单字段配置函数
-     * @param props 包含记录和动作类型的配置对象
-     * @returns 表单字段配置数组
-     */
-    fields?: (props: {
-      record?: Model;
-      records: Model[];
-      action: 'create' | 'edit';
-    }) => RefineFormField[];
-    /** 保存按钮文本 */
-    saveButtonText?: string;
-    /**
-     * 自定义表单渲染函数
-     * @param props YAML表单属性，待完善
-     * @returns React节点
-     */
-    renderForm?: (props: YamlFormProps) => React.ReactNode;
-    /** 表单类型：页面形式或模态框形式
-     * PAGE 或者 MODAL
-    */
-    formType?: FormType;
-    /**
-     * 初始值转换函数
-     * @param values 原始值
-     * @returns 转换后的值
-     */
-    transformInitValues?: (values: Record<string, unknown>) => Record<string, unknown>;
-    /**
-     * 提交值转换函数，转换为 YAML 格式
-     * @param values 表单值
-     * @returns YAML格式的数据
-     */
-    transformApplyValues?: (values: Record<string, unknown>) => Model['_rawYaml'];
-    /**
-     * 路径映射，用于在表单中映射路径
-     */
-    pathMap?: { from: string[]; to: string[] }[];
-    /**
-     * 表单标题，可以是字符串或根据操作类型返回不同标题的函数
-     * @param action 操作类型：create 或 edit
-     */
-    formTitle?: string | ((action: 'create' | 'edit') => string);
-    /**
-     * 表单描述，可以是字符串或根据操作类型返回不同描述的函数
-     * @param action 操作类型：create 或 edit
-     */
-    formDesc?: string | ((action: 'create' | 'edit') => string);
-    /** 表单标签的宽度
-     * 默认是 216px
-     */
-    labelWidth?: string;
-    /**
-     * 错误信息格式化函数，待完善
-     * @param errorBody 错误信息体
-     * @returns 格式化后的错误信息
-     */
-    formatError?: (errorBody: unknown) => string;
-    /** Refine Core 的表单属性 */
-    refineCoreProps?: UseFormProps['refineCoreProps'];
-    /** React Hook Form 的配置属性 */
-    useFormProps?: UseFormProps;
-    /** 是否禁用切换表单模式（在 YAML 和表单之间切换） */
-    isDisabledChangeMode?: boolean;
-    /** 自定义表单模态框组件 */
-    CustomFormModal?: React.FC<FormModalProps>;
-  };
+  formConfig?: (RefineFormConfig<Model> | YamlFormConfig) & CommonFormConfig<Model>;
 };
