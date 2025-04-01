@@ -21,8 +21,8 @@ export const StorageClassConfig = (i18n: I18n): ResourceConfig<StorageClassModel
   displayName: i18n.t('dovetail.storage_class'),
   initValue: STORAGE_CLASS_INIT_VALUE,
   formConfig: generateStorageClassFormConfig({
-    isEnabledZbs: true,
-    isEnabledElf: false,
+    isEnabledProvisionerA: true,
+    isEnabledProvisionerB: false,
     isVmKsc: true,
   }),
   columns: () => [
