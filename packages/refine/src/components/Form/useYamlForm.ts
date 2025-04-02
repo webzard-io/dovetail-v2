@@ -100,12 +100,7 @@ export type UseFormReturnType<
   isLoadingSchema: boolean;
   loadSchemaError: Error | null;
   fetchSchema: () => void;
-  enableEditor: boolean;
   errorResponseBody?: Record<string, unknown> | null;
-  switchEditor: () => void;
-  onFinish: (
-    values?: TVariables
-  ) => Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void>;
 };
 
 const useYamlForm = <
@@ -164,7 +159,6 @@ const useYamlForm = <
 > => {
   const editor = useRef<YamlEditorHandle>(null);
   const { t } = useTranslation();
-  const [enableEditor, setEnableEditor] = useState(false);
   const [isYamlValid, setIsYamlValid] = useState(true);
   const [isSchemaValid, setIsSchemaValid] = useState(true);
   const [editorErrors, setEditorErrors] = useState<string[]>([]);
@@ -259,21 +253,73 @@ const useYamlForm = <
   const finalErrors = useMemo(() => {
     return uniq([...editorErrors, ...rulesErrors]);
   }, [editorErrors, rulesErrors]);
+  const schemas = useMemo(() => {
+    return schema ? [schema] : [];
+  }, [schema]);
+  const saveButtonProps = useMemo(
+    () => ({
+      loading: formLoading,
+      onClick: () => {
+        form.submit();
+      },
+    }),
+    [formLoading, form]
+  );
+  const emptySchemas = useMemo(() => {
+    return [];
+  }, []);
+  const editorProps: EditorProps = useMemo(() => {
+    return {
+      ref: editor,
+      defaultValue:
+        schema && editorOptions?.isGenerateAnnotations
+          ? generateYamlBySchema(initialValues || {}, schema)
+          : yaml.dump(initialValues),
+      schemas: schemas || emptySchemas,
+      id: useResourceResult.resource?.name || '',
+      errorMsgs: finalErrors,
+      onValidate(yamlValid: boolean, schemaValid: boolean) {
+        setIsYamlValid(yamlValid);
+        setIsSchemaValid(schemaValid);
+
+        if (yamlValid && schemaValid) {
+          setEditorErrors([]);
+        }
+      },
+      onEditorCreate(editorInstance) {
+        const editorValue = yaml.dump(initialValues);
+
+        editor.current?.setEditorValue(editorValue);
+        editor.current?.setValue(editorValue);
+        if (action === 'edit') {
+          fold(editorInstance);
+        }
+      },
+    };
+  }, [
+    schema,
+    emptySchemas,
+    editorOptions?.isGenerateAnnotations,
+    initialValues,
+    schemas,
+    useResourceResult.resource?.name,
+    action,
+    finalErrors,
+    fold,
+  ]);
 
   const onKeyUp = (event: React.KeyboardEvent<HTMLFormElement>) => {
     if (submitOnEnter && event.key === 'Enter') {
       form.submit();
     }
   };
-
   const onValuesChange = (changeValues: object) => {
     if (changeValues && warnWhenUnsavedChanges) {
       setWarnWhen(true);
     }
     return changeValues;
   };
-
-  const validateYaml = (yamlValue: string) => {
+  const validateRules = (yamlValue: string) => {
     const errorMap: Record<string, string> = {};
 
     if (rules && isYamlValid && isSchemaValid) {
@@ -300,59 +346,6 @@ const useYamlForm = <
     return errorMap;
   };
 
-  const saveButtonProps = useMemo(
-    () => ({
-      loading: formLoading,
-      onClick: () => {
-        form.submit();
-      },
-    }),
-    [formLoading, form]
-  );
-
-  const schemas = useMemo(() => {
-    return schema ? [schema] : [];
-  }, [schema]);
-
-  const editorProps: EditorProps = useMemo(() => {
-    return {
-      ref: editor,
-      defaultValue:
-        schema && editorOptions?.isGenerateAnnotations
-          ? generateYamlBySchema(initialValues || {}, schema)
-          : yaml.dump(initialValues),
-      schemas,
-      id: useResourceResult.resource?.name || '',
-      errorMsgs: finalErrors,
-      onValidate(yamlValid: boolean, schemaValid: boolean) {
-        setIsYamlValid(yamlValid);
-        setIsSchemaValid(schemaValid);
-
-        if (yamlValid && schemaValid) {
-          setEditorErrors([]);
-        }
-      },
-      onEditorCreate(editorInstance) {
-        const editorValue = yaml.dump(initialValues);
-
-        editor.current?.setEditorValue(editorValue);
-        editor.current?.setValue(editorValue);
-        if (action === 'edit') {
-          fold(editorInstance);
-        }
-      },
-    };
-  }, [
-    schema,
-    editorOptions?.isGenerateAnnotations,
-    initialValues,
-    schemas,
-    useResourceResult.resource?.name,
-    action,
-    finalErrors,
-    fold,
-  ]);
-
   return {
     form: formSF.form,
     formProps: {
@@ -369,7 +362,7 @@ const useYamlForm = <
           return;
         }
 
-        const rulesErrors = validateYaml(editor.current?.getEditorValue() || '');
+        const rulesErrors = validateRules(editor.current?.getEditorValue() || '');
 
         if (Object.keys(rulesErrors).length) {
           setRulesErrors(Object.values(rulesErrors));
@@ -403,32 +396,12 @@ const useYamlForm = <
     },
     saveButtonProps,
     ...useFormCoreResult,
-    editorProps,
-    enableEditor,
     errorResponseBody,
+    editorProps,
     schemas: schema ? [schema] : [],
     isLoadingSchema,
     loadSchemaError,
     fetchSchema,
-    switchEditor() {
-      if (enableEditor && editor.current?.getEditorValue()) {
-        const value = yaml.load(editor.current?.getEditorValue()) as Record<
-          string,
-          unknown
-        >;
-
-        form?.setFieldsValue(value);
-      }
-
-      setEnableEditor(!enableEditor);
-    },
-    onFinish: async (values?: TVariables) => {
-      const finalValues = enableEditor
-        ? yaml.load(editor.current?.getEditorValue() || '')
-        : values ?? formSF.form.getFieldsValue(true);
-
-      return await onFinish(finalValues);
-    },
   };
 };
 
