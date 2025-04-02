@@ -47,7 +47,7 @@ function usePathMap(options: UsePathMapOptions): {
         const fromPath = [...from];
         const lastKey = fromPath.pop();
         if (lastKey) {
-          const obj = get(result, fromPath.join('.'));
+          const obj = get(result, fromPath);
           if (obj && typeof obj === 'object') {
             delete (obj as Record<string, unknown>)[lastKey];
           }
@@ -79,7 +79,7 @@ function usePathMap(options: UsePathMapOptions): {
         const toPath = [...to];
         const lastKey = toPath.pop();
         if (lastKey) {
-          const obj = get(result, toPath.join('.'));
+          const obj = get(result, toPath);
           if (obj && typeof obj === 'object') {
             delete (obj as Record<string, unknown>)[lastKey];
           }
