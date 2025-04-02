@@ -1,3 +1,5 @@
+import { useList } from '@refinedev/core';
+import { Service } from 'kubernetes-types/core/v1';
 import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
@@ -19,9 +21,19 @@ type Props = {
 
 export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
   const { t } = useTranslation();
+  const { data: serviceData } = useList<Service>({
+    resource: 'services',
+    meta: {
+      kind: 'Service',
+      apiVersion: 'v1',
+    }
+  });
+  const flattenedRules = useMemo(() => (
+    serviceData?.data ? ingress.getFlattenedRules(serviceData?.data) : []
+  ), [serviceData?.data, ingress]);
   const rows = useMemo(() => {
-    return addId(ingress.flattenedRules || [], 'fullPath');
-  }, [ingress.flattenedRules]);
+    return addId(flattenedRules || [], 'fullPath');
+  }, [flattenedRules]);
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
   const currentSize = 10;
