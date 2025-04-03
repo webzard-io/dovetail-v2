@@ -1,5 +1,5 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
-import { ServiceList } from 'kubernetes-types/core/v1';
+import { Service } from 'kubernetes-types/core/v1';
 import type { Ingress, IngressRule } from 'kubernetes-types/networking/v1';
 import { ResourceModel } from './resource-model';
 
@@ -15,38 +15,11 @@ export type RuleItem = {
 };
 
 export class IngressModel extends ResourceModel<IngressTypes> {
-  flattenedRules: RuleItem[] = [];
   constructor(
     public _rawYaml: IngressTypes,
     _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
-  }
-
-  override async init() {
-    const services = (await this._globalStore.get('services', {
-      resourceBasePath: '/api/v1',
-      kind: 'Service',
-    })) as ServiceList;
-    const protocal = !!this._rawYaml.spec.tls ? 'https' : 'http';
-    const servicePort = services.items
-      .find(s => s.metadata?.name === 'contour-envoy' && s.spec?.type === 'NodePort')
-      ?.spec?.ports?.find(p => p.name === protocal);
-
-    this.flattenedRules =
-      this._rawYaml.spec.rules?.reduce<RuleItem[]>((res, rule) => {
-        const paths = rule.http?.paths.map(p => {
-          return {
-            resourceName: p.backend.resource?.name || '',
-            serviceName: p.backend.service?.name || '',
-            fullPath: this.getFullPath(rule, p.path, servicePort?.nodePort),
-            pathType: p.pathType,
-            servicePort: p.backend.service?.port?.number || p.backend.service?.port?.name,
-            host: rule.host,
-          };
-        });
-        return [...res, ...(paths || [])];
-      }, []) || [];
   }
 
   private getFullPath(rule: IngressRule, path = '', port?: number) {
@@ -58,5 +31,26 @@ export class IngressModel extends ResourceModel<IngressTypes> {
     const protocal = this._rawYaml.spec.tls ? 'https://' : 'http://';
     const portText = port ? `:${port}` : '';
     return `${protocal}${hostValue}${portText}${path}`;
+  }
+
+  public getFlattenedRules(services: Service[]) {
+    const protocal = !!this._rawYaml.spec.tls ? 'https' : 'http';
+    const servicePort = services
+      .find(s => s.metadata?.name === 'contour-envoy' && s.spec?.type === 'NodePort')
+      ?.spec?.ports?.find(p => p.name === protocal);
+
+    return this._rawYaml.spec.rules?.reduce<RuleItem[]>((res, rule) => {
+      const paths = rule.http?.paths.map(p => {
+        return {
+          resourceName: p.backend.resource?.name || '',
+          serviceName: p.backend.service?.name || '',
+          fullPath: this.getFullPath(rule, p.path, servicePort?.nodePort),
+          pathType: p.pathType,
+          servicePort: p.backend.service?.port?.number || p.backend.service?.port?.name,
+          host: rule.host,
+        };
+      });
+      return [...res, ...(paths || [])];
+    }, []) || [];
   }
 }
