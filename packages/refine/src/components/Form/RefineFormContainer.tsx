@@ -2,6 +2,7 @@ import { Alert } from '@cloudtower/eagle';
 import { Unstructured } from 'k8s-api-provider';
 import React, { useMemo, useEffect } from 'react';
 import { type SaveButtonProps } from 'src/components/Form/FormModal';
+import usePathMap from 'src/hooks/usePathMap';
 import i18n from 'src/i18n';
 import { ResourceConfig } from 'src/types';
 import { CommonFormConfig, RefineFormConfig } from 'src/types';
@@ -46,47 +47,58 @@ function RefineFormContainer({
       redirect: false,
       ...formConfig?.refineCoreProps,
     },
+    formConfig,
+  });
+  const {
+    transformApplyValues,
+  } = usePathMap({
+    pathMap: formConfig?.pathMap,
+    transformInitValues: formConfig?.transformInitValues,
+    transformApplyValues: formConfig?.transformApplyValues || ((v: Record<string, unknown>) => v as Unstructured),
   });
   const yamlFormProps: YamlFormProps = useMemo(() => {
-    const transformApplyValues =
-      formConfig?.transformApplyValues ||
-      ((v: Record<string, unknown>) => v as Unstructured);
+    if (isYamlMode) {
+      return {
+        ...customYamlFormProps,
+        config,
+        transformInitValues: undefined,
+        transformApplyValues: undefined,
+        initialValuesForCreate: transformApplyValues(
+          refineFormResult.formResult.getValues()
+        ),
+        initialValuesForEdit: transformApplyValues(refineFormResult.formResult.getValues()),
+        id,
+        action,
+        isShowLayout: false,
+        useFormProps: {
+          redirect: false,
+        },
+        rules: fieldsConfig?.map(config => ({
+          path: config.path,
+          validators: config.validators,
+        })),
+        onSaveButtonPropsChange,
+        onErrorsChange(errors: string[]) {
+          if (errors.length) {
+            onError?.();
+          }
+        },
+        onFinish: onSuccess,
+      };
+    }
 
     return {
-      ...customYamlFormProps,
       config,
-      transformInitValues: undefined,
-      transformApplyValues: undefined,
-      initialValuesForCreate: transformApplyValues(
-        refineFormResult.formResult.getValues()
-      ),
-      initialValuesForEdit: transformApplyValues(refineFormResult.formResult.getValues()),
-      id,
-      action,
-      isShowLayout: false,
-      useFormProps: {
-        redirect: false,
-      },
-      rules: fieldsConfig?.map(config => ({
-        path: config.path,
-        validators: config.validators,
-      })),
-      onSaveButtonPropsChange,
-      onErrorsChange(errors: string[]) {
-        if (errors.length) {
-          onError?.();
-        }
-      },
-      onFinish: onSuccess,
     };
   }, [
     action,
+    isYamlMode,
     customYamlFormProps,
     fieldsConfig,
     config,
     id,
     refineFormResult,
-    formConfig,
+    transformApplyValues,
     onSaveButtonPropsChange,
     onSuccess,
     onError,
@@ -96,8 +108,7 @@ function RefineFormContainer({
     if (!isYamlMode) {
       onSaveButtonPropsChange?.(refineFormResult.formResult.saveButtonProps);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isYamlMode, onSaveButtonPropsChange]);
+  }, [isYamlMode, refineFormResult.formResult.saveButtonProps, onSaveButtonPropsChange]);
 
   if (isYamlMode) {
     return <YamlForm {...yamlFormProps} />;
