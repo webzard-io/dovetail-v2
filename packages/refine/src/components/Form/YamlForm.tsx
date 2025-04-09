@@ -110,10 +110,6 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(props: Yam
 
   const FormWrapper = isShowLayout ? FormLayout : React.Fragment;
   const formWrapperProps = isShowLayout ? { saveButtonProps } : {};
-  // use useMemo to keep {} the same
-  const schemas = useMemo(() => {
-    return editorProps.schemas || [];
-  }, [editorProps.schemas]);
   const responseErrors = useMemo(() => (
     errorResponseBody
       ? getCommonErrors(errorResponseBody, i18n)
@@ -165,7 +161,6 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(props: Yam
                 <YamlEditorComponent
                   {...editorProps}
                   className={EditorStyle}
-                  schemas={schemas}
                   collapsable={false}
                 />
               </Form.Item>

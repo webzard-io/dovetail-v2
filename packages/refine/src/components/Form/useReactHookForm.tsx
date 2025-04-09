@@ -12,7 +12,7 @@ import {
 } from '@refinedev/core';
 import get from 'lodash/get';
 import has from 'lodash/has';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { DefaultValues } from 'react-hook-form';
 
 import {
@@ -236,7 +236,7 @@ export const useForm = <
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  const onValuesChange = (changeValues: TVariables) => {
+  const onValuesChange = useCallback((changeValues: TVariables) => {
     if (warnWhenUnsavedChanges) {
       setWarnWhen(true);
     }
@@ -254,23 +254,24 @@ export const useForm = <
     }
 
     return changeValues;
-  };
+  }, [warnWhenUnsavedChanges, refineCoreProps?.autoSave, setWarnWhen, onFinishAutoSave]);
+  const handleSubmit: UseFormHandleSubmit<TVariables> = useCallback((onValid, onInvalid) => async e => {
+    setWarnWhen(false);
+    return handleSubmitReactHookForm(onValid, onInvalid)(e);
+  }, [handleSubmitReactHookForm, setWarnWhen]);
 
-  const handleSubmit: UseFormHandleSubmit<TVariables> =
-    (onValid, onInvalid) => async e => {
-      setWarnWhen(false);
-      return handleSubmitReactHookForm(onValid, onInvalid)(e);
+
+  const saveButtonProps = useMemo(() => {
+    return {
+      disabled: formLoading,
+      onClick: (e: React.BaseSyntheticEvent) => {
+        handleSubmit(
+          (v) => onFinish(transformApplyValues ? transformApplyValues(v) : v),
+          () => false
+        )(e);
+      },
     };
-
-  const saveButtonProps = {
-    disabled: formLoading,
-    onClick: (e: React.BaseSyntheticEvent) => {
-      handleSubmit(
-        (v) => onFinish(transformApplyValues ? transformApplyValues(v) : v),
-        () => false
-      )(e);
-    },
-  };
+  }, [formLoading, handleSubmit, onFinish, transformApplyValues]);
 
   return {
     ...useHookFormResult,
