@@ -166,13 +166,14 @@ function App() {
       ProviderPlugins
     );
   }, []);
+
   return (
     <I18nextProvider i18n={i18n}>
       <Dovetail
         resourcesConfig={resourcesConfig}
         Layout={Layout}
         history={history}
-        globalStore={globalStore}
+        globalStoreMap={{default: globalStore} as any}
         schemaUrlPrefix="/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3"
       >
         <Router history={history}>
