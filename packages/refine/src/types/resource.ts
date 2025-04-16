@@ -155,6 +155,8 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
    * 实际效果为：{apiUrl}{basePath}{apiVersion}{name}
   */
   apiVersion: string;
+  /** 资源使用的 DataProvider 的名称 */
+  dataProviderName?: string;
   /** 资源在界面上显示的名称 */
   displayName?: string;
   /** 是否隐藏列表页的工具栏。会连标题和描述一起去掉 */

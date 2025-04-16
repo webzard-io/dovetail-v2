@@ -4,15 +4,10 @@ import {
   ModalStack,
   useMessage,
 } from '@cloudtower/eagle';
-import {
-  NotificationProvider,
-  Refine,
-  AccessControlProvider,
-  DataProvider,
-  LiveProvider,
-} from '@refinedev/core';
+import { NotificationProvider, Refine, RefineProps } from '@refinedev/core';
 import { History } from 'history';
-import { dataProvider, liveProvider, GlobalStore } from 'k8s-api-provider';
+import { GlobalStore, dataProvider, liveProvider} from 'k8s-api-provider';
+import { WatchEvent } from 'k8s-api-provider';
 import { keyBy } from 'lodash-es';
 import React, { useEffect, useMemo } from 'react';
 import { Router } from 'react-router-dom';
@@ -20,11 +15,11 @@ import { ResourceCRUD } from './components/ResourceCRUD';
 import ConfigsContext from './contexts/configs';
 import ConstantsContext from './contexts/constants';
 import GlobalStoreContext from './contexts/global-store';
-import { routerProvider } from './providers/router-provider';
+import { routerProvider } from './providers';
 import { ResourceConfig } from './types';
 
 import './styles.css';
-
+import { IGlobalStore } from './types/globalStore';
 type Props = {
   resourcesConfig: ResourceConfig[];
   schemaUrlPrefix: string;
@@ -32,13 +27,9 @@ type Props = {
   urlPrefix?: string;
   Layout?: React.FC<unknown>;
   history: History;
-  globalStore: GlobalStore;
-  accessControlProvider?: AccessControlProvider;
-  routerProvider?: any;
-  dataProvider?: DataProvider;
-  liveProvider?: LiveProvider;
+  globalStoreMap: Record<string, IGlobalStore<unknown>>;
   antdGetPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement;
-};
+} & Partial<RefineProps>;
 
 export const Dovetail: React.FC<Props> = props => {
   const {
@@ -47,11 +38,8 @@ export const Dovetail: React.FC<Props> = props => {
     schemaUrlPrefix,
     Layout,
     history,
-    globalStore,
+    globalStoreMap,
     accessControlProvider,
-    routerProvider: customRouterProvider,
-    dataProvider: customDataProvider,
-    liveProvider: customLiveProvider,
     antdGetPopupContainer,
   } = props;
   const msg = useMessage();
@@ -97,7 +85,7 @@ export const Dovetail: React.FC<Props> = props => {
     };
     return provider;
   }, [msg]);
-
+  
   return (
     <Router history={history}>
       <KitStoreProvider>
@@ -111,13 +99,11 @@ export const Dovetail: React.FC<Props> = props => {
                 getPopupContainer: antdGetPopupContainer || (() => document.body),
               }}
             >
-              <GlobalStoreContext.Provider value={{ globalStore }}>
+              <GlobalStoreContext.Provider value={globalStoreMap as Record<string, IGlobalStore<WatchEvent>>}> 
                 <Refine
-                  dataProvider={{
-                    default: customDataProvider || dataProvider(globalStore),
-                  }}
-                  routerProvider={customRouterProvider || routerProvider}
-                  liveProvider={customLiveProvider || liveProvider(globalStore)}
+                  dataProvider={dataProvider(globalStoreMap.default as GlobalStore)}
+                  liveProvider={liveProvider(globalStoreMap.default as GlobalStore)}
+                  routerProvider={routerProvider}
                   notificationProvider={notificationProvider}
                   options={{
                     warnWhenUnsavedChanges: true,
@@ -129,6 +115,7 @@ export const Dovetail: React.FC<Props> = props => {
                     return {
                       name: c.name,
                       meta: {
+                        dataProviderName: c.dataProviderName,
                         resourceBasePath: c.basePath,
                         kind: c.kind,
                         parent: c.parent,
@@ -140,6 +127,7 @@ export const Dovetail: React.FC<Props> = props => {
                       edit: `${urlPrefix}/${c.name}/edit`,
                     };
                   })}
+                  {...props}
                 >
                   {content}
                 </Refine>

@@ -1,9 +1,9 @@
 import { CloseCircleFilled } from '@ant-design/icons';
 import { Modal, usePopModal } from '@cloudtower/eagle';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SocketStatus } from 'src/components/Shell';
-import GlobalStoreContext from 'src/contexts/global-store';
+import { useGlobalStore } from 'src/hooks';
 import { PodModel } from 'src/models';
 import { FullscreenModalStyle } from 'src/styles/modal';
 import { PodShell } from './PodShell';
@@ -17,7 +17,7 @@ export function PodShellModal(props: PodShellModalProps) {
   const { pod } = props;
   const { t } = useTranslation();
   const popModal = usePopModal();
-  const { globalStore } = useContext(GlobalStoreContext);
+  const globalStore = useGlobalStore();
   const [socketStatus, setSocketStatus] = useState<SocketStatus>(SocketStatus.Opening);
 
 
