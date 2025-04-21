@@ -1,4 +1,6 @@
 import { OverflowTooltip } from '@cloudtower/eagle';
+import { useList } from '@refinedev/core';
+import { Service } from 'kubernetes-types/core/v1';
 import React from 'react';
 import { LinkFallback } from 'src/components/LinkFallback';
 import { IngressModel } from '../../models';
@@ -7,7 +9,16 @@ import { ResourceLink } from '../ResourceLink';
 export const IngressRulesComponent: React.FC<{
   ingress: IngressModel;
 }> = ({ ingress }) => {
-  const result = ingress.flattenedRules.map(r => {
+  const { data: serviceData } = useList<Service>({
+    resource: 'services',
+    meta: {
+      kind: 'Service',
+      apiVersion: 'v1',
+    }
+  });
+  const flattenedRules = serviceData?.data ? ingress.getFlattenedRules(serviceData?.data) : [];
+
+  const result = flattenedRules.map(r => {
     const divider = ' > ';
 
     return (

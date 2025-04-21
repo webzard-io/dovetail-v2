@@ -13,7 +13,7 @@ import {
   IngressRulesColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { IngressModel } from '../../models';
-import { RESOURCE_GROUP, ResourceConfig, FormType } from '../../types';
+import { RESOURCE_GROUP, ResourceConfig, FormContainerType, FormType } from '../../types';
 
 export const IngressConfig = (i18n: i18n): ResourceConfig<IngressModel> => ({
   name: 'ingresses',
@@ -40,6 +40,7 @@ export const IngressConfig = (i18n: i18n): ResourceConfig<IngressModel> => ({
   initValue: INGRESS_INIT_VALUE,
   Dropdown: K8sDropdown,
   formConfig: {
-    formType: FormType.MODAL,
+    formType: FormType.FORM,
+    formContainerType: FormContainerType.MODAL,
   }
 });
