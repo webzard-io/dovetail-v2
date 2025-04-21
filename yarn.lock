@@ -1658,13 +1658,13 @@
   resolved "https://registry.npmmirror.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cloudtower/eagle@^0.31.19":
-  version "0.31.19"
-  resolved "https://registry.npmjs.org/@cloudtower/eagle/-/eagle-0.31.19.tgz#f361101a67d70e0260d1693fadcedf36a8b16547"
-  integrity sha512-lL8nUIlVlNTKDnW2HOa/Pb+jowN2/9bzAEFT63ULwzgDxzi613Qa73S1+fXgQbUvkWFp5bwtfKFE603ZYQmGvA==
+"@cloudtower/eagle@^0.32.46":
+  version "0.32.46"
+  resolved "https://registry.npmjs.org/@cloudtower/eagle/-/eagle-0.32.46.tgz#9730971d584ab624057e35badc750c99a14f7617"
+  integrity sha512-n/2YevGFBUXx1Xb8BabFPSVZdg7mgo3McfFJnGrYQp3k+OhETcx8F7ZRTAsTOM0hKDtXvTRcagAUAfr99tIeAg==
   dependencies:
-    "@cloudtower/icons-react" "^0.31.19"
-    "@cloudtower/parrot" "^0.31.19"
+    "@cloudtower/icons-react" "^0.32.46"
+    "@cloudtower/parrot" "^0.32.46"
     "@cloudtower/rc-notification" "^4.6.1"
     "@linaria/core" "^4.2.2"
     "@linaria/react" "^4.3.0"
@@ -1682,15 +1682,15 @@
     redux "^4.2.0"
     timezones.json "^1.6.1"
 
-"@cloudtower/icons-react@^0.31.19":
-  version "0.31.19"
-  resolved "https://registry.npmjs.org/@cloudtower/icons-react/-/icons-react-0.31.19.tgz#fe214c5295a60199e2a6081ba3c6164e337d2f25"
-  integrity sha512-P4S4zIM3bxxrzZ9zl6proLVgmvzBi7SVJueqiVsx8kfUr0rbG8ey0M5TBeqWLHt58F1eMP0k019Kk7Q74tVdEg==
+"@cloudtower/icons-react@^0.32.46":
+  version "0.32.46"
+  resolved "https://registry.npmjs.org/@cloudtower/icons-react/-/icons-react-0.32.46.tgz#d6d628c5a48d2a3d0ad747a9c0f1ed92637edc80"
+  integrity sha512-UsSQ3IiVi7KpHUJNtQnYu048tx0V5B2aICnTuaR2Dx0iPVRYzgiHEvNFj/gC+XDNwNNMKG2atWwxYto85E3KMw==
 
-"@cloudtower/parrot@^0.31.19":
-  version "0.31.19"
-  resolved "https://registry.npmjs.org/@cloudtower/parrot/-/parrot-0.31.19.tgz#896f1b355726a7ed29f487406b1571bc1cd92857"
-  integrity sha512-lgYWBzD/5Iv4vikpx+55gtBORPotqZfgnUrrN0ph++9alDjuqNUfWK26U0yMJS0FQL9P3ilFo0W/gxsvbW3cCA==
+"@cloudtower/parrot@^0.32.46":
+  version "0.32.46"
+  resolved "https://registry.npmjs.org/@cloudtower/parrot/-/parrot-0.32.46.tgz#d995bbdee2dd57e6837e98bd38a48417bf2f0268"
+  integrity sha512-RWJMGsSkOsBuiJsrcGbwkAMR4+VuipEEM+k8b1wAB2oq6pffiz0a5tjSJOci3pkUOEik1Qz9ZBpPxrJdZ1cTeQ==
   dependencies:
     i18next "^23.2.3"
     lodash.merge "^4.6.2"
