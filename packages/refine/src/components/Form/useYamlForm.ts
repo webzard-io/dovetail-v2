@@ -23,6 +23,7 @@ import { RefineFormValidator } from 'src/components/Form/type';
 import { type YamlEditorHandle, type YamlEditorProps } from 'src/components/YamlEditor';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
 import { useSchema } from 'src/hooks/useSchema';
+import { FormType } from 'src/types/resource';
 import { pruneBeforeEdit } from 'src/utils/k8s';
 import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
@@ -99,12 +100,7 @@ export type UseFormReturnType<
   isLoadingSchema: boolean;
   loadSchemaError: Error | null;
   fetchSchema: () => void;
-  enableEditor: boolean;
   errorResponseBody?: Record<string, unknown> | null;
-  switchEditor: () => void;
-  onFinish: (
-    values?: TVariables
-  ) => Promise<CreateResponse<TResponse> | UpdateResponse<TResponse> | void>;
 };
 
 const useYamlForm = <
@@ -163,7 +159,6 @@ const useYamlForm = <
 > => {
   const editor = useRef<YamlEditorHandle>(null);
   const { t } = useTranslation();
-  const [enableEditor, setEnableEditor] = useState(false);
   const [isYamlValid, setIsYamlValid] = useState(true);
   const [isSchemaValid, setIsSchemaValid] = useState(true);
   const [editorErrors, setEditorErrors] = useState<string[]>([]);
@@ -173,7 +168,7 @@ const useYamlForm = <
     unknown
   > | null>(null);
   const useResourceResult = useResource();
-  const { globalStore } = useGlobalStore();
+  const globalStore = useGlobalStore();
   const {
     schema,
     loading: isLoadingSchema,
@@ -258,47 +253,9 @@ const useYamlForm = <
   const finalErrors = useMemo(() => {
     return uniq([...editorErrors, ...rulesErrors]);
   }, [editorErrors, rulesErrors]);
-
-  const onKeyUp = (event: React.KeyboardEvent<HTMLFormElement>) => {
-    if (submitOnEnter && event.key === 'Enter') {
-      form.submit();
-    }
-  };
-
-  const onValuesChange = (changeValues: object) => {
-    if (changeValues && warnWhenUnsavedChanges) {
-      setWarnWhen(true);
-    }
-    return changeValues;
-  };
-
-  const validateYaml = (yamlValue: string) => {
-    const errorMap: Record<string, string> = {};
-
-    if (rules && isYamlValid && isSchemaValid) {
-      const formValue = yaml.load(yamlValue || '');
-
-      rules.forEach(rule => {
-        const { path, validators } = rule;
-        const value = get(formValue, path);
-
-        for (const validator of (validators || [])) {
-          const { isValid, errorMsg } = validator(value, formValue);
-
-          if (!isValid) {
-            errorMap[path.join('.')] = `${errorMsg}(${path.join('.')})`;
-            break;
-          }
-        }
-      });
-
-    }
-
-    setRulesErrors(uniq(Object.values(errorMap)));
-
-    return errorMap;
-  };
-
+  const schemas = useMemo(() => {
+    return schema ? [schema] : [];
+  }, [schema]);
   const saveButtonProps = useMemo(
     () => ({
       loading: formLoading,
@@ -308,11 +265,9 @@ const useYamlForm = <
     }),
     [formLoading, form]
   );
-
-  const schemas = useMemo(() => {
-    return schema ? [schema] : [];
-  }, [schema]);
-
+  const emptySchemas = useMemo(() => {
+    return [];
+  }, []);
   const editorProps: EditorProps = useMemo(() => {
     return {
       ref: editor,
@@ -320,7 +275,7 @@ const useYamlForm = <
         schema && editorOptions?.isGenerateAnnotations
           ? generateYamlBySchema(initialValues || {}, schema)
           : yaml.dump(initialValues),
-      schemas,
+      schemas: schemas || emptySchemas,
       id: useResourceResult.resource?.name || '',
       errorMsgs: finalErrors,
       onValidate(yamlValid: boolean, schemaValid: boolean) {
@@ -343,6 +298,7 @@ const useYamlForm = <
     };
   }, [
     schema,
+    emptySchemas,
     editorOptions?.isGenerateAnnotations,
     initialValues,
     schemas,
@@ -351,6 +307,44 @@ const useYamlForm = <
     finalErrors,
     fold,
   ]);
+
+  const onKeyUp = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (submitOnEnter && event.key === 'Enter') {
+      form.submit();
+    }
+  };
+  const onValuesChange = (changeValues: object) => {
+    if (changeValues && warnWhenUnsavedChanges) {
+      setWarnWhen(true);
+    }
+    return changeValues;
+  };
+  const validateRules = (yamlValue: string) => {
+    const errorMap: Record<string, string> = {};
+
+    if (rules && isYamlValid && isSchemaValid) {
+      const formValue = yaml.load(yamlValue || '');
+
+      rules.forEach(rule => {
+        const { path, validators } = rule;
+        const value = get(formValue, path);
+
+        for (const validator of (validators || [])) {
+          const { isValid, errorMsg } = validator(value, formValue, FormType.YAML);
+
+          if (!isValid) {
+            errorMap[path.join('.')] = `${errorMsg}(${path.join('.')})`;
+            break;
+          }
+        }
+      });
+
+    }
+
+    setRulesErrors(uniq(Object.values(errorMap)));
+
+    return errorMap;
+  };
 
   return {
     form: formSF.form,
@@ -368,7 +362,7 @@ const useYamlForm = <
           return;
         }
 
-        const rulesErrors = validateYaml(editor.current?.getEditorValue() || '');
+        const rulesErrors = validateRules(editor.current?.getEditorValue() || '');
 
         if (Object.keys(rulesErrors).length) {
           setRulesErrors(Object.values(rulesErrors));
@@ -402,32 +396,12 @@ const useYamlForm = <
     },
     saveButtonProps,
     ...useFormCoreResult,
-    editorProps,
-    enableEditor,
     errorResponseBody,
+    editorProps,
     schemas: schema ? [schema] : [],
     isLoadingSchema,
     loadSchemaError,
     fetchSchema,
-    switchEditor() {
-      if (enableEditor && editor.current?.getEditorValue()) {
-        const value = yaml.load(editor.current?.getEditorValue()) as Record<
-          string,
-          unknown
-        >;
-
-        form?.setFieldsValue(value);
-      }
-
-      setEnableEditor(!enableEditor);
-    },
-    onFinish: async (values?: TVariables) => {
-      const finalValues = enableEditor
-        ? yaml.load(editor.current?.getEditorValue() || '')
-        : values ?? formSF.form.getFieldsValue(true);
-
-      return await onFinish(finalValues);
-    },
   };
 };
 
