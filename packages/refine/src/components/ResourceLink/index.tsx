@@ -8,6 +8,7 @@ type Props = {
   resourceKind: string;
   namespace: string;
   name: string;
+  displayName?: string;
   uid?: string;
 };
 
@@ -16,7 +17,7 @@ const LinkStyle = css`
 `;
 
 export const ResourceLink: React.FC<Props> = props => {
-  const { resourceKind: resourceName, namespace, name: resourceId, uid } = props;
+  const { resourceKind: resourceName, namespace, name: resourceId, uid, displayName } = props;
   const navigation = useNavigation();
   const go = useGo();
   const onClick = () => {
@@ -33,8 +34,8 @@ export const ResourceLink: React.FC<Props> = props => {
   };
 
   return resourceId ? (
-    <Link className={LinkStyle} onClick={onClick} title={resourceId}>
-      {resourceId}
+    <Link className={LinkStyle} onClick={onClick} title={displayName || resourceId}>
+      {displayName || resourceId}
     </Link>
   ) : (
     <ValueDisplay value="" />
