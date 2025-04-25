@@ -1,4 +1,4 @@
-import { Icon, Divider, Dropdown, Menu, Modal, Button } from '@cloudtower/eagle';
+import { Icon, Divider, Dropdown, Menu, Button } from '@cloudtower/eagle';
 import {
   EditPen16PrimaryIcon,
   MoreEllipsis324BoldSecondaryIcon,
@@ -15,10 +15,8 @@ import { AccessControlAuth } from 'src/constants/auth';
 import ConfigsContext from 'src/contexts/configs';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
-import { useFailedModal } from 'src/hooks/useFailedModal';
 import { useOpenForm } from 'src/hooks/useOpenForm';
 import { FormType } from 'src/types';
-import { getCommonErrors } from 'src/utils/error';
 import { useGlobalStore } from '../../../hooks';
 import { ResourceModel } from '../../../models';
 export type DropdownSize = 'normal' | 'large';
@@ -35,19 +33,8 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const resource = useResourceResult.resource;
   const configs = useContext(ConfigsContext);
   const config = configs[resource?.name || ''];
-  const { t, i18n } = useTranslation();
-  const { modalProps: failedModalProps, visible: failedModalVisible, openFailedModal } = useFailedModal(resource?.name || '');
-  const { modalProps: deleteModalProps, visible: deleteModalVisible, openDeleteConfirmModal, setVisible: setDeleteModalVisible } = useDeleteModal(
-    resource?.name || '',
-    {
-      deleteTip: config.deleteTip,
-      onError: async (error) => {
-        console.log(error);
-        setDeleteModalVisible(false);
-        openFailedModal(record.id, getCommonErrors(await error.response.json(), i18n));
-      }
-    }
-  );
+  const { t } = useTranslation();
+  const { openDeleteConfirmModal } = useDeleteModal({resourceName: resource?.name || ''});
   const download = useDownloadYAML();
   const openForm = useOpenForm({ id: record.id });
   const isInShowPage = useResourceResult.action === 'show';
@@ -68,7 +55,11 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
           <Menu>
             {isInShowPage || canEditData?.can === false || config.hideEdit ? null : (
               <Menu.Item onClick={openForm}>
-                <Icon src={EditPen16PrimaryIcon}>{formType === FormType.FORM ? t('dovetail.edit') : t('dovetail.edit_yaml')}</Icon>
+                <Icon src={EditPen16PrimaryIcon}>
+                  {formType === FormType.FORM
+                    ? t('dovetail.edit')
+                    : t('dovetail.edit_yaml')}
+                </Icon>
               </Menu.Item>
             )}
             <Menu.Item
@@ -116,8 +107,6 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
           }
         ></Button>
       </Dropdown>
-      {deleteModalVisible ? <Modal {...deleteModalProps} /> : null}
-      {failedModalVisible ? <Modal {...failedModalProps} /> : null}
     </>
   );
 }

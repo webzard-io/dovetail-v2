@@ -1,4 +1,4 @@
-import { Button, Modal } from '@cloudtower/eagle';
+import { Button } from '@cloudtower/eagle';
 import { useResource, useParsed } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,16 +9,17 @@ export const DeleteButton: React.FC = () => {
   const { id } = useParsed();
   const { t } = useTranslation();
 
-  const { modalProps, visible, openDeleteConfirmModal } = useDeleteModal(
-    resource?.name || ''
-  );
+  const { openDeleteConfirmModal } = useDeleteModal({resourceName: resource?.name || ''});
 
   return (
     <>
-      <Button type="primary" danger onClick={() => openDeleteConfirmModal((id as string) || '')}>
+      <Button
+        type="primary"
+        danger
+        onClick={() => openDeleteConfirmModal((id as string) || '')}
+      >
         {t('dovetail.delete')}
       </Button>
-      {visible ? <Modal {...modalProps} /> : null}
     </>
   );
 };
