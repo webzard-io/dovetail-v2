@@ -1,4 +1,4 @@
-import { ModalType } from '@cloudtower/eagle';
+import { DeleteDialogProps, ModalType } from '@cloudtower/eagle';
 import { EditFieldModalProps } from 'src/components/EditField';
 import { FormModalProps, ConfirmModalProps } from 'src/components/FormModal';
 import { PodShellModal } from 'src/components/PodShellModal';
@@ -8,6 +8,8 @@ type ModalProps = {
   ConfirmModal: ConfirmModalProps;
   EditFieldModal: EditFieldModalProps;
   PodShellModal: PodShellModal;
+  DeleteDialog: DeleteDialogProps;
+  RejectDialog: RejectDialogProps;
 };
 
 declare module '@cloudtower/eagle' {
