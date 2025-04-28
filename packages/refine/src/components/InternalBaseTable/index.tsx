@@ -51,6 +51,7 @@ export type InternalTableProps<Data extends { id: string; }> = {
   empty?: string;
   showMenuColumn?: boolean;
   hideNamespacesFilter?: boolean;
+  customNamespaceFilter?: React.ReactNode;
 };
 
 function Table<Data extends { id: string; }>(props: InternalTableProps<Data>) {
