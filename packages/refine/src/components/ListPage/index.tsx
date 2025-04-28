@@ -79,7 +79,7 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
         style={config.hideNamespacesFilter ? { paddingTop: 0 } : {}}
       >
         {!config.hideNamespacesFilter ? (
-          <NamespacesFilter className={NamespaceFilterStyle} />
+          config.customNamespaceFilter || <NamespacesFilter className={NamespaceFilterStyle} />
         ) : undefined}
         <div className={TableStyle}>
           <Table

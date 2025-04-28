@@ -163,6 +163,8 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   hideListToolBar?: boolean;
   /** 是否隐藏命名空间过滤器 */
   hideNamespacesFilter?: boolean;
+  /** 自定义命名空间过滤器 */
+  customNamespaceFilter?: React.ReactNode;
   /** 是否隐藏编辑功能。会隐藏 Dropdown 和详情中的编辑按钮 */
   hideEdit?: boolean;
   /** 是否隐藏创建功能 */
