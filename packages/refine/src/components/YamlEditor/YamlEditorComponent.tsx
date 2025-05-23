@@ -23,6 +23,7 @@ import React, {
   useState,
   useImperativeHandle,
   forwardRef,
+  useEffect,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Separator } from '../Separator';
@@ -44,6 +45,7 @@ const MonacoYamlDiffEditor = React.lazy(() => import('./MonacoYamlDiffEditor'));
 export type YamlEditorProps = {
   eleRef?: React.MutableRefObject<HTMLDivElement>;
   title?: string;
+  value?: string;
   defaultValue?: string;
   errorMsgs?: string[];
   schemas?: JSONSchema7[] | null;
@@ -72,6 +74,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
       title,
       collapsable = true,
       isDefaultCollapsed,
+      value = '',
       defaultValue = '',
       height,
       readOnly,
@@ -85,14 +88,14 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
       collapsable ? isDefaultCollapsed : false
     );
     const [isDiff, setIsDiff] = useState(false);
-    const [value, setValue] = useState(defaultValue);
+    const [_value, _setValue] = useState(value || defaultValue);
     const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>();
     const [copyTooltip, setCopyTooltip] = useState(t('dovetail.copy'));
     const [resetTooltip, setResetTooltip] = useState(t('dovetail.reset_arguments'));
 
     useImperativeHandle(ref, () => {
       return {
-        setValue,
+        setValue: _setValue,
         setEditorValue: (value: string) => {
           editorInstance.current?.getModel()?.setValue(value);
         },
@@ -105,33 +108,37 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
 
     const onChange = useCallback(
       (newVal: string) => {
-        setValue(newVal);
+        _setValue(newVal);
         props.onChange?.(newVal);
       },
       [props.onChange]
     );
-
     const onValidate = useCallback(
       (valid: boolean, schemaValid: boolean) => {
         props.onValidate?.(valid, schemaValid);
       },
       [props.onValidate]
     );
-
     const onEditorCreate = useCallback(
       (editor: monaco.editor.IStandaloneCodeEditor) => {
-        if (editor.getValue() !== value) {
-          editorInstance.current?.getModel()?.setValue(value);
+        if (editor.getValue() !== _value) {
+          editorInstance.current?.getModel()?.setValue(_value);
         }
 
         props.onEditorCreate?.(editor);
       },
-      [value, props.onEditorCreate]
+      [_value, props.onEditorCreate]
     );
-
     const getInstance = useCallback((ins: monaco.editor.IStandaloneCodeEditor): void => {
       editorInstance.current = ins;
     }, []);
+
+    useEffect(() => {
+      if (value !== _value) {
+        _setValue(value);
+        editorInstance.current?.getModel()?.setValue(value);
+      }
+    }, [value]);
 
     return (
       <div
@@ -182,7 +189,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                       iconHeight={16}
                       onClick={() => {
                         if (!isCollapsed) {
-                          copyToClipboard(value);
+                          copyToClipboard(_value);
                           setCopyTooltip(t('dovetail.copied'));
                         }
                       }}
@@ -222,8 +229,8 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                   isCollapsed
                     ? ''
                     : isDiff
-                      ? t('dovetail.back_to_edit')
-                      : t('dovetail.view_changes')
+                    ? t('dovetail.back_to_edit')
+                    : t('dovetail.view_changes')
                 }
               >
                 {isDiff ? (
@@ -272,12 +279,12 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
             zIndex: 1,
           }}
         >
-          <Suspense fallback={<pre className={PlainCodeStyle}>{value}</pre>}>
+          <Suspense fallback={<pre className={PlainCodeStyle}>{_value}</pre>}>
             <div style={{ display: isDiff ? 'none' : 'block' }}>
               <MonacoYamlEditor
                 id={props.id}
                 getInstance={getInstance}
-                defaultValue={value}
+                defaultValue={_value}
                 height={height}
                 onChange={onChange}
                 onValidate={onValidate}
@@ -289,11 +296,11 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
             </div>
           </Suspense>
           {isDiff ? (
-            <Suspense fallback={<pre className={PlainCodeStyle}>{value}</pre>}>
+            <Suspense fallback={<pre className={PlainCodeStyle}>{_value}</pre>}>
               <MonacoYamlDiffEditor
                 id={props.id}
                 origin={defaultValue}
-                modified={value}
+                modified={_value}
                 height={height}
               />
             </Suspense>
