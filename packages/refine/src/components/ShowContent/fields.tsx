@@ -97,6 +97,7 @@ export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
     color: Record<string, StatusCapsuleColor | 'loading'>;
     text: Record<string, string>;
   };
+  displayName?: string;
 }
 
 export const ImageField = <Model extends WorkloadBaseModel>(

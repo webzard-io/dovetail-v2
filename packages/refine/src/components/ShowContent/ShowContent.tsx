@@ -278,7 +278,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       <Space className={TopBarStyle}>
         <div style={{ display: 'flex' }}>
           <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>
-            {record?.metadata?.name}
+            {showConfig.displayName || record?.metadata?.name}
           </span>
           {stateDisplay ? (
             <StateTag
