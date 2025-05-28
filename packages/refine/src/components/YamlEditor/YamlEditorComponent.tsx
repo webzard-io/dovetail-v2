@@ -15,6 +15,7 @@ import {
 } from '@cloudtower/icons-react';
 import { cx } from '@linaria/core';
 import { JSONSchema7 } from 'json-schema';
+import { debounce } from 'lodash-es';
 import type * as monaco from 'monaco-editor';
 import React, {
   Suspense,
@@ -24,6 +25,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
   useEffect,
+  useMemo,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Separator } from '../Separator';
@@ -55,6 +57,8 @@ export type YamlEditorProps = {
   collapsable?: boolean;
   isDefaultCollapsed?: boolean;
   readOnly?: boolean;
+  debounceTime?: number;
+  isScrollOnFocus?: boolean;
   onChange?: (value: string) => void;
   onValidate?: (valid: boolean, schemaValid: boolean) => void;
   onEditorCreate?: (editor: monaco.editor.IStandaloneCodeEditor) => void;
@@ -74,7 +78,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
       title,
       collapsable = true,
       isDefaultCollapsed,
-      value = '',
+      value,
       defaultValue = '',
       height,
       readOnly,
@@ -82,6 +86,8 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
       schemas,
       eleRef,
       className,
+      debounceTime,
+      isScrollOnFocus = true,
     } = props;
     const { t } = useTranslation();
     const [isCollapsed, setIsCollapsed] = useState(
@@ -113,6 +119,9 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
       },
       [props.onChange]
     );
+    const finalOnChange = useMemo(() => {
+      return debounceTime ? debounce(onChange, debounceTime) : onChange;
+    }, [onChange, debounceTime]);
     const onValidate = useCallback(
       (valid: boolean, schemaValid: boolean) => {
         props.onValidate?.(valid, schemaValid);
@@ -134,7 +143,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
     }, []);
 
     useEffect(() => {
-      if (value !== _value) {
+      if (value !== undefined && value !== _value) {
         _setValue(value);
         editorInstance.current?.getModel()?.setValue(value);
       }
@@ -286,12 +295,13 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                 getInstance={getInstance}
                 defaultValue={_value}
                 height={height}
-                onChange={onChange}
+                onChange={finalOnChange}
                 onValidate={onValidate}
                 onEditorCreate={onEditorCreate}
                 onBlur={props.onBlur}
                 schemas={schemas}
                 readOnly={readOnly}
+                isScrollOnFocus={isScrollOnFocus}
               />
             </div>
           </Suspense>
