@@ -57,16 +57,23 @@ const MonacoYamlEditor: React.FC<Props> = props => {
     onBlur,
   } = props;
   const uri = id ? monaco.Uri.parse(`${id}.yaml`) : undefined;
+
   useEffect(() => {
-    const finalSchemas = [
-      {
-        uri: String(uri),
-        fileMatch: [String(uri)],
-        schema: {
-          oneOf: schemas || [],
-        }
+    if (!window._MonacoSchemaMap) {
+      window._MonacoSchemaMap = new Map();
+    }
+
+    window._MonacoSchemaMap.set(id || '', {
+      // Id of the first schema
+      uri: String(uri),
+      // Associate with our model
+      fileMatch: [String(uri)],
+      schema: {
+        oneOf: schemas || [{ type: 'object' }],
       },
-    ];
+    });
+
+    const finalSchemas = [...window._MonacoSchemaMap.values()];
 
     // config monaco yaml
     setDiagnosticsOptions({
@@ -90,6 +97,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
       lineNumbersMinChars: 7,
       readOnly: readOnly,
       autoIndent: import.meta.env.VITE_IS_TEST ? 'none' : 'advanced',
+      theme: 'vs',
     });
 
     instanceRef.current.editor = editor;
@@ -98,6 +106,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
 
     return () => {
       instanceRef.current.editor = null;
+      window._MonacoSchemaMap.delete(id || '');
       model.dispose();
       editor.dispose();
     };
@@ -118,7 +127,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
         stop.dispose();
       };
     }
-  }, [onChange, instanceRef.current.editor]);
+  }, [onChange]);
 
   useEffect(() => {
     const editor = instanceRef.current.editor;
@@ -154,7 +163,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
         stop.dispose();
       };
     }
-  }, [onValidate, instanceRef.current.editor]);
+  }, [onValidate]);
 
   useEffect(() => {
     const editor = instanceRef.current.editor;
@@ -170,7 +179,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
         stop.dispose();
       };
     }
-  }, [onBlur, instanceRef.current.editor]);
+  }, [onBlur]);
 
   useEffect(() => {
     const editor = instanceRef.current.editor;
@@ -200,7 +209,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
     return () => {
       stops.forEach(stop => stop.dispose());
     };
-  }, [instanceRef.current.editor, isScrollOnFocus]);
+  }, [isScrollOnFocus]);
 
   return (
     <div
