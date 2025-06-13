@@ -1,5 +1,7 @@
 export enum AccessControlAuth {
   Edit = 'Edit',
   Delete = 'Delete',
-  Create = 'Create'
+  Create = 'Create',
+  Read = 'Read',
+  None = 'None',
 }
