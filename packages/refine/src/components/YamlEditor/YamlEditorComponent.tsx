@@ -16,7 +16,7 @@ import {
 import { cx } from '@linaria/core';
 import { JSONSchema7 } from 'json-schema';
 import { debounce } from 'lodash-es';
-import type * as monaco from 'monaco-editor';
+import { type editor } from 'monaco-editor';
 import React, {
   Suspense,
   useCallback,
@@ -61,7 +61,7 @@ export type YamlEditorProps = {
   isScrollOnFocus?: boolean;
   onChange?: (value: string) => void;
   onValidate?: (valid: boolean, schemaValid: boolean) => void;
-  onEditorCreate?: (editor: monaco.editor.IStandaloneCodeEditor) => void;
+  onEditorCreate?: (editor: editor.IStandaloneCodeEditor) => void;
   onBlur?: () => void;
 };
 
@@ -69,7 +69,7 @@ export type YamlEditorHandle = {
   setValue: (value: string) => void;
   setEditorValue: (value: string) => void;
   getEditorValue: () => string;
-  getEditorInstance: () => monaco.editor.IStandaloneCodeEditor | null;
+  getEditorInstance: () => editor.IStandaloneCodeEditor | null;
 };
 
 export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>(
@@ -95,7 +95,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
     );
     const [isDiff, setIsDiff] = useState(false);
     const [_value, _setValue] = useState(value || defaultValue);
-    const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>();
+    const editorInstance = useRef<editor.IStandaloneCodeEditor>();
     const [copyTooltip, setCopyTooltip] = useState(t('dovetail.copy'));
     const [resetTooltip, setResetTooltip] = useState(t('dovetail.reset_arguments'));
 
@@ -129,7 +129,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
       [props.onValidate]
     );
     const onEditorCreate = useCallback(
-      (editor: monaco.editor.IStandaloneCodeEditor) => {
+      (editor: editor.IStandaloneCodeEditor) => {
         if (editor.getValue() !== _value) {
           editorInstance.current?.getModel()?.setValue(_value);
         }
@@ -138,7 +138,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
       },
       [_value, props.onEditorCreate]
     );
-    const getInstance = useCallback((ins: monaco.editor.IStandaloneCodeEditor): void => {
+    const getInstance = useCallback((ins: editor.IStandaloneCodeEditor): void => {
       editorInstance.current = ins;
     }, []);
 
