@@ -2,7 +2,13 @@ import path from 'path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import commonjs from 'vite-plugin-commonjs';
+import pkg from './package.json';
 import linaria from './tools/linaria';
+
+const external = [
+  ...Object.keys(pkg.dependencies || {}),
+  ...Object.keys(pkg.peerDependencies || {})
+];
 
 export default defineConfig({
   plugins: [
@@ -24,7 +30,7 @@ export default defineConfig({
       '/api': {
         target: process.env.API_HOST || 'http://192.168.30.67',
         ws: true,
-        headers: { 
+        headers: {
           'Accept-Encoding': 'identity',
           'Authorization': process.env.REACT_APP_DEV_TOKEN,
           'Cookie': process.env.REACT_APP_DEV_COOKIE,
@@ -37,7 +43,7 @@ export default defineConfig({
           return path.replace('/exec-proxy', '');
         },
         ws: true,
-        headers: { 
+        headers: {
           'Accept-Encoding': 'identity',
           'Authorization': process.env.REACT_APP_DEV_TOKEN,
           'Cookie': process.env.REACT_APP_DEV_COOKIE,
@@ -53,26 +59,7 @@ export default defineConfig({
       name: 'dovetail',
     },
     rollupOptions: {
-      external: [
-        '@cloudtower/eagle',
-        '@cloudtower/icons-react',
-        '@refinedev/core',
-        '@refinedev/inferencer',
-        'antd',
-        'i18next',
-        'ky',
-        'lodash-es',
-        'mitt',
-        'qs',
-        'react',
-        'react-dom',
-        'react-router-dom',
-        'sunflower-antd',
-        'monaco-editor',
-        'monaco-yaml',
-        'js-yaml',
-        'k8s-api-provider',
-      ],
+      external,
     },
   },
   resolve: {
