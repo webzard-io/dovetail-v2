@@ -6,6 +6,8 @@ export const ToolBarStyle = css`
   border-bottom: 1px solid rgba(211, 218, 235, 0.6);
   background: rgba(225, 230, 241, 0.6);
   border-radius: 8px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 
   &.collapsed {
     border-bottom: 0;
