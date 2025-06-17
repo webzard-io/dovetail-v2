@@ -20,7 +20,7 @@ export default {
     '^src/(.*)$': '<rootDir>/src/$1',
   },
 
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   maxWorkers: '50%',
   collectCoverage: Boolean(process.env.COVERAGE),
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
