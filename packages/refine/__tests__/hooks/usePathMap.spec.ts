@@ -1,3 +1,4 @@
+import { renderHook } from '@testing-library/react-hooks';
 import { Unstructured } from 'k8s-api-provider';
 import usePathMap from '../../src/hooks/usePathMap';
 
@@ -35,7 +36,8 @@ describe('usePathMap', () => {
       { from: ['spec', 'oldPath'], to: ['spec', 'newPath'] },
     ];
 
-    const { transformInitValues, transformApplyValues } = usePathMap({ pathMap });
+    const { result } = renderHook(() => usePathMap({ pathMap }));
+    const { transformInitValues, transformApplyValues } = result.current;
 
     const initValues: TestValues = {
       spec: {
@@ -63,7 +65,8 @@ describe('usePathMap', () => {
       { from: ['spec', 'deep', 'old'], to: ['config', 'nested', 'new'] },
     ];
 
-    const { transformInitValues } = usePathMap({ pathMap });
+    const { result } = renderHook(() => usePathMap({ pathMap }));
+    const { transformInitValues } = result.current;
 
     const initValues: TestValues = {
       spec: {
@@ -88,7 +91,7 @@ describe('usePathMap', () => {
       extra: 'custom',
     });
 
-    const { transformInitValues, transformApplyValues } = usePathMap({
+    const { result } = renderHook(() => usePathMap({
       pathMap,
       transformInitValues: customTransform,
       transformApplyValues: (values) => ({
@@ -98,7 +101,8 @@ describe('usePathMap', () => {
         ...values,
         type: 'Custom',
       } as unknown as Unstructured),
-    });
+    }));
+    const { transformInitValues, transformApplyValues } = result.current;
 
     const initValues: TestValues = {
       data: 'test',
@@ -118,7 +122,8 @@ describe('usePathMap', () => {
   });
 
   it('should handle empty mapping correctly', () => {
-    const { transformInitValues, transformApplyValues } = usePathMap({});
+    const { result } = renderHook(() => usePathMap({}));
+    const { transformInitValues, transformApplyValues } = result.current;
 
     const values: TestValues = {
       test: 'value',
@@ -133,7 +138,8 @@ describe('usePathMap', () => {
       { from: ['spec', 'value'], to: ['spec', 'mapped'] },
     ];
 
-    const { transformInitValues } = usePathMap({ pathMap });
+    const { result } = renderHook(() => usePathMap({ pathMap }));
+    const { transformInitValues } = result.current;
 
     const values: TestValues = {
       _rawYaml: {
@@ -153,7 +159,8 @@ describe('usePathMap', () => {
       { from: ['parameters', 'csi.storage.k8s.io/fstype'], to: ['parameters', 'fstype'] },
     ];
 
-    const { transformInitValues, transformApplyValues } = usePathMap({ pathMap });
+    const { result } = renderHook(() => usePathMap({ pathMap }));
+    const { transformInitValues, transformApplyValues } = result.current;
 
     const initValues: TestValues = {
       parameters: {
