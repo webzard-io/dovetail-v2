@@ -6,9 +6,9 @@
     "dist",
     "lib"
   ],
-  "main": "./dist/refine.umd.js",
+  "main": "./dist/refine.cjs",
   "module": "./dist/refine.js",
-  "types": "./lib/index.d.ts",
+  "types": "./dist/index.d.ts",
   "dependencies": {
     "@cloudtower/eagle": "^0.32.50",
     "@cloudtower/icons-react": "^0.32.50",
@@ -97,7 +97,7 @@
   "scripts": {
     "dev": "refine dev",
     "dev:test": "VITE_IS_TEST=true refine dev",
-    "build": "tsc --emitDeclarationOnly && vite build",
+    "build": "vite build && tsc --emitDeclarationOnly",
     "preview": "refine start",
     "refine": "refine",
     "unit-test": "jest",
