@@ -219,7 +219,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
         <Col
           flex={areaType === AreaType.Inline ? 'none' : ''}
           span={field.col || 24}
-          key={field.path.join()}
+          key={field.key}
         >
           {field.render ? (
             field.render(value, record, field)
