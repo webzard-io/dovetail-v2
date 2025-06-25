@@ -32,6 +32,7 @@ export function EditNodeTaintDropdownMenuItem(props: EditMenuItemProps) {
           renderContent() {
             return <EditNodeTaintForm ref={formRef} nodeModel={resourceModel} />;
           },
+          namespace: resourceModel.namespace || '',
         };
 
         pushModal<'EditFieldModal'>({

@@ -32,6 +32,7 @@ export function EditLabelDropdownMenuItem<Model extends ResourceModel>(
           renderContent() {
             return <EditLabelForm ref={formRef} resourceModel={resourceModel} />;
           },
+          namespace: resourceModel.namespace || '',
         };
 
         pushModal<'EditFieldModal'>({

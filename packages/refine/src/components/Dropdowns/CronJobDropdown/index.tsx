@@ -25,7 +25,10 @@ export function CronJobDropdown<Model extends CronJobModel>(props: Props<Model>)
   const { t } = useTranslation();
   const { data: canEditData } = useCan({
     resource: resource?.name,
-    action: AccessControlAuth.Edit
+    action: AccessControlAuth.Edit,
+    params: {
+      namespace: record.namespace,
+    },
   });
 
   const suspended = Boolean(spec?.suspend);

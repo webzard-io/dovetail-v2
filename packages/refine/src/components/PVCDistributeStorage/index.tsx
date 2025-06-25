@@ -133,6 +133,7 @@ function PVCDistributeStorage({ pvc, editable }: PVCDistributeStorageProps) {
             modalProps={{
               formRef,
               title: t('dovetail.edit_distribute_storage'),
+              namespace: pvc.namespace || '',
               renderContent() {
                 return (
                   <DistributeStorageForm
