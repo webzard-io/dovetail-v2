@@ -30,6 +30,7 @@ export interface EditFieldModalProps {
   } | null>;
   renderContent: () => React.ReactNode;
   fullscreen?: boolean;
+  namespace: string;
 }
 
 export function EditFieldModal(props: EditFieldModalProps) {
@@ -46,7 +47,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
   const close = useCallback(() => {
     popModal();
     reset();
-  }, [reset]);
+  }, [popModal, reset]);
 
   return (
     <Modal
@@ -77,7 +78,13 @@ export function EditField(props: EditField) {
   const pushModal = usePushModal();
 
   return (
-    <CanAccess resource={resource?.name} action={AccessControlAuth.Edit}>
+    <CanAccess
+      resource={resource?.name}
+      action={AccessControlAuth.Edit}
+      params={{
+        namespace: modalProps.namespace,
+      }}
+    >
       <Button
         className={cx(EditButtonStyle, Typo.Label.l4_regular_title)}
         type="link"

@@ -41,10 +41,16 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const { data: canEditData } = useCan({
     resource: resource?.name,
     action: AccessControlAuth.Edit,
+    params: {
+      namespace: record.namespace,
+    },
   });
   const { data: canDeleteData } = useCan({
     resource: resource?.name,
     action: AccessControlAuth.Delete,
+    params: {
+      namespace: record.namespace,
+    },
   });
   const formType = config.formConfig?.formType || FormType.FORM;
 

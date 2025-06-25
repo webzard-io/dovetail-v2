@@ -188,6 +188,7 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
                   modalProps={{
                     formRef,
                     title: t('dovetail.edit_replicas'),
+                    namespace: record.namespace || '',
                     renderContent() {
                       return (
                         <WorkloadReplicasForm

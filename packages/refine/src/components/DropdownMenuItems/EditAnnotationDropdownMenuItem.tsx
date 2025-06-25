@@ -29,6 +29,7 @@ export function EditAnnotationDropdownMenuItem<Model extends ResourceModel>(
           formRef,
           title: t('dovetail.edit_annotation'),
           fullscreen: true,
+          namespace: resourceModel.namespace || '',
           renderContent() {
             return <EditAnnotationForm ref={formRef} resourceModel={resourceModel} />;
           },

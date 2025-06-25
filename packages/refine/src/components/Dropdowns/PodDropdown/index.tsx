@@ -20,7 +20,10 @@ export function PodDropdown<Model extends PodModel>(props: React.PropsWithChildr
   const pushModal = usePushModal();
   const { data: canEditData } = useCan({
     resource: resource?.name,
-    action: AccessControlAuth.Edit
+    action: AccessControlAuth.Edit,
+    params: {
+      namespace: record.namespace,
+    },
   });
 
   return (

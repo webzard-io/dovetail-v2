@@ -20,7 +20,10 @@ export function WorkloadDropdown<Model extends WorkloadModel>(props: React.Props
   const { t } = useTranslation();
   const { data: canEditData } = useCan({
     resource: resource?.name,
-    action: AccessControlAuth.Edit
+    action: AccessControlAuth.Edit,
+    params: {
+      namespace: record.namespace,
+    },
   });
 
   return (
