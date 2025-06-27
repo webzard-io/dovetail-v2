@@ -1,5 +1,4 @@
-import { Alert, Typo, Link, Icon } from '@cloudtower/eagle';
-import { Loading24GradientBlueIcon } from '@cloudtower/icons-react';
+import { Alert, Link } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { CanvasAddon } from '@xterm/addon-canvas';
 import { FitAddon } from '@xterm/addon-fit';
@@ -10,8 +9,17 @@ import { Terminal } from '@xterm/xterm';
 import { ITerminalOptions } from '@xterm/xterm';
 import copyToClipboard from 'copy-to-clipboard';
 import { debounce } from 'lodash-es';
-import React, { useRef, useMemo, useState, useEffect, useCallback, useImperativeHandle } from 'react';
+import React, {
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  useImperativeHandle,
+} from 'react';
 import { useTranslation } from 'react-i18next';
+import { SocketStatus } from './common';
+import { Connecting } from './Connecting';
 import ShellToolbar, { ShellToolbarProps } from './ShellToolbar';
 import '@xterm/xterm/css/xterm.css';
 
@@ -24,17 +32,7 @@ const ShellStyle = css`
   flex: 1;
   min-height: 0;
   padding: 8px;
-  background: #00122E;
-`;
-const LoadingStyle = css`
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  color: #2C385299;
-  background: #F2F5FA;
+  background: #00122e;
 `;
 const ErrorAlertStyle = css`
   display: flex;
@@ -43,12 +41,6 @@ const ErrorAlertStyle = css`
 const ToolbarStyle = css`
   margin: 4px 8px;
 `;
-
-export enum SocketStatus {
-  Opening = 'Opening',
-  Open = 'Open',
-  Disconnected = 'Disconnected'
-}
 
 export type ShellProps = React.PropsWithChildren<{
   url: string;
@@ -62,7 +54,9 @@ export type ShellProps = React.PropsWithChildren<{
   shellOptions?: Record<string, unknown>;
   loadingElement?: React.ReactNode;
   encode: (input: string) => string | ArrayBufferLike | Blob | ArrayBufferView;
-  decode?: (output: string | ArrayBufferLike | Blob | ArrayBufferView) => string | ArrayBuffer;
+  decode?: (
+    output: string | ArrayBufferLike | Blob | ArrayBufferView
+  ) => string | ArrayBuffer;
   fit?: (layout: { rows: number; cols: number }) => void;
   onReconnect?: () => void;
   onSocketInit?: (socket: WebSocket) => void;
@@ -72,11 +66,14 @@ export type ShellProps = React.PropsWithChildren<{
   onSocketOpen?: (socket: WebSocket) => void;
   onSocketClose?: (socket: WebSocket, term: Terminal | null) => void;
   onSocketStatusChange?: (socketStatus: SocketStatus) => void;
-}>
+}>;
 
 export interface ShellHandler {
   clear: () => void;
-  send: (data: string | ArrayBufferLike | Blob | ArrayBufferView, callback?: () => void) => void;
+  send: (
+    data: string | ArrayBufferLike | Blob | ArrayBufferView,
+    callback?: () => void
+  ) => void;
   connect: () => void;
   fit: () => void;
   getAllTerminalContents: () => string[];
@@ -89,7 +86,10 @@ export interface ShellHandler {
   writeln: (data: string) => void;
 }
 
-export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(props: ShellProps, ref) {
+export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(
+  props: ShellProps,
+  ref
+) {
   const {
     className,
     url,
@@ -113,10 +113,12 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
   const fitAddonRef = useRef<FitAddon | null>(null);
   const searchAddonRef = useRef<SearchAddon | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
-  const backlogRef = useRef<{
-    message: (string | ArrayBufferLike | Blob | ArrayBufferView),
-    callback?: () => void
-  }[]>([]);
+  const backlogRef = useRef<
+    {
+      message: string | ArrayBufferLike | Blob | ArrayBufferView;
+      callback?: () => void;
+    }[]
+  >([]);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [socketStatus, setSocketStatus] = useState<SocketStatus>(SocketStatus.Opening);
   const [loading, setLoading] = useState(false);
@@ -124,31 +126,40 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
   const [searchMatchedTotal, setSearchMatchedTotal] = useState(0);
   const { t } = useTranslation();
 
-  const searchOptions = useMemo(() => ({
-    decorations: {
-      activeMatchColorOverviewRuler: '#FEA008',
-      matchOverviewRuler: '#E07F00',
-      activeMatchBackground: '#FEA008',
-      matchBackground: '#E07F00'
-    }
-  }), []);
+  const searchOptions = useMemo(
+    () => ({
+      decorations: {
+        activeMatchColorOverviewRuler: '#FEA008',
+        matchOverviewRuler: '#E07F00',
+        activeMatchBackground: '#FEA008',
+        matchBackground: '#E07F00',
+      },
+    }),
+    []
+  );
 
   const reset = useCallback(() => {
     termInstanceRef.current?.clear();
     termInstanceRef.current?.reset();
   }, []);
-  const send = useCallback((message: string | ArrayBufferLike | Blob | ArrayBufferView, callback?: () => void) => {
-    if (socketRef.current && socketRef.current.readyState === socketRef.current.OPEN) {
-      socketRef.current.send(message);
-      callback?.();
-    } else {
-      /** if the socket is not ready, the message will saved in the backlog and be sent after the socket ready */
-      backlogRef.current.push({
-        message,
-        callback,
-      });
-    }
-  }, []);
+  const send = useCallback(
+    (
+      message: string | ArrayBufferLike | Blob | ArrayBufferView,
+      callback?: () => void
+    ) => {
+      if (socketRef.current && socketRef.current.readyState === socketRef.current.OPEN) {
+        socketRef.current.send(message);
+        callback?.();
+      } else {
+        /** if the socket is not ready, the message will saved in the backlog and be sent after the socket ready */
+        backlogRef.current.push({
+          message,
+          callback,
+        });
+      }
+    },
+    []
+  );
   const fit = useCallback(() => {
     if (!fitAddonRef.current) return;
 
@@ -159,7 +170,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     if (rows && cols) {
       props.fit?.({
         rows,
-        cols
+        cols,
       });
     }
   }, [encode, send, props.fit]);
@@ -242,7 +253,19 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
         }
       };
     }
-  }, [url, protocols, decode, props.onSocketClose, props.onSocketMessage, props.onSocketOpen, reset, flush, fit, onSocketInit, timeout]);
+  }, [
+    url,
+    protocols,
+    decode,
+    props.onSocketClose,
+    props.onSocketMessage,
+    props.onSocketOpen,
+    reset,
+    flush,
+    fit,
+    onSocketInit,
+    timeout,
+  ]);
   const setupTerminal = useCallback(() => {
     if (terminalRef.current) {
       if (termInstanceRef.current) {
@@ -270,8 +293,8 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
 
       // init and setup addons
       onTermInit?.(term);
-      term.loadAddon(fitAddonRef.current = new FitAddon());
-      term.loadAddon(searchAddonRef.current = new SearchAddon());
+      term.loadAddon((fitAddonRef.current = new FitAddon()));
+      term.loadAddon((searchAddonRef.current = new SearchAddon()));
       term.loadAddon(new WebLinksAddon());
       term.loadAddon(renderAddon);
       term.open(terminalRef.current);
@@ -293,7 +316,7 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       searchAddonRef.current.onDidChangeResults(({ resultCount }) => {
         setSearchMatchedTotal(resultCount);
       });
-      term.onData((input) => {
+      term.onData(input => {
         // send hte terminal input to websocket
         send(encode(input));
       });
@@ -310,12 +333,18 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       };
     }
   }, [send, encode, onTermInit, fit, flush, shellOptions]);
-  const searchNext = useCallback((search: string) => {
-    searchAddonRef.current?.findNext(search || '', searchOptions);
-  }, [searchOptions]);
-  const searchPrevious = useCallback((search: string) => {
-    searchAddonRef.current?.findPrevious(search || '', searchOptions);
-  }, [searchOptions]);
+  const searchNext = useCallback(
+    (search: string) => {
+      searchAddonRef.current?.findNext(search || '', searchOptions);
+    },
+    [searchOptions]
+  );
+  const searchPrevious = useCallback(
+    (search: string) => {
+      searchAddonRef.current?.findPrevious(search || '', searchOptions);
+    },
+    [searchOptions]
+  );
   const getAllTerminalContents = useCallback(() => {
     if (!termInstanceRef.current) return [];
 
@@ -349,14 +378,17 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
       window.URL.revokeObjectURL(url);
     }, 0);
   }, [getAllTerminalContents, logFileName]);
-  const setOptions = useCallback((options) => {
-    Object.entries(options).forEach(([key, value]) => {
-      if (termInstanceRef.current) {
-        termInstanceRef.current.options[key as keyof ITerminalOptions] = value;
-      }
-    });
-    fit();
-  }, [fit]);
+  const setOptions = useCallback(
+    options => {
+      Object.entries(options).forEach(([key, value]) => {
+        if (termInstanceRef.current) {
+          termInstanceRef.current.options[key as keyof ITerminalOptions] = value;
+        }
+      });
+      fit();
+    },
+    [fit]
+  );
   const writeln = useCallback((data: string) => {
     termInstanceRef.current?.writeln(data);
   }, []);
@@ -398,39 +430,59 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
     return () => resizeObserver.disconnect();
   }, [debouncedFit]);
 
-  useImperativeHandle(ref, () => ({
-    clear,
-    setSocketStatus,
-    fit,
-    send,
-    connect,
-    searchNext,
-    searchPrevious,
-    getAllTerminalContents,
-    setOptions,
-    setLoading,
-    setError,
-    writeln,
-  }), [send, searchNext, searchPrevious, getAllTerminalContents, fit, clear, connect, setOptions, writeln]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      clear,
+      setSocketStatus,
+      fit,
+      send,
+      connect,
+      searchNext,
+      searchPrevious,
+      getAllTerminalContents,
+      setOptions,
+      setLoading,
+      setError,
+      writeln,
+    }),
+    [
+      send,
+      searchNext,
+      searchPrevious,
+      getAllTerminalContents,
+      fit,
+      clear,
+      connect,
+      setOptions,
+      writeln,
+    ]
+  );
 
   return (
     <div ref={containerRef} className={ContainerStyle}>
-      {!!error ? <Alert
-        style={{ margin: 8, marginBottom: 4 }}
-        message={(
-          <span className={ErrorAlertStyle}>
-            {t('dovetail.disconnected')}
-            <Link onClick={() => {
-              if (props.onReconnect) {
-                props.onReconnect();
-              } else {
-                connect();
-              }
-            }}>{t('dovetail.reconnect')}</Link>
-          </span>
-        )}
-        type="error"
-      /> : null}
+      {!!error ? (
+        <Alert
+          style={{ margin: 8, marginBottom: 4 }}
+          message={
+            <span className={ErrorAlertStyle}>
+              {t('dovetail.disconnected')}
+              <Link
+                onClick={() => {
+                  if (props.onReconnect) {
+                    props.onReconnect();
+                  } else {
+                    connect();
+                  }
+                }}
+              >
+                {t('dovetail.reconnect')}
+              </Link>
+            </span>
+          }
+          type="error"
+        />
+      ) : null}
       {isHideToolbar ? null : (
         <ShellToolbar
           className={ToolbarStyle}
@@ -441,31 +493,23 @@ export const Shell = React.forwardRef<ShellHandler, ShellProps>(function Shell(p
           onSearchPre={searchPrevious}
           onClear={onClear}
           onDownloadLog={downloadContent}
-          onSetFontSize={(fontSize) => {
+          onSetFontSize={fontSize => {
             setOptions({
-              fontSize
+              fontSize,
             });
           }}
         />
       )}
-      {
-        loading ? loadingElement || (
-          <div className={LoadingStyle}>
-            <Icon src={Loading24GradientBlueIcon} iconWidth={24} iconHeight={24} isRotate />
-            <span className={Typo.Display.d2_bold_title}>{t('dovetail.connecting')}</span>
-          </div>
-        ) : null
-      }
+      {loading ? loadingElement || <Connecting /> : null}
       <div
         className={cx(ShellStyle, className)}
         style={{
           display: loading ? 'none' : 'block',
         }}
       >
-        <div
-          ref={terminalRef}
-          style={{ height: '100%' }}
-        >{children}</div>
+        <div ref={terminalRef} style={{ height: '100%' }}>
+          {children}
+        </div>
       </div>
     </div>
   );
