@@ -55,7 +55,10 @@ export default defineConfig({
   build: {
     minify: false,
     lib: {
-      entry: path.resolve(__dirname, 'src/index.ts'),
+      entry: {
+        refine: path.resolve(__dirname, 'src/index.ts'),
+        shell: path.resolve(__dirname, 'src/shell.ts'),
+      },
       name: 'dovetail',
     },
     rollupOptions: {

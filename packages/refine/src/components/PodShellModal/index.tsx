@@ -1,12 +1,15 @@
 import { CloseCircleFilled } from '@ant-design/icons';
-import { Modal, usePopModal } from '@cloudtower/eagle';
-import React, { useState } from 'react';
+import { Modal, usePopModal, Loading } from '@cloudtower/eagle';
+import React, { lazy, useState, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SocketStatus } from 'src/components/Shell';
+import { SocketStatus } from 'src/components/Shell/common';
 import { useGlobalStore } from 'src/hooks';
 import { PodModel } from 'src/models';
 import { FullscreenModalStyle } from 'src/styles/modal';
-import { PodShell } from './PodShell';
+
+const PodShell = lazy(() =>
+  import('./PodShell').then(module => ({ default: module.PodShell }))
+);
 
 interface PodShellModalProps {
   pod: PodModel;
@@ -20,7 +23,6 @@ export function PodShellModal(props: PodShellModalProps) {
   const globalStore = useGlobalStore();
   const [socketStatus, setSocketStatus] = useState<SocketStatus>(SocketStatus.Opening);
 
-
   return (
     <Modal
       className={FullscreenModalStyle}
@@ -30,17 +32,25 @@ export function PodShellModal(props: PodShellModalProps) {
       onCancel={() => {
         popModal();
       }}
-      error={socketStatus === SocketStatus.Disconnected ? socketStatus : <span style={{ color: 'green' }}>{socketStatus}</span>}
+      error={
+        socketStatus === SocketStatus.Disconnected ? (
+          socketStatus
+        ) : (
+          <span style={{ color: 'green' }}>{socketStatus}</span>
+        )
+      }
       keyboard
       destroyOnClose
       fullscreen
       visible
     >
-      <PodShell
-        pod={pod}
-        onSocketStatusChange={setSocketStatus}
-        basePath={globalStore?.apiUrl || ''}
-      />
+      <Suspense fallback={<Loading />}>
+        <PodShell
+          pod={pod}
+          onSocketStatusChange={setSocketStatus}
+          basePath={globalStore?.apiUrl || ''}
+        />
+      </Suspense>
     </Modal>
   );
 }
