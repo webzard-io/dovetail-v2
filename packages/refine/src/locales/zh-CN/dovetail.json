@@ -68,6 +68,8 @@
   "unknown_state": "未知",
   "pending_state": "待处理",
   "waiting_state": "等待中",
+  "active_state": "活跃",
+  "deleting_state": "删除中",
   "create_resource": "创建{{resource}}",
   "edit_resource": "编辑{{resource}}",
   "sec": "秒",
