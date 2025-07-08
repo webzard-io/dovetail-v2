@@ -16,6 +16,8 @@ export enum ResourceState {
   AVAILABLE = 'available',
   BOUND = 'bound',
   RELEASED = 'released',
-  LOST = 'lost'
+  LOST = 'lost',
+  ACTIVE = 'active',
+  DELETING = 'deleting',
 }
 

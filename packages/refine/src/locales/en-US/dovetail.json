@@ -60,6 +60,8 @@
   "unknown_state": "Unknown",
   "pending_state": "Pending",
   "waiting_state": "Waiting",
+  "active_state": "Active",
+  "deleting_state": "Deleting",
   "expand": "Expand",
   "fold": "Collapse",
   "rule": "Rule",

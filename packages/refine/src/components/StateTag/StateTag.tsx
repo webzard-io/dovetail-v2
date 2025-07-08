@@ -42,6 +42,8 @@ export const StateTag: React.FC<Props> = props => {
     [ResourceState.BOUND]: 'green',
     [ResourceState.RELEASED]: 'gray',
     [ResourceState.LOST]: 'red',
+    [ResourceState.ACTIVE]: 'green',
+    [ResourceState.DELETING]: 'loading',
   };
   const finalColorMap = customResourceStateMap?.color || defaultStateMap;
   const finalTextMap = customResourceStateMap?.text;
