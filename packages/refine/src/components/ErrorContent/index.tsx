@@ -30,7 +30,6 @@ export const ErrorWrapper = styled.div`
     }
   }
 
-
   &.card .error-content {
     height: 96px;
   }
@@ -44,6 +43,10 @@ export const ErrorContent = styled.div`
 
   .title {
     margin-bottom: 8px;
+
+    &.list-title {
+      margin-bottom: 16px;
+    }
   }
 `;
 
@@ -74,12 +77,12 @@ const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = pro
   return (
     <ErrorWrapper className={cx(props.className, type)} style={props.style}>
       <ErrorContent className="error-content">
-        <p className={cx(fontMap[type], 'title')}>
+        <p className={cx(fontMap[type], 'title', `${type}-title`)}>
           {errorText || t('dovetail.obtain_data_error')}
         </p>
         {!refetch ? null : (
           <kit.button
-            size="small"
+            size={type === ErrorContentType.List ? 'middle' : 'small'}
             type="ordinary"
             onClick={e => {
               e.stopPropagation();
