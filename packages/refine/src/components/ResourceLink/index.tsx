@@ -33,7 +33,7 @@ export const ResourceLink: React.FC<Props> = props => {
   const isCanRead = data?.can;
 
   if (!isCanRead) {
-    return <span>{name}</span>;
+    return <span>{displayName || name}</span>;
   }
 
   const onClick = () => {
