@@ -45,6 +45,10 @@ export class WorkloadModel extends WorkloadBaseModel {
     return this.status && 'readyReplicas' in this.status ? this.status.readyReplicas : 0;
   }
 
+  get appKey() {
+    return `${this.kind}-${this.name}-${this.namespace}`;
+  }
+
   redeploy(): WorkloadTypes {
     const rawYaml = this._globalStore.restoreItem(this);
     const newOne = cloneDeep(rawYaml);
