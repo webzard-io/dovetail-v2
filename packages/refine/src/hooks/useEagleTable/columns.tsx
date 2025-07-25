@@ -195,7 +195,11 @@ export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
     width: 120,
     dataIndex,
     align: 'right',
+    sorter: CommonSorter(dataIndex),
     title: i18n.t('dovetail.restarts'),
+    render: (value: number) => {
+      return <ValueDisplay value={value} />;
+    },
   };
 };
 
