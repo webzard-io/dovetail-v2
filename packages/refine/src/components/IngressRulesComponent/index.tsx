@@ -31,7 +31,7 @@ export const IngressRulesComponent: React.FC<{
             {r.serviceName ? (
               <>
                 <ResourceLink
-                  resourceKind="services"
+                  resourceName="services"
                   namespace={ingress.metadata.namespace || 'default'}
                   name={r.serviceName}
                 />
