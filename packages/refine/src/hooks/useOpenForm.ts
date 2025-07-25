@@ -19,16 +19,17 @@ export function useOpenForm(options?: UseOpenFormOptions) {
   const pushModal = usePushModal();
   const go = useGo();
 
-  return function openForm() {
-    if (resource?.name) {
-      const config = configs[resource.name];
+  return function openForm(resourceName?: string) {
+    const finalResourceName = resourceName || resource?.name;
+    if (finalResourceName) {
+      const config = configs[finalResourceName];
       const formType = config.formConfig?.formContainerType;
 
       if (formType === undefined || formType === FormContainerType.MODAL) {
         pushModal<'FormModal'>({
           component: config.formConfig?.CustomFormModal || FormModal,
           props: {
-            resource: resource.name,
+            resource: finalResourceName,
             id: options?.id,
             formProps: {
               initialValues: getInitialValues(config),
@@ -39,7 +40,7 @@ export function useOpenForm(options?: UseOpenFormOptions) {
         edit(options.id);
       } else {
         go({
-          to: navigation.createUrl(resource.name),
+          to: navigation.createUrl(finalResourceName),
           options: {
             keepQuery: true,
           },

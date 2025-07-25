@@ -297,7 +297,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
                 namespace: record.namespace,
               }}
             >
-              <Button style={{ marginRight: 8 }} onClick={openForm}>
+              <Button style={{ marginRight: 8 }} onClick={() => openForm()}>
                 {config.formConfig?.formType === FormType.FORM
                   ? t('dovetail.edit')
                   : t('dovetail.edit_yaml')}
