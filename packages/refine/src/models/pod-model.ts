@@ -71,7 +71,7 @@ export class PodModel extends WorkloadBaseModel {
     );
   }
 
-  get restartCount() {
+  get restarts() {
     if (this._rawYaml.status?.containerStatuses) {
       return this._rawYaml.status?.containerStatuses.reduce((count, container) => {
         count += container.restartCount;

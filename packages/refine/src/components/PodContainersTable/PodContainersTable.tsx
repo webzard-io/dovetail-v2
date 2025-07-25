@@ -71,13 +71,13 @@ export const PodContainersTable: React.FC<Props> = ({
         },
       },
       {
-        key: 'restartCount',
-        dataIndex: ['restartCount'],
+        key: 'restarts',
+        dataIndex: ['restarts'],
         title: i18n.t('dovetail.restarts'),
         sortable: true,
         align: 'right',
         width: 120,
-        sorter: CommonSorter(['restartCount']),
+        sorter: CommonSorter(['restarts']),
       },
       {
         key: 'started',

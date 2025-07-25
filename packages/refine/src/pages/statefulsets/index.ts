@@ -16,7 +16,7 @@ import {
   NameSpaceColumnRenderer,
   StateDisplayColumnRenderer,
   ReplicasColumnRenderer,
-  WorkloadRestartsColumnRenderer,
+  RestartsColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import { StatefulSetModel } from 'src/models/statefulset-model';
 import { ResourceConfig } from 'src/types';
@@ -33,7 +33,7 @@ export const StatefulSetConfig = (i18n: i18n): ResourceConfig<StatefulSetModel> 
     StateDisplayColumnRenderer(i18n),
     NameSpaceColumnRenderer(i18n),
     WorkloadImageColumnRenderer(i18n),
-    WorkloadRestartsColumnRenderer(i18n),
+    RestartsColumnRenderer(i18n),
     ReplicasColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
   ]),

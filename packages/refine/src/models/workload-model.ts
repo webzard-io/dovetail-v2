@@ -33,7 +33,7 @@ export class WorkloadModel extends WorkloadBaseModel {
     const myPods = pods.items.filter(p =>
       matchSelector(p as PodModel, this.spec?.selector, this.metadata.namespace)
     );
-    const result = sumBy(myPods, 'restartCount');
+    const result = sumBy(myPods, 'restarts');
     this.restarts = result;
   }
 

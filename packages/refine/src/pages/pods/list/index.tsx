@@ -12,7 +12,7 @@ import {
   NameColumnRenderer,
   NameSpaceColumnRenderer,
   CommonSorter,
-  RestartCountColumnRenderer,
+  RestartsColumnRenderer,
   NodeNameColumnRenderer,
   StateDisplayColumnRenderer,
   PodWorkloadColumnRenderer,
@@ -53,7 +53,7 @@ export const PodList: React.FC<IResourceComponentsProps> = () => {
       NameSpaceColumnRenderer(i18n),
       WorkloadImageColumnRenderer(i18n),
       PodContainersNumColumnRenderer(i18n),
-      RestartCountColumnRenderer(i18n),
+      RestartsColumnRenderer(i18n),
       NodeNameColumnRenderer(i18n),
       PodWorkloadColumnRenderer(i18n),
       supportMetrics && {

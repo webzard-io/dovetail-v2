@@ -17,7 +17,7 @@ import {
   DurationColumnRenderer,
   CompletionsCountColumnRenderer,
   StateDisplayColumnRenderer,
-  WorkloadRestartsColumnRenderer,
+  RestartsColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
 import { JobModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig, FormType } from '../../types';
@@ -33,7 +33,7 @@ export const JobConfig = (i18n: i18n): ResourceConfig<JobModel> => ({
       StateDisplayColumnRenderer(i18n),
       WorkloadImageColumnRenderer(i18n),
       CompletionsCountColumnRenderer(i18n),
-      WorkloadRestartsColumnRenderer(i18n),
+      RestartsColumnRenderer(i18n),
       DurationColumnRenderer(i18n),
       AgeColumnRenderer(i18n),
     ] as Column<JobModel>[],

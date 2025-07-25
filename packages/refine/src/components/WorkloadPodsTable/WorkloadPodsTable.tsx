@@ -10,7 +10,7 @@ import { matchSelector } from 'src/utils/match-selector';
 import {
   NameColumnRenderer,
   NodeNameColumnRenderer,
-  RestartCountColumnRenderer,
+  RestartsColumnRenderer,
   StateDisplayColumnRenderer,
   WorkloadImageColumnRenderer,
   PodContainersNumColumnRenderer,
@@ -56,7 +56,7 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
     hideNodeColumn ? undefined : NodeNameColumnRenderer(i18n),
     WorkloadImageColumnRenderer(i18n),
     PodContainersNumColumnRenderer(i18n),
-    RestartCountColumnRenderer(i18n),
+    RestartsColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
   ].filter(v => !!v) as Column<PodModel>[];
 

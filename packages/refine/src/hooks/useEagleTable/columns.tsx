@@ -185,7 +185,7 @@ export const WorkloadImageColumnRenderer = <Model extends WorkloadBaseModel>(
   };
 };
 
-export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
+export const RestartsColumnRenderer = <Model extends WorkloadModel>(
   i18n: I18nType
 ): Column<Model> => {
   const dataIndex = ['restarts'];
@@ -195,6 +195,7 @@ export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
     width: 120,
     dataIndex,
     align: 'right',
+    sortable: true,
     sorter: CommonSorter(dataIndex),
     title: i18n.t('dovetail.restarts'),
     render: (value: number) => {
@@ -277,22 +278,6 @@ export const NodeNameColumnRenderer = <Model extends PodModel>(
       return <ResourceLink resourceName="nodes" name={v} namespace="" />;
     },
     ...options,
-  };
-};
-
-export const RestartCountColumnRenderer = <Model extends PodModel>(
-  i18n: I18nType
-): Column<Model> => {
-  const dataIndex = ['restartCount'];
-  return {
-    key: 'restartCount',
-    display: true,
-    dataIndex,
-    title: i18n.t('dovetail.restarts'),
-    sortable: true,
-    width: 120,
-    align: 'right',
-    sorter: CommonSorter(dataIndex),
   };
 };
 
