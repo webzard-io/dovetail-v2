@@ -86,7 +86,12 @@ const NameLink: React.FC<{ id: string; name: string; resource?: string }> = prop
 export const CommonSorter = (dataIndex: string[]) => (a: unknown, b: unknown) => {
   const valA = get(a, dataIndex);
   const valB = get(b, dataIndex);
+  
+  // 处理 undefined 值的情况
   if (valA === valB) return 0;
+  if (valA !== undefined && valB === undefined) return 1; // undefined 更小
+  if (valA === undefined && valB !== undefined) return -1;
+
   if (valA > valB) return 1;
   return -1;
 };
