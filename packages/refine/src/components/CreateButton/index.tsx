@@ -24,7 +24,7 @@ export function CreateButton(props: CreateButtonProps) {
     <Button
       prefixIcon={<PlusAddCreateNew16BoldOntintIcon />}
       type="primary"
-      onClick={openForm}
+      onClick={() => openForm()}
     >
       {createButtonText ||
         t('dovetail.create_resource', {
