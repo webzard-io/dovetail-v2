@@ -17,6 +17,7 @@ import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useOpenForm } from 'src/hooks/useOpenForm';
 import { FormType } from 'src/types';
+import { getResourceNameByKind } from 'src/utils';
 import { useGlobalStore } from '../../../hooks';
 import { ResourceModel } from '../../../models';
 export type DropdownSize = 'normal' | 'large';
@@ -30,23 +31,23 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const { record, size = 'normal' } = props;
   const globalStore = useGlobalStore();
   const useResourceResult = useResource();
-  const resource = useResourceResult.resource;
   const configs = useContext(ConfigsContext);
-  const config = configs[resource?.name || ''];
+  const resourceName = getResourceNameByKind(record.kind || '', configs);
+  const config = configs[resourceName || ''];
   const { t } = useTranslation();
-  const { openDeleteConfirmModal } = useDeleteModal({resourceName: resource?.name || ''});
+  const { openDeleteConfirmModal } = useDeleteModal({resourceName: resourceName || ''});
   const download = useDownloadYAML();
   const openForm = useOpenForm({ id: record.id });
   const isInShowPage = useResourceResult.action === 'show';
   const { data: canEditData } = useCan({
-    resource: resource?.name,
+    resource: resourceName,
     action: AccessControlAuth.Edit,
     params: {
       namespace: record.namespace,
     },
   });
   const { data: canDeleteData } = useCan({
-    resource: resource?.name,
+    resource: resourceName,
     action: AccessControlAuth.Delete,
     params: {
       namespace: record.namespace,
