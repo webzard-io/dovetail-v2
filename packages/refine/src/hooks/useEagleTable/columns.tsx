@@ -270,7 +270,7 @@ export const NodeNameColumnRenderer = <Model extends PodModel>(
     width: 160,
     sorter: CommonSorter(dataIndex),
     render: v => {
-      return <ResourceLink resourceKind="nodes" name={v} namespace="" />;
+      return <ResourceLink resourceName="nodes" name={v} namespace="" />;
     },
     ...options,
   };
@@ -673,7 +673,7 @@ export const PVRefColumnRenderer = <Model extends PersistentVolumeClaimModel>(
     width: 160,
     sortable: true,
     render(value) {
-      return <ResourceLink resourceKind="persistentvolumes" namespace="" name={value} />;
+      return <ResourceLink resourceName="persistentvolumes" namespace="" name={value} />;
     },
   };
 };
@@ -691,7 +691,7 @@ export const PVStorageClassColumnRenderer = <
     width: 160,
     sortable: true,
     render(value) {
-      return <ResourceLink resourceKind="storageclasses" namespace="" name={value} />;
+      return <ResourceLink resourceName="storageclasses" namespace="" name={value} />;
     },
   };
 };
@@ -727,7 +727,7 @@ export const PVCRefColumnRenderer = <Model extends PersistentVolumeModel>(
     render(value, pv) {
       return (
         <ResourceLink
-          resourceKind="persistentvolumeclaims"
+          resourceName="persistentvolumeclaims"
           namespace={pv.pvcNamespace || 'default'}
           name={value}
           uid={pv.pvcUid}

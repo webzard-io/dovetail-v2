@@ -489,7 +489,7 @@ export const PVRefField = <Model extends PersistentVolumeClaimModel>(
     renderContent(value) {
       return (
         <ResourceLink
-          resourceKind="persistentvolumes"
+          resourceName="persistentvolumes"
           namespace=""
           name={value as string}
         />
@@ -509,7 +509,7 @@ export const PVStorageClassField = <
     title: i18n.t('dovetail.storage_class'),
     renderContent(value) {
       return (
-        <ResourceLink resourceKind="storageclasses" namespace="" name={value as string} />
+        <ResourceLink resourceName="storageclasses" namespace="" name={value as string} />
       );
     },
   };
@@ -592,7 +592,7 @@ export const PVCRefField = <Model extends PersistentVolumeModel>(
     renderContent(value, pv) {
       return (
         <ResourceLink
-          resourceKind="persistentvolumeclaims"
+          resourceName="persistentvolumeclaims"
           namespace={pv.pvcNamespace || 'default'}
           name={value as string}
           uid={pv.pvcUid}
