@@ -86,7 +86,12 @@ const NameLink: React.FC<{ id: string; name: string; resource?: string }> = prop
 export const CommonSorter = (dataIndex: string[]) => (a: unknown, b: unknown) => {
   const valA = get(a, dataIndex);
   const valB = get(b, dataIndex);
+  
+  // 处理 undefined 值的情况
   if (valA === valB) return 0;
+  if (valA !== undefined && valB === undefined) return 1; // undefined 更小
+  if (valA === undefined && valB !== undefined) return -1;
+
   if (valA > valB) return 1;
   return -1;
 };
@@ -185,7 +190,7 @@ export const WorkloadImageColumnRenderer = <Model extends WorkloadBaseModel>(
   };
 };
 
-export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
+export const RestartsColumnRenderer = <Model extends WorkloadModel>(
   i18n: I18nType
 ): Column<Model> => {
   const dataIndex = ['restarts'];
@@ -195,7 +200,12 @@ export const WorkloadRestartsColumnRenderer = <Model extends WorkloadModel>(
     width: 120,
     dataIndex,
     align: 'right',
+    sortable: true,
+    sorter: CommonSorter(dataIndex),
     title: i18n.t('dovetail.restarts'),
+    render: (value: number) => {
+      return <ValueDisplay value={value} />;
+    },
   };
 };
 
@@ -270,25 +280,9 @@ export const NodeNameColumnRenderer = <Model extends PodModel>(
     width: 160,
     sorter: CommonSorter(dataIndex),
     render: v => {
-      return <ResourceLink resourceKind="nodes" name={v} namespace="" />;
+      return <ResourceLink resourceName="nodes" name={v} namespace="" />;
     },
     ...options,
-  };
-};
-
-export const RestartCountColumnRenderer = <Model extends PodModel>(
-  i18n: I18nType
-): Column<Model> => {
-  const dataIndex = ['restartCount'];
-  return {
-    key: 'restartCount',
-    display: true,
-    dataIndex,
-    title: i18n.t('dovetail.restarts'),
-    sortable: true,
-    width: 120,
-    align: 'right',
-    sorter: CommonSorter(dataIndex),
   };
 };
 
@@ -673,7 +667,7 @@ export const PVRefColumnRenderer = <Model extends PersistentVolumeClaimModel>(
     width: 160,
     sortable: true,
     render(value) {
-      return <ResourceLink resourceKind="persistentvolumes" namespace="" name={value} />;
+      return <ResourceLink resourceName="persistentvolumes" namespace="" name={value} />;
     },
   };
 };
@@ -691,7 +685,7 @@ export const PVStorageClassColumnRenderer = <
     width: 160,
     sortable: true,
     render(value) {
-      return <ResourceLink resourceKind="storageclasses" namespace="" name={value} />;
+      return <ResourceLink resourceName="storageclasses" namespace="" name={value} />;
     },
   };
 };
@@ -727,7 +721,7 @@ export const PVCRefColumnRenderer = <Model extends PersistentVolumeModel>(
     render(value, pv) {
       return (
         <ResourceLink
-          resourceKind="persistentvolumeclaims"
+          resourceName="persistentvolumeclaims"
           namespace={pv.pvcNamespace || 'default'}
           name={value}
           uid={pv.pvcUid}

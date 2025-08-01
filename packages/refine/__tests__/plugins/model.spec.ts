@@ -14,7 +14,7 @@ describe('PodModel', () => {
     expect(podModel.imageNames).toEqual([
       'quay.io/jetstack/cert-manager-controller:v1.8.0',
     ]);
-    expect(podModel.restartCount).toEqual(5);
+    expect(podModel.restarts).toEqual(5);
     expect(podModel.readyDisplay).toEqual('1/1');
     expect(podModel.name).toEqual('cert-manager-7d6d974dbf-drn4r');
     expect(podModel.spec!.restartPolicy).toEqual('Always');

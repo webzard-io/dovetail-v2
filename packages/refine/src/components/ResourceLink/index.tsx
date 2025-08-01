@@ -6,7 +6,7 @@ import { AccessControlAuth } from 'src/constants';
 import { ValueDisplay } from '../ValueDisplay';
 
 type Props = {
-  resourceKind: string;
+  resourceName: string;
   namespace: string;
   name: string;
   displayName?: string;
@@ -18,7 +18,7 @@ const LinkStyle = css`
 `;
 
 export const ResourceLink: React.FC<Props> = props => {
-  const { resourceKind: resourceName, namespace, name, uid, displayName } = props;
+  const { resourceName, namespace, name, uid, displayName } = props;
   const navigation = useNavigation();
   const go = useGo();
 

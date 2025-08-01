@@ -33,7 +33,7 @@ export class WorkloadModel extends WorkloadBaseModel {
     const myPods = pods.items.filter(p =>
       matchSelector(p as PodModel, this.spec?.selector, this.metadata.namespace)
     );
-    const result = sumBy(myPods, 'restartCount');
+    const result = sumBy(myPods, 'restarts');
     this.restarts = result;
   }
 
@@ -43,6 +43,10 @@ export class WorkloadModel extends WorkloadBaseModel {
 
   get readyReplicas() {
     return this.status && 'readyReplicas' in this.status ? this.status.readyReplicas : 0;
+  }
+
+  get appKey() {
+    return `${this.kind}-${this.name}-${this.namespace}`;
   }
 
   redeploy(): WorkloadTypes {
