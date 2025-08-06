@@ -91,6 +91,7 @@ export type ShowTab<Model extends ResourceModel> = {
 };
 
 export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
+  basicGroup?: ShowGroup<Model>;
   tabs?: ShowTab<Model>[];
   renderExtraButton?: (record: Model) => React.ReactNode;
   resourceStateMap?: {
