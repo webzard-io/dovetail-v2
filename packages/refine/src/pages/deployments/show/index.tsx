@@ -18,14 +18,15 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
   return (
     <PageShow<WorkloadModel>
       showConfig={{
+        basicGroup: BasicGroup(i18n, {
+          upAreas: [{ fields: [ReplicaField(),] }],
+          basicFields: [ImageField(i18n),]
+        }),
         tabs: [{
           title: i18n.t('dovetail.detail'),
           key: 'detail',
           groups: [
-            BasicGroup(i18n, {
-              upAreas: [{ fields: [ReplicaField(),] }],
-              basicFields: [ImageField(i18n),]
-            }),
+            
             PodsGroup(),
             ConditionsGroup(i18n)
           ]
