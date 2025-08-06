@@ -35,9 +35,9 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const resourceName = getResourceNameByKind(record.kind || '', configs);
   const config = configs[resourceName || ''];
   const { t } = useTranslation();
-  const { openDeleteConfirmModal } = useDeleteModal({resourceName: resourceName || ''});
+  const { openDeleteConfirmModal } = useDeleteModal({ resourceName: resourceName || '' });
   const download = useDownloadYAML();
-  const openForm = useOpenForm({ id: record.id });
+  const openForm = useOpenForm();
   const isInShowPage = useResourceResult.action === 'show';
   const { data: canEditData } = useCan({
     resource: resourceName,
@@ -61,7 +61,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
         overlay={
           <Menu>
             {isInShowPage || canEditData?.can === false || config.hideEdit ? null : (
-              <Menu.Item onClick={() => openForm()}>
+              <Menu.Item onClick={() => openForm({ id: record.id })}>
                 <Icon src={EditPen16PrimaryIcon}>
                   {formType === FormType.FORM
                     ? t('dovetail.edit')

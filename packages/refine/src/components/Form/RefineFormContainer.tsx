@@ -1,4 +1,5 @@
 import { Alert } from '@cloudtower/eagle';
+import { BaseRecord, CreateResponse, UpdateResponse } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
 import React, { useMemo, useEffect } from 'react';
 import { type SaveButtonProps } from 'src/components/Form/FormModal';
@@ -19,7 +20,7 @@ interface RefineFormContainerProps {
   customYamlFormProps?: YamlFormProps;
   onSaveButtonPropsChange?: (props: SaveButtonProps) => void;
   onError?: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
 }
 
 function RefineFormContainer({
@@ -38,23 +39,26 @@ function RefineFormContainer({
     config,
     id,
     refineProps: {
-      onMutationSuccess: () => {
-        onSuccess?.();
+      onMutationSuccess: data => {
+        onSuccess?.(data);
       },
       onMutationError() {
         onError?.();
       },
       redirect: false,
+      mutationMeta: {
+        updateType: 'put',
+      },
       ...formConfig?.refineCoreProps,
     },
     formConfig,
   });
-  const {
-    transformApplyValues,
-  } = usePathMap({
+  const { transformApplyValues } = usePathMap({
     pathMap: formConfig?.pathMap,
     transformInitValues: formConfig?.transformInitValues,
-    transformApplyValues: formConfig?.transformApplyValues || ((v: Record<string, unknown>) => v as Unstructured),
+    transformApplyValues:
+      formConfig?.transformApplyValues ||
+      ((v: Record<string, unknown>) => v as Unstructured),
   });
   const yamlFormProps: YamlFormProps = useMemo(() => {
     if (isYamlMode) {
@@ -66,17 +70,21 @@ function RefineFormContainer({
         initialValuesForCreate: transformApplyValues(
           refineFormResult.formResult.getValues()
         ),
-        initialValuesForEdit: transformApplyValues(refineFormResult.formResult.getValues()),
+        initialValuesForEdit: transformApplyValues(
+          refineFormResult.formResult.getValues()
+        ),
         id,
         action,
         isShowLayout: false,
         useFormProps: {
           redirect: false,
         },
-        rules: fieldsConfig?.map(config => ({
-          path: config.path,
-          validators: config.validators,
-        })),
+        rules: fieldsConfig
+          ?.filter(config => !config.isSkipValidationInYaml)
+          .map(config => ({
+            path: config.path,
+            validators: config.validators,
+          })),
         onSaveButtonPropsChange,
         onErrorsChange(errors: string[]) {
           if (errors.length) {

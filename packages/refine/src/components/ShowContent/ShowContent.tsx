@@ -188,7 +188,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
   const { data } = queryResult;
   const navigation = useNavigation();
   const go = useGo();
-  const openForm = useOpenForm({ id });
+  const openForm = useOpenForm();
   const Component = useContext(ComponentContext);
   const configs = useContext(ConfigsContext);
   const config = configs[resource?.name || ''];
@@ -297,7 +297,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
                 namespace: record.namespace,
               }}
             >
-              <Button style={{ marginRight: 8 }} onClick={() => openForm()}>
+              <Button style={{ marginRight: 8 }} onClick={() => openForm({ id })}>
                 {config.formConfig?.formType === FormType.FORM
                   ? t('dovetail.edit')
                   : t('dovetail.edit_yaml')}

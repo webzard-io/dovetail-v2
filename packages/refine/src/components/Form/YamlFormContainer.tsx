@@ -1,3 +1,4 @@
+import { BaseRecord, CreateResponse, UpdateResponse } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
 import React, { useMemo } from 'react';
 import { type SaveButtonProps } from 'src/components/Form/FormModal';
@@ -12,7 +13,7 @@ interface YamlFormContainerProps {
   config: ResourceConfig;
   customYamlFormProps?: YamlFormProps;
   formConfig?: YamlFormConfig & CommonFormConfig;
-  onSuccess?: () => void;
+  onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
   onError?: () => void;
   onSaveButtonPropsChange?: (props: SaveButtonProps) => void;
 }
@@ -24,58 +25,53 @@ function YamlFormContainer({
   formConfig,
   onSuccess,
   onError,
-  onSaveButtonPropsChange
+  onSaveButtonPropsChange,
 }: YamlFormContainerProps) {
   const action = id ? 'edit' : 'create';
-  const {
-    transformInitValues,
-    transformApplyValues,
-  } = usePathMap({
+  const { transformInitValues, transformApplyValues } = usePathMap({
     pathMap: formConfig?.pathMap,
     transformInitValues: formConfig?.transformInitValues,
-    transformApplyValues: formConfig?.transformApplyValues || ((v: Record<string, unknown>) => v as Unstructured),
+    transformApplyValues:
+      formConfig?.transformApplyValues ||
+      ((v: Record<string, unknown>) => v as Unstructured),
   });
-  const yamlFormProps: YamlFormProps = useMemo(
-    () => {
-      return {
-        ...customYamlFormProps,
-        config,
-        transformInitValues,
-        transformApplyValues,
-        initialValuesForCreate: (customYamlFormProps?.initialValuesForCreate || config.initValue),
-        initialValuesForEdit: undefined,
-        id,
-        action,
-        isShowLayout: false,
-        useFormProps: {
-          redirect: false,
-        },
-        rules: undefined,
-        onSaveButtonPropsChange,
-        onErrorsChange(errors: string[]) {
-          if (errors.length) {
-            onError?.();
-          }
-        },
-        onFinish: onSuccess,
-      };
-    },
-    [
-      id,
-      action,
-      customYamlFormProps,
+  const yamlFormProps: YamlFormProps = useMemo(() => {
+    return {
+      ...customYamlFormProps,
       config,
       transformInitValues,
       transformApplyValues,
-      onSuccess,
-      onError,
+      initialValuesForCreate:
+        customYamlFormProps?.initialValuesForCreate || config.initValue,
+      initialValuesForEdit: undefined,
+      id,
+      action,
+      isShowLayout: false,
+      useFormProps: {
+        redirect: false,
+      },
+      rules: undefined,
       onSaveButtonPropsChange,
-    ]
-  );
+      onErrorsChange(errors: string[]) {
+        if (errors.length) {
+          onError?.();
+        }
+      },
+      onFinish: onSuccess,
+    };
+  }, [
+    id,
+    action,
+    customYamlFormProps,
+    config,
+    transformInitValues,
+    transformApplyValues,
+    onSuccess,
+    onError,
+    onSaveButtonPropsChange,
+  ]);
 
-  return (
-    <YamlForm {...yamlFormProps} />
-  );
+  return <YamlForm {...yamlFormProps} />;
 }
 
 export default YamlFormContainer;

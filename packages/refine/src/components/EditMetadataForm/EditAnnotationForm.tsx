@@ -1,9 +1,13 @@
 import { useUpdate } from '@refinedev/core';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResourceModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
-import { KeyValuePair, KeyValueTableFormForm } from './KeyValueTableForm';
+import {
+  KeyValuePair,
+  KeyValueTableForm,
+  KeyValueTableFormHandle,
+} from '../KeyValueTableForm';
 
 interface EditAnnotationFormProps {
   resourceModel: ResourceModel;
@@ -20,6 +24,7 @@ export const EditAnnotationForm = React.forwardRef<
   const { resourceModel } = props;
   const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
+  const tableFormRef = useRef<KeyValueTableFormHandle<KeyValuePair>>(null);
 
   const defaultValue = useMemo<KeyValuePair[]>(() => {
     return Object.keys(resourceModel.metadata?.annotations || {}).map(key => {
@@ -62,9 +67,19 @@ export const EditAnnotationForm = React.forwardRef<
     [resourceModel, mutateAsync, t]
   );
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      submit: () => {
+        return tableFormRef.current?.submit();
+      },
+    }),
+    []
+  );
+
   return (
-    <KeyValueTableFormForm
-      ref={ref}
+    <KeyValueTableForm
+      ref={tableFormRef}
       defaultValue={defaultValue}
       onSubmit={onSubmit}
       addButtonText={t('dovetail.add_annotation')}
