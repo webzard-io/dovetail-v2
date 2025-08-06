@@ -1,0 +1,225 @@
+import {
+  Space,
+  TableForm,
+  TableFormColumn,
+  TableFormHandle,
+  TextArea,
+  Button,
+  Upload,
+} from '@cloudtower/eagle';
+import { css } from '@linaria/core';
+import { isEqual } from 'lodash-es';
+import React, {
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
+import { useTranslation } from 'react-i18next';
+import { readFileAsBase64 } from 'src/utils/file';
+import { validateLabelKey, validateLabelValue } from '../../utils/validation';
+import { LabelFormatPopover } from '../EditMetadataForm/LabelFormatPopover';
+
+export type KeyValuePair = {
+  key: string;
+  value?: string;
+};
+
+interface KeyValueTableFormProps<T extends KeyValuePair> {
+  value?: T[];
+  defaultValue: T[];
+  onChange?: (value: T[]) => void;
+  extraColumns?: TableFormColumn[];
+  addButtonText?: string;
+  noValueValidation?: boolean;
+  isHideLabelFormatPopover?: boolean;
+  isValueOptional?: boolean;
+  canImportFromFile?: boolean;
+  minSize?: number;
+  validateKey?: (key: string) => { isValid: boolean; errorMessage?: string };
+  validateValue?: (value: string) => { isValid: boolean; errorMessage?: string };
+  onSubmit?: (value: T[]) => Promise<unknown> | undefined;
+}
+
+export type KeyValueTableFormHandle<T extends KeyValuePair = KeyValuePair> = {
+  validate: () => Promise<boolean>;
+  submit: () => Promise<unknown> | undefined;
+  setValue: (value: T[]) => void;
+};
+
+function _KeyValueTableForm<RowType extends KeyValuePair>(
+  props: KeyValueTableFormProps<RowType>,
+  ref: React.ForwardedRef<KeyValueTableFormHandle<RowType>>
+) {
+  const {
+    value,
+    defaultValue,
+    onChange,
+    extraColumns,
+    addButtonText,
+    noValueValidation,
+    isHideLabelFormatPopover,
+    isValueOptional = true,
+    canImportFromFile,
+    minSize,
+    validateKey,
+    validateValue,
+    onSubmit,
+  } = props;
+  const { t } = useTranslation();
+  const tableFormRef = useRef<TableFormHandle>(null);
+  const [_value, _setValue] = useState<RowType[]>(value || defaultValue);
+  const [forceUpdateCount, setForceUpdateCount] = useState(0);
+
+  const validate = useCallback(() => {
+    return new Promise<boolean>(resolve => {
+      tableFormRef.current?.validateWholeFields();
+      setForceUpdateCount(forceUpdateCount + 1);
+
+      setTimeout(() => {
+        const isValid = tableFormRef.current?.isValid();
+
+        resolve(isValid || false);
+      }, 0);
+    });
+  }, [forceUpdateCount]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      validate,
+      submit: async () => {
+        const isValid = await validate();
+
+        if (isValid) {
+          return onSubmit?.(_value);
+        }
+        return Promise.reject();
+      },
+      setValue: (value: RowType[]) => {
+        _setValue(value);
+        tableFormRef.current?.setData(value);
+      },
+    }),
+    [validate, onSubmit, _value]
+  );
+
+  useEffect(() => {
+    if (value && !isEqual(value, _value)) {
+      _setValue(value);
+      tableFormRef.current?.setData(value);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
+  const renderTextAreaFunc = ({
+    value,
+    onChange,
+  }: {
+    value?: string;
+    onChange: (v: string) => void;
+  }) => {
+    return (
+      <TextArea
+        autoSize
+        className={css`
+          min-height: 24px !important;
+        `}
+        size="small"
+        value={value}
+        onChange={e => {
+          onChange(e.target.value);
+        }}
+      />
+    );
+  };
+
+  return (
+    <Space
+      size={8}
+      direction="vertical"
+      className={css`
+        width: 100%;
+      `}
+    >
+      <TableForm
+        ref={tableFormRef}
+        onBodyChange={newValue => {
+          _setValue(newValue as RowType[]);
+          onChange?.(newValue as RowType[]);
+        }}
+        columns={[
+          {
+            key: 'key',
+            title: t('dovetail.key'),
+            type: 'input',
+            validator: ({ value }) => {
+              if (!value) return t('dovetail.key_empty_text');
+              const validate = validateKey || validateLabelKey;
+              const { isValid, errorMessage } = validate(value || '');
+              if (!isValid) return errorMessage || t('dovetail.format_error');
+            },
+            render: renderTextAreaFunc,
+          },
+          {
+            key: 'value',
+            title: isValueOptional ? t('dovetail.value_optional') : t('dovetail.value'),
+            type: 'input',
+            validator: ({ value }) => {
+              if (noValueValidation) return;
+              const validate = validateValue || validateLabelValue;
+              const { isValid, errorMessage } = validate(value || '', isValueOptional);
+              if (!isValid) return errorMessage || t('dovetail.format_error');
+            },
+            render: renderTextAreaFunc,
+          },
+          ...(extraColumns || []),
+        ]}
+        rowAddConfig={{
+          addible: true,
+          text: () => addButtonText,
+        }}
+        defaultData={defaultValue}
+        row={{
+          deletable: _value.length > (minSize || 0),
+        }}
+        disableBatchFilling
+        hideEmptyTable
+      />
+      {isHideLabelFormatPopover ? null : (
+        <LabelFormatPopover noValueValidation={noValueValidation} />
+      )}
+      {canImportFromFile ? (
+        <Upload
+          multiple={false}
+          showUploadList={false}
+          onChange={async e => {
+            const fileValue = {
+              key: e.file.name,
+              value: await readFileAsBase64(e.file.originFileObj as File),
+            };
+
+            let newValue = [..._value, fileValue] as RowType[];
+
+            if (_value.some(v => v.key === fileValue.key)) {
+              newValue = _value.map(v =>
+                v.key === fileValue.key ? fileValue : v
+              ) as RowType[];
+            }
+
+            _setValue(newValue);
+            tableFormRef.current?.setData(newValue);
+            onChange?.(newValue);
+          }}
+        >
+          <Button type="link" size="small">
+            {t('dovetail.import_from_file')}
+          </Button>
+        </Upload>
+      ) : null}
+    </Space>
+  );
+}
+
+export const KeyValueTableForm = React.forwardRef(_KeyValueTableForm);

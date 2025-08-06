@@ -7,11 +7,15 @@ import { css } from '@linaria/core';
 import { useUpdate } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
 import { Node, Taint } from 'kubernetes-types/core/v1';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useImperativeHandle, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ResourceModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
-import { KeyValueTableFormForm } from './KeyValueTableForm';
+import {
+  KeyValuePair,
+  KeyValueTableForm,
+  KeyValueTableFormHandle,
+} from '../KeyValueTableForm';
 
 const UlStyle = css`
   list-style: disc;
@@ -39,6 +43,7 @@ export const EditNodeTaintForm = React.forwardRef<
   const { nodeModel } = props;
   const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
+  const tableFormRef = useRef<KeyValueTableFormHandle<KeyValuePair>>(null);
 
   const defaultValue = useMemo(() => {
     return nodeModel._rawYaml.spec?.taints || [];
@@ -80,9 +85,20 @@ export const EditNodeTaintForm = React.forwardRef<
     },
     [nodeModel, mutateAsync, t]
   );
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      submit: () => {
+        return tableFormRef.current?.submit();
+      },
+    }),
+    []
+  );
+
   return (
-    <KeyValueTableFormForm
-      ref={ref}
+    <KeyValueTableForm
+      ref={tableFormRef}
       defaultValue={defaultValue}
       onSubmit={onSubmit}
       addButtonText={t('dovetail.add_taint')}

@@ -1,6 +1,12 @@
 import { Form, Loading } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
-import { FormAction, useResource } from '@refinedev/core';
+import {
+  BaseRecord,
+  CreateResponse,
+  FormAction,
+  UpdateResponse,
+  useResource,
+} from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,13 +50,15 @@ export interface YamlFormProps<Model extends ResourceModel = ResourceModel> {
   onSaveButtonPropsChange?: (saveButtonProps: {
     disabled?: boolean;
     onClick: () => void;
-    loading?: boolean | { delay?: number | undefined; };
+    loading?: boolean | { delay?: number | undefined };
   }) => void;
   onErrorsChange?: (errors: string[]) => void;
-  onFinish?: () => void;
+  onFinish?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
 }
 
-export function YamlForm<Model extends ResourceModel = ResourceModel>(props: YamlFormProps<Model>) {
+export function YamlForm<Model extends ResourceModel = ResourceModel>(
+  props: YamlFormProps<Model>
+) {
   const {
     id,
     action: actionFromProps,
@@ -89,13 +97,20 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(props: Yam
     successNotification(data) {
       const displayName = config.displayName || resource?.meta?.kind;
       return {
-        message: i18n.t(action === 'create' ? 'dovetail.create_success_toast' : 'dovetail.save_yaml_success_toast', {
-          kind: transformResourceKindInSentence(displayName, i18n.language),
-          name: data?.data.id,
-          interpolation: {
-            escapeValue: false
-          },
-        }).trim(),
+        message: i18n
+          .t(
+            action === 'create'
+              ? 'dovetail.create_success_toast'
+              : 'dovetail.save_yaml_success_toast',
+            {
+              kind: transformResourceKindInSentence(displayName, i18n.language),
+              name: data?.data.id,
+              interpolation: {
+                escapeValue: false,
+              },
+            }
+          )
+          .trim(),
         type: 'success',
       };
     },
@@ -103,31 +118,30 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(props: Yam
     transformInitValues,
     transformApplyValues,
     mutationMeta: {
-      updateType: 'put'
+      updateType: 'put',
     },
     ...useFormProps,
   });
 
   const FormWrapper = isShowLayout ? FormLayout : React.Fragment;
   const formWrapperProps = isShowLayout ? { saveButtonProps } : {};
-  const responseErrors = useMemo(() => (
-    errorResponseBody
-      ? getCommonErrors(errorResponseBody, i18n)
-      : []
-  ), [errorResponseBody, i18n]);
+  const responseErrors = useMemo(
+    () => (errorResponseBody ? getCommonErrors(errorResponseBody, i18n) : []),
+    [errorResponseBody, i18n]
+  );
 
   const onFinish = useCallback(
     async store => {
       try {
         const result = await formProps.onFinish?.(store);
         if (result) {
-          props.onFinish?.();
+          props.onFinish?.(result);
         }
       } catch {
       } finally {
         onSaveButtonPropsChange?.({
           ...saveButtonProps,
-          loading: false
+          loading: false,
         });
       }
     },

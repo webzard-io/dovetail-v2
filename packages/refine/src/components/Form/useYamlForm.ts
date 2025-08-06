@@ -319,25 +319,25 @@ const useYamlForm = <
     }
     return changeValues;
   };
-  const validateRules = (yamlValue: string) => {
+  const validateRules = async (yamlValue: string) => {
     const errorMap: Record<string, string> = {};
 
     if (rules && isYamlValid && isSchemaValid) {
       const formValue = yaml.load(yamlValue || '');
 
-      rules.forEach(rule => {
+      for (const rule of rules) {
         const { path, validators } = rule;
         const value = get(formValue, path);
 
         for (const validator of (validators || [])) {
-          const { isValid, errorMsg } = validator(value, formValue, FormType.YAML);
+          const { isValid, errorMsg } = await validator(value, formValue, FormType.YAML);
 
           if (!isValid) {
             errorMap[path.join('.')] = `${errorMsg}(${path.join('.')})`;
             break;
           }
         }
-      });
+      }
 
     }
 

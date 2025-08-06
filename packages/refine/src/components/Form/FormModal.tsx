@@ -2,7 +2,7 @@ import { CloseCircleFilled } from '@ant-design/icons';
 import { usePopModal, usePushModal, Modal, Typo } from '@cloudtower/eagle';
 import { ExclamationErrorCircleFill16RedIcon } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
-import { useResource } from '@refinedev/core';
+import { BaseRecord, CreateResponse, UpdateResponse, useResource } from '@refinedev/core';
 import React, { useState, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
@@ -36,18 +36,18 @@ const TitleWrapperStyle = css`
 
 export type SaveButtonProps =
   | {
-    disabled: boolean;
-    onClick: (e: React.BaseSyntheticEvent) => void;
-  }
-  | {
-    loading?:
-    | boolean
-    | {
-      delay?: number | undefined;
+      disabled: boolean;
+      onClick: (e: React.BaseSyntheticEvent) => void;
     }
-    | undefined;
-    onClick?: (() => void) | undefined;
-  };
+  | {
+      loading?:
+        | boolean
+        | {
+            delay?: number | undefined;
+          }
+        | undefined;
+      onClick?: (() => void) | undefined;
+    };
 
 export interface ConfirmModalProps {
   onOk?: () => void;
@@ -83,10 +83,16 @@ export type FormModalProps = {
   resource?: string;
   id?: string;
   yamlFormProps?: YamlFormProps;
+  onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
 };
 
 export function FormModal(props: FormModalProps) {
-  const { resource: resourceFromProps, id, yamlFormProps: customYamlFormProps } = props;
+  const {
+    resource: resourceFromProps,
+    id,
+    yamlFormProps: customYamlFormProps,
+    onSuccess,
+  } = props;
   const { i18n } = useTranslation();
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
@@ -171,9 +177,10 @@ export function FormModal(props: FormModalProps) {
       onError: () => {
         setIsError(true);
       },
-      onSuccess: () => {
+      onSuccess: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => {
         setIsError(false);
         popModal();
+        onSuccess?.(data);
       },
     };
 
@@ -191,7 +198,15 @@ export function FormModal(props: FormModalProps) {
     }
 
     return <YamlFormContainer {...commonFormProps} formConfig={config.formConfig} />;
-  }, [id, customYamlFormProps, config, isYamlMode, popModal, setSaveButtonProps]);
+  }, [
+    id,
+    customYamlFormProps,
+    config,
+    isYamlMode,
+    popModal,
+    setSaveButtonProps,
+    onSuccess,
+  ]);
 
   return (
     <Modal
