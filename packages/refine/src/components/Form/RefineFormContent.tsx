@@ -4,11 +4,18 @@ import { UseFormReturnType } from '@refinedev/react-hook-form';
 import { get } from 'lodash-es';
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { RefineFormFieldRenderProps } from 'src/components/Form/type';
+import { FormItemLayout, RefineFormFieldRenderProps } from 'src/components/Form/type';
 import { ResourceModel } from 'src/models';
 import { CommonFormConfig, FormType, RefineFormConfig, ResourceConfig } from 'src/types';
 import { FormErrorAlert } from '../FormErrorAlert';
 import useFieldsConfig from './useFieldsConfig';
+
+const VerticalFormItemStyle = css`
+  &.ant-form-item {
+    flex-direction: column !important;
+    gap: 8px;
+  }
+`;
 
 type Props<Model extends ResourceModel> = {
   config?: ResourceConfig<Model>;
@@ -61,7 +68,9 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
   const formFieldsConfig = useFieldsConfig(config, formConfig, resourceId);
 
   const fields = formFieldsConfig?.map(fieldConfig => {
-    const isDisplay = fieldConfig.condition?.(formValues, get(formValues, fieldConfig.path.join('.'))) !== false;
+    const isDisplay =
+      fieldConfig.condition?.(formValues, get(formValues, fieldConfig.path.join('.'))) !==
+      false;
 
     return isDisplay ? (
       <Controller
@@ -69,11 +78,12 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
         control={control}
         name={fieldConfig.path.join('.')}
         rules={{
-          validate(value) {
+          async validate(value) {
             const formValue = getValues();
-            if (!fieldConfig.validators || fieldConfig.validators.length === 0) return true;
+            if (!fieldConfig.validators || fieldConfig.validators.length === 0)
+              return true;
             for (const func of fieldConfig.validators) {
-              const { isValid, errorMsg } = func(value, formValue, FormType.FORM);
+              const { isValid, errorMsg } = await func(value, formValue, FormType.FORM);
               if (!isValid) return errorMsg;
             }
             return true;
@@ -101,11 +111,22 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
               key={fieldConfig.key}
               label={fieldConfig.label}
               colon={false}
-              labelCol={{ flex: `0 0 ${formConfig?.labelWidth || '216px'}` }}
-              help={fieldState.error?.message}
+              labelCol={
+                fieldConfig.layout === FormItemLayout.VERTICAL
+                  ? {}
+                  : { flex: `0 0 ${formConfig?.labelWidth || '216px'}` }
+              }
+              help={fieldConfig.isHideErrorStatus ? '' : fieldState.error?.message}
               extra={fieldConfig.helperText}
-              validateStatus={fieldState.invalid ? 'error' : undefined}
+              validateStatus={
+                fieldState.invalid && !fieldConfig.isHideErrorStatus ? 'error' : undefined
+              }
               data-test-id={fieldConfig.key}
+              className={
+                fieldConfig.layout === FormItemLayout.VERTICAL
+                  ? VerticalFormItemStyle
+                  : ''
+              }
             >
               {ele}
             </Form.Item>

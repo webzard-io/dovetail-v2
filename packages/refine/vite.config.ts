@@ -28,7 +28,7 @@ export default defineConfig({
     proxy: {
       // '/proxy-k8s': getProxyConfig(),
       '/api': {
-        target: process.env.API_HOST || 'http://192.168.30.67',
+        target: process.env.API_HOST || 'http://192.168.31.62',
         ws: true,
         headers: {
           'Accept-Encoding': 'identity',

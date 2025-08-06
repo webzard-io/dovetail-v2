@@ -2,11 +2,16 @@ import React from 'react';
 import { Control, UseFormTrigger, FieldValues, ControllerRenderProps } from 'react-hook-form';
 import { FormType } from 'src/types/resource';
 
+export enum FormItemLayout {
+  VERTICAL = 'VERTICAL',
+  HORIZONTAL = 'HORIZONTAL',
+}
+
 export type RefineFormValidator = (
   value: unknown,
   formValue: unknown,
   formMode: FormType
-) => { isValid: boolean; errorMsg: string };
+) => { isValid: boolean; errorMsg: string } | Promise<{ isValid: boolean; errorMsg: string }>;
 
 export type RefineFormFieldRenderProps = {
   field: ControllerRenderProps<FieldValues, string>;
@@ -24,7 +29,10 @@ export type RefineFormField = {
   helperText?: React.ReactNode;
   type?: 'number';
   validators?: RefineFormValidator[];
+  isSkipValidationInYaml?: boolean;
   disabledWhenEdit?: boolean;
+  layout?: FormItemLayout;
+  isHideErrorStatus?: boolean;
   render?: (props: RefineFormFieldRenderProps) => React.ReactElement;
   /**
    * 表单项条件渲染函数
