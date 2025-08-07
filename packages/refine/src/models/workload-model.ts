@@ -4,7 +4,9 @@ import { PodList } from 'kubernetes-types/core/v1';
 import { cloneDeep, get, set, sumBy } from 'lodash';
 import { REDEPLOY_TIMESTAMP_KEY } from '../constants';
 import { matchSelector } from '../utils/match-selector';
+import { IngressModel } from './ingress-model';
 import { PodModel } from './pod-model';
+import { ServiceModel } from './service-model';
 import { WorkloadBaseModel } from './workload-base-model';
 
 type WorkloadTypes = Required<Deployment | StatefulSet | DaemonSet> & Unstructured;
@@ -13,6 +15,8 @@ export class WorkloadModel extends WorkloadBaseModel {
   public restarts = 0;
   public declare spec?: WorkloadTypes['spec'];
   public declare status?: WorkloadTypes['status'];
+  public services: ServiceModel[] = [];
+  public ingresses: IngressModel[] = [];
 
   constructor(
     public _rawYaml: WorkloadTypes,
@@ -23,6 +27,8 @@ export class WorkloadModel extends WorkloadBaseModel {
 
   override async init() {
     await this.getRestarts();
+    await this.getServices();
+    await this.getIngresses();
   }
 
   private async getRestarts() {
@@ -35,6 +41,32 @@ export class WorkloadModel extends WorkloadBaseModel {
     );
     const result = sumBy(myPods, 'restarts');
     this.restarts = result;
+  }
+
+  private async getServices() {
+    const services = await this._globalStore.get('services', {
+      resourceBasePath: '/api/v1',
+      kind: 'Service',
+    });
+    const myServices = services.items.filter(p =>
+      matchSelector(p as ServiceModel, this.spec?.selector, this.metadata.namespace)
+    ) as ServiceModel[];
+    
+    this.services = myServices;
+  }
+
+  private async getIngresses() {
+    // 通过关联的services获取所有ingresses，避免重复
+    const allIngresses = new Map<string, IngressModel>();
+    
+    for (const service of this.services) {
+      for (const ingress of service.ingresses) {
+        const key = `${ingress.namespace}-${ingress.name}`;
+        allIngresses.set(key, ingress);
+      }
+    }
+    
+    this.ingresses = Array.from(allIngresses.values());
   }
 
   get replicas() {
