@@ -328,6 +328,7 @@ export const LabelsField = <Model extends ResourceModel>(
   i18n: I18nType
 ): ShowField<Model> => ({
   key: 'Labels',
+  col: 24,
   title: i18n.t('dovetail.label'),
   path: ['metadata', 'labels'],
   renderContent: value => {
@@ -343,6 +344,7 @@ export const AnnotationsField = <Model extends ResourceModel>(
   i18n: I18nType
 ): ShowField<Model> => ({
   key: 'Annotations',
+  col: 24,
   title: i18n.t('dovetail.annotation'),
   path: ['metadata', 'annotations'],
   renderContent: value => {
