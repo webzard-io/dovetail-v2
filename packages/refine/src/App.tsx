@@ -151,6 +151,13 @@ function App() {
       ConfigMapConfig(i18n),
       SecretsConfig(i18n),
       ServicesConfig(i18n),
+      {
+        name: 'replicasets',
+        basePath: '/apis/apps/v1',
+        kind: 'ReplicaSet',
+        apiVersion: 'apps/v1',
+        isCustom: true,
+      },
     ];
   }, []);
 
@@ -173,7 +180,7 @@ function App() {
         resourcesConfig={resourcesConfig}
         Layout={Layout}
         history={history}
-        globalStoreMap={{default: globalStore} as any}
+        globalStoreMap={{ default: globalStore } as any}
         schemaUrlPrefix="/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3"
       >
         <Router history={history}>

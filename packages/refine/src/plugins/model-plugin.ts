@@ -21,6 +21,7 @@ import {
   StorageClassModel,
   PersistentVolumeModel,
   PersistentVolumeClaimModel,
+  ReplicaSetModel,
 } from '../models';
 
 export class ModelPlugin implements IProviderPlugin<ResourceModel> {
@@ -42,6 +43,7 @@ export class ModelPlugin implements IProviderPlugin<ResourceModel> {
       StorageClass: StorageClassModel,
       PersistentVolume: PersistentVolumeModel,
       PersistentVolumeClaim: PersistentVolumeClaimModel,
+      ReplicaSet: ReplicaSetModel,
     })
   );
 
