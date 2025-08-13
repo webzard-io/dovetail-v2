@@ -35,7 +35,12 @@ import { FormType } from 'src/types';
 import { ResourceState } from '../../constants';
 import { ResourceModel } from '../../models';
 import { StateTag } from '../StateTag';
-import { ShowConfig, ShowField, AreaType } from './fields';
+import {
+  ShowConfig,
+  ShowField,
+  AreaType, 
+  ShowGroup,
+} from './fields';
 const ShowContentWrapperStyle = css`
   height: 100%;
   display: flex;
@@ -184,7 +189,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
     id,
     errorNotification: false,
   });
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data } = queryResult;
   const navigation = useNavigation();
   const go = useGo();
@@ -220,6 +225,9 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
           flex={areaType === AreaType.Inline ? 'none' : ''}
           span={field.col || 24}
           key={field.key}
+          className={css`
+            padding: 4px 0;
+          `}
         >
           {field.render ? (
             field.render(value, record, field)
@@ -252,6 +260,31 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
         <ValueDisplay style={{ height: '100%' }} value={content} useOverflow={false} />
       );
     });
+  }
+
+  function renderGroup(group: ShowGroup<Model>) {
+    const GroupContainer = group.title ? ShowGroupComponent : React.Fragment;
+    const FieldContainer = group.title ? Row : React.Fragment;
+    const groupContainerProps = group.title ? { title: group.title || '' } : {};
+    const fieldContainerProps = group.title ? { gutter: [24, 8] } : {};
+
+    return (
+      <GroupContainer
+        key={group.title}
+        {...(groupContainerProps as ShowGroupComponentProps)}
+      >
+        {group.areas.map((area, index) => (
+          <>
+            <FieldContainer key={index} {...(fieldContainerProps as AntdRowProps)}>
+              {renderFields(area.fields, area.type, !!group.title)}
+            </FieldContainer>
+            {index !== group.areas.length - 1 ? (
+              <Divider style={{ margin: '8px 0 12px 0' }} />
+            ) : null}
+          </>
+        ))}
+      </GroupContainer>
+    );
   }
 
   const stateDisplay = get(record, 'stateDisplay') as ResourceState;
@@ -322,35 +355,7 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
                 tab.groups.length <= 1 && tabIndex !== 0 && FullTabContentStyle
               )}
             >
-              {tab.groups?.map(group => {
-                const GroupContainer = group.title ? ShowGroupComponent : React.Fragment;
-                const FieldContainer = group.title ? Row : React.Fragment;
-                const groupContainerProps = group.title
-                  ? { title: group.title || '' }
-                  : {};
-                const fieldContainerProps = group.title ? { gutter: [24, 8] } : {};
-
-                return (
-                  <GroupContainer
-                    key={group.title}
-                    {...(groupContainerProps as ShowGroupComponentProps)}
-                  >
-                    {group.areas.map((area, index) => (
-                      <>
-                        <FieldContainer
-                          key={index}
-                          {...(fieldContainerProps as AntdRowProps)}
-                        >
-                          {renderFields(area.fields, area.type, !!group.title)}
-                        </FieldContainer>
-                        {index !== group.areas.length - 1 ? (
-                          <Divider style={{ margin: '8px 0 12px 0' }} />
-                        ) : null}
-                      </>
-                    ))}
-                  </GroupContainer>
-                );
-              })}
+              {tab.groups?.map(renderGroup)}
             </div>
           ),
         };
@@ -359,11 +364,14 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
     />
   );
 
+  const basicInfo = showConfig.basicGroup ? renderGroup(showConfig.basicGroup) : null;
+
   return (
     <div className={ShowContentWrapperStyle}>
       <Space direction="vertical" className={ShowContentHeaderStyle}>
         {topBar}
       </Space>
+      {basicInfo}
       {tabs}
     </div>
   );
