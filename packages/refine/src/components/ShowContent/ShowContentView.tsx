@@ -221,7 +221,7 @@ export const ShowContentView = <Model extends ResourceModel>(
       return hasCol ? (
         <Col
           flex={areaType === AreaType.Inline ? 'none' : ''}
-          span={field.col || 12}
+          span={field.col || 24}
           key={field.key}
           className={css`
             padding: 4px 0;
