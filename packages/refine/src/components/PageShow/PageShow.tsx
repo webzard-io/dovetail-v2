@@ -6,11 +6,11 @@ import { ConfigsContext } from 'src/contexts';
 import { ResourceModel } from '../../models';
 import { ShowContent, ShowConfig } from '../ShowContent';
 
-type Props<Model extends ResourceModel> = {
+type Props<Model extends ResourceModel> = React.PropsWithChildren<{
   showConfig: ShowConfig<Model>;
   formatter?: (r: Model) => Model;
   Dropdown?: React.FC<{ record: Model }>;
-};
+}>;
 
 export const PageShow = <Model extends ResourceModel>(props: Props<Model>) => {
   const parsed = useParsed();
@@ -64,5 +64,5 @@ export const PageShow = <Model extends ResourceModel>(props: Props<Model>) => {
     }
   }, [isError, nav, resource, queryResult, parsed, msg, notExistMsg, isLoading]);
 
-  return isLoading ? <Loading /> : <ShowContent {...props} />;
+  return isLoading ? <Loading /> : <ShowContent {...props}>{props.children}</ShowContent>;
 };

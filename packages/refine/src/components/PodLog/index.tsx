@@ -5,7 +5,6 @@ import {
 } from '@cloudtower/icons-react';
 import { css } from '@linaria/core';
 import { LogViewer } from '@patternfly/react-log-viewer';
-import { useDataProvider } from '@refinedev/core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent from 'src/components/ErrorContent';
@@ -14,7 +13,6 @@ import '@patternfly/react-core/dist/styles/base-no-reset.css';
 import { PodModel } from '../../models';
 
 const WrapperStyle = css`
-  padding: 0 24px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -39,7 +37,7 @@ const ContentStyle = css`
   min-height: 0;
 `;
 
-export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
+export const PodLog: React.FC<{ pod: PodModel, apiUrl: string }> = ({ pod, apiUrl }) => {
   const [selectedContainer, setSelectedContainer] = useState(
     pod.spec?.containers[0]?.name || ''
   );
@@ -50,9 +48,6 @@ export const PodLog: React.FC<{ pod: PodModel }> = ({ pod }) => {
   const [wrap, setWrap] = useState(false);
   const logViewerRef = useRef<{ scrollToBottom: () => void }>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
-
-  const dataProvider = useDataProvider();
-  const apiUrl = dataProvider()['getApiUrl']();
 
   const { t } = useTranslation();
 
