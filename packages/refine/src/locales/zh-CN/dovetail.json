@@ -240,5 +240,7 @@
   "cant_delete_resource": "无法删除{{resource}}",
   "cant_delete_resource_with_name": "无法删除{{resource}} <0>{{name}}</0> 。",
   "close": "关闭",
-  "import_from_file": "从文件读取"
+  "import_from_file": "从文件读取",
+  "view_all_info": "查看全部信息",
+  "collapse": "收起"
 }
