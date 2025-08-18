@@ -106,6 +106,7 @@ export const ImageField = <Model extends WorkloadBaseModel>(
 ): ShowField<Model> => {
   return {
     key: 'Image',
+    col: 12,
     title: i18n.t('dovetail.image'),
     path: ['imageNames'],
     renderContent(value) {
@@ -221,6 +222,7 @@ export const SecretDataField = <Model extends ResourceModel>(): ShowField<Model>
 export const StartTimeField = (i18n: I18nType): ShowField<JobModel> => {
   return {
     key: 'started',
+    col: 12,
     title: i18n.t('dovetail.started'),
     path: ['status', 'startTime'],
     renderContent(value) {
@@ -234,6 +236,7 @@ export const ServiceTypeField = <Model extends ServiceModel>(
 ): ShowField<Model> => {
   return {
     key: 'type',
+    col: 12,
     title: i18n.t('dovetail.type'),
     path: ['displayType'],
   };
@@ -244,6 +247,7 @@ export const ClusterIpField = <Model extends ServiceModel>(
 ): ShowField<Model> => {
   return {
     key: 'clusterIp',
+    col: 12,
     title: i18n.t('dovetail.clusterIp'),
     path: ['spec', 'clusterIP'],
   };
@@ -254,6 +258,7 @@ export const SessionAffinityField = <Model extends ServiceModel>(
 ): ShowField<Model> => {
   return {
     key: 'clusterIp',
+    col: 12,
     title: i18n.t('dovetail.sessionAffinity'),
     path: ['spec', 'sessionAffinity'],
   };
@@ -309,6 +314,7 @@ export const NamespaceField = <Model extends ResourceModel>(
   i18n: I18nType
 ): ShowField<Model> => ({
   key: 'NameSpace',
+  col: 12,
   title: i18n.t('dovetail.namespace'),
   path: ['metadata', 'namespace'],
 });
@@ -317,6 +323,7 @@ export const AgeField = <Model extends ResourceModel>(
   i18n: I18nType
 ): ShowField<Model> => ({
   key: 'Age',
+  col: 12,
   title: i18n.t('dovetail.created_time'),
   path: ['metadata', 'creationTimestamp'],
   renderContent(value) {
@@ -354,6 +361,7 @@ export const ServiceInnerClusterAccessField = <
   Model extends ServiceModel,
 >(): ShowField<Model> => ({
   key: 'innerClusterAccess',
+  col: 12,
   title: <ServiceInClusterAccessTitle />,
   path: [],
   renderContent: (_, record) => {
@@ -365,6 +373,7 @@ export const ServiceOutClusterAccessField = <Model extends ServiceModel>(
   clusterVip: string
 ): ShowField<Model> => ({
   key: 'innerClusterAccess',
+  col: 12,
   title: <ServiceOutClusterAccessTitle />,
   path: [],
   renderContent: (_, record) => {
@@ -407,6 +416,7 @@ export const DurationField = <Model extends JobModel | CronJobModel>(
 ): ShowField<Model> => {
   return {
     key: 'duration',
+    col: 12,
     path: ['duration'],
     title: i18n.t('dovetail.duration'),
     renderContent: v => {
@@ -420,6 +430,7 @@ export const StorageClassProvisionerField = <Model extends StorageClassModel>(
 ): ShowField<Model> => {
   return {
     key: 'provisioner',
+    col: 12,
     path: ['provisioner'],
     title: i18n.t('dovetail.provisioner'),
   };
@@ -459,6 +470,7 @@ export const PVCapacityField = <Model extends PersistentVolumeModel>(
 ): ShowField<Model> => {
   return {
     key: 'capacity',
+    col: 12,
     path: ['spec', 'capacity', 'storage'],
     title: i18n.t('dovetail.capacity'),
     renderContent(value) {
@@ -472,6 +484,7 @@ export const PVCStorageField = <Model extends PersistentVolumeClaimModel>(
 ): ShowField<Model> => {
   return {
     key: 'storage',
+    col: 12,
     path: ['spec', 'resources', 'requests', 'storage'],
     title: i18n.t('dovetail.distributed'),
     renderContent(value, pvc) {
@@ -485,6 +498,7 @@ export const PVRefField = <Model extends PersistentVolumeClaimModel>(
 ): ShowField<Model> => {
   return {
     key: 'pv',
+    col: 12,
     path: ['pv'],
     title: i18n.t('dovetail.pv'),
     renderContent(value) {
@@ -506,6 +520,7 @@ export const PVStorageClassField = <
 ): ShowField<Model> => {
   return {
     key: 'storageClass',
+    col: 12,
     path: ['spec', 'storageClassName'],
     title: i18n.t('dovetail.storage_class'),
     renderContent(value) {
@@ -523,6 +538,7 @@ export const PVPhaseField = <
 ): ShowField<Model> => {
   return {
     key: 'phase',
+    col: 12,
     path: ['stateDisplay'],
     title: i18n.t('dovetail.state'),
     renderContent(value) {
@@ -538,6 +554,7 @@ export const PVVolumeModeField = <
 ): ShowField<Model> => {
   return {
     key: 'mode',
+    col: 12,
     path: ['spec', 'volumeMode'],
     title: i18n.t('dovetail.volume_mode'),
     renderContent(value) {
@@ -553,6 +570,7 @@ export const PVAccessModeField = <
 ): ShowField<Model> => {
   return {
     key: 'accessMode',
+    col: 12,
     path: ['spec', 'accessModes'],
     title: i18n.t('dovetail.access_mode'),
     renderContent(value) {
@@ -588,6 +606,7 @@ export const PVCRefField = <Model extends PersistentVolumeModel>(
 ): ShowField<Model> => {
   return {
     key: 'pvc',
+    col: 12,
     path: ['pvc'],
     title: i18n.t('dovetail.pvc'),
     renderContent(value, pv) {
@@ -608,6 +627,7 @@ export const PVCSIRefField = <Model extends PersistentVolumeModel>(
 ): ShowField<Model> => {
   return {
     key: 'csi',
+    col: 12,
     path: ['csi'],
     title: i18n.t('dovetail.csi'),
   };
@@ -618,6 +638,7 @@ export const IsDefaultSCField = <Model extends StorageClassModel>(
 ): ShowField<Model> => {
   return {
     key: 'isDefaultSC',
+    col: 12,
     path: ['isDefaultSC'],
     title: i18n.t('dovetail.default_sc'),
     renderContent(val) {
@@ -631,6 +652,7 @@ export const SCReclaimPolicyField = <Model extends StorageClassModel>(
 ): ShowField<Model> => {
   return {
     key: 'reclaimPolicy',
+    col: 12,
     path: ['reclaimPolicy'],
     title: i18n.t('dovetail.reclaim_policy'),
     renderContent(val) {
@@ -649,6 +671,7 @@ export const IsSCAllowVolumeExpansionField = <Model extends StorageClassModel>(
 ): ShowField<Model> => {
   return {
     key: 'allowVolumeExpansion',
+    col: 12,
     path: ['allowVolumeExpansion'],
     title: i18n.t('dovetail.allow_expand'),
     renderContent(val) {

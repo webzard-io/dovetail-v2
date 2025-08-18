@@ -3,7 +3,7 @@ import { ViewEye16GradientGrayIcon, EntityFilterIgnoreGradient16GrayIcon } from 
 import { css } from '@linaria/core';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ShowGroupComponent } from '../ShowContent/ShowContent';
+import { ShowGroupComponent } from '../ShowContent';
 import { KeyValue } from './KeyValue';
 
 const ButtonStyle = css`
