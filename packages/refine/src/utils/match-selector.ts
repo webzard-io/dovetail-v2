@@ -1,7 +1,7 @@
 import { LabelSelector } from 'kubernetes-types/meta/v1';
-import { PodModel } from '../models/pod-model';
+import { ResourceModel } from '../models/resource-model';
 
-export function matchSelector(pod: PodModel, selector?: LabelSelector, namespace = 'default'): boolean {
+export function matchSelector(pod: ResourceModel, selector?: LabelSelector, namespace = 'default'): boolean {
   let match = true;
   // TODO: support complete selector match strategy
   // https://github.com/rancher/dashboard/blob/master/shell/utils/selector.js#L166
@@ -16,5 +16,5 @@ export function matchSelector(pod: PodModel, selector?: LabelSelector, namespace
     }
   }
 
-  return match && pod.metadata.namespace === namespace;
+  return match && pod.metadata?.namespace === namespace;
 }
