@@ -7,6 +7,7 @@ import {
   Col,
   Row,
   Button,
+  Tag,
 } from '@cloudtower/eagle';
 import {
   ArrowChevronDown16OntintIcon,
@@ -142,6 +143,13 @@ const TabsStyle = css`
       }
     }
   }
+`;
+
+const KindTagStyle = css`
+  margin: auto 0;
+  margin-right: 8px;
+  border: 1px solid #acbad399;
+  background-color: white;
 `;
 
 export type ShowContentViewProps<Model extends ResourceModel> = {
@@ -312,6 +320,7 @@ export const ShowContentView = <Model extends ResourceModel>(
       )}
       <Space className={TopBarStyle}>
         <div style={{ display: 'flex' }}>
+          <Tag.NameTag className={KindTagStyle}>{config.kind}</Tag.NameTag>
           <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>
             {showConfig.displayName?.(record) || record?.metadata?.name}
           </span>
@@ -386,7 +395,7 @@ const CollapseTabs: React.FC = props => {
   if (isCollapsed) {
     return (
       <Button
-        type='text'
+        type="text"
         onClick={() => setIsCollapsed(v => !v)}
         suffixIcon={<Icon src={ArrowChevronUp16OntintIcon} />}
       >
@@ -398,7 +407,7 @@ const CollapseTabs: React.FC = props => {
       <>
         {props.children}
         <Button
-          type='text'
+          type="text"
           onClick={() => setIsCollapsed(v => !v)}
           suffixIcon={<Icon src={ArrowChevronDown16OntintIcon} />}
         >
