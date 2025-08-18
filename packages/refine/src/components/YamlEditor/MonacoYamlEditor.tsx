@@ -1,4 +1,5 @@
 import { cx } from '@linaria/core';
+import yaml from 'js-yaml';
 import { type JSONSchema7 } from 'json-schema';
 import _ from 'lodash-es';
 
@@ -9,12 +10,12 @@ import ReactDOM from 'react-dom';
 import { YamlEditorStyle } from './style';
 import YamlWorker from './yaml.worker?worker';
 
-type Props = {
+type Props<T extends string | Record<string, unknown> = string> = {
   className?: string;
   id?: string;
-  defaultValue: string;
+  defaultValue: T;
   height?: string;
-  onChange?: (val: string) => void;
+  onChange?: (val: T) => void;
   onValidate?: (valid: boolean, schemaValid: boolean) => void;
   isScrollOnFocus?: boolean;
   onEditorCreate?: (editor: monaco.editor.IStandaloneCodeEditor) => void;
@@ -38,7 +39,9 @@ if (!import.meta.env.PROD) {
   };
 }
 
-const MonacoYamlEditor: React.FC<Props> = props => {
+function MonacoYamlEditor<T extends string | Record<string, unknown> = string>(
+  props: Props<T>
+) {
   const ref = useRef<HTMLDivElement>(null);
   const instanceRef = useRef<{ editor: monaco.editor.IStandaloneCodeEditor | null }>({
     editor: null,
@@ -84,7 +87,9 @@ const MonacoYamlEditor: React.FC<Props> = props => {
       schemas: finalSchemas,
     });
 
-    const model = monaco.editor.createModel(defaultValue, 'yaml', uri);
+    const defaultValueString =
+      typeof defaultValue === 'string' ? defaultValue : yaml.dump(defaultValue);
+    const model = monaco.editor.createModel(defaultValueString, 'yaml', uri);
     const editor = monaco.editor.create(ref.current!, {
       automaticLayout: true,
       scrollBeyondLastLine: false,
@@ -119,7 +124,19 @@ const MonacoYamlEditor: React.FC<Props> = props => {
     if (editor) {
       const stop = editor.onDidChangeModelContent(() => {
         ReactDOM.unstable_batchedUpdates(() => {
-          onChange?.(editor.getValue());
+          const editorValue = editor.getValue();
+          // 保持原来传入值的类型
+          const newValue = (
+            typeof defaultValue === 'string' ? editorValue : yaml.load(editorValue) || {}
+          ) as T;
+
+          // 如果传入值为对象，则校验是否能解析 YAML 为对象，不能则报错
+          if (typeof defaultValue !== 'string' && typeof newValue === 'string') {
+            onValidate?.(false, true);
+          } else {
+            onValidate?.(true, true);
+            onChange?.(newValue);
+          }
         });
       });
 
@@ -127,7 +144,7 @@ const MonacoYamlEditor: React.FC<Props> = props => {
         stop.dispose();
       };
     }
-  }, [onChange]);
+  }, [onChange, defaultValue]);
 
   useEffect(() => {
     const editor = instanceRef.current.editor;
@@ -221,6 +238,6 @@ const MonacoYamlEditor: React.FC<Props> = props => {
       }}
     />
   );
-};
+}
 
 export default MonacoYamlEditor;

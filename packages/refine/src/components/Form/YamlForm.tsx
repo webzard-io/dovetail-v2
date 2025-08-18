@@ -172,7 +172,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
           return editorProps.schemas || schemaStrategy !== SchemaStrategy.Required ? (
             <>
               <Form.Item style={{ flex: 1 }}>
-                <YamlEditorComponent
+                <YamlEditorComponent<string>
                   {...editorProps}
                   className={EditorStyle}
                   collapsable={false}

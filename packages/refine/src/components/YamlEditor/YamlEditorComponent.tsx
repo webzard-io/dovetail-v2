@@ -14,8 +14,9 @@ import {
   Showdiff16GradientBlueIcon,
 } from '@cloudtower/icons-react';
 import { cx } from '@linaria/core';
+import yaml from 'js-yaml';
 import { JSONSchema7 } from 'json-schema';
-import { debounce } from 'lodash-es';
+import { debounce, isEqual } from 'lodash-es';
 import { type editor } from 'monaco-editor';
 import React, {
   Suspense,
@@ -44,11 +45,11 @@ import {
 const MonacoYamlEditor = React.lazy(() => import('./MonacoYamlEditor'));
 const MonacoYamlDiffEditor = React.lazy(() => import('./MonacoYamlDiffEditor'));
 
-export type YamlEditorProps = {
+export type YamlEditorProps<T extends string | Record<string, unknown> = string> = {
   eleRef?: React.MutableRefObject<HTMLDivElement>;
   title?: string;
-  value?: string;
-  defaultValue?: string;
+  value?: T;
+  defaultValue?: T;
   errorMsgs?: string[];
   schemas?: JSONSchema7[] | null;
   id?: string;
@@ -59,21 +60,23 @@ export type YamlEditorProps = {
   readOnly?: boolean;
   debounceTime?: number;
   isScrollOnFocus?: boolean;
-  onChange?: (value: string) => void;
+  onChange?: (value: T) => void;
   onValidate?: (valid: boolean, schemaValid: boolean) => void;
   onEditorCreate?: (editor: editor.IStandaloneCodeEditor) => void;
   onBlur?: () => void;
 };
 
-export type YamlEditorHandle = {
-  setValue: (value: string) => void;
+export type YamlEditorHandle<T extends string | Record<string, unknown> = string> = {
+  setValue: (value: T) => void;
   setEditorValue: (value: string) => void;
   getEditorValue: () => string;
   getEditorInstance: () => editor.IStandaloneCodeEditor | null;
 };
 
-export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>(
-  function YamlEditorComponent(props, ref) {
+export const YamlEditorComponent = forwardRef(
+  function YamlEditorComponent<
+    T extends string | Record<string, unknown> = string,
+  >(props: YamlEditorProps<T>, ref: React.Ref<YamlEditorHandle<T>>) {
     const {
       title,
       collapsable = true,
@@ -99,21 +102,22 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
     const [copyTooltip, setCopyTooltip] = useState(t('dovetail.copy'));
     const [resetTooltip, setResetTooltip] = useState(t('dovetail.reset_arguments'));
 
-    useImperativeHandle(ref, () => {
-      return {
-        setValue: _setValue,
-        setEditorValue: (value: string) => {
-          editorInstance.current?.getModel()?.setValue(value);
-        },
-        getEditorValue: () => {
-          return editorInstance.current?.getValue() ?? '';
-        },
-        getEditorInstance: () => editorInstance.current || null,
-      };
-    });
+    // 转换为字符串给编辑器使用
+    const defaultValueString = useMemo(() => {
+      if (typeof defaultValue === 'string') {
+        return defaultValue;
+      }
+      return yaml.dump(defaultValue);
+    }, [defaultValue]);
+    const _valueString = useMemo(() => {
+      if (typeof _value === 'string') {
+        return _value;
+      }
+      return yaml.dump(_value);
+    }, [_value]);
 
     const onChange = useCallback(
-      (newVal: string) => {
+      (newVal: T) => {
         _setValue(newVal);
         props.onChange?.(newVal);
       },
@@ -131,7 +135,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
     const onEditorCreate = useCallback(
       (editor: editor.IStandaloneCodeEditor) => {
         if (editor.getValue() !== _value) {
-          editorInstance.current?.getModel()?.setValue(_value);
+          editorInstance.current?.getModel()?.setValue(_valueString);
         }
 
         props.onEditorCreate?.(editor);
@@ -141,13 +145,29 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
     const getInstance = useCallback((ins: editor.IStandaloneCodeEditor): void => {
       editorInstance.current = ins;
     }, []);
+    const getEditorValue = useCallback(() => {
+      return editorInstance.current?.getValue() ?? '';
+    }, []);
 
     useEffect(() => {
-      if (value !== undefined && value !== _value) {
+      if (value !== undefined && !isEqual(value, _value)) {
+        const valueString = typeof value === 'string' ? value : yaml.dump(value);
+
         _setValue(value);
-        editorInstance.current?.getModel()?.setValue(value);
+        editorInstance.current?.getModel()?.setValue(valueString);
       }
     }, [value]);
+
+    useImperativeHandle(ref, () => {
+      return {
+        setValue: _setValue,
+        setEditorValue: (value: string) => {
+          editorInstance.current?.getModel()?.setValue(value);
+        },
+        getEditorValue,
+        getEditorInstance: () => editorInstance.current || null,
+      };
+    });
 
     return (
       <div
@@ -198,7 +218,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                       iconHeight={16}
                       onClick={() => {
                         if (!isCollapsed) {
-                          copyToClipboard(_value);
+                          copyToClipboard(getEditorValue());
                           setCopyTooltip(t('dovetail.copied'));
                         }
                       }}
@@ -224,7 +244,7 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
                       iconHeight={16}
                       onClick={() => {
                         if (!isCollapsed) {
-                          editorInstance.current?.setValue(defaultValue);
+                          editorInstance.current?.setValue(defaultValueString);
                           setResetTooltip(t('dovetail.already_reset'));
                         }
                       }}
@@ -288,14 +308,14 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
             zIndex: 1,
           }}
         >
-          <Suspense fallback={<pre className={PlainCodeStyle}>{_value}</pre>}>
+          <Suspense fallback={<pre className={PlainCodeStyle}>{_valueString}</pre>}>
             <div style={{ display: isDiff ? 'none' : 'block' }}>
               <MonacoYamlEditor
                 id={props.id}
                 getInstance={getInstance}
                 defaultValue={_value}
                 height={height}
-                onChange={finalOnChange}
+                onChange={finalOnChange as (val: string | Record<string, unknown>) => void}
                 onValidate={onValidate}
                 onEditorCreate={onEditorCreate}
                 onBlur={props.onBlur}
@@ -306,11 +326,11 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
             </div>
           </Suspense>
           {isDiff ? (
-            <Suspense fallback={<pre className={PlainCodeStyle}>{_value}</pre>}>
+            <Suspense fallback={<pre className={PlainCodeStyle}>{_valueString}</pre>}>
               <MonacoYamlDiffEditor
                 id={props.id}
-                origin={defaultValue}
-                modified={_value}
+                origin={defaultValueString}
+                modified={_valueString}
                 height={height}
               />
             </Suspense>
@@ -319,7 +339,9 @@ export const YamlEditorComponent = forwardRef<YamlEditorHandle, YamlEditorProps>
       </div>
     );
   }
-);
+) as <T extends string | Record<string, unknown> = string>(
+  props: YamlEditorProps<T> & { ref?: React.Ref<YamlEditorHandle<T>> }
+) => React.ReactElement;
 
 function copyToClipboard(text: string) {
   const input = document.createElement('textarea');
