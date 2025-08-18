@@ -1,4 +1,4 @@
-import { IResourceComponentsProps } from '@refinedev/core';
+import { IResourceComponentsProps, useDataProvider } from '@refinedev/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PodDropdown } from 'src/components/Dropdowns/PodDropdown';
@@ -8,7 +8,9 @@ import { PodModel } from '../../../models';
 
 export const PodShow: React.FC<IResourceComponentsProps> = () => {
   const { i18n } = useTranslation();
-
+  const dataProvider = useDataProvider();
+  const apiUrl = dataProvider()['getApiUrl']();
+  
   return (
     <PageShow<PodModel>
       showConfig={{
@@ -46,7 +48,7 @@ export const PodShow: React.FC<IResourceComponentsProps> = () => {
             ],
           },
           EventsTab(i18n),
-          PodLogTab(i18n),
+          PodLogTab(i18n, apiUrl),
         ],
       }}
       Dropdown={PodDropdown}

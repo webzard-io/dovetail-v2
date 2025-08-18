@@ -26,7 +26,7 @@ export const EventsTab = <Model extends ResourceModel>(
   ],
 });
 
-export const PodLogTab = <Model extends PodModel>(i18n: I18nType): ShowTab<Model> => ({
+export const PodLogTab = <Model extends PodModel>(i18n: I18nType, apiUrl: string): ShowTab<Model> => ({
   title: i18n.t('dovetail.log'),
   key: 'pod-log',
   groups: [
@@ -38,7 +38,7 @@ export const PodLogTab = <Model extends PodModel>(i18n: I18nType): ShowTab<Model
               key: 'log',
               path: [],
               renderContent: (_, record) => {
-                return <PodLog pod={record} />;
+                return <PodLog pod={record} apiUrl={apiUrl} />;
               },
             },
           ],
