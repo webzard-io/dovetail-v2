@@ -9,13 +9,15 @@ import {
   Button,
 } from '@cloudtower/eagle';
 import {
+  ArrowChevronDown16OntintIcon,
   ArrowChevronLeft16BoldTertiaryIcon,
   ArrowChevronLeftSmall16BoldBlueIcon,
+  ArrowChevronUp16OntintIcon,
 } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useShow, useNavigation, useGo, CanAccess } from '@refinedev/core';
 import { get } from 'lodash-es';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/Dropdowns/K8sDropdown';
 import { Tabs as BaseTabs } from 'src/components/Tabs';
@@ -149,6 +151,7 @@ export type ShowContentViewProps<Model extends ResourceModel> = {
   formatter?: (r: Model) => Model;
   Dropdown?: React.FC<{ record: Model }>;
   hideBackButton?: boolean;
+  canCollapseTabs?: boolean;
 };
 
 type ShowGroupComponentProps = React.PropsWithChildren<{
@@ -181,6 +184,7 @@ export const ShowContentView = <Model extends ResourceModel>(
     formatter,
     Dropdown = K8sDropdown,
     hideBackButton = false,
+    canCollapseTabs = false,
   } = props;
   const { queryResult } = useShow<Model>({
     id,
@@ -370,7 +374,37 @@ export const ShowContentView = <Model extends ResourceModel>(
         {topBar}
       </Space>
       {basicInfo}
-      {tabs}
+
+      {canCollapseTabs ? <CollapseTabs>{tabs}</CollapseTabs> : tabs}
     </div>
   );
+};
+
+const CollapseTabs: React.FC = props => {
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const { t } = useTranslation();
+  if (isCollapsed) {
+    return (
+      <Button
+        type='text'
+        onClick={() => setIsCollapsed(v => !v)}
+        suffixIcon={<Icon src={ArrowChevronUp16OntintIcon} />}
+      >
+        {t('dovetail.view_all_info')}
+      </Button>
+    );
+  } else {
+    return (
+      <>
+        {props.children}
+        <Button
+          type='text'
+          onClick={() => setIsCollapsed(v => !v)}
+          suffixIcon={<Icon src={ArrowChevronDown16OntintIcon} />}
+        >
+          {t('dovetail.collapse')}
+        </Button>
+      </>
+    );
+  }
 };
