@@ -7,15 +7,18 @@ import {
   Col,
   Row,
   Button,
+  Tag,
 } from '@cloudtower/eagle';
 import {
+  ArrowBoldDown16Icon,
   ArrowChevronLeft16BoldTertiaryIcon,
   ArrowChevronLeftSmall16BoldBlueIcon,
+  ArrowChevronUp16BoldSecondaryIcon,
 } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useShow, useNavigation, useGo, CanAccess } from '@refinedev/core';
 import { get } from 'lodash-es';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/Dropdowns/K8sDropdown';
 import { Tabs as BaseTabs } from 'src/components/Tabs';
@@ -92,6 +95,13 @@ const GroupStyle = css`
     padding-bottom: 0;
   }
 `;
+
+const BasicGroupStyle = css`
+  margin: 0 24px;
+  overflow: auto;
+  margin-bottom: 16;
+`;
+
 const GroupTitleStyle = css`
   display: flex;
   color: $blue-100;
@@ -142,14 +152,22 @@ const TabsStyle = css`
   }
 `;
 
-export type ShowContentViewProps<Model extends ResourceModel> = {
+const KindTagStyle = css`
+  margin: auto 0;
+  margin-right: 8px;
+  border: 1px solid #acbad399;
+  background-color: white;
+`;
+
+export type ShowContentViewProps<Model extends ResourceModel> = React.PropsWithChildren<{
   id: string;
   resourceName: string;
   showConfig: ShowConfig<Model>;
   formatter?: (r: Model) => Model;
   Dropdown?: React.FC<{ record: Model }>;
   hideBackButton?: boolean;
-};
+  canCollapseTabs?: boolean;
+}>;
 
 type ShowGroupComponentProps = React.PropsWithChildren<{
   title: string;
@@ -171,6 +189,12 @@ export function ShowGroupComponent(props: ShowGroupComponentProps) {
   );
 }
 
+export function BasicShowGroupComponent(props: React.PropsWithChildren<unknown>) {
+  const { children } = props;
+
+  return <div className={BasicGroupStyle}>{children}</div>;
+}
+
 export const ShowContentView = <Model extends ResourceModel>(
   props: ShowContentViewProps<Model>
 ) => {
@@ -179,8 +203,10 @@ export const ShowContentView = <Model extends ResourceModel>(
     resourceName,
     showConfig,
     formatter,
+    children,
     Dropdown = K8sDropdown,
     hideBackButton = false,
+    canCollapseTabs = false,
   } = props;
   const { queryResult } = useShow<Model>({
     id,
@@ -260,8 +286,14 @@ export const ShowContentView = <Model extends ResourceModel>(
     });
   }
 
-  function renderGroup(group: ShowGroup<Model>) {
-    const GroupContainer = group.title ? ShowGroupComponent : React.Fragment;
+  function renderGroup(group: ShowGroup<Model>, isBasicGroup = false) {
+    let GroupContainer: React.FC<ShowGroupComponentProps> = React.Fragment;
+    if (isBasicGroup) {
+      GroupContainer = BasicShowGroupComponent;
+    } else if (group.title) {
+      GroupContainer = ShowGroupComponent;
+    }
+
     const FieldContainer = group.title ? Row : React.Fragment;
     const groupContainerProps = group.title ? { title: group.title || '' } : {};
     const fieldContainerProps = group.title ? { gutter: [24, 8] } : {};
@@ -308,6 +340,7 @@ export const ShowContentView = <Model extends ResourceModel>(
       )}
       <Space className={TopBarStyle}>
         <div style={{ display: 'flex' }}>
+          <Tag.NameTag className={KindTagStyle}>{config.kind}</Tag.NameTag>
           <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>
             {showConfig.displayName?.(record) || record?.metadata?.name}
           </span>
@@ -353,7 +386,7 @@ export const ShowContentView = <Model extends ResourceModel>(
                 tab.groups.length <= 1 && tabIndex !== 0 && FullTabContentStyle
               )}
             >
-              {tab.groups?.map(renderGroup)}
+              {tab.groups?.map(group => renderGroup(group, false))}
             </div>
           ),
         };
@@ -362,7 +395,9 @@ export const ShowContentView = <Model extends ResourceModel>(
     />
   );
 
-  const basicInfo = showConfig.basicGroup ? renderGroup(showConfig.basicGroup) : null;
+  const basicInfo = showConfig.basicGroup
+    ? renderGroup(showConfig.basicGroup, true)
+    : null;
 
   return (
     <div className={ShowContentWrapperStyle}>
@@ -370,7 +405,44 @@ export const ShowContentView = <Model extends ResourceModel>(
         {topBar}
       </Space>
       {basicInfo}
-      {tabs}
+
+      {canCollapseTabs ? <CollapseTabs>{tabs}</CollapseTabs> : tabs}
+      {children}
     </div>
   );
+};
+
+const CollapseTabs: React.FC = props => {
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const { t } = useTranslation();
+  if (isCollapsed) {
+    return (
+      <div style={{ display: 'flex' }}>
+        <Button
+          style={{ margin: 'auto', cursor: 'pointer' }}
+          type="quiet"
+          onClick={() => setIsCollapsed(v => !v)}
+          suffixIcon={<Icon src={ArrowChevronUp16BoldSecondaryIcon} />}
+        >
+          {t('dovetail.view_all_info')}
+        </Button>
+      </div>
+    );
+  } else {
+    return (
+      <>
+        {props.children}
+        <div style={{ display: 'flex' }}>
+          <Button
+            style={{ margin: 'auto', cursor: 'pointer' }}
+            type="quiet"
+            onClick={() => setIsCollapsed(v => !v)}
+            suffixIcon={<Icon src={ArrowBoldDown16Icon} />}
+          >
+            {t('dovetail.collapse')}
+          </Button>
+        </div>
+      </>
+    );
+  }
 };

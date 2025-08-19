@@ -4,13 +4,12 @@ import K8sDropdown from 'src/components/Dropdowns/K8sDropdown';
 import { ResourceModel } from '../../models';
 import { ShowContentView, ShowContentViewProps } from './ShowContentView';
 
-type Props<Model extends ResourceModel> = Omit<
-  ShowContentViewProps<Model>,
-  'id' | 'resourceName'
+type Props<Model extends ResourceModel> = React.PropsWithChildren<
+  Omit<ShowContentViewProps<Model>, 'id' | 'resourceName'>
 >;
 
 export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) => {
-  const { showConfig, formatter, Dropdown = K8sDropdown } = props;
+  const { showConfig, formatter, Dropdown = K8sDropdown, children, canCollapseTabs } = props;
   const parsed = useParsed();
   const { resource } = useResource();
   const id = parsed?.params?.id;
@@ -22,6 +21,9 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       showConfig={showConfig}
       formatter={formatter}
       Dropdown={Dropdown}
-    />
+      canCollapseTabs={canCollapseTabs}
+    >
+      {children}
+    </ShowContentView>
   );
 };
