@@ -207,9 +207,9 @@ export const useForm = <
 
     /**
      * get registered fields from react-hook-form
-     */
-    const registeredFields = Object.keys(flattenObjectKeys(getValues()));
+     */ 
     const transformedData = transformInitValues ? transformInitValues(data) : data;
+    const registeredFields = Object.keys(flattenObjectKeys(transformedData));
 
     /**
      * set values from query result as default values
@@ -225,7 +225,7 @@ export const useForm = <
         setValue(path as Path<TVariables>, dataValue);
       }
     });
-  }, [queryResult?.data, setValue, getValues, transformInitValues, formState.isDirty]);
+  }, [queryResult?.data, setValue, transformInitValues, formState.isDirty]);
 
   useEffect(() => {
     const subscription = watch((values: any, { type }: { type?: any }) => {
