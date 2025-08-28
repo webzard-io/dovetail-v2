@@ -3,16 +3,30 @@ import { useList } from '@refinedev/core';
 import React from 'react';
 
 type ResourceSelectProps = {
+  className?: string;
   resource: string;
   resourceBasePath: string;
+  namespace?: string;
   kind: string;
   value: string;
-  onChange: (...params: unknown[]) => void;
+  onChange: (
+    value: string | string[],
+    object: { object: Record<string, unknown> } | { object: Record<string, unknown> }[]
+  ) => void;
   selectProps?: KitSelectProps;
 };
 
 export function ResourceSelect(props: ResourceSelectProps) {
-  const { resource, resourceBasePath, kind, selectProps, value, onChange } = props;
+  const {
+    className,
+    resource,
+    resourceBasePath,
+    kind,
+    namespace,
+    selectProps,
+    value,
+    onChange,
+  } = props;
   const { data, isLoading, isError } = useList({
     resource,
     meta: {
@@ -20,25 +34,28 @@ export function ResourceSelect(props: ResourceSelectProps) {
       kind,
     },
     pagination: {
-      mode: 'off'
-    }
+      mode: 'off',
+    },
   });
 
   return (
     <Select
+      className={className}
       input={{
         value,
-        onChange
+        onChange,
       }}
       loading={isLoading}
       error={isError}
       {...selectProps}
     >
-      {data?.data.map(namespace => (
-        <AntdOption key={namespace.metadata.name} value={namespace.metadata.name}>
-          {namespace.metadata.name}
-        </AntdOption>
-      ))}
+      {data?.data
+        .filter(item => !namespace || item.metadata.namespace === namespace)
+        .map(item => (
+          <AntdOption key={item.metadata.name} value={item.metadata.name} object={item}>
+            {item.metadata.name}
+          </AntdOption>
+        ))}
     </Select>
   );
 }
