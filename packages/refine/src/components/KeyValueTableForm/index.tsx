@@ -37,6 +37,7 @@ interface KeyValueTableFormProps<T extends KeyValuePair> {
   isValueOptional?: boolean;
   canImportFromFile?: boolean;
   minSize?: number;
+  extraAction?: React.ReactNode;
   validateKey?: (key: string) => { isValid: boolean; errorMessage?: string };
   validateValue?: (value: string) => { isValid: boolean; errorMessage?: string };
   onSubmit?: (value: T[]) => Promise<unknown> | undefined;
@@ -63,6 +64,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
     isValueOptional = true,
     canImportFromFile,
     minSize,
+    extraAction,
     validateKey,
     validateValue,
     onSubmit,
@@ -179,6 +181,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         rowAddConfig={{
           addible: true,
           text: () => addButtonText,
+          extraAction,
         }}
         defaultData={defaultValue}
         row={{
