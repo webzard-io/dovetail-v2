@@ -1,3 +1,7 @@
+import { i18n as I18n } from 'i18next';
+
+const ResourceNameRegExp = /(^[a-z0-9]$)|(^[a-z0-9][a-z0-9-]*[a-z0-9]$)/;
+
 export function validateDnsSubdomain(subdomain: string): {
   isValid: boolean;
   errorMessage?: string;
@@ -13,6 +17,45 @@ export function validateDnsSubdomain(subdomain: string): {
   }
 
   return { isValid: true };
+}
+
+export function rfc1123NameValidator({
+  v,
+  allNames,
+  i18n,
+  emptyText,
+  duplicatedText,
+}: {
+  v: string;
+  allNames: string[];
+  i18n: I18n;
+  emptyText?: string;
+  duplicatedText?: string;
+}) {
+  if (!v) {
+    return emptyText || i18n.t('dovetail.required_field', {
+      label: i18n.t('dovetail.name'),
+    });
+  }
+
+  if (v.length > 63) {
+    return i18n.t('dovetail.length_limit', {
+      label: i18n.t('dovetail.name'),
+      minLength: 1,
+      maxLength: 63,
+    });
+  }
+
+  if (!v.match(ResourceNameRegExp)) {
+    return i18n.t('dovetail.resource_name_format_error');
+  }
+
+  if (allNames.includes(v)) {
+    return duplicatedText || i18n.t('dovetail.name_duplicated', {
+      name: v,
+    });
+  }
+  return '';
 }
 
 export function validateLabelKey(key: string): {
@@ -64,6 +107,26 @@ export function validateLabelValue(
 
   if (!labelValueRegex.test(value)) {
     return { isValid: false };
+  }
+
+  return { isValid: true };
+}
+
+export function validatePort(port: string | number, isOptional: boolean, i18n: I18n): {
+  isValid: boolean;
+  errorMessage?: string;
+} {
+
+  if (port === '' && !isOptional) {
+    return { isValid: false, errorMessage: i18n.t('dovetail.required_field', {
+      label: i18n.t('dovetail.port'),
+    }) };
+  }
+
+  const portNumber = Number(port);
+
+  if (portNumber < 1 || portNumber > 65535) {
+    return { isValid: false, errorMessage: i18n.t('dovetail.input_correct_port') };
   }
 
   return { isValid: true };

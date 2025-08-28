@@ -242,5 +242,16 @@
   "close": "关闭",
   "import_from_file": "从文件读取",
   "view_all_info": "查看全部信息",
-  "collapse": "收起"
+  "collapse": "收起",
+  "tcp": "TCP",
+  "udp": "UDP",
+  "specify_workload": "指定工作负载",
+  "port_name": "端口名称",
+  "container_port": "容器端口",
+  "add_port": "添加端口",
+  "required_field": "请填写{{ label }}。",
+  "length_limit": "{{ label }}支持的字符长度范围为 {{ minLength }}–{{ maxLength }}。",
+  "resource_name_format_error": "仅支持小写字母、数字、连字符（-），并且必须以小写字母、数字开头和结尾。",
+  "name_duplicated": "已存在同名 {{name}}。",
+  "input_correct_port": "请填写有效的端口号。"
 }
