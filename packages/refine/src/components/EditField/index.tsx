@@ -1,4 +1,11 @@
-import { Modal, Button, usePushModal, Typo, usePopModal } from '@cloudtower/eagle';
+import {
+  Modal,
+  ImmersiveDialog,
+  Button,
+  usePushModal,
+  Typo,
+  usePopModal,
+} from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useResource, CanAccess } from '@refinedev/core';
 import React, { useCallback } from 'react';
@@ -7,7 +14,6 @@ import { FormErrorAlert } from '../../components/FormErrorAlert';
 import { AccessControlAuth } from '../../constants/auth';
 import { useSubmitForm } from '../../hooks/useSubmitForm';
 import { SmallModalStyle } from '../../styles/modal';
-import { FullscreenModalStyle } from '../../styles/modal';
 
 const EditButtonStyle = css`
   &.ant-btn.ant-btn-link {
@@ -43,6 +49,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
       popModal();
     },
   });
+  const ModalComponent = fullscreen ? ImmersiveDialog : Modal;
 
   const close = useCallback(() => {
     popModal();
@@ -50,8 +57,8 @@ export function EditFieldModal(props: EditFieldModalProps) {
   }, [popModal, reset]);
 
   return (
-    <Modal
-      className={fullscreen ? FullscreenModalStyle : SmallModalStyle}
+    <ModalComponent
+      className={fullscreen ? '' : SmallModalStyle}
       title={title || i18n.t('dovetail.edit')}
       confirmLoading={submitting}
       onOk={onSubmit}
@@ -59,11 +66,10 @@ export function EditFieldModal(props: EditFieldModalProps) {
       okText={i18n.t('dovetail.save')}
       normal
       destroyOnClose
-      fullscreen={fullscreen}
     >
       {renderContent()}
       <FormErrorAlert style={{ marginTop: 16 }} errorMsgs={errorMsgs} isEdit />
-    </Modal>
+    </ModalComponent>
   );
 }
 
