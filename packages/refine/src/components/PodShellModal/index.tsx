@@ -1,11 +1,9 @@
-import { CloseCircleFilled } from '@ant-design/icons';
-import { Modal, usePopModal, Loading } from '@cloudtower/eagle';
+import { usePopModal, Loading, ImmersiveDialog } from '@cloudtower/eagle';
 import React, { lazy, useState, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SocketStatus } from 'src/components/Shell/common';
 import { useGlobalStore } from 'src/hooks';
 import { PodModel } from 'src/models';
-import { FullscreenModalStyle } from 'src/styles/modal';
 
 const PodShell = lazy(() =>
   import('./PodShell').then(module => ({ default: module.PodShell }))
@@ -24,11 +22,8 @@ export function PodShellModal(props: PodShellModalProps) {
   const [socketStatus, setSocketStatus] = useState<SocketStatus>(SocketStatus.Opening);
 
   return (
-    <Modal
-      className={FullscreenModalStyle}
-      width="calc(100vw - 16px)"
+    <ImmersiveDialog
       title={t('dovetail.exec_pod')}
-      closeIcon={<CloseCircleFilled />}
       onCancel={() => {
         popModal();
       }}
@@ -41,7 +36,6 @@ export function PodShellModal(props: PodShellModalProps) {
       }
       keyboard
       destroyOnClose
-      fullscreen
       visible
     >
       <Suspense fallback={<Loading />}>
@@ -51,7 +45,7 @@ export function PodShellModal(props: PodShellModalProps) {
           basePath={globalStore?.apiUrl || ''}
         />
       </Suspense>
-    </Modal>
+    </ImmersiveDialog>
   );
 }
 

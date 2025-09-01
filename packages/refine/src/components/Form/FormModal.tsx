@@ -1,13 +1,17 @@
-import { CloseCircleFilled } from '@ant-design/icons';
-import { usePopModal, usePushModal, Modal, Typo } from '@cloudtower/eagle';
-import { ExclamationErrorCircleFill16RedIcon } from '@cloudtower/icons-react';
-import { css, cx } from '@linaria/core';
+import {
+  usePopModal,
+  usePushModal,
+  Modal,
+  Typo,
+  WizardDialog,
+} from '@cloudtower/eagle';
+import { WizardDialogProps } from '@cloudtower/eagle/dist/src/core/WizardDialog/type';
+import { css } from '@linaria/core';
 import { BaseRecord, CreateResponse, UpdateResponse, useResource } from '@refinedev/core';
 import React, { useState, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
 import { WarningButtonStyle } from 'src/styles/button';
-import { FullscreenModalStyle } from 'src/styles/modal';
 import { SmallModalStyle } from 'src/styles/modal';
 import { FormType, FormMode, RefineFormConfig, CommonFormConfig } from 'src/types';
 import { transformResourceKindInSentence } from 'src/utils/string';
@@ -22,11 +26,6 @@ const FormDescStyle = css`
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-`;
-const ErrorStyle = css`
-  display: flex;
-  align-items: center;
-  gap: 4px;
 `;
 const TitleWrapperStyle = css`
   display: flex;
@@ -83,6 +82,7 @@ export type FormModalProps = {
   resource?: string;
   id?: string;
   yamlFormProps?: YamlFormProps;
+  modalProps?: WizardDialogProps;
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
 };
 
@@ -91,6 +91,7 @@ export function FormModal(props: FormModalProps) {
     resource: resourceFromProps,
     id,
     yamlFormProps: customYamlFormProps,
+    modalProps,
     onSuccess,
   } = props;
   const { i18n } = useTranslation();
@@ -209,14 +210,12 @@ export function FormModal(props: FormModalProps) {
   ]);
 
   return (
-    <Modal
-      className={cx(FullscreenModalStyle)}
+    <WizardDialog
       style={
         {
           '--max-modal-width': isYamlForm || !isDisabledChangeMode ? '1024px' : '648px',
         } as React.CSSProperties
       }
-      width="calc(100vw - 16px)"
       title={
         <div className={TitleWrapperStyle}>
           <span>{title}</span>
@@ -229,28 +228,19 @@ export function FormModal(props: FormModalProps) {
           ) : null}
         </div>
       }
-      error={
-        errorText ? (
-          <div className={ErrorStyle}>
-            <ExclamationErrorCircleFill16RedIcon /> {errorText}
-          </div>
-        ) : (
-          ''
-        )
-      }
+      error={errorText}
       okButtonProps={{
         ...saveButtonProps,
         children: config.formConfig?.saveButtonText,
         onClick: onOk,
       }}
-      closeIcon={<CloseCircleFilled />}
       okText={okText}
       onCancel={onCancel}
       destroyOnClose
-      fullscreen
+      {...modalProps}
     >
       {desc ? <div className={FormDescStyle}>{desc}</div> : undefined}
       {formEle}
-    </Modal>
+    </WizardDialog>
   );
 }
