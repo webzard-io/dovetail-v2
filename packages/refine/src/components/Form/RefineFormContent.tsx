@@ -117,6 +117,7 @@ function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Mo
             action,
             control,
             trigger,
+            formValue: formValues,
           };
 
           let ele = null;
