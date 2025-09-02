@@ -53,3 +53,4 @@ export { default as ErrorContent } from './ErrorContent';
 export * from './KeyValueTableForm';
 export * from './MatchLabelSelector';
 export * from './PortsConfigForm';
+export * from './SectionTitle';

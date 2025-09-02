@@ -10,13 +10,18 @@ import {
   POD_INIT_VALUE,
   SERVER_INSTANCE_INIT_VALUE,
   NODE_INIT_VALUE,
+  DEPLOYMENT_INIT_VALUE,
 } from './constants/k8s';
 import { Dovetail } from './Dovetail';
 import i18n from './i18n';
 import { ConfigMapConfig } from './pages/configmaps';
 import { CronJobForm, CronJobList, CronJobShow } from './pages/cronjobs';
 import { DaemonSetForm, DaemonSetList, DaemonSetShow } from './pages/daemonsets';
-import { DeploymentList, DeploymentShow } from './pages/deployments';
+import {
+  DeploymentList,
+  DeploymentShow,
+  generatedDeploymentsFormConfig,
+} from './pages/deployments';
 import { IngressConfig } from './pages/ingresses';
 import { JobConfig } from './pages/jobs';
 import { NetworkPolicyConfig } from './pages/networkPolicies';
@@ -29,7 +34,7 @@ import { ServicesConfig } from './pages/services';
 import { StatefulSetConfig } from './pages/statefulsets';
 import { StorageClassConfig } from './pages/storageclasses';
 import { ProviderPlugins } from './plugins';
-import { RESOURCE_GROUP, ResourceConfig, FormContainerType, FormType } from './types';
+import { RESOURCE_GROUP, ResourceConfig, FormType } from './types';
 
 function App() {
   const history = createBrowserHistory();
@@ -60,10 +65,8 @@ function App() {
         kind: 'Deployment',
         apiVersion: 'apps/v1',
         parent: RESOURCE_GROUP.WORKLOAD,
-        formConfig: {
-          formType: FormType.YAML,
-          formContainerType: FormContainerType.MODAL,
-        },
+        formConfig: generatedDeploymentsFormConfig(),
+        initValue: DEPLOYMENT_INIT_VALUE,
         isCustom: true,
       },
       StatefulSetConfig(i18n),

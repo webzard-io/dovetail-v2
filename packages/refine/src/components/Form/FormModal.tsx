@@ -1,13 +1,8 @@
-import {
-  usePopModal,
-  usePushModal,
-  Modal,
-  Typo,
-  WizardDialog,
-} from '@cloudtower/eagle';
+import { usePopModal, usePushModal, Modal, Typo, WizardDialog } from '@cloudtower/eagle';
 import { WizardDialogProps } from '@cloudtower/eagle/dist/src/core/WizardDialog/type';
 import { css } from '@linaria/core';
 import { BaseRecord, CreateResponse, UpdateResponse, useResource } from '@refinedev/core';
+import { omit } from 'lodash-es';
 import React, { useState, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
@@ -100,6 +95,7 @@ export function FormModal(props: FormModalProps) {
   const [saveButtonProps, setSaveButtonProps] = useState<SaveButtonProps>({});
   const [isError, setIsError] = useState<boolean>(false);
   const [mode, setMode] = useState<FormMode>(FormMode.FORM);
+  const [step, setStep] = useState<number>(0);
   const isYamlMode = mode === FormMode.YAML;
   const popModal = usePopModal();
   const pushModal = usePushModal();
@@ -192,6 +188,7 @@ export function FormModal(props: FormModalProps) {
       return (
         <RefineFormContainer
           {...commonFormProps}
+          step={step}
           isYamlMode={isYamlMode}
           formConfig={config.formConfig as RefineFormConfig & CommonFormConfig}
         />
@@ -204,10 +201,32 @@ export function FormModal(props: FormModalProps) {
     customYamlFormProps,
     config,
     isYamlMode,
+    step,
     popModal,
     setSaveButtonProps,
     onSuccess,
   ]);
+  const steps = useMemo(() => {
+    if (isYamlMode) {
+      return undefined;
+    }
+
+    if (config.formConfig && 'steps' in config.formConfig) {
+      return config.formConfig?.steps?.map((step, index) => ({
+        title: step.title,
+        children: (
+          <>
+            {desc && index === 0 ? (
+              <div className={FormDescStyle}>{desc}</div>
+            ) : undefined}
+            {formEle}
+          </>
+        ),
+      }));
+    }
+
+    return undefined;
+  }, [config.formConfig, desc, formEle, isYamlMode]);
 
   return (
     <WizardDialog
@@ -229,14 +248,18 @@ export function FormModal(props: FormModalProps) {
         </div>
       }
       error={errorText}
+      steps={steps}
+      onStepChange={setStep}
+      onOk={onOk}
       okButtonProps={{
-        ...saveButtonProps,
+        ...omit(saveButtonProps, 'onClick'),
         children: config.formConfig?.saveButtonText,
-        onClick: onOk,
+        size: 'middle',
       }}
       okText={okText}
       onCancel={onCancel}
       destroyOnClose
+      destroyOtherStep
       {...modalProps}
     >
       {desc ? <div className={FormDescStyle}>{desc}</div> : undefined}
