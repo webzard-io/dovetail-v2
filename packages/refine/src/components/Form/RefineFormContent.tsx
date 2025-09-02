@@ -96,6 +96,7 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
             action,
             control,
             trigger,
+            formValue: formValues,
           };
 
           let ele = null;

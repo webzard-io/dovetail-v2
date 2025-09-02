@@ -19,6 +19,7 @@ export type RefineFormFieldRenderProps = {
   action: 'edit' | 'create';
   control: Control;
   trigger: UseFormTrigger<FieldValues>;
+  formValue: unknown;
 };
 
 export type RefineFormField = {
