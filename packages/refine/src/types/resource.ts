@@ -1,5 +1,5 @@
 import { UseFormProps } from '@refinedev/react-hook-form';
-import { FormModalProps, RefineFormField } from '../components/Form';
+import { FormModalProps, RefineFormField, RefineFormSection } from '../components/Form';
 import { Column, InternalTableProps } from '../components/InternalBaseTable';
 import { ShowConfig } from '../components/ShowContent';
 import { ResourceModel } from '../models';
@@ -44,6 +44,9 @@ export type WithId<T> = T & { id: string };
 
 export type RefineFormConfig<Model extends ResourceModel = ResourceModel> = {
   formType: FormType.FORM;
+  steps?: {
+    title: string;
+  }[]
   /**
  * 表单字段配置函数
  * @param props 包含记录和动作类型的配置对象
@@ -53,7 +56,8 @@ export type RefineFormConfig<Model extends ResourceModel = ResourceModel> = {
     record?: Model;
     records: Model[];
     action: 'create' | 'edit';
-  }) => RefineFormField[];
+    step: number;
+  }) => (RefineFormField | RefineFormSection)[];
   /** Refine Core 的表单属性 */
   refineCoreProps?: UseFormProps['refineCoreProps'];
   /** React Hook Form 的配置属性 */

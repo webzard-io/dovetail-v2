@@ -1,6 +1,6 @@
 import {
-  Modal,
   ImmersiveDialog,
+  SmallDialog,
   Button,
   usePushModal,
   Typo,
@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 import { FormErrorAlert } from '../../components/FormErrorAlert';
 import { AccessControlAuth } from '../../constants/auth';
 import { useSubmitForm } from '../../hooks/useSubmitForm';
-import { SmallModalStyle } from '../../styles/modal';
 
 const EditButtonStyle = css`
   &.ant-btn.ant-btn-link {
@@ -49,7 +48,7 @@ export function EditFieldModal(props: EditFieldModalProps) {
       popModal();
     },
   });
-  const ModalComponent = fullscreen ? ImmersiveDialog : Modal;
+  const ModalComponent = fullscreen ? ImmersiveDialog : SmallDialog;
 
   const close = useCallback(() => {
     popModal();
@@ -58,13 +57,11 @@ export function EditFieldModal(props: EditFieldModalProps) {
 
   return (
     <ModalComponent
-      className={fullscreen ? '' : SmallModalStyle}
       title={title || i18n.t('dovetail.edit')}
       confirmLoading={submitting}
       onOk={onSubmit}
       onCancel={close}
       okText={i18n.t('dovetail.save')}
-      normal
       destroyOnClose
     >
       {renderContent()}

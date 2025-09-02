@@ -1,5 +1,6 @@
 import React from 'react';
 import { Control, UseFormTrigger, FieldValues, ControllerRenderProps } from 'react-hook-form';
+import { ResourceModel } from 'src/models';
 import { FormType } from 'src/types/resource';
 
 export enum FormItemLayout {
@@ -41,3 +42,15 @@ export type RefineFormField = {
    */
   condition?: (formValue: Record<string, unknown>, value: unknown) => boolean;
 };
+
+export type RefineFormSection<Model extends ResourceModel = ResourceModel> = {
+  title: string;
+  collapsable?: boolean;
+  defaultCollapse?: boolean;
+  fields: (props: {
+    record?: Model;
+    records: Model[];
+    action: 'create' | 'edit';
+    step?: number;
+  }) => RefineFormField[];
+}

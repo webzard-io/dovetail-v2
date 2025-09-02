@@ -1,24 +1,19 @@
 import { Fields, Form, Space } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
 import { UseFormReturnType } from '@refinedev/react-hook-form';
 import { get } from 'lodash-es';
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { FormItemLayout, RefineFormFieldRenderProps } from 'src/components/Form/type';
+import { SectionTitle } from 'src/components/SectionTitle';
 import { ResourceModel } from 'src/models';
 import { CommonFormConfig, FormType, RefineFormConfig, ResourceConfig } from 'src/types';
 import { FormErrorAlert } from '../FormErrorAlert';
+import { IntegerStyle, SpaceStyle, VerticalFormItemStyle } from './styles';
 import useFieldsConfig from './useFieldsConfig';
 
-const VerticalFormItemStyle = css`
-  &.ant-form-item {
-    flex-direction: column !important;
-    gap: 8px;
-  }
-`;
-
-type Props<Model extends ResourceModel> = {
+type RefineFormContentProps<Model extends ResourceModel> = {
   config?: ResourceConfig<Model>;
+  step: number;
   formConfig?: CommonFormConfig & RefineFormConfig;
   formResult: UseFormReturnType;
   errorMsgs?: string[];
@@ -41,9 +36,7 @@ export function renderCommonFormFiled(props: RefineFormFieldRenderProps) {
     case 'number':
       ele = (
         <Fields.Integer
-          className={css`
-            max-width: 144px;
-          `}
+          className={IntegerStyle}
           placeholder={fieldConfig.placeholder}
           input={{ value, onChange, onBlur, name, onFocus: () => null }}
           meta={{}}
@@ -59,15 +52,43 @@ export function renderCommonFormFiled(props: RefineFormFieldRenderProps) {
   return ele;
 }
 
-export const RefineFormContent = <Model extends ResourceModel>(props: Props<Model>) => {
-  const { config, formResult, resourceId, errorMsgs, formConfig } = props;
+type FieldsContentProps<Model extends ResourceModel> = Pick<
+  RefineFormContentProps<Model>,
+  'config' | 'formConfig' | 'resourceId' | 'step' | 'formResult'
+> & {
+  fields: RefineFormConfig['fields'];
+};
+
+function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Model>) {
+  const { config, formConfig, resourceId, step, formResult, fields } = props;
   const { control, getValues, watch, trigger } = formResult;
   const action = resourceId ? 'edit' : 'create';
   const formValues = watch();
 
-  const formFieldsConfig = useFieldsConfig(config, formConfig, resourceId);
+  const formFieldsConfig = useFieldsConfig(config, { fields }, resourceId, step);
 
-  const fields = formFieldsConfig?.map(fieldConfig => {
+  const fieldsEle = formFieldsConfig?.map(fieldConfig => {
+    if ('fields' in fieldConfig) {
+      return (
+        <>
+          <SectionTitle
+            title={fieldConfig.title}
+            collapsable={fieldConfig.collapsable}
+            defaultCollapse={fieldConfig.defaultCollapse}
+          >
+            <FieldsContent
+              config={config}
+              formConfig={formConfig}
+              resourceId={resourceId}
+              step={step}
+              formResult={formResult}
+              fields={fieldConfig.fields}
+            />
+          </SectionTitle>
+        </>
+      );
+    }
+
     const isDisplay =
       fieldConfig.condition?.(formValues, get(formValues, fieldConfig.path.join('.'))) !==
       false;
@@ -136,17 +157,25 @@ export const RefineFormContent = <Model extends ResourceModel>(props: Props<Mode
     ) : null;
   });
 
+  return <>{fieldsEle}</>;
+}
+
+export const RefineFormContent = <Model extends ResourceModel>(
+  props: RefineFormContentProps<Model>
+) => {
+  const { config, formResult, resourceId, errorMsgs, formConfig, step } = props;
+  const action = resourceId ? 'edit' : 'create';
+
   return (
-    <Space
-      direction="vertical"
-      size={16}
-      className={css`
-        flex-basis: 58%;
-        width: 100%;
-        margin: 0 auto;
-      `}
-    >
-      {fields}
+    <Space direction="vertical" size={16} className={SpaceStyle}>
+      <FieldsContent
+        config={config}
+        formConfig={formConfig}
+        fields={formConfig?.fields}
+        resourceId={resourceId}
+        step={step}
+        formResult={formResult}
+      />
       <FormErrorAlert
         errorMsgs={errorMsgs || []}
         style={{ marginBottom: 16 }}
