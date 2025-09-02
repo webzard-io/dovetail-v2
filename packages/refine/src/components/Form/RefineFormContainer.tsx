@@ -16,6 +16,7 @@ interface RefineFormContainerProps {
   id: string;
   isYamlMode: boolean;
   config: ResourceConfig;
+  step: number;
   formConfig: (RefineFormConfig & CommonFormConfig) | undefined;
   customYamlFormProps?: YamlFormProps;
   onSaveButtonPropsChange?: (props: SaveButtonProps) => void;
@@ -26,6 +27,7 @@ interface RefineFormContainerProps {
 function RefineFormContainer({
   id,
   config,
+  step,
   customYamlFormProps,
   formConfig,
   isYamlMode,
@@ -34,7 +36,7 @@ function RefineFormContainer({
   onSaveButtonPropsChange,
 }: RefineFormContainerProps) {
   const action = id ? 'edit' : 'create';
-  const fieldsConfig = useFieldsConfig(config, formConfig, id);
+  const fieldsConfig = useFieldsConfig(config, { fields: formConfig?.fields }, id, step);
   const refineFormResult = useRefineForm({
     config,
     id,
@@ -80,10 +82,12 @@ function RefineFormContainer({
           redirect: false,
         },
         rules: fieldsConfig
-          ?.filter(config => !config.isSkipValidationInYaml)
+          ?.filter(
+            config => 'isSkipValidationInYaml' in config && !config.isSkipValidationInYaml
+          )
           .map(config => ({
-            path: config.path,
-            validators: config.validators,
+            path: 'path' in config ? config.path : [],
+            validators: 'validators' in config ? config.validators : undefined,
           })),
         onSaveButtonPropsChange,
         onErrorsChange(errors: string[]) {
@@ -137,6 +141,7 @@ function RefineFormContainer({
         <RefineFormContent
           formResult={refineFormResult.formResult}
           config={config}
+          step={step}
           formConfig={formConfig}
           errorMsgs={refineFormResult.responseErrorMsgs}
           resourceId={id as string}
