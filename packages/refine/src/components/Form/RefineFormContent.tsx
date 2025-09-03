@@ -13,7 +13,7 @@ import useFieldsConfig from './useFieldsConfig';
 
 type RefineFormContentProps<Model extends ResourceModel> = {
   config?: ResourceConfig<Model>;
-  step: number;
+  step?: number;
   formConfig?: CommonFormConfig & RefineFormConfig;
   formResult: UseFormReturnType;
   errorMsgs?: string[];
