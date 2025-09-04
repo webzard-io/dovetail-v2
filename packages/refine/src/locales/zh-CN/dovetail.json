@@ -213,6 +213,7 @@
   "key_empty_text": "请填写键。",
   "format_error": "格式错误。",
   "taint_effect_empty_text": "请选择效果。",
+  "add": "添加",
   "add_label": "添加标签",
   "add_annotation": "添加注解",
   "add_taint": "添加污点",
@@ -254,5 +255,8 @@
   "rf1123_name_format_error": "仅支持小写字母、数字、连字符（-），并且必须以小写字母、数字开头和结尾。",
   "rf1035_name_format_error": "仅支持小写字母、数字、连字符（-），并且必须以小写字母开头，以小写字母、数字结尾。",
   "name_duplicated": "已存在同名 {{name}}。",
-  "input_correct_port": "请填写有效的端口号。"
+  "input_correct_port": "请填写有效的端口号。",
+  "auto_generate": "自动生成",
+  "specify_port": "指定端口",
+  "node_port_duplicated": "节点端口已存在。"
 }

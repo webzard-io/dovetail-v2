@@ -16,3 +16,9 @@ export const VerticalFormItemStyle = css`
 export const IntegerStyle = css`
   max-width: 144px;
 `;
+
+export const ContentWrapper = css`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
