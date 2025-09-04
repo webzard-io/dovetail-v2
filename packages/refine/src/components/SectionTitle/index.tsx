@@ -11,10 +11,13 @@ const TitleWrapperStyle = css`
   color: $gray-120;
   padding: 7px 0;
   line-height: 18px;
-  box-shadow: 0px -1px 0px 0px rgba(225, 230, 241, 0.6) inset;
+  box-shadow: 0px -1px 0px 0px rgba(172, 186, 211, 0.6) inset;
   display: flex;
   justify-content: space-between;
   margin-bottom: 16px;
+`;
+const CollapsedTitleStyle = css`
+  box-shadow: none;
 `;
 const ButtonStyle = css`
   &.ant-btn.ant-btn-link {
@@ -46,7 +49,7 @@ export function SectionTitle(props: SectionTitleProps) {
 
   return (
     <div className={cx(className)}>
-      <div className={cx(TitleWrapperStyle)}>
+      <div className={cx(TitleWrapperStyle, collapse && CollapsedTitleStyle)}>
         <span className={Typo.Label.l4_bold_title}>{title}</span>
         {collapsable ? (
           <Button

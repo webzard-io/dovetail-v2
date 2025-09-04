@@ -190,3 +190,24 @@ export function validatePort(port: string | number, isOptional: boolean, i18n: I
 
   return { isValid: true };
 }
+
+export function validateNodePort(nodePort: number | null, allNodePorts: number[], i18n: I18n): {
+  isValid: boolean;
+  errorMessage?: string;
+} {
+  if (nodePort === null) {
+    return { isValid: true };
+  }
+
+  const portNumber = Number(nodePort);
+
+  if (portNumber < 30000 || portNumber > 32767) {
+    return { isValid: false, errorMessage: i18n.t('dovetail.input_correct_port') };
+  }
+
+  if (allNodePorts.includes(portNumber)) {
+    return { isValid: false, errorMessage: i18n.t('dovetail.node_port_duplicated') };
+  }
+
+  return { isValid: true };
+}

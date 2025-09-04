@@ -8,7 +8,12 @@ import { SectionTitle } from 'src/components/SectionTitle';
 import { ResourceModel } from 'src/models';
 import { CommonFormConfig, FormType, RefineFormConfig, ResourceConfig } from 'src/types';
 import { FormErrorAlert } from '../FormErrorAlert';
-import { IntegerStyle, SpaceStyle, VerticalFormItemStyle } from './styles';
+import {
+  ContentWrapper,
+  IntegerStyle,
+  SpaceStyle,
+  VerticalFormItemStyle,
+} from './styles';
 import useFieldsConfig from './useFieldsConfig';
 
 type RefineFormContentProps<Model extends ResourceModel> = {
@@ -76,14 +81,16 @@ function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Mo
             collapsable={fieldConfig.collapsable}
             defaultCollapse={fieldConfig.defaultCollapse}
           >
-            <FieldsContent
-              config={config}
-              formConfig={formConfig}
-              resourceId={resourceId}
-              step={step}
-              formResult={formResult}
-              fields={fieldConfig.fields}
-            />
+            <div className={ContentWrapper}>
+              <FieldsContent
+                config={config}
+                formConfig={formConfig}
+                resourceId={resourceId}
+                step={step}
+                formResult={formResult}
+                fields={fieldConfig.fields}
+              />
+            </div>
           </SectionTitle>
         </>
       );
@@ -158,7 +165,7 @@ function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Mo
     ) : null;
   });
 
-  return <>{fieldsEle}</>;
+  return <div className={ContentWrapper}>{fieldsEle}</div>;
 }
 
 export const RefineFormContent = <Model extends ResourceModel>(
