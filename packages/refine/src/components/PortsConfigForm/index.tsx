@@ -5,11 +5,17 @@ import {
   TableFormHandle,
   TableFormColumn,
 } from '@cloudtower/eagle';
-import { ServicePort } from 'kubernetes-types/core/v1';
+import { useList } from '@refinedev/core';
+import { Service, ServicePort } from 'kubernetes-types/core/v1';
 import isEqual from 'lodash-es/isEqual';
 import React, { useEffect, useRef, useState, useMemo, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
-import { validatePort, validateRfc1123Name } from 'src/utils/validation';
+import {
+  validateNodePort,
+  validatePort,
+  validateRfc1123Name,
+} from 'src/utils/validation';
+import { NodePort } from './NodePort';
 
 interface PortsConfigFormProps {
   value: ServicePort[];
@@ -29,7 +35,20 @@ export const PortsConfigForm = React.forwardRef<
   const tableFormRef = useRef<TableFormHandle>(null);
   const [_value, _setValue] = useState(value);
   const [forceUpdateCount, setForceUpdateCount] = useState(0);
+  const { data: services } = useList<Service>({
+    resource: 'services',
+    meta: {
+      resourceBasePath: '/api/v1',
+      kind: 'Service',
+    },
+  });
 
+  const nodePortsFromOtherServices = useMemo(() => {
+    return (services?.data
+      ?.map(service => service?.spec?.ports?.map(port => port.nodePort))
+      .flat()
+      ?.filter(port => port !== undefined) || []) as number[];
+  }, [services]);
   const columns = useMemo(() => {
     const columns: TableFormColumn[] = [
       {
@@ -83,7 +102,14 @@ export const PortsConfigForm = React.forwardRef<
         key: 'port',
         title: i18n.t('dovetail.port'),
         render: ({ value, onChange }) => {
-          return <InputInteger value={value} size="small" onChange={onChange} />;
+          return (
+            <InputInteger
+              value={value}
+              size="small"
+              placeholder="1-65535"
+              onChange={onChange}
+            />
+          );
         },
         validator: ({ value }) => {
           const { isValid, errorMessage } = validatePort(value || '', false, i18n);
@@ -95,7 +121,14 @@ export const PortsConfigForm = React.forwardRef<
         key: 'targetPort',
         title: i18n.t('dovetail.container_port'),
         render: ({ value, onChange }) => {
-          return <InputInteger value={value} size="small" onChange={onChange} />;
+          return (
+            <InputInteger
+              value={value}
+              size="small"
+              placeholder="1-65535"
+              onChange={onChange}
+            />
+          );
         },
         validator: ({ value }) => {
           const { isValid, errorMessage } = validatePort(value || '', false, i18n);
@@ -108,12 +141,19 @@ export const PortsConfigForm = React.forwardRef<
     if (['NodePort', 'LoadBalancer'].includes(serviceType || '')) {
       columns.push({
         key: 'nodePort',
+        width: 200,
         title: i18n.t('dovetail.node_port'),
         render: ({ value, onChange }) => {
-          return <InputInteger value={value} size="small" onChange={onChange} />;
+          return <NodePort value={value} onChange={onChange} />;
         },
-        validator: ({ value }) => {
-          const { isValid, errorMessage } = validatePort(value || '', false, i18n);
+        validator: ({ value, rowIndex }) => {
+          const allNodePorts = [
+            ...nodePortsFromOtherServices,
+            ..._value
+              .filter((row, index) => index !== rowIndex && row.nodePort !== undefined)
+              .map(row => row.nodePort),
+          ] as number[];
+          const { isValid, errorMessage } = validateNodePort(value, allNodePorts, i18n);
 
           if (!isValid) return errorMessage;
         },
@@ -121,7 +161,7 @@ export const PortsConfigForm = React.forwardRef<
     }
 
     return columns;
-  }, [serviceType, _value, i18n]);
+  }, [serviceType, _value, i18n, nodePortsFromOtherServices]);
 
   useEffect(() => {
     if (value && !isEqual(value, _value)) {

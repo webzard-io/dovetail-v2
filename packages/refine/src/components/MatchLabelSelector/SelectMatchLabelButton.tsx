@@ -1,12 +1,4 @@
-import {
-  Popover,
-  Radio,
-  RadioGroup,
-  Typo,
-  Button,
-  Divider,
-  Form,
-} from '@cloudtower/eagle';
+import { Popover, Typo, Button, Divider, Form, Select } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { Deployment, StatefulSet } from 'kubernetes-types/apps/v1';
 import { DaemonSet } from 'kubernetes-types/apps/v1';
@@ -24,7 +16,7 @@ const PopoverOverlayStyle = css`
   }
 `;
 const PopoverContentStyle = css`
-  width: 640px;
+  width: 463px;
 `;
 const PopoverTitleStyle = css`
   margin-bottom: 24px;
@@ -38,28 +30,10 @@ const PopoverContentFooterStyle = css`
   justify-content: flex-end;
   gap: 8px;
 `;
-const SelectStyle = css`
-  &.ant-select.ant-select-single {
-    width: 357px;
-    margin-top: 4px;
-    margin-left: 26px;
-  }
-`;
-
-const RadioGroupStyle = css`
-  &.ant-radio-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 5px;
-  }
-`;
-const RadioStyle = css`
-  &.ant-radio-wrapper {
-    &:not(:first-child) {
-      margin-top: 8px;
-    }
-  }
+const FormWrapperStyle = css`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const FormItem = Form.Item;
@@ -83,14 +57,14 @@ function ResourceMatchLabelSelector({
 }: ResourceMatchLabelSelectorProps) {
   return (
     <ResourceSelect
-      className={SelectStyle}
       namespace={namespace}
       resource={resource}
       resourceBasePath={resourceBasePath}
       kind={kind}
       value={value}
       onChange={(newValue, object) => {
-        const resourceItem = (object as { object: Deployment | StatefulSet | DaemonSet }).object;
+        const resourceItem = (object as { object: Deployment | StatefulSet | DaemonSet })
+          .object;
         const newSelector = Object.entries(
           resourceItem?.spec?.selector?.matchLabels || {}
         ).map(([key, value]) => ({
@@ -112,10 +86,16 @@ export interface SelectMatchLabelButtonProps {
 export function SelectMatchLabelButton(props: SelectMatchLabelButtonProps) {
   const { namespace, onChange } = props;
   const { t } = useTranslation();
-  const [workload, setWorkload] = useState<string>('deployment');
+  const [workload, setWorkload] = useState<string>('deployments');
   const [selectedResource, setSelectedResource] = useState<string>('');
   const [selector, setSelector] = useState<KeyValuePair[]>([]);
   const [popoverVisible, setPopoverVisible] = useState(false);
+
+  const kindMap = {
+    deployment: 'Deployment',
+    statefulset: 'StatefulSet',
+    daemonset: 'DaemonSet',
+  };
 
   useEffect(() => {
     setSelectedResource('');
@@ -134,69 +114,45 @@ export function SelectMatchLabelButton(props: SelectMatchLabelButtonProps) {
               <div className={cx(Typo.Display.d3_bold_title, PopoverTitleStyle)}>
                 {t('dovetail.specify_workload')}
               </div>
-              <FormItem
-                label={t('dovetail.workload')}
-                labelCol={{ flex: '0 0 216px' }}
-                colon={false}
-              >
-                <RadioGroup
-                  className={RadioGroupStyle}
-                  value={workload}
-                  onChange={e => {
-                    setWorkload(e.target.value);
-                    setSelectedResource('');
-                  }}
+              <div className={FormWrapperStyle}>
+                <FormItem
+                  label={t('dovetail.type')}
+                  labelCol={{ flex: '0 0 134px' }}
+                  colon={false}
                 >
-                  <Radio value="deployment" className={RadioStyle}>
-                    Deployment
-                  </Radio>
-                  {workload === 'deployment' ? (
-                    <ResourceMatchLabelSelector
-                      namespace={namespace}
-                      resource="deployments"
-                      resourceBasePath="/apis/apps/v1"
-                      kind="Deployment"
-                      value={selectedResource}
-                      onChange={(newValue, newSelector) => {
-                        setSelector(newSelector);
-                        setSelectedResource(newValue);
-                      }}
-                    />
-                  ) : null}
-                  <Radio value="statefulset" className={RadioStyle}>
-                    StatefulSet
-                  </Radio>
-                  {workload === 'statefulset' ? (
-                    <ResourceMatchLabelSelector
-                      namespace={namespace}
-                      resource="statefulsets"
-                      resourceBasePath="/apis/apps/v1"
-                      kind="StatefulSet"
-                      value={selectedResource}
-                      onChange={(newValue, newSelector) => {
-                        setSelector(newSelector);
-                        setSelectedResource(newValue);
-                      }}
-                    />
-                  ) : null}
-                  <Radio value="daemonset" className={RadioStyle}>
-                    DaemonSet
-                  </Radio>
-                  {workload === 'daemonset' ? (
-                    <ResourceMatchLabelSelector
-                      namespace={namespace}
-                      resource="daemonsets"
-                      resourceBasePath="/apis/apps/v1"
-                      kind="DaemonSet"
-                      value={selectedResource}
-                      onChange={(newValue, newSelector) => {
-                        setSelector(newSelector);
-                        setSelectedResource(newValue);
-                      }}
-                    />
-                  ) : null}
-                </RadioGroup>
-              </FormItem>
+                  <Select
+                    input={{
+                      value: workload,
+                      onChange: newWorkload => {
+                        setWorkload(newWorkload as string);
+                        setSelectedResource('');
+                      },
+                    }}
+                    options={[
+                      { label: 'Deployment', value: 'deployments' },
+                      { label: 'StatefulSet', value: 'statefulsets' },
+                      { label: 'DaemonSet', value: 'daemonsets' },
+                    ]}
+                  />
+                </FormItem>
+                <FormItem
+                  label={t('dovetail.workload')}
+                  labelCol={{ flex: '0 0 134px' }}
+                  colon={false}
+                >
+                  <ResourceMatchLabelSelector
+                    namespace={namespace}
+                    resource={workload}
+                    resourceBasePath="/apis/apps/v1"
+                    kind={kindMap[workload as keyof typeof kindMap]}
+                    value={selectedResource}
+                    onChange={(newValue, newSelector) => {
+                      setSelector(newSelector);
+                      setSelectedResource(newValue);
+                    }}
+                  />
+                </FormItem>
+              </div>
             </div>
             <Divider style={{ margin: '0' }} />
             <div className={PopoverContentFooterStyle}>
@@ -210,13 +166,13 @@ export function SelectMatchLabelButton(props: SelectMatchLabelButtonProps) {
                   setPopoverVisible(false);
                 }}
               >
-                {t('dovetail.confirm')}
+                {t('dovetail.add')}
               </Button>
             </div>
           </div>
         }
       >
-        <Button type="quiet" size="small">
+        <Button type="link" size="small">
           {t('dovetail.specify_workload')}
         </Button>
       </Popover>

@@ -40,6 +40,8 @@ export const MatchLabelSelector = React.forwardRef<
       extraAction={<SelectMatchLabelButton namespace={namespace} onChange={onChange} />}
       onChange={onChange}
       isValueOptional={false}
+      minSize={1}
+      isHideLabelFormatPopover
     />
   );
 });
