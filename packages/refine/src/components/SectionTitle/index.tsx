@@ -4,7 +4,7 @@ import {
   ArrowChevronUp16BlueIcon,
 } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const TitleWrapperStyle = css`
@@ -34,7 +34,11 @@ export interface SectionTitleProps {
   contentClassName?: string;
 }
 
-export function SectionTitle(props: SectionTitleProps) {
+export interface SectionTitleRef {
+  setCollapse: (collapse: boolean) => void;
+}
+
+export const SectionTitle = React.forwardRef<SectionTitleRef, SectionTitleProps>(function SectionTitle(props: SectionTitleProps, ref) {
   const {
     title,
     collapsable = true,
@@ -46,6 +50,10 @@ export function SectionTitle(props: SectionTitleProps) {
 
   const { t } = useTranslation();
   const [collapse, setCollapse] = useState(defaultCollapse);
+
+  useImperativeHandle(ref, () => ({
+    setCollapse,
+  }), [setCollapse]);
 
   return (
     <div className={cx(className)}>
@@ -74,4 +82,4 @@ export function SectionTitle(props: SectionTitleProps) {
       </div>
     </div>
   );
-}
+});
