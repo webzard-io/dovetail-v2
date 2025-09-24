@@ -1,7 +1,7 @@
 import { Alert } from '@cloudtower/eagle';
 import { BaseRecord, CreateResponse, UpdateResponse } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useImperativeHandle } from 'react';
 import { type SaveButtonProps } from 'src/components/Form/FormModal';
 import usePathMap from 'src/hooks/usePathMap';
 import i18n from 'src/i18n';
@@ -24,17 +24,27 @@ interface RefineFormContainerProps {
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
 }
 
-function RefineFormContainer({
-  id,
-  config,
-  step,
-  customYamlFormProps,
-  formConfig,
-  isYamlMode,
-  onSuccess,
-  onError,
-  onSaveButtonPropsChange,
-}: RefineFormContainerProps) {
+export interface RefineFormContainerRef {
+  validate: () => Promise<boolean>;
+}
+
+const RefineFormContainer = React.forwardRef<
+  RefineFormContainerRef,
+  RefineFormContainerProps
+>(function RefineFormContainer(
+  {
+    id,
+    config,
+    step,
+    customYamlFormProps,
+    formConfig,
+    isYamlMode,
+    onSuccess,
+    onError,
+    onSaveButtonPropsChange,
+  },
+  ref
+) {
   const action = id ? 'edit' : 'create';
   const fieldsConfig = useFieldsConfig(config, { fields: formConfig?.fields }, id, step);
   const refineFormResult = useRefineForm({
@@ -122,6 +132,16 @@ function RefineFormContainer({
     }
   }, [isYamlMode, refineFormResult.formResult.saveButtonProps, onSaveButtonPropsChange]);
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      validate: () => {
+        return refineFormResult.formResult.trigger();
+      },
+    }),
+    [refineFormResult.formResult]
+  );
+
   if (isYamlMode) {
     return <YamlForm {...yamlFormProps} />;
   }
@@ -149,6 +169,6 @@ function RefineFormContainer({
       )}
     </>
   );
-}
+});
 
 export default RefineFormContainer;
