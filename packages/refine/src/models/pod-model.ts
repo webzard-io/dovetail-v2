@@ -8,6 +8,10 @@ import { WorkloadBaseModel } from './workload-base-model';
 
 type RequiredPod = Required<Pod> & Unstructured;
 
+interface NetworkStatus {
+  name: string;
+  ips?: string[];
+}
 export class PodModel extends WorkloadBaseModel {
   public request: ResourceQuantity;
   public limit: ResourceQuantity;
@@ -99,5 +103,39 @@ export class PodModel extends WorkloadBaseModel {
       return ResourceState.TERMINATING;
     }
     return this.status?.phase?.toLowerCase() || ResourceState.UNKNOWN;
+  }
+
+  get ips() {
+    const ips: string[] = [];
+
+    if (this.status?.podIP) {
+      ips.push(this.status.podIP);
+    }
+
+    const networkStatusStr =
+      this.metadata?.annotations?.['k8s.v1.cni.cncf.io/network-status'];
+    if (networkStatusStr) {
+      try {
+        const networkStatus: NetworkStatus[] = JSON.parse(networkStatusStr);
+
+        networkStatus.forEach(network => {
+          if (network.ips && Array.isArray(network.ips)) {
+            network.ips.forEach(ip => {
+              if (!ips.includes(ip)) {
+                ips.push(ip);
+              }
+            });
+          }
+        });
+      } catch (error) {
+        console.warn('Failed to parse network-status annotation:', error);
+      }
+    }
+
+    return ips;
+  }
+
+  get ipsDisplay() {
+    return this.ips.join(', ');
   }
 }
