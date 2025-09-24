@@ -4,7 +4,7 @@ import {
   ArrowChevronUp16BlueIcon,
 } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const TitleWrapperStyle = css`
@@ -29,6 +29,7 @@ export interface SectionTitleProps {
   title: string;
   collapsable?: boolean;
   defaultCollapse?: boolean;
+  collapse?: boolean;
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
@@ -39,36 +40,43 @@ export function SectionTitle(props: SectionTitleProps) {
     title,
     collapsable = true,
     defaultCollapse = false,
+    collapse,
     children,
     className,
     contentClassName,
   } = props;
 
   const { t } = useTranslation();
-  const [collapse, setCollapse] = useState(defaultCollapse);
+  const [_collapse, _setCollapse] = useState(collapse ?? defaultCollapse);
+
+  useEffect(() => {
+    if (collapse === undefined) return;
+
+    _setCollapse(collapse);
+  }, [collapse]);
 
   return (
     <div className={cx(className)}>
-      <div className={cx(TitleWrapperStyle, collapse && CollapsedTitleStyle)}>
+      <div className={cx(TitleWrapperStyle, _collapse && CollapsedTitleStyle)}>
         <span className={Typo.Label.l4_bold_title}>{title}</span>
         {collapsable ? (
           <Button
             type="link"
             size="small"
             className={cx(ButtonStyle)}
-            onClick={() => setCollapse(!collapse)}
+            onClick={() => _setCollapse(!_collapse)}
           >
-            {collapse ? t('dovetail.expand') : t('dovetail.fold')}
+            {_collapse ? t('dovetail.expand') : t('dovetail.fold')}
             <Icon
               style={{ marginLeft: 4 }}
-              src={collapse ? ArrowChevronDown16BlueIcon : ArrowChevronUp16BlueIcon}
+              src={_collapse ? ArrowChevronDown16BlueIcon : ArrowChevronUp16BlueIcon}
             />
           </Button>
         ) : null}
       </div>
       <div
         className={cx(contentClassName)}
-        style={{ display: collapse ? 'none' : 'block' }}
+        style={{ display: _collapse ? 'none' : 'block' }}
       >
         {children}
       </div>
