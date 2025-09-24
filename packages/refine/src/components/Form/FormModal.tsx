@@ -3,7 +3,7 @@ import { WizardDialogProps } from '@cloudtower/eagle/dist/src/core/WizardDialog/
 import { css } from '@linaria/core';
 import { BaseRecord, CreateResponse, UpdateResponse, useResource } from '@refinedev/core';
 import { omit } from 'lodash-es';
-import React, { useState, useContext, useCallback, useMemo } from 'react';
+import React, { useState, useContext, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
 import { WarningButtonStyle } from 'src/styles/button';
@@ -11,7 +11,7 @@ import { SmallModalStyle } from 'src/styles/modal';
 import { FormType, FormMode, RefineFormConfig, CommonFormConfig } from 'src/types';
 import { transformResourceKindInSentence } from 'src/utils/string';
 import FormModeSegmentControl from './FormModeSegmentControl';
-import RefineFormContainer from './RefineFormContainer';
+import RefineFormContainer, { RefineFormContainerRef } from './RefineFormContainer';
 import { YamlFormProps } from './YamlForm';
 import YamlFormContainer from './YamlFormContainer';
 
@@ -97,6 +97,7 @@ export function FormModal(props: FormModalProps) {
   const [mode, setMode] = useState<FormMode>(FormMode.FORM);
   const [step, setStep] = useState<number>(0);
   const isYamlMode = mode === FormMode.YAML;
+  const refineFormContainerRef = useRef<RefineFormContainerRef>(null);
   const popModal = usePopModal();
   const pushModal = usePushModal();
   const config = configs[resourceFromProps || resource?.name || ''];
@@ -188,6 +189,7 @@ export function FormModal(props: FormModalProps) {
       return (
         <RefineFormContainer
           {...commonFormProps}
+          ref={refineFormContainerRef}
           step={step}
           isYamlMode={isYamlMode}
           formConfig={config.formConfig as RefineFormConfig & CommonFormConfig}
@@ -228,6 +230,25 @@ export function FormModal(props: FormModalProps) {
     return undefined;
   }, [config.formConfig, desc, formEle, isYamlMode]);
 
+  const handleStepChange = useCallback(
+    async (nextStep: number) => {
+      const isNextStep = nextStep > step;
+
+      if (isNextStep && refineFormContainerRef.current?.validate) {
+        // validate current step fields before moving to next
+        const isValid = await refineFormContainerRef.current?.validate();
+
+        if (!isValid) {
+          return;
+        }
+        setStep(nextStep);
+      } else {
+        setStep(nextStep);
+      }
+    },
+    [step]
+  );
+
   return (
     <WizardDialog
       style={
@@ -249,7 +270,8 @@ export function FormModal(props: FormModalProps) {
       }
       error={errorText}
       steps={steps}
-      onStepChange={setStep}
+      step={step}
+      onStepChange={handleStepChange}
       onOk={onOk}
       okButtonProps={{
         ...omit(saveButtonProps, 'onClick'),
