@@ -12,12 +12,12 @@ import React from 'react';
 import ConfigsContext from 'src/contexts/configs';
 import { useEdit } from 'src/hooks/useEdit';
 import { FormContainerType } from 'src/types';
-import { getInitialValues } from 'src/utils/form';
 import { FormModal } from '../components';
 
 interface OpenFormOptions {
   id?: string;
   resourceName?: string;
+  initialValues?: Record<string, unknown>;
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
 }
 
@@ -47,8 +47,8 @@ export function useOpenForm() {
                 id={options?.id}
                 yamlFormProps={{
                   config,
-                  initialValuesForCreate: getInitialValues(config),
                 }}
+                options={options}
                 onSuccess={options?.onSuccess}
               />
             );
