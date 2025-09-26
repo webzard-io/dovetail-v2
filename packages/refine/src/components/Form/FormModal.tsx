@@ -77,6 +77,9 @@ export type FormModalProps = {
   resource?: string;
   id?: string;
   yamlFormProps?: YamlFormProps;
+  options?: {
+    initialValues?: Record<string, unknown>;
+  };
   modalProps?: WizardDialogProps;
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
 };
@@ -87,6 +90,7 @@ export function FormModal(props: FormModalProps) {
     id,
     yamlFormProps: customYamlFormProps,
     modalProps,
+    options,
     onSuccess,
   } = props;
   const { i18n } = useTranslation();
@@ -110,9 +114,6 @@ export function FormModal(props: FormModalProps) {
 
   const isYamlForm = config.formConfig?.formType === FormType.YAML;
 
-  const onCancel = useCallback(() => {
-    popModal();
-  }, [popModal]);
   const onOk = useCallback(
     e => {
       setIsError(false);
@@ -191,6 +192,7 @@ export function FormModal(props: FormModalProps) {
           {...commonFormProps}
           ref={refineFormContainerRef}
           step={step}
+          options={options}
           isYamlMode={isYamlMode}
           formConfig={config.formConfig as RefineFormConfig & CommonFormConfig}
         />
@@ -204,6 +206,7 @@ export function FormModal(props: FormModalProps) {
     config,
     isYamlMode,
     step,
+    options,
     popModal,
     setSaveButtonProps,
     onSuccess,
@@ -279,7 +282,6 @@ export function FormModal(props: FormModalProps) {
         size: 'middle',
       }}
       okText={okText}
-      onCancel={onCancel}
       destroyOnClose
       destroyOtherStep
       {...modalProps}
