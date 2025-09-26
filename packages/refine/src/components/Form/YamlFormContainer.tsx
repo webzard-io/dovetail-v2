@@ -6,6 +6,7 @@ import usePathMap from 'src/hooks/usePathMap';
 import { ResourceConfig } from 'src/types';
 import { CommonFormConfig } from 'src/types';
 import { YamlFormConfig } from 'src/types';
+import { getInitialValues } from 'src/utils/form';
 import { YamlForm, YamlFormProps } from './YamlForm';
 
 interface YamlFormContainerProps {
@@ -42,7 +43,7 @@ function YamlFormContainer({
       transformInitValues,
       transformApplyValues,
       initialValuesForCreate:
-        customYamlFormProps?.initialValuesForCreate || config.initValue,
+        customYamlFormProps?.initialValuesForCreate || getInitialValues(config),
       initialValuesForEdit: undefined,
       id,
       action,

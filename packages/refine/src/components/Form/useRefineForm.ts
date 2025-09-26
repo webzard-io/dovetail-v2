@@ -7,14 +7,18 @@ import { transformResourceKindInSentence } from 'src/utils/string';
 import { CommonFormConfig, ErrorBody, RefineFormConfig, ResourceConfig } from '../../types';
 import { useForm, UseFormProps } from './useReactHookForm';
 
+interface UseRefineFormOptions {
+  initialValues?: Record<string, unknown>;
+}
+
 export const useRefineForm = (props: {
   formConfig?: RefineFormConfig & CommonFormConfig;
   id?: string;
   config: ResourceConfig;
   refineProps?: UseFormProps['refineCoreProps'];
-  useFormProps?: UseFormProps;
+  options?: UseRefineFormOptions;
 }) => {
-  const { formConfig, config, id, refineProps } = props;
+  const { formConfig, config, id, refineProps, options } = props;
   const { transformInitValues, transformApplyValues } = usePathMap({
     pathMap: formConfig?.pathMap,
     transformInitValues: formConfig?.transformInitValues,
@@ -49,7 +53,7 @@ export const useRefineForm = (props: {
       liveMode: 'off',
       ...refineProps,
     },
-    defaultValues: config?.initValue,
+    defaultValues: options?.initialValues || config?.initValue,
     transformApplyValues,
     transformInitValues,
     ...formConfig?.useFormProps,

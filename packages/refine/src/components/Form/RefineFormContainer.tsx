@@ -19,6 +19,9 @@ interface RefineFormContainerProps {
   step: number;
   formConfig: (RefineFormConfig & CommonFormConfig) | undefined;
   customYamlFormProps?: YamlFormProps;
+  options?: {
+    initialValues?: Record<string, unknown>;
+  };
   onSaveButtonPropsChange?: (props: SaveButtonProps) => void;
   onError?: () => void;
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
@@ -39,6 +42,7 @@ const RefineFormContainer = React.forwardRef<
     customYamlFormProps,
     formConfig,
     isYamlMode,
+    options,
     onSuccess,
     onError,
     onSaveButtonPropsChange,
@@ -64,6 +68,7 @@ const RefineFormContainer = React.forwardRef<
       ...formConfig?.refineCoreProps,
     },
     formConfig,
+    options,
   });
   const { transformApplyValues } = usePathMap({
     pathMap: formConfig?.pathMap,
