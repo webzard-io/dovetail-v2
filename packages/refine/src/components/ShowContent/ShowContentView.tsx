@@ -123,6 +123,7 @@ const TabContentStyle = css`
   flex-direction: column;
   align-items: center;
   min-width: 904px;
+  overflow: auto;
 `;
 const ValueStyle = css`
   color: $gray-120;
