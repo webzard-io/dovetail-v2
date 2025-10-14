@@ -138,4 +138,11 @@ export class PodModel extends WorkloadBaseModel {
   get ipsDisplay() {
     return this.ips.join(', ');
   }
+
+  get hasDnsConfig() {
+    return !!(this.spec?.dnsConfig &&
+      (this.spec.dnsConfig.nameservers?.length ||
+        this.spec.dnsConfig.searches?.length ||
+        this.spec.dnsConfig.options?.length));
+  }
 }
