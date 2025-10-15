@@ -3,7 +3,7 @@ import { ViewEye16GradientGrayIcon, EntityFilterIgnoreGradient16GrayIcon } from 
 import { css } from '@linaria/core';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ShowGroupComponent } from '../ShowContent';
+import { ShowGroupWithTitleComponent } from '../ShowContent';
 import { KeyValue } from './KeyValue';
 
 const ButtonStyle = css`
@@ -39,8 +39,8 @@ export function KeyValueSecret(props: KeyValueSecretProps) {
   ) : null;
 
   return (
-    <ShowGroupComponent title={i18n.t('dovetail.data')} operationEle={toggleButton} className={GroupStyle}>
+    <ShowGroupWithTitleComponent title={i18n.t('dovetail.data')} operationEle={toggleButton} className={GroupStyle}>
       <KeyValue data={data} hideSecret={hideSecret} empty={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.data') })} />
-    </ShowGroupComponent>
+    </ShowGroupWithTitleComponent>
   );
 }
