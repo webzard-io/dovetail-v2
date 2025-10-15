@@ -33,6 +33,7 @@ export * from './Menu';
 export * from './InternalBaseTable';
 export * from './Table';
 export * from './EditButton';
+export * from './EditField';
 export * from './ReferenceLink';
 export * from './ResourceLink';
 export * from './NamespacesFilter';
