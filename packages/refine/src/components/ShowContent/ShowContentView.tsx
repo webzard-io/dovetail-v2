@@ -168,6 +168,8 @@ export type ShowContentViewProps<Model extends ResourceModel> = React.PropsWithC
   Dropdown?: React.FC<{ record: Model }>;
   hideBackButton?: boolean;
   canCollapseTabs?: boolean;
+  hideTopBar?: boolean;
+  className?: string;
 }>;
 
 type ShowGroupComponentProps = React.PropsWithChildren<{
@@ -208,6 +210,8 @@ export const ShowContentView = <Model extends ResourceModel>(
     Dropdown = K8sDropdown,
     hideBackButton = false,
     canCollapseTabs = false,
+    className,
+    hideTopBar = false,
   } = props;
   const { queryResult } = useShow<Model>({
     id,
@@ -411,10 +415,12 @@ export const ShowContentView = <Model extends ResourceModel>(
     : null;
 
   return (
-    <div className={ShowContentWrapperStyle}>
-      <Space direction="vertical" className={ShowContentHeaderStyle}>
-        {topBar}
-      </Space>
+    <div className={cx(ShowContentWrapperStyle, className)}>
+      {hideTopBar ? null : (
+        <Space direction="vertical" className={ShowContentHeaderStyle}>
+          {topBar}
+        </Space>
+      )}
       {basicInfo}
 
       {canCollapseTabs ? <CollapseTabs>{tabs}</CollapseTabs> : tabs}
