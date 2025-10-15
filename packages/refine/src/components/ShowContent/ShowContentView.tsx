@@ -432,34 +432,25 @@ export const ShowContentView = <Model extends ResourceModel>(
 const CollapseTabs: React.FC = props => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const { t } = useTranslation();
-  if (isCollapsed) {
-    return (
+  return (
+    <>
       <div style={{ display: 'flex' }}>
         <Button
           style={{ margin: 'auto', cursor: 'pointer' }}
           type="quiet"
           onClick={() => setIsCollapsed(v => !v)}
-          suffixIcon={<Icon src={ArrowChevronUp16BoldSecondaryIcon} />}
+          suffixIcon={
+            isCollapsed ? (
+              <Icon src={ArrowChevronUp16BoldSecondaryIcon} />
+            ) : (
+              <Icon src={ArrowBoldDown16Icon} />
+            )
+          }
         >
           {t('dovetail.view_all_info')}
         </Button>
       </div>
-    );
-  } else {
-    return (
-      <>
-        {props.children}
-        <div style={{ display: 'flex' }}>
-          <Button
-            style={{ margin: 'auto', cursor: 'pointer' }}
-            type="quiet"
-            onClick={() => setIsCollapsed(v => !v)}
-            suffixIcon={<Icon src={ArrowBoldDown16Icon} />}
-          >
-            {t('dovetail.collapse')}
-          </Button>
-        </div>
-      </>
-    );
-  }
+      {isCollapsed ? null : props.children}
+    </>
+  );
 };
