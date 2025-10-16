@@ -168,6 +168,8 @@ export type ShowContentViewProps<Model extends ResourceModel> = React.PropsWithC
   Dropdown?: React.FC<{ record: Model }>;
   hideBackButton?: boolean;
   canCollapseTabs?: boolean;
+  hideTopBar?: boolean;
+  className?: string;
 }>;
 
 type ShowGroupComponentProps = React.PropsWithChildren<{
@@ -176,7 +178,7 @@ type ShowGroupComponentProps = React.PropsWithChildren<{
   operationEle?: React.ReactElement | null;
 }>;
 
-export function ShowGroupComponent(props: ShowGroupComponentProps) {
+export function ShowGroupWithTitleComponent(props: ShowGroupComponentProps) {
   const { title, className, children, operationEle } = props;
 
   return (
@@ -208,6 +210,8 @@ export const ShowContentView = <Model extends ResourceModel>(
     Dropdown = K8sDropdown,
     hideBackButton = false,
     canCollapseTabs = false,
+    className,
+    hideTopBar = false,
   } = props;
   const { queryResult } = useShow<Model>({
     id,
@@ -289,15 +293,25 @@ export const ShowContentView = <Model extends ResourceModel>(
 
   function renderGroup(group: ShowGroup<Model>, isBasicGroup = false) {
     let GroupContainer: React.FC<ShowGroupComponentProps> = React.Fragment;
+    let FieldContainer = React.Fragment;
+    let groupContainerProps = {};
+    let fieldContainerProps = {};
+
     if (isBasicGroup) {
+      // 基本组不需要卡片和阴影的样式
       GroupContainer = BasicShowGroupComponent;
     } else if (group.title) {
-      GroupContainer = ShowGroupComponent;
+      // 有标题时，需要用有标题的容器
+      GroupContainer = ShowGroupWithTitleComponent;
     }
 
-    const FieldContainer = group.title ? Row : React.Fragment;
-    const groupContainerProps = group.title ? { title: group.title || '' } : {};
-    const fieldContainerProps = group.title ? { gutter: [24, 8] } : {};
+    // 基本组和有标题的时候，都需要Row组件包裹，以便showConfig里的col的属性生效
+    const shouldRenderRow = !!(isBasicGroup || group.title);
+    if (shouldRenderRow) {
+      FieldContainer = Row;
+      groupContainerProps = { title: group.title || '' };
+      fieldContainerProps = { gutter: [24, 8] };
+    }
 
     return (
       <GroupContainer
@@ -307,7 +321,7 @@ export const ShowContentView = <Model extends ResourceModel>(
         {group.areas.map((area, index) => (
           <>
             <FieldContainer key={index} {...(fieldContainerProps as AntdRowProps)}>
-              {renderFields(area.fields, area.type, !!group.title)}
+              {renderFields(area.fields, area.type, shouldRenderRow)}
             </FieldContainer>
             {index !== group.areas.length - 1 ? (
               <Divider style={{ margin: '8px 0 12px 0' }} />
@@ -401,10 +415,12 @@ export const ShowContentView = <Model extends ResourceModel>(
     : null;
 
   return (
-    <div className={ShowContentWrapperStyle}>
-      <Space direction="vertical" className={ShowContentHeaderStyle}>
-        {topBar}
-      </Space>
+    <div className={cx(ShowContentWrapperStyle, className)}>
+      {hideTopBar ? null : (
+        <Space direction="vertical" className={ShowContentHeaderStyle}>
+          {topBar}
+        </Space>
+      )}
       {basicInfo}
 
       {canCollapseTabs ? <CollapseTabs>{tabs}</CollapseTabs> : tabs}
@@ -416,34 +432,25 @@ export const ShowContentView = <Model extends ResourceModel>(
 const CollapseTabs: React.FC = props => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const { t } = useTranslation();
-  if (isCollapsed) {
-    return (
+  return (
+    <>
       <div style={{ display: 'flex' }}>
         <Button
           style={{ margin: 'auto', cursor: 'pointer' }}
           type="quiet"
           onClick={() => setIsCollapsed(v => !v)}
-          suffixIcon={<Icon src={ArrowChevronUp16BoldSecondaryIcon} />}
+          suffixIcon={
+            isCollapsed ? (
+              <Icon src={ArrowChevronUp16BoldSecondaryIcon} />
+            ) : (
+              <Icon src={ArrowBoldDown16Icon} />
+            )
+          }
         >
           {t('dovetail.view_all_info')}
         </Button>
       </div>
-    );
-  } else {
-    return (
-      <>
-        {props.children}
-        <div style={{ display: 'flex' }}>
-          <Button
-            style={{ margin: 'auto', cursor: 'pointer' }}
-            type="quiet"
-            onClick={() => setIsCollapsed(v => !v)}
-            suffixIcon={<Icon src={ArrowBoldDown16Icon} />}
-          >
-            {t('dovetail.collapse')}
-          </Button>
-        </div>
-      </>
-    );
-  }
+      {isCollapsed ? null : props.children}
+    </>
+  );
 };
