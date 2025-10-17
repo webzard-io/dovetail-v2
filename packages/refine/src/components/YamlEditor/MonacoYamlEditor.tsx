@@ -39,7 +39,7 @@ if (!import.meta.env.PROD) {
   };
 }
 
-function MonacoYamlEditor<T extends string | Record<string, unknown> = string>(
+export function MonacoYamlEditor<T extends string | Record<string, unknown> = string>(
   props: Props<T>
 ) {
   const ref = useRef<HTMLDivElement>(null);

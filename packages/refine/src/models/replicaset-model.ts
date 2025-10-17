@@ -42,6 +42,10 @@ export class ReplicaSetModel extends ResourceModel<RequiredReplicaSet> {
     this.restarts = sumBy(this.pods, pod => pod.restarts || 0);
   }
 
+  get revision() {
+    return this.metadata?.annotations?.['deployment.kubernetes.io/revision'];
+  }
+
   get ownerDeploymentName() {
     // 获取所属的Deployment名称
     const ownerRef = this.metadata.ownerReferences?.find(
