@@ -8,7 +8,7 @@ type Props = {
   modified: string;
 };
 
-const MonacoYamlDiffEditor: React.FC<Props> = props => {
+export const MonacoYamlDiffEditor: React.FC<Props> = props => {
   const ref = useRef<HTMLDivElement>(null);
   const { origin, modified, id, height } = props;
   useEffect(() => {
