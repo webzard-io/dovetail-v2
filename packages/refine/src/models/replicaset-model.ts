@@ -49,4 +49,8 @@ export class ReplicaSetModel extends ResourceModel<RequiredReplicaSet> {
     );
     return ownerRef?.name;
   }
-} 
+
+  get revision() {
+    return this.metadata?.annotations?.['deployment.kubernetes.io/revision'];
+  }
+}

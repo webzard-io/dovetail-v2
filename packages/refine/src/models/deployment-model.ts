@@ -1,6 +1,7 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import type { Deployment } from 'kubernetes-types/apps/v1';
 import { ReplicaSetList } from 'kubernetes-types/apps/v1';
+import { cloneDeep } from 'lodash-es';
 import { ResourceState } from '../constants';
 import { ReplicaSetModel } from './replicaset-model';
 import { WorkloadModel } from './workload-model';
@@ -51,5 +52,22 @@ export class DeploymentModel extends WorkloadModel {
       return ResourceState.UPDATING;
     }
     return ResourceState.READY;
+  }
+
+  get revision() {
+    return this.metadata?.annotations?.['deployment.kubernetes.io/revision'];
+  }
+
+  rollback(revision: string): RequiredDeployment {
+    const targetReplicaSet = this.replicaSets.find(rs => rs.revision === revision);
+
+    const rawYaml = this._globalStore.restoreItem(this);
+    const newDeployment = cloneDeep(rawYaml) as RequiredDeployment;
+
+    if (targetReplicaSet?.spec?.template) {
+      newDeployment.spec.template = cloneDeep(targetReplicaSet.spec.template);
+    }
+
+    return newDeployment;
   }
 }
