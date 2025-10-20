@@ -3,6 +3,8 @@ import type { Pod } from 'kubernetes-types/core/v1';
 import { ResourceState } from '../constants';
 import { shortenedImage } from '../utils/string';
 import { formatSi, parseSi } from '../utils/unit';
+import { DeploymentModel } from './deployment-model';
+import { ReplicaSetModel } from './replicaset-model';
 import { ResourceQuantity } from './types/metric';
 import { WorkloadBaseModel } from './workload-base-model';
 
@@ -17,6 +19,7 @@ export class PodModel extends WorkloadBaseModel {
   public limit: ResourceQuantity;
   public declare spec?: RequiredPod['spec'];
   public declare status?: RequiredPod['status'];
+  public belongToDeployment: DeploymentModel | undefined;
 
   constructor(
     public _rawYaml: RequiredPod,
@@ -65,6 +68,23 @@ export class PodModel extends WorkloadBaseModel {
         }),
       },
     };
+  }
+
+  getBelongToDeployment(deployments: DeploymentModel[], replicaSets: ReplicaSetModel[]) {
+    const ownerReferences = this.metadata.ownerReferences;
+
+    // 通过 ownerReference 匹配 ReplicaSet
+    const belongToReplicaSet = replicaSets.find(replicaSet =>
+      ownerReferences?.some(ownerReference =>
+        ownerReference.kind === 'ReplicaSet' && ownerReference.uid === replicaSet.metadata.uid
+      )
+    );
+    // 通过 ownerReference 匹配 Deployment
+    return deployments.find(deployment =>
+      belongToReplicaSet?.metadata.ownerReferences?.some(ownerReference =>
+        ownerReference.kind === 'Deployment' && ownerReference.uid === deployment.metadata.uid
+      )
+    );
   }
 
   get imageNames() {
