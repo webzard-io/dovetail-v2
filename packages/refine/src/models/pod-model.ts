@@ -3,6 +3,7 @@ import type { Pod } from 'kubernetes-types/core/v1';
 import { ResourceState } from '../constants';
 import { shortenedImage } from '../utils/string';
 import { formatSi, parseSi } from '../utils/unit';
+import { DeploymentModel } from './deployment-model';
 import { ResourceQuantity } from './types/metric';
 import { WorkloadBaseModel } from './workload-base-model';
 
@@ -65,6 +66,14 @@ export class PodModel extends WorkloadBaseModel {
         }),
       },
     };
+  }
+
+  getBelongToDeployment(deployments: DeploymentModel[]) {
+    return deployments.find(deployment => {
+      return deployment.replicaSets.find(replicaSet => {
+        return replicaSet.pods.find(pod => pod.metadata.uid === this.metadata.uid);
+      });
+    });
   }
 
   get imageNames() {
