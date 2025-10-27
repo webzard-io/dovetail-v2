@@ -1,9 +1,17 @@
 import { Fields, Form, Space } from '@cloudtower/eagle';
 import { UseFormReturnType } from '@refinedev/react-hook-form';
 import { get } from 'lodash-es';
-import React from 'react';
-import { Controller } from 'react-hook-form';
+import React, { memo } from 'react';
+import {
+  Controller,
+  Control,
+  UseFormGetValues,
+  UseFormTrigger,
+  UseFormWatch,
+  FieldValues,
+} from 'react-hook-form';
 import { FormItemLayout, RefineFormFieldRenderProps } from 'src/components/Form/type';
+import { RefineFormField } from 'src/components/Form/type';
 import { SectionTitle } from 'src/components/SectionTitle';
 import { ResourceModel } from 'src/models';
 import { CommonFormConfig, FormType, RefineFormConfig, ResourceConfig } from 'src/types';
@@ -64,18 +72,111 @@ type FieldsContentProps<Model extends ResourceModel> = Pick<
   fields: RefineFormConfig['fields'];
 };
 
+// 创建一个 memo 化的字段组件来避免不必要的重新渲染
+const MemoizedFormField = memo(function FormField({
+  fieldConfig,
+  control,
+  getValues,
+  trigger,
+  action,
+  formConfig,
+  watch,
+}: {
+  fieldConfig: RefineFormField;
+  control: Control;
+  getValues: UseFormGetValues<FieldValues>;
+  trigger: UseFormTrigger<FieldValues>;
+  action: 'edit' | 'create';
+  formConfig?: CommonFormConfig & RefineFormConfig;
+  watch: UseFormWatch<FieldValues>;
+}) {
+  // 如果字段有条件依赖，只监听相关字段；否则为空对象避免触发重新渲染
+  const formValues = fieldConfig.condition ? watch() : {};
+
+  const isDisplay = fieldConfig.condition
+    ? fieldConfig.condition(formValues, get(formValues, fieldConfig.path.join('.'))) !==
+      false
+    : true;
+
+  if (!isDisplay) {
+    return null;
+  }
+
+  return (
+    <Controller
+      key={fieldConfig.key}
+      control={control}
+      name={fieldConfig.path.join('.')}
+      rules={{
+        async validate(value) {
+          const formValue = getValues();
+          if (!fieldConfig.validators || fieldConfig.validators.length === 0) return true;
+          for (const func of fieldConfig.validators) {
+            const { isValid, errorMsg } = await func(value, formValue, FormType.FORM);
+            if (!isValid) return errorMsg;
+          }
+          return true;
+        },
+      }}
+      render={({ field, fieldState }) => {
+        // 使用 getValues 获取最新值，避免依赖 watch 导致的重新渲染
+        const currentFormValue = getValues();
+        const renderProps: RefineFormFieldRenderProps = {
+          field,
+          fieldConfig,
+          action,
+          control,
+          trigger,
+          formValue: currentFormValue,
+        };
+
+        let ele = null;
+
+        if (fieldConfig?.render) {
+          ele = fieldConfig.render(renderProps);
+        } else {
+          ele = renderCommonFormFiled(renderProps);
+        }
+
+        return (
+          <Form.Item
+            key={fieldConfig.key}
+            label={fieldConfig.label}
+            colon={false}
+            labelCol={
+              fieldConfig.layout === FormItemLayout.VERTICAL
+                ? {}
+                : { flex: `0 0 ${formConfig?.labelWidth || '216px'}` }
+            }
+            help={fieldConfig.isHideErrorStatus ? '' : fieldState.error?.message}
+            extra={fieldConfig.helperText}
+            validateStatus={
+              fieldState.invalid && !fieldConfig.isHideErrorStatus ? 'error' : undefined
+            }
+            data-test-id={fieldConfig.key}
+            className={
+              fieldConfig.layout === FormItemLayout.VERTICAL ? VerticalFormItemStyle : ''
+            }
+          >
+            {ele}
+          </Form.Item>
+        );
+      }}
+    />
+  );
+});
+
 function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Model>) {
   const { config, formConfig, resourceId, step, formResult, fields } = props;
   const { control, getValues, watch, trigger } = formResult;
   const action = resourceId ? 'edit' : 'create';
-  const formValues = watch();
 
   const formFieldsConfig = useFieldsConfig(config, { fields }, resourceId, step);
 
   const fieldsEle = formFieldsConfig?.map(fieldConfig => {
     if ('fields' in fieldConfig) {
       return (
-        <>
+        <React.Fragment key={fieldConfig.title}>
           <SectionTitle
             title={fieldConfig.title}
             collapsable={fieldConfig.collapsable}
@@ -92,77 +193,22 @@ function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Mo
               />
             </div>
           </SectionTitle>
-        </>
+        </React.Fragment>
       );
     }
 
-    const isDisplay =
-      fieldConfig.condition?.(formValues, get(formValues, fieldConfig.path.join('.'))) !==
-      false;
-
-    return isDisplay ? (
-      <Controller
+    return (
+      <MemoizedFormField
         key={fieldConfig.key}
+        fieldConfig={fieldConfig}
         control={control}
-        name={fieldConfig.path.join('.')}
-        rules={{
-          async validate(value) {
-            const formValue = getValues();
-            if (!fieldConfig.validators || fieldConfig.validators.length === 0)
-              return true;
-            for (const func of fieldConfig.validators) {
-              const { isValid, errorMsg } = await func(value, formValue, FormType.FORM);
-              if (!isValid) return errorMsg;
-            }
-            return true;
-          },
-        }}
-        render={({ field, fieldState }) => {
-          const renderProps: RefineFormFieldRenderProps = {
-            field,
-            fieldConfig,
-            action,
-            control,
-            trigger,
-            formValue: formValues,
-          };
-
-          let ele = null;
-
-          if (fieldConfig?.render) {
-            ele = fieldConfig.render(renderProps);
-          } else {
-            ele = renderCommonFormFiled(renderProps);
-          }
-
-          return (
-            <Form.Item
-              key={fieldConfig.key}
-              label={fieldConfig.label}
-              colon={false}
-              labelCol={
-                fieldConfig.layout === FormItemLayout.VERTICAL
-                  ? {}
-                  : { flex: `0 0 ${formConfig?.labelWidth || '216px'}` }
-              }
-              help={fieldConfig.isHideErrorStatus ? '' : fieldState.error?.message}
-              extra={fieldConfig.helperText}
-              validateStatus={
-                fieldState.invalid && !fieldConfig.isHideErrorStatus ? 'error' : undefined
-              }
-              data-test-id={fieldConfig.key}
-              className={
-                fieldConfig.layout === FormItemLayout.VERTICAL
-                  ? VerticalFormItemStyle
-                  : ''
-              }
-            >
-              {ele}
-            </Form.Item>
-          );
-        }}
+        getValues={getValues}
+        trigger={trigger}
+        action={action}
+        formConfig={formConfig}
+        watch={watch}
       />
-    ) : null;
+    );
   });
 
   return <div className={ContentWrapper}>{fieldsEle}</div>;
