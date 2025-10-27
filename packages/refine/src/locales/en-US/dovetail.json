@@ -246,6 +246,6 @@
   "required_field": "Please enter {{ label }}.",
   "length_limit": "The length of {{ label }} should be between {{ minLength }} and {{ maxLength }} characters.",
   "rf1123_name_format_error": "Only lowercase letters, numbers, and hyphens (-) are supported, and the name must start and end with a lowercase letter or number.",
-  "name_duplicated": "{{name}} already exists. Try another one.",
+  "name_duplicated": "The name already exists.",
   "input_correct_port": "Please fill in a valid port number."
 }

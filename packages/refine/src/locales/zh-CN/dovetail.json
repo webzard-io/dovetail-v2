@@ -254,9 +254,11 @@
   "length_limit": "{{ label }}支持的字符长度范围为 {{ minLength }}–{{ maxLength }}。",
   "rf1123_name_format_error": "仅支持小写字母、数字、连字符（-），并且必须以小写字母、数字开头和结尾。",
   "rf1035_name_format_error": "仅支持小写字母、数字、连字符（-），并且必须以小写字母开头，以小写字母、数字结尾。",
-  "name_duplicated": "已存在同名 {{name}}。",
+  "dns_subdomain_name_format_error": "仅支持小写字母、数字、连字符（-）和点（.），并且必须以小写字母或数字开头和结尾。",
+  "name_duplicated": "名称已存在。",
   "input_correct_port": "请填写有效的端口号。",
   "auto_generate": "自动生成",
   "specify_port": "指定端口",
-  "node_port_duplicated": "节点端口已存在。"
+  "node_port_duplicated": "节点端口已存在。",
+  "all": "全部"
 }

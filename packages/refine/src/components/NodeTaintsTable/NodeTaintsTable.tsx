@@ -9,10 +9,8 @@ import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import useTableData from 'src/hooks/useTableData';
 import { WithId } from 'src/types';
 import { addId } from '../../utils/addId';
-import {
-  NodeTaintEffect,
-  TaintEffectTooltip,
-} from '../EditMetadataForm/EditNodeTaintForm';
+import { TaintEffectTooltip } from '../EditMetadataForm/EditNodeTaintForm';
+import { NodeTaintEffect } from '../EditMetadataForm/NodeTaintEffectSelect';
 
 type Props = {
   taints: Taint[];
@@ -47,7 +45,7 @@ export const NodeTaintsTable: React.FC<Props> = ({ taints = [] }) => {
       dataIndex: 'effect',
       title: t('dovetail.effect'),
       sortable: true,
-      render: (value: NodeTaintEffect) => {
+      render: (value: Exclude<NodeTaintEffect, NodeTaintEffect.All>) => {
         return (
           <Tooltip title={<TaintEffectTooltip effect={value} />}>
             <span className={EffectStyle}>{t(`dovetail.node_taint_${value}`)}</span>
