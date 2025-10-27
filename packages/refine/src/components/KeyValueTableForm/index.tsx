@@ -6,6 +6,7 @@ import {
   TextArea,
   Button,
   Upload,
+  AutoComplete,
 } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { isEqual } from 'lodash-es';
@@ -29,6 +30,7 @@ export type KeyValuePair = {
 interface KeyValueTableFormProps<T extends KeyValuePair> {
   value?: T[];
   defaultValue: T[];
+  keyOptions?: { label: string; value: string }[];
   onChange?: (value: T[]) => void;
   extraColumns?: TableFormColumn[];
   addButtonText?: string;
@@ -65,11 +67,12 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
     canImportFromFile,
     minSize,
     extraAction,
+    keyOptions,
     validateKey,
     validateValue,
     onSubmit,
   } = props;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const tableFormRef = useRef<TableFormHandle>(null);
   const [_value, _setValue] = useState<RowType[]>(value || defaultValue);
   const [forceUpdateCount, setForceUpdateCount] = useState(0);
@@ -115,6 +118,27 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
+  const renderAutoCompleteFunc = ({
+    value,
+    onChange,
+  }: {
+    value?: string;
+    onChange: (v: string) => void;
+  }) => {
+    return (
+      <AutoComplete
+        options={keyOptions || []}
+        value={value}
+        onChange={onChange}
+        size="small"
+        filterOption={(inputValue, option) =>
+          option?.label?.toString().toLowerCase().includes(inputValue.toLowerCase()) ||
+          false
+        }
+        allowClear
+      />
+    );
+  };
   const renderTextAreaFunc = ({
     value,
     onChange,
@@ -162,7 +186,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
               const { isValid, errorMessage } = validate(value || '');
               if (!isValid) return errorMessage || t('dovetail.format_error');
             },
-            render: renderTextAreaFunc,
+            render: keyOptions?.length ? renderAutoCompleteFunc : renderTextAreaFunc,
           },
           {
             key: 'value',
@@ -171,7 +195,11 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
             validator: ({ value }) => {
               if (noValueValidation) return;
               const validate = validateValue || validateLabelValue;
-              const { isValid, errorMessage } = validate(value || '', isValueOptional);
+              const { isValid, errorMessage } = validate(
+                value || '',
+                i18n,
+                isValueOptional
+              );
               if (!isValid) return errorMessage || t('dovetail.format_error');
             },
             render: renderTextAreaFunc,

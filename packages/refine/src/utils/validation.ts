@@ -2,23 +2,7 @@ import { i18n as I18n } from 'i18next';
 
 const Rfc1123NameRegExp = /(^[a-z0-9]$)|(^[a-z0-9][a-z0-9-]*[a-z0-9]$)/;
 const Rfc1035NameRegExp = /(^[a-z]$)|(^[a-z][a-z0-9\-]*[a-z0-9]$)/;
-
-export function validateDnsSubdomain(subdomain: string): {
-  isValid: boolean;
-  errorMessage?: string;
-} {
-  const regex = /(^[a-zA-Z0-9]$)|(^[a-zA-Z0-9][a-zA-Z0-9\.\-\_]*[a-zA-Z0-9]$)/;
-
-  if (!regex.test(subdomain)) {
-    return { isValid: false };
-  }
-
-  if (subdomain && subdomain.length > 63) {
-    return { isValid: false };
-  }
-
-  return { isValid: true };
-}
+const DnsSubdomainRegExp = /(^[a-z0-9]$)|(^[a-z0-9][a-z0-9-.]*[a-z0-9]$)/;
 
 interface ValidateResourceNameOptions {
   v: string;
@@ -28,6 +12,7 @@ interface ValidateResourceNameOptions {
   duplicatedText?: string;
   formatErrorText: string;
   regex: RegExp;
+  maxLength?: number;
 }
 
 export function validateResourceName({
@@ -38,6 +23,7 @@ export function validateResourceName({
   duplicatedText,
   formatErrorText,
   regex,
+  maxLength = 63,
 }: ValidateResourceNameOptions) {
   if (!v) {
     return {
@@ -48,13 +34,13 @@ export function validateResourceName({
     };
   }
 
-  if (v.length > 63) {
+  if (v.length > maxLength) {
     return {
       isValid: false,
       errorMessage: i18n.t('dovetail.length_limit', {
         label: i18n.t('dovetail.name'),
         minLength: 1,
-        maxLength: 63,
+        maxLength: maxLength,
       }),
     };
   }
@@ -115,6 +101,25 @@ export function ValidateRfc1035Name({
   });
 }
 
+export function validateDnsSubdomainName({
+  v,
+  allNames,
+  i18n,
+  emptyText,
+  duplicatedText,
+}: Omit<ValidateResourceNameOptions, 'regex' | 'formatErrorText'>) {
+  return validateResourceName({
+    v,
+    allNames,
+    i18n,
+    emptyText,
+    duplicatedText,
+    regex: DnsSubdomainRegExp,
+    formatErrorText: i18n.t('dovetail.dns_subdomain_name_format_error'),
+    maxLength: 253,
+  });
+}
+
 export function validateLabelKey(key: string): {
   isValid: boolean;
   errorMessage?: string;
@@ -140,12 +145,17 @@ export function validateLabelKey(key: string): {
     return { isValid: false };
   }
 
-  return validateDnsSubdomain(name);
+  if (name && name.length > 63) {
+    return { isValid: false };
+  }
+
+  return { isValid: true };
 }
 
 export function validateLabelValue(
   value: string,
-  isOptional?: boolean
+  i18n: I18n,
+  isOptional?: boolean,
 ): {
   isValid: boolean;
   errorMessage?: string;
@@ -155,7 +165,7 @@ export function validateLabelValue(
   if (isOptional && value === '') {
     return { isValid: true };
   } else if (value === '') {
-    return { isValid: false };
+    return { isValid: false, errorMessage: i18n.t('dovetail.required_field', { label: i18n.t('dovetail.value') }) };
   }
 
   if (value.length > 63) {
@@ -163,6 +173,23 @@ export function validateLabelValue(
   }
 
   if (!labelValueRegex.test(value)) {
+    return { isValid: false };
+  }
+
+  return { isValid: true };
+}
+
+export function validateDataKey(key: string): {
+  isValid: boolean;
+  errorMessage?: string;
+} {
+  const dataKeyRegex = /^[-._a-zA-Z0-9]+$/;
+
+  if (!dataKeyRegex.test(key)) {
+    return { isValid: false };
+  }
+
+  if (key.length > 253) {
     return { isValid: false };
   }
 
