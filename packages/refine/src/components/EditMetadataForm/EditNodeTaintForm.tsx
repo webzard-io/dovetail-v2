@@ -1,8 +1,3 @@
-import { Select, Tooltip, getOptions, Icon } from '@cloudtower/eagle';
-import {
-  InfoICircleFill16Gray70Icon,
-  InfoICircleFill16GrayIcon,
-} from '@cloudtower/icons-react';
 import { css } from '@linaria/core';
 import { useUpdate } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
@@ -16,6 +11,7 @@ import {
   KeyValueTableForm,
   KeyValueTableFormHandle,
 } from '../KeyValueTableForm';
+import { NodeTaintEffect, NodeTaintEffectSelect } from './NodeTaintEffectSelect';
 
 const UlStyle = css`
   list-style: disc;
@@ -28,12 +24,6 @@ interface EditNodeTaintFormProps {
 
 interface EditNodeTaintFormHandler {
   submit: () => Promise<unknown> | undefined;
-}
-
-export enum NodeTaintEffect {
-  'NoSchedule' = 'NoSchedule',
-  'PreferNoSchedule' = 'PreferNoSchedule',
-  'NoExecute' = 'NoExecute',
 }
 
 export const EditNodeTaintForm = React.forwardRef<
@@ -109,56 +99,10 @@ export const EditNodeTaintForm = React.forwardRef<
           defaultValue: NodeTaintEffect.NoExecute,
           render: ({ value, onChange }) => {
             return (
-              <Select input={{}} value={value} onChange={onChange} size="small">
-                {getOptions([
-                  {
-                    value: NodeTaintEffect.NoSchedule,
-                    children: t(`dovetail.node_taint_${NodeTaintEffect.NoSchedule}`),
-                    suffix: (
-                      <Tooltip
-                        title={<TaintEffectTooltip effect={NodeTaintEffect.NoSchedule} />}
-                      >
-                        <Icon
-                          src={InfoICircleFill16GrayIcon}
-                          hoverSrc={InfoICircleFill16Gray70Icon}
-                        />
-                      </Tooltip>
-                    ),
-                  },
-                  {
-                    value: NodeTaintEffect.PreferNoSchedule,
-                    children: t(
-                      `dovetail.node_taint_${NodeTaintEffect.PreferNoSchedule}`
-                    ),
-                    suffix: (
-                      <Tooltip
-                        title={
-                          <TaintEffectTooltip effect={NodeTaintEffect.PreferNoSchedule} />
-                        }
-                      >
-                        <Icon
-                          src={InfoICircleFill16GrayIcon}
-                          hoverSrc={InfoICircleFill16Gray70Icon}
-                        />
-                      </Tooltip>
-                    ),
-                  },
-                  {
-                    value: NodeTaintEffect.NoExecute,
-                    children: t(`dovetail.node_taint_${NodeTaintEffect.NoExecute}`),
-                    suffix: (
-                      <Tooltip
-                        title={<TaintEffectTooltip effect={NodeTaintEffect.NoExecute} />}
-                      >
-                        <Icon
-                          src={InfoICircleFill16GrayIcon}
-                          hoverSrc={InfoICircleFill16Gray70Icon}
-                        />
-                      </Tooltip>
-                    ),
-                  },
-                ])}
-              </Select>
+              <NodeTaintEffectSelect
+                value={value as NodeTaintEffect}
+                onChange={onChange}
+              />
             );
           },
           validator: ({ value }) => {
@@ -171,7 +115,7 @@ export const EditNodeTaintForm = React.forwardRef<
 });
 
 export const TaintEffectTooltip: React.FC<{
-  effect: NodeTaintEffect;
+  effect: Exclude<NodeTaintEffect, NodeTaintEffect.All>;
 }> = ({ effect }) => {
   const { t } = useTranslation();
 

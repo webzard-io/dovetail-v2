@@ -55,3 +55,4 @@ export * from './KeyValueTableForm';
 export * from './MatchLabelSelector';
 export * from './PortsConfigForm';
 export * from './SectionTitle';
+export * from './EditMetadataForm';
