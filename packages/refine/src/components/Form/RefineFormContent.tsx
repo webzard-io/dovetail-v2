@@ -31,6 +31,8 @@ type RefineFormContentProps<Model extends ResourceModel> = {
   formResult: UseFormReturnType;
   errorMsgs?: string[];
   resourceId?: string;
+  transformedInitValues: FieldValues | undefined;
+  customOptions?: Record<string, unknown>;
 };
 
 export function renderCommonFormFiled(props: RefineFormFieldRenderProps) {
@@ -67,9 +69,11 @@ export function renderCommonFormFiled(props: RefineFormFieldRenderProps) {
 
 type FieldsContentProps<Model extends ResourceModel> = Pick<
   RefineFormContentProps<Model>,
-  'config' | 'formConfig' | 'resourceId' | 'step' | 'formResult'
+  'config' | 'formConfig' | 'resourceId' | 'step' | 'formResult' | 'transformedInitValues'
 > & {
   fields: RefineFormConfig['fields'];
+  // 动态的表单选项
+  customOptions?: Record<string, unknown>;
 };
 
 // 创建一个 memo 化的字段组件来避免不必要的重新渲染
@@ -90,12 +94,14 @@ const MemoizedFormField = memo(function FormField({
   formConfig?: CommonFormConfig & RefineFormConfig;
   watch: UseFormWatch<FieldValues>;
 }) {
-  // 如果字段有条件依赖，只监听相关字段；否则为空对象避免触发重新渲染
-  const formValues = fieldConfig.condition ? watch() : {};
+  // 如果字段有条件依赖，只监听相关字段；否则为 null 避免触发重新渲染
+  const watchedFormValues = fieldConfig.condition ? watch() : null;
 
   const isDisplay = fieldConfig.condition
-    ? fieldConfig.condition(formValues, get(formValues, fieldConfig.path.join('.'))) !==
-      false
+    ? fieldConfig.condition(
+        watchedFormValues || {},
+        get(watchedFormValues || {}, fieldConfig.path.join('.'))
+      ) !== false
     : true;
 
   if (!isDisplay) {
@@ -109,7 +115,10 @@ const MemoizedFormField = memo(function FormField({
       name={fieldConfig.path.join('.')}
       rules={{
         async validate(value) {
-          const formValue = getValues();
+          // 如果字段在禁止编辑，则跳过验证
+          if (fieldConfig.disabledWhenEdit && action === 'edit') return true;
+
+          const formValue = watchedFormValues || getValues();
           if (!fieldConfig.validators || fieldConfig.validators.length === 0) return true;
           for (const func of fieldConfig.validators) {
             const { isValid, errorMsg } = await func(value, formValue, FormType.FORM);
@@ -120,7 +129,7 @@ const MemoizedFormField = memo(function FormField({
       }}
       render={({ field, fieldState }) => {
         // 使用 getValues 获取最新值，避免依赖 watch 导致的重新渲染
-        const currentFormValue = getValues();
+        const currentFormValue = watchedFormValues || getValues();
         const renderProps: RefineFormFieldRenderProps = {
           field,
           fieldConfig,
@@ -167,11 +176,27 @@ const MemoizedFormField = memo(function FormField({
 });
 
 function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Model>) {
-  const { config, formConfig, resourceId, step, formResult, fields } = props;
+  const {
+    config,
+    formConfig,
+    resourceId,
+    step,
+    formResult,
+    fields,
+    customOptions,
+    transformedInitValues,
+  } = props;
   const { control, getValues, watch, trigger } = formResult;
   const action = resourceId ? 'edit' : 'create';
 
-  const formFieldsConfig = useFieldsConfig(config, { fields }, resourceId, step);
+  const formFieldsConfig = useFieldsConfig(
+    config,
+    { fields },
+    resourceId,
+    step,
+    customOptions,
+    transformedInitValues
+  );
 
   const fieldsEle = formFieldsConfig?.map(fieldConfig => {
     if ('fields' in fieldConfig) {
@@ -190,6 +215,7 @@ function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Mo
                 step={step}
                 formResult={formResult}
                 fields={fieldConfig.fields}
+                transformedInitValues={transformedInitValues}
               />
             </div>
           </SectionTitle>
@@ -217,7 +243,16 @@ function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Mo
 export const RefineFormContent = <Model extends ResourceModel>(
   props: RefineFormContentProps<Model>
 ) => {
-  const { config, formResult, resourceId, errorMsgs, formConfig, step } = props;
+  const {
+    config,
+    formResult,
+    resourceId,
+    errorMsgs,
+    formConfig,
+    step,
+    customOptions,
+    transformedInitValues,
+  } = props;
   const action = resourceId ? 'edit' : 'create';
 
   return (
@@ -229,6 +264,8 @@ export const RefineFormContent = <Model extends ResourceModel>(
         resourceId={resourceId}
         step={step}
         formResult={formResult}
+        customOptions={customOptions}
+        transformedInitValues={transformedInitValues}
       />
       <FormErrorAlert
         errorMsgs={errorMsgs || []}

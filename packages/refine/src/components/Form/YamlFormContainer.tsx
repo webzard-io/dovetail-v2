@@ -39,6 +39,7 @@ function YamlFormContainer({
   const yamlFormProps: YamlFormProps = useMemo(() => {
     return {
       ...customYamlFormProps,
+      resource: config.name,
       config,
       transformInitValues,
       transformApplyValues,

@@ -6,21 +6,27 @@ import {
   TableFormColumn,
 } from '@cloudtower/eagle';
 import { useList } from '@refinedev/core';
-import { Service, ServicePort } from 'kubernetes-types/core/v1';
+import { ServicePort } from 'kubernetes-types/core/v1';
 import isEqual from 'lodash-es/isEqual';
 import React, { useEffect, useRef, useState, useMemo, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ServiceModel } from 'src/models/service-model';
 import {
   validateNodePort,
   validatePort,
   validateRfc1123Name,
 } from 'src/utils/validation';
-import { NodePort } from './NodePort';
+import { NodePort, NodePortMode } from './NodePort';
+
+export type PortConfigValue = Omit<ServicePort, 'nodePort'> & {
+  nodePort: { value: number; mode: NodePortMode };
+};
 
 interface PortsConfigFormProps {
-  value: ServicePort[];
+  value: PortConfigValue[];
   serviceType?: string;
-  onChange: (value: ServicePort[]) => void;
+  serviceId?: string;
+  onChange: (value: PortConfigValue[]) => void;
 }
 
 export interface PortsConfigFormHandle {
@@ -30,25 +36,32 @@ export interface PortsConfigFormHandle {
 export const PortsConfigForm = React.forwardRef<
   PortsConfigFormHandle,
   PortsConfigFormProps
->(function PortsConfigForm({ value, serviceType, onChange }: PortsConfigFormProps, ref) {
+>(function PortsConfigForm(
+  { value, serviceType, serviceId, onChange }: PortsConfigFormProps,
+  ref
+) {
   const { i18n } = useTranslation();
   const tableFormRef = useRef<TableFormHandle>(null);
   const [_value, _setValue] = useState(value);
   const [forceUpdateCount, setForceUpdateCount] = useState(0);
-  const { data: services } = useList<Service>({
+  const { data: services } = useList<ServiceModel>({
     resource: 'services',
     meta: {
       resourceBasePath: '/api/v1',
       kind: 'Service',
     },
+    pagination: {
+      mode: 'off',
+    },
   });
 
   const nodePortsFromOtherServices = useMemo(() => {
     return (services?.data
-      ?.map(service => service?.spec?.ports?.map(port => port.nodePort))
+      ?.filter(service => service.id !== serviceId)
+      .map(service => service?.spec?.ports?.map(port => port.nodePort))
       .flat()
-      ?.filter(port => port !== undefined) || []) as number[];
-  }, [services]);
+      .filter(port => port !== undefined) || []) as number[];
+  }, [services, serviceId]);
   const columns = useMemo(() => {
     const columns: TableFormColumn[] = [
       {
@@ -79,20 +92,16 @@ export const PortsConfigForm = React.forwardRef<
       },
       {
         key: 'name',
-        title: i18n.t('dovetail.port_name'),
+        title: `${i18n.t('dovetail.name')}${i18n.t('dovetail.optional_with_bracket')}`,
         type: 'input',
         validator: ({ value: portName, rowIndex }) => {
-          if (!portName)
-            return i18n.t('dovetail.required_field', {
-              label: i18n.t('dovetail.port_name'),
-            });
-
           const { errorMessage } = validateRfc1123Name({
             v: portName || '',
             allNames: _value
               .filter((_, index) => index !== rowIndex)
               .map(port => port.name || ''),
             i18n,
+            isOptional: true,
           });
 
           if (errorMessage) return errorMessage;
@@ -100,7 +109,7 @@ export const PortsConfigForm = React.forwardRef<
       },
       {
         key: 'port',
-        title: i18n.t('dovetail.port'),
+        title: i18n.t('dovetail.service_port'),
         render: ({ value, onChange }) => {
           return (
             <InputInteger
@@ -112,7 +121,13 @@ export const PortsConfigForm = React.forwardRef<
           );
         },
         validator: ({ value }) => {
-          const { isValid, errorMessage } = validatePort(value || '', false, i18n);
+          const { isValid, errorMessage } = validatePort(value || '', {
+            isOptional: false,
+            i18n,
+            emptyText: i18n.t('dovetail.required_field', {
+              label: i18n.t('dovetail.service_port'),
+            }),
+          });
 
           if (!isValid) return errorMessage;
         },
@@ -131,7 +146,13 @@ export const PortsConfigForm = React.forwardRef<
           );
         },
         validator: ({ value }) => {
-          const { isValid, errorMessage } = validatePort(value || '', false, i18n);
+          const { isValid, errorMessage } = validatePort(value || '', {
+            isOptional: false,
+            i18n,
+            emptyText: i18n.t('dovetail.required_field', {
+              label: i18n.t('dovetail.container_port'),
+            }),
+          });
 
           if (!isValid) return errorMessage;
         },
@@ -144,16 +165,30 @@ export const PortsConfigForm = React.forwardRef<
         width: 200,
         title: i18n.t('dovetail.node_port'),
         render: ({ value, onChange }) => {
-          return <NodePort value={value} onChange={onChange} />;
+          return (
+            <NodePort
+              value={value.value}
+              mode={value.mode}
+              onChange={(value, mode) => onChange({ value, mode })}
+            />
+          );
         },
         validator: ({ value, rowIndex }) => {
           const allNodePorts = [
             ...nodePortsFromOtherServices,
             ..._value
-              .filter((row, index) => index !== rowIndex && row.nodePort !== undefined)
-              .map(row => row.nodePort),
+              .filter(
+                (row, index) =>
+                  index !== rowIndex &&
+                  row.nodePort.mode === NodePortMode.Manual &&
+                  !!row.nodePort?.value
+              )
+              .map(row => row.nodePort.value),
           ] as number[];
-          const { isValid, errorMessage } = validateNodePort(value, allNodePorts, i18n);
+          const { isValid, errorMessage } =
+            value.mode === 'auto'
+              ? { isValid: true, errorMessage: undefined }
+              : validateNodePort(value.value, allNodePorts, i18n);
 
           if (!isValid) return errorMessage;
         },
@@ -166,7 +201,7 @@ export const PortsConfigForm = React.forwardRef<
   useEffect(() => {
     if (value && !isEqual(value, _value)) {
       _setValue(value);
-      tableFormRef.current?.setData(value);
+      tableFormRef.current?.setDataWithoutTriggerChange(value);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
@@ -196,8 +231,18 @@ export const PortsConfigForm = React.forwardRef<
       defaultData={value}
       columns={columns}
       onBodyChange={data => {
-        _setValue(data as ServicePort[]);
-        onChange(data as ServicePort[]);
+        const newData = data.map(item => ({
+          ...item,
+          protocol: item.protocol || 'TCP',
+          nodePort: item.nodePort || {
+            value: undefined,
+            mode: NodePortMode.Auto,
+          },
+        })) as PortConfigValue[];
+
+        _setValue(newData);
+        tableFormRef.current?.setDataWithoutTriggerChange(newData);
+        onChange(newData);
       }}
       rowAddConfig={{
         addible: true,
@@ -211,3 +256,5 @@ export const PortsConfigForm = React.forwardRef<
     />
   );
 });
+
+export { NodePortMode };

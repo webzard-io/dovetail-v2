@@ -1,11 +1,11 @@
-import { useResource, type IResourceItem } from '@refinedev/core';
+import { useResource } from '@refinedev/core';
 import { JSONSchema7 } from 'json-schema';
 import { useState, useEffect, useCallback, useContext } from 'react';
 import schemaStore from 'src/utils/schema-store';
 import ConstantsContext from '../contexts/constants';
 
 type UseSchemaOptions = {
-  resource?: IResourceItem;
+  resource?: string;
   skip?: boolean;
 };
 
@@ -68,8 +68,8 @@ export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
   const [schema, setSchema] = useState<JSONSchema7 | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-  const useResourceResult = useResource();
-  const resource = options?.resource || useResourceResult.resource;
+  const useResourceResult = useResource({ resourceNameOrRouteName: options?.resource });
+  const resource = useResourceResult.resource;
   const { schemaUrlPrefix } = useContext(ConstantsContext);
 
   const fetchSchema = useCallback(async () => {

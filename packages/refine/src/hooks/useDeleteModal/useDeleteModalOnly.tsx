@@ -5,7 +5,7 @@ import {
   usePushModal,
   DeleteDialogProps,
 } from '@cloudtower/eagle';
-import { HttpError, useDelete, useNavigation } from '@refinedev/core';
+import { HttpError, useDelete, useNavigation, useResource } from '@refinedev/core';
 import React, { useContext } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import ConfigsContext from 'src/contexts/configs';
@@ -19,12 +19,13 @@ type useDeleteModalOnlyProps = {
 };
 
 export const useDeleteModalOnly = ({
-  resource,
+  resource: resourceFromProps,
   deleteDialogProps,
   onError,
 }: useDeleteModalOnlyProps) => {
+  const { resource } = useResource();
   const configs = useContext(ConfigsContext);
-  const config = configs[resource];
+  const config = configs[resourceFromProps];
   const { mutateAsync } = useDelete();
   // const [deleting, setDeleting] = useState<boolean>(false);
   const pushModal = usePushModal();
@@ -59,7 +60,7 @@ export const useDeleteModalOnly = ({
           try {
             // setDeleting(true);
             await mutateAsync({
-              resource,
+              resource: resourceFromProps,
               id,
               successNotification() {
                 return {
@@ -79,7 +80,9 @@ export const useDeleteModalOnly = ({
                 return false;
               },
             });
-            navigation.list(resource);
+            if (resource?.name === resourceFromProps) {
+              navigation.list(resourceFromProps);
+            }
             popModal();
           } finally {
             // setDeleting(false);

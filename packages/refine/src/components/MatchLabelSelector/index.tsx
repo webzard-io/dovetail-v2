@@ -9,7 +9,9 @@ import { SelectMatchLabelButton } from './SelectMatchLabelButton';
 
 interface MatchLabelSelectorProps {
   value: KeyValuePair[];
+  defaultValue: KeyValuePair[];
   namespace: string;
+  disabledChagneDefaultValues?: boolean;
   onChange: (value: KeyValuePair[]) => void;
 }
 
@@ -17,7 +19,7 @@ export const MatchLabelSelector = React.forwardRef<
   KeyValueTableFormHandle,
   MatchLabelSelectorProps
 >(function MatchLabelSelector(props, ref) {
-  const { value, namespace, onChange } = props;
+  const { value, defaultValue, namespace, onChange, disabledChagneDefaultValues } = props;
   const keyValueTableFormRef = useRef<KeyValueTableFormHandle>(null);
   const { t } = useTranslation();
 
@@ -35,12 +37,19 @@ export const MatchLabelSelector = React.forwardRef<
     <KeyValueTableForm
       ref={keyValueTableFormRef}
       value={value || []}
-      defaultValue={value || []}
+      defaultValue={defaultValue || []}
       addButtonText={t('dovetail.add_label')}
-      extraAction={<SelectMatchLabelButton namespace={namespace} onChange={onChange} />}
+      extraAction={
+        <SelectMatchLabelButton
+          namespace={namespace}
+          onChange={onChange}
+          disabled={disabledChagneDefaultValues}
+        />
+      }
       onChange={onChange}
       isValueOptional={false}
       minSize={1}
+      disabledChagneDefaultValues={disabledChagneDefaultValues}
       isHideLabelFormatPopover
     />
   );
