@@ -21,6 +21,7 @@ interface RefineFormContainerProps {
   customYamlFormProps?: YamlFormProps;
   options?: {
     initialValues?: Record<string, unknown>;
+    customOptions?: Record<string, unknown>;
   };
   onSaveButtonPropsChange?: (props: SaveButtonProps) => void;
   onError?: () => void;
@@ -50,7 +51,6 @@ const RefineFormContainer = React.forwardRef<
   ref
 ) {
   const action = id ? 'edit' : 'create';
-  const fieldsConfig = useFieldsConfig(config, { fields: formConfig?.fields }, id, step);
   const refineFormResult = useRefineForm({
     config,
     id,
@@ -70,6 +70,14 @@ const RefineFormContainer = React.forwardRef<
     formConfig,
     options,
   });
+  const fieldsConfig = useFieldsConfig(
+    config,
+    { fields: formConfig?.fields },
+    id,
+    step,
+    options?.customOptions,
+    refineFormResult.formResult.transformedInitValues
+  );
   const { transformApplyValues } = usePathMap({
     pathMap: formConfig?.pathMap,
     transformInitValues: formConfig?.transformInitValues,
@@ -81,6 +89,7 @@ const RefineFormContainer = React.forwardRef<
     if (isYamlMode) {
       return {
         ...customYamlFormProps,
+        resource: config.name,
         config,
         transformInitValues: undefined,
         transformApplyValues: undefined,
@@ -170,6 +179,8 @@ const RefineFormContainer = React.forwardRef<
           formConfig={formConfig}
           errorMsgs={refineFormResult.responseErrorMsgs}
           resourceId={id as string}
+          transformedInitValues={refineFormResult.formResult.transformedInitValues}
+          customOptions={options?.customOptions}
         />
       )}
     </>

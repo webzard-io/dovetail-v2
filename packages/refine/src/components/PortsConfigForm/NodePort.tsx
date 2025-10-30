@@ -1,42 +1,54 @@
-import { InputGroup, Select, InputInteger } from '@cloudtower/eagle';
-import React, { useState } from 'react';
+import { InputGroup, Select, Fields } from '@cloudtower/eagle';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-interface NodePortProps {
-  value: number | null;
-  onChange: (value: number | null) => void;
+export enum NodePortMode {
+  Auto = 'auto',
+  Manual = 'manual',
 }
 
-export function NodePort({ value, onChange }: NodePortProps) {
-  const [mode, setMode] = useState<'auto' | 'manual'>(value ? 'manual' : 'auto');
+interface NodePortProps {
+  value: number | undefined;
+  mode: NodePortMode;
+  onChange: (value: number | undefined, mode: NodePortMode) => void;
+}
+
+export function NodePort({ value, mode, onChange }: NodePortProps) {
   const { t } = useTranslation();
 
   return (
     <InputGroup size="small" compact>
       <Select
-        style={{ width: mode === 'manual' ? 100 : 200 }}
+        style={{ width: mode === NodePortMode.Manual ? 100 : 200 }}
         input={{
           value: mode,
-          onChange: newValue => {
-            setMode(newValue as 'auto' | 'manual');
-            onChange(null);
+          onChange: newMode => {
+            onChange(value, newMode as NodePortMode);
           },
         }}
         options={[
-          { label: t('dovetail.auto_generate'), value: 'auto' },
-          { label: t('dovetail.specify_port'), value: 'manual' },
+          { label: t('dovetail.auto_generate'), value: NodePortMode.Auto },
+          { label: t('dovetail.specify_port'), value: NodePortMode.Manual },
         ]}
         size="small"
       />
-      {mode === 'manual' ? (
-        <InputInteger
+      {mode === NodePortMode.Manual ? (
+        <Fields.Int
+          input={{
+            value: value || undefined,
+            onChange: newValue => {
+              onChange(Number(newValue), mode);
+            },
+            onBlur: () => undefined,
+            onFocus: () => undefined,
+            name: 'nodePort',
+          }}
+          meta={{}}
           style={{ width: 100 }}
-          value={value || undefined}
           size="small"
           placeholder="30000-32767"
-          onChange={newValue => {
-            onChange(Number(newValue));
-          }}
+          minimum={30000}
+          maximum={32767}
         />
       ) : null}
     </InputGroup>

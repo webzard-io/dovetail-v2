@@ -18,6 +18,7 @@ interface OpenFormOptions {
   id?: string;
   resourceName?: string;
   initialValues?: Record<string, unknown>;
+  customOptions?: Record<string, unknown>;
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
 }
 

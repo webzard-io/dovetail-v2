@@ -79,6 +79,7 @@ export type FormModalProps = {
   yamlFormProps?: YamlFormProps;
   options?: {
     initialValues?: Record<string, unknown>;
+    customOptions?: Record<string, unknown>;
   };
   modalProps?: WizardDialogProps;
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;

@@ -80,11 +80,12 @@ function ResourceMatchLabelSelector({
 
 export interface SelectMatchLabelButtonProps {
   namespace: string;
+  disabled?: boolean;
   onChange?: (selector: KeyValuePair[]) => void;
 }
 
 export function SelectMatchLabelButton(props: SelectMatchLabelButtonProps) {
-  const { namespace, onChange } = props;
+  const { namespace, onChange, disabled } = props;
   const { t } = useTranslation();
   const [workload, setWorkload] = useState<string>('deployments');
   const [selectedResource, setSelectedResource] = useState<string>('');
@@ -172,7 +173,7 @@ export function SelectMatchLabelButton(props: SelectMatchLabelButtonProps) {
           </div>
         }
       >
-        <Button type="link" size="small">
+        <Button type="link" size="small" disabled={disabled}>
           {t('dovetail.specify_workload')}
         </Button>
       </Popover>

@@ -13,6 +13,7 @@ interface ValidateResourceNameOptions {
   formatErrorText: string;
   regex: RegExp;
   maxLength?: number;
+  isOptional?: boolean;
 }
 
 export function validateResourceName({
@@ -24,8 +25,13 @@ export function validateResourceName({
   formatErrorText,
   regex,
   maxLength = 63,
+  isOptional = false,
 }: ValidateResourceNameOptions) {
   if (!v) {
+    if (isOptional) {
+      return { isValid: true };
+    }
+
     return {
       isValid: false,
       errorMessage: emptyText || i18n.t('dovetail.required_field', {
@@ -71,6 +77,7 @@ export function validateRfc1123Name({
   i18n,
   emptyText,
   duplicatedText,
+  isOptional = false,
 }: Omit<ValidateResourceNameOptions, 'regex' | 'formatErrorText'>) {
   return validateResourceName({
     v,
@@ -80,6 +87,7 @@ export function validateRfc1123Name({
     duplicatedText,
     regex: Rfc1123NameRegExp,
     formatErrorText: i18n.t('dovetail.rf1123_name_format_error'),
+    isOptional,
   });
 }
 
@@ -89,6 +97,7 @@ export function ValidateRfc1035Name({
   i18n,
   emptyText,
   duplicatedText,
+  isOptional = false,
 }: Omit<ValidateResourceNameOptions, 'regex' | 'formatErrorText'>) {
   return validateResourceName({
     v,
@@ -98,6 +107,7 @@ export function ValidateRfc1035Name({
     duplicatedText,
     regex: Rfc1035NameRegExp,
     formatErrorText: i18n.t('dovetail.rf1035_name_format_error'),
+    isOptional,
   });
 }
 
@@ -107,6 +117,7 @@ export function validateDnsSubdomainName({
   i18n,
   emptyText,
   duplicatedText,
+  isOptional = false,
 }: Omit<ValidateResourceNameOptions, 'regex' | 'formatErrorText'>) {
   return validateResourceName({
     v,
@@ -117,6 +128,7 @@ export function validateDnsSubdomainName({
     regex: DnsSubdomainRegExp,
     formatErrorText: i18n.t('dovetail.dns_subdomain_name_format_error'),
     maxLength: 253,
+    isOptional,
   });
 }
 
@@ -196,14 +208,20 @@ export function validateDataKey(key: string): {
   return { isValid: true };
 }
 
-export function validatePort(port: string | number, isOptional: boolean, i18n: I18n): {
+export function validatePort(port: string | number, options: {
+  isOptional?: boolean;
+  emptyText?: string;
+  i18n: I18n;
+}): {
   isValid: boolean;
   errorMessage?: string;
 } {
+  const { isOptional, emptyText, i18n } = options;
 
   if (port === '' && !isOptional) {
     return {
-      isValid: false, errorMessage: i18n.t('dovetail.required_field', {
+      isValid: false,
+      errorMessage: emptyText || i18n.t('dovetail.required_field', {
         label: i18n.t('dovetail.port'),
       })
     };
@@ -212,7 +230,7 @@ export function validatePort(port: string | number, isOptional: boolean, i18n: I
   const portNumber = Number(port);
 
   if (portNumber < 1 || portNumber > 65535) {
-    return { isValid: false, errorMessage: i18n.t('dovetail.input_correct_port') };
+    return { isValid: false, errorMessage: i18n.t('dovetail.port_range_limit') };
   }
 
   return { isValid: true };
@@ -222,14 +240,18 @@ export function validateNodePort(nodePort: number | null, allNodePorts: number[]
   isValid: boolean;
   errorMessage?: string;
 } {
-  if (nodePort === null) {
-    return { isValid: true };
+  if (!nodePort) {
+    return {
+      isValid: false, errorMessage: i18n.t('dovetail.required_field', {
+        label: i18n.t('dovetail.specify_port'),
+      })
+    };
   }
 
   const portNumber = Number(nodePort);
 
   if (portNumber < 30000 || portNumber > 32767) {
-    return { isValid: false, errorMessage: i18n.t('dovetail.input_correct_port') };
+    return { isValid: false, errorMessage: i18n.t('dovetail.node_port_range_limit') };
   }
 
   if (allNodePorts.includes(portNumber)) {

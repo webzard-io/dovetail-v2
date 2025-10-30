@@ -16,6 +16,7 @@ export enum ServiceTypeEnum {
 
 export class ServiceModel extends ResourceModel<ServiceType> {
   public ingresses: IngressModel[] = [];
+  public declare spec?: ServiceType['spec'];
 
   constructor(
     public _rawYaml: ServiceType,
@@ -33,16 +34,16 @@ export class ServiceModel extends ResourceModel<ServiceType> {
       resourceBasePath: '/apis/networking.k8s.io/v1',
       kind: 'Ingress',
     })) as IngressList;
-    
+
     // 查找引用了当前service的ingresses
     const myIngresses = ingresses.items.filter(ingress => {
       const rules = (ingress as IngressModel).getFlattenedRules([]);
-      
-      return rules.some(rule => 
+
+      return rules.some(rule =>
         rule.serviceName === this.name
       );
     }) as IngressModel[];
-    
+
     this.ingresses = myIngresses;
   }
 

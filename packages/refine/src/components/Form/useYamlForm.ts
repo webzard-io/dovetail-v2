@@ -176,6 +176,7 @@ const useYamlForm = <
     fetchSchema,
   } = useSchema({
     skip: editorOptions?.isSkipSchema,
+    resource,
   });
   const [formAnt] = Form.useForm();
   const formSF = useFormSF({
@@ -350,7 +351,7 @@ const useYamlForm = <
     form: formSF.form,
     formProps: {
       ...formSF.formProps,
-      onFinish: values => {
+      onFinish: async (values) => {
         const errors = [
           !isYamlValid ? t('dovetail.yaml_format_wrong') : '',
           !isSchemaValid ? t('dovetail.yaml_value_wrong') : '',
@@ -362,7 +363,7 @@ const useYamlForm = <
           return;
         }
 
-        const rulesErrors = validateRules(editor.current?.getEditorValue() || '');
+        const rulesErrors = await validateRules(editor.current?.getEditorValue() || '');
 
         if (Object.keys(rulesErrors).length) {
           setRulesErrors(Object.values(rulesErrors));

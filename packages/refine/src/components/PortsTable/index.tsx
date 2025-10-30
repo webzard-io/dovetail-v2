@@ -46,7 +46,7 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
       key: 'podPort',
       display: true,
       dataIndex: 'targetPort',
-      title: t('dovetail.pod_port'),
+      title: t('dovetail.container_port'),
       sortable: true,
       width: 199,
     },
@@ -68,17 +68,19 @@ export const PortsTable: React.FC<Props> = ({ service }) => {
     data: finalData,
     currentPage,
     onPageChange,
-    onSorterChange
+    onSorterChange,
   } = useTableData({
     data: ports,
     columns,
   });
 
   if (ports?.length === 0) {
-    return <ErrorContent
-      errorText={t('dovetail.no_resource', { kind: t('dovetail.port') })}
-      type={ErrorContentType.Card}
-    />;
+    return (
+      <ErrorContent
+        errorText={t('dovetail.no_resource', { kind: t('dovetail.port') })}
+        type={ErrorContentType.Card}
+      />
+    );
   }
 
   return (

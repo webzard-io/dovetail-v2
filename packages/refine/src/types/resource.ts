@@ -1,4 +1,5 @@
 import { UseFormProps } from '@refinedev/react-hook-form';
+import { FieldValues } from 'react-hook-form';
 import { FormModalProps, RefineFormField, RefineFormSection } from '../components/Form';
 import { Column, InternalTableProps } from '../components/InternalBaseTable';
 import { ShowConfig } from '../components/ShowContent';
@@ -57,6 +58,10 @@ export type RefineFormConfig<Model extends ResourceModel = ResourceModel> = {
     records: Model[];
     action: 'create' | 'edit';
     step: number;
+    // 自定义的一些表单选项，可以在 useOpenForm 中传入
+    customOptions?: Record<string, unknown>;
+    // 转换后的初始值，可以在表单配置中读取
+    transformedInitValues?: FieldValues;
   }) => (RefineFormField | RefineFormSection)[];
   /** Refine Core 的表单属性 */
   refineCoreProps?: UseFormProps['refineCoreProps'];

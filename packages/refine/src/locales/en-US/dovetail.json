@@ -124,7 +124,7 @@
   "save_yaml_success_toast": "YAML editing was successfully saved",
   "save_replicas_success_toast": "The expected number of replicas was edited successfully",
   "save_replicas_failed_toast": "Failed to edit the expected number of replicas",
-  "port_mapping_title_tooltip": "The mapping between the service port and the pod port.",
+  "port_mapping_title_tooltip": "The mapping between the service port and the container port.",
   "in_cluster_desc": "Services of types ClusterIP, NodePort, and LoadBalancer will show the ClusterIP field, which represents a virtual IP address only accessible within the cluster.",
   "in_cluster_ip_desc": "If ClusterIP is a headless service, it will display as blank.",
   "in_cluster_external_name_desc": "For an ExternalName type service, it displays DNS records.",
@@ -150,7 +150,6 @@
   "ingress_rule": "Ingress rule",
   "egress_rule": "Egress rule",
   "service_port": "Service port",
-  "pod_port": "Pod port",
   "path_type": "Path type",
   "only_support_one_yaml": "Only one YAML configuration is supported at a time.",
   "not_support": "Not supported",
@@ -247,5 +246,6 @@
   "length_limit": "The length of {{ label }} should be between {{ minLength }} and {{ maxLength }} characters.",
   "rf1123_name_format_error": "Only lowercase letters, numbers, and hyphens (-) are supported, and the name must start and end with a lowercase letter or number.",
   "name_duplicated": "The name already exists.",
-  "input_correct_port": "Please fill in a valid port number."
+  "input_correct_port": "Please fill in a valid port number.",
+  "optional_with_bracket": "(optional)"
 }
