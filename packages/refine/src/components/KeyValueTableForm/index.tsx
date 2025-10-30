@@ -40,6 +40,7 @@ interface KeyValueTableFormProps<T extends KeyValuePair> {
   canImportFromFile?: boolean;
   minSize?: number;
   extraAction?: React.ReactNode;
+  disabledChagneDefaultValues?: boolean;
   validateKey?: (key: string) => { isValid: boolean; errorMessage?: string };
   validateValue?: (value: string) => { isValid: boolean; errorMessage?: string };
   onSubmit?: (value: T[]) => Promise<unknown> | undefined;
@@ -64,6 +65,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
     noValueValidation,
     isHideLabelFormatPopover,
     isValueOptional = true,
+    disabledChagneDefaultValues,
     canImportFromFile,
     minSize,
     extraAction,
@@ -121,9 +123,13 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
   const renderAutoCompleteFunc = ({
     value,
     onChange,
+    rowIndex,
+    disabled,
   }: {
     value?: string;
     onChange: (v: string) => void;
+    rowIndex?: number;
+    disabled?: boolean;
   }) => {
     return (
       <AutoComplete
@@ -135,6 +141,10 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
           option?.label?.toString().toLowerCase().includes(inputValue.toLowerCase()) ||
           false
         }
+        disabled={
+          disabled ||
+          (disabledChagneDefaultValues && (rowIndex || 0) < (defaultValue.length || 0))
+        }
         allowClear
       />
     );
@@ -142,9 +152,13 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
   const renderTextAreaFunc = ({
     value,
     onChange,
+    rowIndex,
+    disabled,
   }: {
     value?: string;
     onChange: (v: string) => void;
+    rowIndex?: number;
+    disabled?: boolean;
   }) => {
     return (
       <TextArea
@@ -154,6 +168,10 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         `}
         size="small"
         value={value}
+        disabled={
+          disabled ||
+          (disabledChagneDefaultValues && (rowIndex || 0) < (defaultValue.length || 0))
+        }
         onChange={e => {
           onChange(e.target.value);
         }}
@@ -211,9 +229,14 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
           text: () => addButtonText,
           extraAction,
         }}
-        defaultData={defaultValue}
+        defaultData={_value}
         row={{
           deletable: _value.length > (minSize || 0),
+          disableActions(rowIndex) {
+            if (disabledChagneDefaultValues && rowIndex < (defaultValue.length || 0)) {
+              return ['delete'];
+            }
+          },
         }}
         disableBatchFilling
         hideEmptyTable

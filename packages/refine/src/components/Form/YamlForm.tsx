@@ -37,6 +37,7 @@ export enum SchemaStrategy {
 
 export interface YamlFormProps<Model extends ResourceModel = ResourceModel> {
   id?: string;
+  resource?: string;
   action?: FormAction;
   config: ResourceConfig<Model>;
   initialValuesForCreate?: Record<string, unknown>;
@@ -61,6 +62,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
 ) {
   const {
     id,
+    resource: resourceFromProps,
     action: actionFromProps,
     schemaStrategy = SchemaStrategy.Optional,
     isShowLayout = true,
@@ -72,7 +74,9 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     onErrorsChange,
     rules,
   } = props;
-  const { action: actionFromResource, resource } = useResource();
+  const { action: actionFromResource, resource } = useResource({
+    resourceNameOrRouteName: resourceFromProps,
+  });
   const action = actionFromProps || actionFromResource;
   const { t, i18n } = useTranslation();
   const {
@@ -87,6 +91,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
   } = useYamlForm({
     id,
     action: actionFromProps,
+    resource: resource?.name,
     editorOptions: {
       isSkipSchema: schemaStrategy === SchemaStrategy.None,
     },

@@ -39,7 +39,12 @@ export const RefineFormPage = (props: Props) => {
         width: 100%;
       `}
     >
-      <RefineFormContent config={config} formResult={formResult} resourceId={id as string} />;
+      <RefineFormContent
+        config={config}
+        formResult={formResult}
+        resourceId={id as string}
+        transformedInitValues={formResult.transformedInitValues}
+      />
       <Button {...saveButtonProps} onClick={onClick}>
         {action === 'create' ? t('dovetail.create') : t('dovetail.edit')}
       </Button>

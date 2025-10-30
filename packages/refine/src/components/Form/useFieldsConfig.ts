@@ -1,4 +1,5 @@
 import { useList, useShow } from '@refinedev/core';
+import { FieldValues } from 'react-hook-form';
 import { ResourceModel } from 'src/models';
 import { RefineFormConfig, ResourceConfig } from 'src/types';
 
@@ -6,7 +7,9 @@ function useFieldsConfig<Model extends ResourceModel>(
   config?: ResourceConfig<Model>,
   formConfig?: { fields: RefineFormConfig['fields'] },
   resourceId?: string,
-  step?: number
+  step?: number,
+  customOptions?: Record<string, unknown>,
+  transformedInitValues?: FieldValues
 ) {
   const action = resourceId ? 'edit' : 'create';
   const listQuery = useList<Model>({
@@ -27,6 +30,8 @@ function useFieldsConfig<Model extends ResourceModel>(
     records: listQuery.data?.data || [],
     action,
     step: step || 0,
+    customOptions: customOptions || {},
+    transformedInitValues: transformedInitValues || {},
   });
 }
 

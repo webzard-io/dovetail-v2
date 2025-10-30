@@ -12,7 +12,7 @@ import {
 } from '@refinedev/core';
 import get from 'lodash/get';
 import has from 'lodash/has';
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { DefaultValues } from 'react-hook-form';
 
 import {
@@ -31,8 +31,9 @@ export type UseFormReturnType<
   TContext extends object = object,
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError,
+  TResponseError extends HttpError = TError
 > = UseFormReturn<TVariables, TContext> & {
+  transformedInitValues: TVariables | undefined;
   refineCore: UseFormReturnTypeCore<
     TQueryFnData,
     TError,
@@ -54,7 +55,7 @@ export type UseFormProps<
   TContext extends object = object,
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError,
+  TResponseError extends HttpError = TError
 > = {
   /**
    * Configuration object for the core of the [useForm](/docs/api-reference/core/hooks/useForm/)
@@ -90,7 +91,7 @@ export const useForm = <
   TContext extends object = object,
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError,
+  TResponseError extends HttpError = TError
 >({
   refineCoreProps,
   warnWhenUnsavedChanges: warnWhenUnsavedChangesProp,
@@ -128,8 +129,14 @@ export const useForm = <
 
   const useHookFormResult = useHookForm<TVariables, TContext>({
     ...rest,
-    defaultValues: transformInitValues && typeof rest.defaultValues === 'object' ? transformInitValues(rest.defaultValues) : rest.defaultValues,
+    defaultValues:
+      transformInitValues && typeof rest.defaultValues === 'object'
+        ? transformInitValues(rest.defaultValues)
+        : rest.defaultValues,
   });
+  const [transformedInitValues, setTransformedInitValues] = useState<
+    TVariables | undefined
+  >(useHookFormResult.getValues());
 
   const {
     watch,
@@ -207,7 +214,7 @@ export const useForm = <
 
     /**
      * get registered fields from react-hook-form
-     */ 
+     */
     const transformedData = transformInitValues ? transformInitValues(data) : data;
     const registeredFields = Object.keys(flattenObjectKeys(transformedData));
 
@@ -222,10 +229,15 @@ export const useForm = <
        * set value if the path exists in the query result even if the value is null
        */
       if (hasValue) {
-        setValue(path as Path<TVariables>, dataValue);
+        setValue(path as Path<TVariables>, dataValue, {
+          shouldDirty: false,
+          shouldValidate: false,
+          shouldTouch: false,
+        });
       }
     });
-  }, [queryResult?.data, setValue, transformInitValues, formState.isDirty]);
+    setTransformedInitValues(getValues());
+  }, [queryResult?.data, setValue, transformInitValues, formState.isDirty, getValues]);
 
   useEffect(() => {
     const subscription = watch((values: any, { type }: { type?: any }) => {
@@ -236,37 +248,42 @@ export const useForm = <
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  const onValuesChange = useCallback((changeValues: TVariables) => {
-    if (warnWhenUnsavedChanges) {
-      setWarnWhen(true);
-    }
-
-    if (refineCoreProps?.autoSave) {
-      setWarnWhen(false);
-
-      const onFinishProps = refineCoreProps.autoSave?.onFinish;
-
-      if (onFinishProps) {
-        return onFinishAutoSave(onFinishProps(changeValues));
+  const onValuesChange = useCallback(
+    (changeValues: TVariables) => {
+      if (warnWhenUnsavedChanges) {
+        setWarnWhen(true);
       }
 
-      return onFinishAutoSave(changeValues);
-    }
+      if (refineCoreProps?.autoSave) {
+        setWarnWhen(false);
 
-    return changeValues;
-  }, [warnWhenUnsavedChanges, refineCoreProps?.autoSave, setWarnWhen, onFinishAutoSave]);
-  const handleSubmit: UseFormHandleSubmit<TVariables> = useCallback((onValid, onInvalid) => async e => {
-    setWarnWhen(false);
-    return handleSubmitReactHookForm(onValid, onInvalid)(e);
-  }, [handleSubmitReactHookForm, setWarnWhen]);
+        const onFinishProps = refineCoreProps.autoSave?.onFinish;
 
+        if (onFinishProps) {
+          return onFinishAutoSave(onFinishProps(changeValues));
+        }
+
+        return onFinishAutoSave(changeValues);
+      }
+
+      return changeValues;
+    },
+    [warnWhenUnsavedChanges, refineCoreProps?.autoSave, setWarnWhen, onFinishAutoSave]
+  );
+  const handleSubmit: UseFormHandleSubmit<TVariables> = useCallback(
+    (onValid, onInvalid) => async e => {
+      setWarnWhen(false);
+      return handleSubmitReactHookForm(onValid, onInvalid)(e);
+    },
+    [handleSubmitReactHookForm, setWarnWhen]
+  );
 
   const saveButtonProps = useMemo(() => {
     return {
       disabled: formLoading,
       onClick: (e: React.BaseSyntheticEvent) => {
         handleSubmit(
-          (v) => onFinish(transformApplyValues ? transformApplyValues(v) : v),
+          v => onFinish(transformApplyValues ? transformApplyValues(v) : v),
           () => false
         )(e);
       },
@@ -275,6 +292,7 @@ export const useForm = <
 
   return {
     ...useHookFormResult,
+    transformedInitValues,
     handleSubmit,
     refineCore: useFormCoreResult,
     saveButtonProps,
