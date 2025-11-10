@@ -1,4 +1,4 @@
-import { Alert } from '@cloudtower/eagle';
+import { Alert, Loading } from '@cloudtower/eagle';
 import { BaseRecord, CreateResponse, UpdateResponse } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
 import React, { useMemo, useEffect, useImperativeHandle } from 'react';
@@ -155,6 +155,14 @@ const RefineFormContainer = React.forwardRef<
     }),
     [refineFormResult.formResult]
   );
+
+  // 等获取到真实数据后再渲染表单
+  if (
+    action === 'edit' &&
+    !(refineFormResult.formResult.getValues() as Unstructured)?.metadata?.name
+  ) {
+    return <Loading />;
+  }
 
   if (isYamlMode) {
     return <YamlForm {...yamlFormProps} />;
