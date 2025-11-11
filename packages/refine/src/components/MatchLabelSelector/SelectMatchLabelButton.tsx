@@ -107,7 +107,11 @@ export function SelectMatchLabelButton(props: SelectMatchLabelButtonProps) {
       <Popover
         trigger="click"
         visible={popoverVisible}
-        onVisibleChange={setPopoverVisible}
+        onVisibleChange={newPopoverVisible => {
+          if (disabled) return;
+
+          setPopoverVisible(newPopoverVisible);
+        }}
         overlayClassName={PopoverOverlayStyle}
         content={
           <div className={PopoverContentStyle}>
