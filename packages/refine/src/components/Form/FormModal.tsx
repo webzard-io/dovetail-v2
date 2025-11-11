@@ -280,9 +280,8 @@ export function FormModal(props: FormModalProps) {
       okButtonProps={{
         ...omit(saveButtonProps, 'onClick'),
         children: config.formConfig?.saveButtonText,
-        size: 'middle',
       }}
-      okText={okText}
+      okText={config.formConfig?.saveButtonText || okText}
       destroyOnClose
       destroyOtherStep
       {...modalProps}
