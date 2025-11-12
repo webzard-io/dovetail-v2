@@ -32,6 +32,7 @@ import { ResourceState } from '../../constants';
 import { ResourceModel } from '../../models';
 import { StateTag } from '../StateTag';
 import { ShowConfig, ShowField, AreaType, ShowGroup } from './fields';
+import { transformResourceKindInSentence } from 'src/utils/string';
 const ShowContentWrapperStyle = css`
   height: 100%;
   display: flex;
@@ -218,7 +219,7 @@ export const ShowContentView = <Model extends ResourceModel>(
     resource: resourceName,
     errorNotification: false,
   });
-  const { t } = useTranslation();
+  const { t ,i18n } = useTranslation();
   const { data } = queryResult;
   const navigation = useNavigation();
   const go = useGo();
@@ -378,7 +379,7 @@ export const ShowContentView = <Model extends ResourceModel>(
             >
               <Button style={{ marginRight: 8 }} onClick={() => openForm({ id })}>
                 {config.formConfig?.formType === FormType.FORM
-                  ? t('dovetail.edit')
+                  ? `${t('dovetail.edit')}${transformResourceKindInSentence(config.displayName || config.kind, i18n.language)}`
                   : t('dovetail.edit_yaml')}
               </Button>
             </CanAccess>

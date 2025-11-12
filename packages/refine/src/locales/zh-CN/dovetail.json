@@ -262,5 +262,6 @@
   "specify_port": "指定端口",
   "node_port_duplicated": "端口已被占用。",
   "all": "全部",
-  "optional_with_bracket": "（选填）"
+  "optional_with_bracket": "（选填）",
+  "label_annotations": "标签与注解"
 }
