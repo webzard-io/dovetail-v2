@@ -77,6 +77,7 @@ export function validateRfc1123Name({
   i18n,
   emptyText,
   duplicatedText,
+  maxLength,
   isOptional = false,
 }: Omit<ValidateResourceNameOptions, 'regex' | 'formatErrorText'>) {
   return validateResourceName({
@@ -87,6 +88,7 @@ export function validateRfc1123Name({
     duplicatedText,
     regex: Rfc1123NameRegExp,
     formatErrorText: i18n.t('dovetail.rf1123_name_format_error'),
+    maxLength,
     isOptional,
   });
 }
@@ -97,6 +99,7 @@ export function ValidateRfc1035Name({
   i18n,
   emptyText,
   duplicatedText,
+  maxLength,
   isOptional = false,
 }: Omit<ValidateResourceNameOptions, 'regex' | 'formatErrorText'>) {
   return validateResourceName({
@@ -107,6 +110,7 @@ export function ValidateRfc1035Name({
     duplicatedText,
     regex: Rfc1035NameRegExp,
     formatErrorText: i18n.t('dovetail.rf1035_name_format_error'),
+    maxLength,
     isOptional,
   });
 }
@@ -117,6 +121,7 @@ export function validateDnsSubdomainName({
   i18n,
   emptyText,
   duplicatedText,
+  maxLength = 253,
   isOptional = false,
 }: Omit<ValidateResourceNameOptions, 'regex' | 'formatErrorText'>) {
   return validateResourceName({
@@ -127,7 +132,7 @@ export function validateDnsSubdomainName({
     duplicatedText,
     regex: DnsSubdomainRegExp,
     formatErrorText: i18n.t('dovetail.dns_subdomain_name_format_error'),
-    maxLength: 253,
+    maxLength,
     isOptional,
   });
 }
