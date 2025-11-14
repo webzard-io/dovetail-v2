@@ -13,6 +13,7 @@ type Props = {
     color: Record<string, StatusCapsuleColor | 'loading'>;
     text: Record<string, string>;
   };
+  size?: 'small' | 'medium';
 };
 
 export const StateTag: React.FC<Props> = props => {
@@ -21,6 +22,7 @@ export const StateTag: React.FC<Props> = props => {
     hideBackground,
     className,
     customResourceStateMap,
+    size = 'medium',
   } = props;
   const { t } = useTranslation();
 
@@ -50,7 +52,7 @@ export const StateTag: React.FC<Props> = props => {
 
   return (
     <StatusCapsule
-      className={cx(className, StateTagStyle, hideBackground && 'no-background')}
+      className={cx(className, StateTagStyle, hideBackground && 'no-background', size)}
       color={
         finalColorMap[state] !== 'loading'
           ? (finalColorMap[state] as StatusCapsuleColor)
