@@ -16,6 +16,7 @@ export * from './WorkloadPodsTable';
 export * from './Dropdowns/CronJobDropdown';
 export * from './Dropdowns/K8sDropdown';
 export * from './DropdownMenuItems';
+export * from './EventsTable';
 export * from './ResourceUsageBar';
 export * from './WorkloadReplicas';
 export * from './CronjobJobsTable';

@@ -10,6 +10,11 @@ export const StateTagStyle = css`
     background-color: transparent !important;
     padding: 0;
   }
+
+  &.small {
+    padding: 0 10px;
+    height: 18px;
+  }
 `;
 
 export const NameTagStyle = css`

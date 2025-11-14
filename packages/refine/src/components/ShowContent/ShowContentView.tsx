@@ -10,10 +10,10 @@ import {
   Tag,
 } from '@cloudtower/eagle';
 import {
-  ArrowBoldDown16Icon,
+  ArrowChevronDownSmall16BlueIcon,
   ArrowChevronLeft16BoldTertiaryIcon,
   ArrowChevronLeftSmall16BoldBlueIcon,
-  ArrowChevronUp16BoldSecondaryIcon,
+  ArrowChevronUpSmall16BlueIcon,
 } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useShow, useNavigation, useGo, CanAccess } from '@refinedev/core';
@@ -28,10 +28,12 @@ import ComponentContext from 'src/contexts/component';
 import ConfigsContext from 'src/contexts/configs';
 import { useOpenForm } from 'src/hooks/useOpenForm';
 import { FormType } from 'src/types';
+import { transformResourceKindInSentence } from 'src/utils/string';
 import { ResourceState } from '../../constants';
 import { ResourceModel } from '../../models';
 import { StateTag } from '../StateTag';
 import { ShowConfig, ShowField, AreaType, ShowGroup } from './fields';
+
 const ShowContentWrapperStyle = css`
   height: 100%;
   display: flex;
@@ -99,7 +101,6 @@ const GroupStyle = css`
 const BasicGroupStyle = css`
   margin: 0 24px;
   overflow: auto;
-  margin-bottom: 16;
 `;
 
 const GroupTitleStyle = css`
@@ -118,7 +119,6 @@ const FieldWrapperStyle = css`
   flex-wrap: nowrap;
 `;
 const TabContentStyle = css`
-  padding-bottom: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -195,7 +195,7 @@ export function ShowGroupWithTitleComponent(props: ShowGroupComponentProps) {
 export function BasicShowGroupComponent(props: React.PropsWithChildren<unknown>) {
   const { children } = props;
 
-  return <div className={BasicGroupStyle}>{children}</div>;
+  return <div className={cx(BasicGroupStyle, 'basic-group')}>{children}</div>;
 }
 
 export const ShowContentView = <Model extends ResourceModel>(
@@ -218,7 +218,7 @@ export const ShowContentView = <Model extends ResourceModel>(
     resource: resourceName,
     errorNotification: false,
   });
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data } = queryResult;
   const navigation = useNavigation();
   const go = useGo();
@@ -378,7 +378,10 @@ export const ShowContentView = <Model extends ResourceModel>(
             >
               <Button style={{ marginRight: 8 }} onClick={() => openForm({ id })}>
                 {config.formConfig?.formType === FormType.FORM
-                  ? t('dovetail.edit')
+                  ? `${t('dovetail.edit')}${transformResourceKindInSentence(
+                      config.displayName || config.kind,
+                      i18n.language
+                    )}`
                   : t('dovetail.edit_yaml')}
               </Button>
             </CanAccess>
@@ -434,23 +437,24 @@ const CollapseTabs: React.FC = props => {
   const { t } = useTranslation();
   return (
     <>
+      {isCollapsed ? null : props.children}
       <div style={{ display: 'flex' }}>
         <Button
-          style={{ margin: 'auto', cursor: 'pointer' }}
-          type="quiet"
+          style={{ margin: '8px auto', cursor: 'pointer' }}
+          size="small"
+          type="link"
           onClick={() => setIsCollapsed(v => !v)}
           suffixIcon={
             isCollapsed ? (
-              <Icon src={ArrowChevronUp16BoldSecondaryIcon} />
+              <Icon src={ArrowChevronUpSmall16BlueIcon} />
             ) : (
-              <Icon src={ArrowBoldDown16Icon} />
+              <Icon src={ArrowChevronDownSmall16BlueIcon} />
             )
           }
         >
-          {t('dovetail.view_all_info')}
+          {isCollapsed ? t('dovetail.view_all_info') : t('dovetail.collapse')}
         </Button>
       </div>
-      {isCollapsed ? null : props.children}
     </>
   );
 };
