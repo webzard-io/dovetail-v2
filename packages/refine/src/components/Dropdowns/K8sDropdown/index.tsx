@@ -25,10 +25,11 @@ export type DropdownSize = 'normal' | 'large';
 interface K8sDropdownProps {
   record: ResourceModel;
   size?: DropdownSize;
+  customButton?: React.ReactNode;
 }
 
 export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
-  const { record, size = 'normal' } = props;
+  const { record, size = 'normal', customButton } = props;
   const globalStore = useGlobalStore();
   const useResourceResult = useResource();
   const configs = useContext(ConfigsContext);
@@ -97,7 +98,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
         }
         trigger={['click']}
       >
-        <Button
+        {customButton || <Button
           type="quiet"
           size={size === 'large' ? 'middle' : 'small'}
           prefixIcon={
@@ -112,7 +113,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
               <Icon src={MoreEllipsis316BoldBlueIcon} />
             )
           }
-        ></Button>
+        ></Button>}
       </Dropdown>
     </>
   );
