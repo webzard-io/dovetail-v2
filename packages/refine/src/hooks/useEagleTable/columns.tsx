@@ -17,6 +17,7 @@ import { Trans } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import { DurationTime } from 'src/components/DurationTime';
 import ValueDisplay from 'src/components/ValueDisplay';
+import { DashedTitleStyle } from 'src/styles/show';
 import {
   PVVolumeModeDisplay,
   ResourceLink,
@@ -44,10 +45,6 @@ import {
   PersistentVolumeClaimModel,
 } from '../../models';
 
-const DashedTitleStyle = css`
-  border-bottom: 1px dashed rgba(107, 128, 167, 0.6);
-  padding-bottom: 1px;
-`;
 const ServiceClusterTooltipStyle = css`
   &.ant-tooltip {
     .ant-tooltip-inner {
@@ -86,7 +83,7 @@ const NameLink: React.FC<{ id: string; name: string; resource?: string }> = prop
 export const CommonSorter = (dataIndex: string[]) => (a: unknown, b: unknown) => {
   const valA = get(a, dataIndex);
   const valB = get(b, dataIndex);
-  
+
   // 处理 undefined 值的情况
   if (valA === valB) return 0;
   if (valA !== undefined && valB === undefined) return 1; // undefined 更小
@@ -155,7 +152,7 @@ export const StateDisplayColumnRenderer = <
     | PodModel
     | ServiceModel
     | DaemonSetModel
-    | JobModel,
+    | JobModel
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -286,7 +283,7 @@ export const NodeNameColumnRenderer = <Model extends PodModel>(
   };
 };
 
-export const CompletionsCountColumnRenderer = <Model extends JobModel>(
+export const PodCountOfJobColumnRenderer = <Model extends JobModel>(
   i18n: I18nType
 ): Column<Model> => {
   const dataIndex = ['succeeded'];
@@ -296,7 +293,7 @@ export const CompletionsCountColumnRenderer = <Model extends JobModel>(
     display: true,
     dataIndex,
     title: (
-      <Tooltip title={i18n.t('dovetail.completion_num_tooltip')}>
+      <Tooltip title={i18n.t('dovetail.job_pod_count_tooltip')}>
         <span className={DashedTitleStyle}>{i18n.t('dovetail.pod_num')}</span>
       </Tooltip>
     ),
@@ -305,7 +302,7 @@ export const CompletionsCountColumnRenderer = <Model extends JobModel>(
     align: 'right',
     sorter: CommonSorter(dataIndex),
     render: (_, record: Model) => {
-      return <span>{record.completionsDisplay}</span>;
+      return <span>{record.podCountDisplay}</span>;
     },
   };
 };
@@ -364,7 +361,7 @@ export function ServiceInClusterAccessTitle() {
   );
 }
 export const ServiceInClusterAccessColumnRenderer = <
-  Model extends ServiceModel,
+  Model extends ServiceModel
 >(): Column<Model> => {
   return {
     key: 'inClusterAccess',
@@ -673,7 +670,7 @@ export const PVRefColumnRenderer = <Model extends PersistentVolumeClaimModel>(
 };
 
 export const PVStorageClassColumnRenderer = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -691,7 +688,7 @@ export const PVStorageClassColumnRenderer = <
 };
 
 export const PVPhaseColumnRenderer = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -745,7 +742,7 @@ export const PVCSIRefColumnRenderer = <Model extends PersistentVolumeModel>(
 };
 
 export const PVVolumeModeColumnRenderer = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -763,7 +760,7 @@ export const PVVolumeModeColumnRenderer = <
 };
 
 export const PVAccessModeColumnRenderer = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
 >(
   i18n: I18nType
 ): Column<Model> => {

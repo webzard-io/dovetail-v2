@@ -118,7 +118,7 @@
   "create_failed_tip": "请解决如下问题后，再创建：",
   "save_failed": "保存失败。",
   "save_failed_tip": "请解决如下问题后，再保存：",
-  "completion_num_tooltip": "已完成数量/预期数量",
+  "job_pod_count_tooltip": "完成数量/全部数量",
   "ready_num_tooltip": "就绪数量/预期数量",
   "true": "是",
   "false": "否",

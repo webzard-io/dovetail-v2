@@ -57,3 +57,4 @@ export * from './MatchLabelSelector';
 export * from './PortsConfigForm';
 export * from './SectionTitle';
 export * from './EditMetadataForm';
+export * from './LabelsAndAnnotationsShow';
