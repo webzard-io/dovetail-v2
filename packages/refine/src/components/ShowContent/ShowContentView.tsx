@@ -78,8 +78,7 @@ const GroupStyle = css`
   padding-bottom: 4px;
   border-radius: 8px;
   border: 1px solid $gray-a60-3;
-  box-shadow:
-    0px 0px 2.003px 0px rgba($gray-70, 0.15),
+  box-shadow: 0px 0px 2.003px 0px rgba($gray-70, 0.15),
     0px 0px 16px 0px rgba($gray-70, 0.08);
   background-color: $white;
   margin: 0 24px;
@@ -99,7 +98,7 @@ const GroupStyle = css`
 `;
 
 const BasicGroupStyle = css`
-  margin: 0 24px;
+  margin: 0 24px 0 24px;
   overflow: auto;
 `;
 
@@ -111,7 +110,6 @@ const GroupTitleStyle = css`
   align-items: center;
 `;
 const FullTabContentStyle = css`
-  background-color: $white;
   height: 100%;
 `;
 const FieldWrapperStyle = css`
@@ -132,6 +130,7 @@ const TabsStyle = css`
   &.ant-tabs {
     flex: 1;
     min-height: 0;
+    margin-top: 16px;
 
     .ant-tabs-nav {
       margin-bottom: 0;
@@ -152,6 +151,11 @@ const TabsStyle = css`
     }
   }
 `;
+const SmallTabsStyle = css`
+  &.ant-tabs {
+    margin-top: 12px;
+  }
+`;
 
 const KindTagStyle = css`
   margin: auto 0;
@@ -170,12 +174,15 @@ export type ShowContentViewProps<Model extends ResourceModel> = React.PropsWithC
   canCollapseTabs?: boolean;
   hideTopBar?: boolean;
   className?: string;
+  size?: 'small' | 'medium';
 }>;
 
 type ShowGroupComponentProps = React.PropsWithChildren<{
   title: string;
   className?: string;
+  size?: 'small' | 'medium';
   operationEle?: React.ReactElement | null;
+  [key: string]: unknown;
 }>;
 
 export function ShowGroupWithTitleComponent(props: ShowGroupComponentProps) {
@@ -192,10 +199,24 @@ export function ShowGroupWithTitleComponent(props: ShowGroupComponentProps) {
   );
 }
 
-export function BasicShowGroupComponent(props: React.PropsWithChildren<unknown>) {
-  const { children } = props;
+type BasicShowGroupComponentProps = React.PropsWithChildren<{
+  size?: 'small' | 'medium';
+  [key: string]: unknown;
+}>;
 
-  return <div className={cx(BasicGroupStyle, 'basic-group')}>{children}</div>;
+export function BasicShowGroupComponent(props: BasicShowGroupComponentProps) {
+  const { children, size = 'medium' } = props;
+
+  return (
+    <div
+      className={cx(BasicGroupStyle, 'basic-group')}
+      style={{
+        margin: size === 'small' ? '12px 8px 0px 12px' : undefined,
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 export const ShowContentView = <Model extends ResourceModel>(
@@ -212,6 +233,7 @@ export const ShowContentView = <Model extends ResourceModel>(
     canCollapseTabs = false,
     className,
     hideTopBar = false,
+    size = 'medium',
   } = props;
   const { queryResult } = useShow<Model>({
     id,
@@ -244,47 +266,53 @@ export const ShowContentView = <Model extends ResourceModel>(
       const value = get(record, field.path);
 
       if (field.renderContent) {
-        content = field.renderContent(value, record, field);
+        content = field.renderContent(value, record, field, size);
       } else {
         content = get(record, field.path);
       }
 
-      return hasCol ? (
-        <Col
-          flex={areaType === AreaType.Inline ? 'none' : ''}
-          span={field.col || 24}
-          key={field.key}
-          className={css`
-            padding: 4px 0;
-          `}
-        >
-          {field.render ? (
-            field.render(value, record, field)
-          ) : (
-            <div className={FieldWrapperStyle}>
-              {field.title && (
-                <span
-                  className={Typo.Label.l4_regular_title}
-                  style={{
-                    width: field.labelWidth || '165px',
-                    marginRight: 8,
-                    flexShrink: 0,
-                    color: '#2C385299',
-                  }}
-                >
-                  {field.title}
+      if (hasCol) {
+        return (
+          <Col
+            flex={areaType === AreaType.Inline ? 'none' : ''}
+            span={field.col || 24}
+            key={field.key}
+            className={css`
+              padding: 4px 0;
+            `}
+          >
+            {field.render ? (
+              field.render(value, record, field, size)
+            ) : (
+              <div className={FieldWrapperStyle}>
+                {field.title && (
+                  <span
+                    className={Typo.Label.l4_regular_title}
+                    style={{
+                      width: field.labelWidth || '165px',
+                      marginRight: 8,
+                      flexShrink: 0,
+                      color: '#2C385299',
+                    }}
+                  >
+                    {field.title}
+                  </span>
+                )}
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <ValueDisplay
+                    className={cx(Typo.Label.l4_regular_title, ValueStyle)}
+                    value={content}
+                    useOverflow={false}
+                  />
                 </span>
-              )}
-              <span style={{ flex: 1, minWidth: 0 }}>
-                <ValueDisplay
-                  className={cx(Typo.Label.l4_regular_title, ValueStyle)}
-                  value={content}
-                  useOverflow={false}
-                />
-              </span>
-            </div>
-          )}
-        </Col>
+              </div>
+            )}
+          </Col>
+        );
+      }
+
+      return field.render ? (
+        field.render(value, record, field, size)
       ) : (
         <ValueDisplay style={{ height: '100%' }} value={content} useOverflow={false} />
       );
@@ -292,9 +320,11 @@ export const ShowContentView = <Model extends ResourceModel>(
   }
 
   function renderGroup(group: ShowGroup<Model>, isBasicGroup = false) {
-    let GroupContainer: React.FC<ShowGroupComponentProps> = React.Fragment;
+    let GroupContainer:
+      | React.FC<ShowGroupComponentProps>
+      | React.FC<BasicShowGroupComponentProps> = React.Fragment;
     let FieldContainer = React.Fragment;
-    let groupContainerProps = {};
+    const groupContainerProps = { title: group.title || '', size };
     let fieldContainerProps = {};
 
     if (isBasicGroup) {
@@ -307,17 +337,14 @@ export const ShowContentView = <Model extends ResourceModel>(
 
     // 基本组和有标题的时候，都需要Row组件包裹，以便showConfig里的col的属性生效
     const shouldRenderRow = !!(isBasicGroup || group.title);
+
     if (shouldRenderRow) {
       FieldContainer = Row;
-      groupContainerProps = { title: group.title || '' };
       fieldContainerProps = { gutter: [24, 8] };
     }
 
     return (
-      <GroupContainer
-        key={group.title}
-        {...(groupContainerProps as ShowGroupComponentProps)}
-      >
+      <GroupContainer key={group.title} {...groupContainerProps}>
         {group.areas.map((area, index) => (
           <>
             <FieldContainer key={index} {...(fieldContainerProps as AntdRowProps)}>
@@ -334,7 +361,12 @@ export const ShowContentView = <Model extends ResourceModel>(
 
   const stateDisplay = get(record, 'stateDisplay') as ResourceState;
   const topBar = (
-    <div className={ToolBarWrapper}>
+    <div
+      className={ToolBarWrapper}
+      style={{
+        padding: size === 'small' ? '8px 16px' : undefined,
+      }}
+    >
       {!hideBackButton && (
         <div
           className={cx(Typo.Label.l4_bold, BackButton)}
@@ -393,7 +425,7 @@ export const ShowContentView = <Model extends ResourceModel>(
   );
   const tabs = (
     <Tabs
-      tabs={(showConfig.tabs || []).map((tab, tabIndex) => {
+      tabs={(showConfig.tabs || []).map(tab => {
         return {
           title: tab.title,
           key: tab.key,
@@ -401,15 +433,18 @@ export const ShowContentView = <Model extends ResourceModel>(
             <div
               className={cx(
                 TabContentStyle,
-                tab.groups.length <= 1 && tabIndex !== 0 && FullTabContentStyle
+                tab.groups.length <= 1 && FullTabContentStyle
               )}
+              style={{
+                background: tab.background === 'white' ? '#fff' : undefined,
+              }}
             >
               {tab.groups?.map(group => renderGroup(group, false))}
             </div>
           ),
         };
       })}
-      className={TabsStyle}
+      className={cx(TabsStyle, size === 'small' && SmallTabsStyle)}
     />
   );
 
@@ -418,7 +453,12 @@ export const ShowContentView = <Model extends ResourceModel>(
     : null;
 
   return (
-    <div className={cx(ShowContentWrapperStyle, className)}>
+    <div
+      className={cx(ShowContentWrapperStyle, className)}
+      style={{
+        background: size === 'small' ? '#fff' : undefined,
+      }}
+    >
       {hideTopBar ? null : (
         <Space direction="vertical" className={ShowContentHeaderStyle}>
           {topBar}
@@ -446,9 +486,9 @@ const CollapseTabs: React.FC = props => {
           onClick={() => setIsCollapsed(v => !v)}
           suffixIcon={
             isCollapsed ? (
-              <Icon src={ArrowChevronUpSmall16BlueIcon} />
-            ) : (
               <Icon src={ArrowChevronDownSmall16BlueIcon} />
+            ) : (
+              <Icon src={ArrowChevronUpSmall16BlueIcon} />
             )
           }
         >

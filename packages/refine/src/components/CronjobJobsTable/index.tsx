@@ -8,7 +8,7 @@ import ComponentContext from 'src/contexts/component';
 import { useEagleTable } from 'src/hooks/useEagleTable/useEagleTable';
 import {
   AgeColumnRenderer,
-  CompletionsCountColumnRenderer,
+  PodCountOfJobColumnRenderer,
   DurationColumnRenderer,
   NameColumnRenderer,
   NameSpaceColumnRenderer,
@@ -53,55 +53,58 @@ export const CronjobJobsTable: React.FC<{
   const [selectedKeys] = useState<string[]>([]);
   const component = useContext(ComponentContext);
   const Table = component.Table || BaseTable;
-  const columns: Column<JobModel>[] = useMemo(() => ([
-    NameColumnRenderer(i18n, 'jobs'),
-    StateDisplayColumnRenderer(i18n),
-    NameSpaceColumnRenderer(i18n),
-    {
-      ...WorkloadImageColumnRenderer(i18n),
-      width: 238,
-    },
-    CompletionsCountColumnRenderer(i18n),
-    DurationColumnRenderer(i18n),
-    AgeColumnRenderer(i18n),
-  ]), [i18n]);
-  const params = useMemo(() => ({
-    columns,
-    useTableParams: {
-      resource: 'jobs',
-      meta: { resourceBasePath: '/apis/batch/v1', kind: 'Job' },
-      filters: {
-        permanent: [{
-          field: '',
-          value: '',
-          fn(item: JobModel) {
-            return owner ? matchOwner(item, owner) : true;
-          }
-        }] as any
-      }
-    }
-  }), [columns, owner]);
+  const columns: Column<JobModel>[] = useMemo(
+    () => [
+      NameColumnRenderer(i18n, 'jobs'),
+      StateDisplayColumnRenderer(i18n),
+      NameSpaceColumnRenderer(i18n),
+      {
+        ...WorkloadImageColumnRenderer(i18n),
+        width: 238,
+      },
+      PodCountOfJobColumnRenderer(i18n),
+      DurationColumnRenderer(i18n),
+      AgeColumnRenderer(i18n),
+    ],
+    [i18n]
+  );
+  const params = useMemo(
+    () => ({
+      columns,
+      useTableParams: {
+        resource: 'jobs',
+        meta: { resourceBasePath: '/apis/batch/v1', kind: 'Job' },
+        filters: {
+          permanent: [
+            {
+              field: '',
+              value: '',
+              fn(item: JobModel) {
+                return owner ? matchOwner(item, owner) : true;
+              },
+            },
+          ] as any,
+        },
+      },
+    }),
+    [columns, owner]
+  );
 
   const { tableProps } = useEagleTable<JobModel>(params);
 
   if (!tableProps.data?.length && !tableProps.loading) {
-    return <ErrorContent
-      errorText={i18n.t('dovetail.no_resource', { kind: ' Job' })}
-      type={ErrorContentType.Card}
-    />;
+    return (
+      <ErrorContent
+        errorText={i18n.t('dovetail.no_resource', { kind: ' Job' })}
+        type={ErrorContentType.Card}
+      />
+    );
   }
 
   return (
-    <Space
-      direction="vertical"
-      className={WrapperStyle}
-    >
-      {hideToolBar ? null : (<TableToolBar selectedKeys={selectedKeys} hideCreate />)}
-      <Table
-        {...tableProps}
-        tableKey="cronjobs"
-        showMenuColumn={false}
-      />
+    <Space direction="vertical" className={WrapperStyle}>
+      {hideToolBar ? null : <TableToolBar selectedKeys={selectedKeys} hideCreate />}
+      <Table {...tableProps} tableKey="cronjobs" showMenuColumn={false} />
     </Space>
   );
 };

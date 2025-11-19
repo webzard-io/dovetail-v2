@@ -9,7 +9,7 @@ import {
   BasicGroup,
   PodsGroup,
   ConditionsGroup,
-  EventsTab
+  EventsTab,
 } from '../../../components/ShowContent';
 import { WorkloadModel } from '../../../models';
 
@@ -19,18 +19,17 @@ export const DeploymentShow: React.FC<IResourceComponentsProps> = () => {
     <PageShow<WorkloadModel>
       showConfig={{
         basicGroup: BasicGroup(i18n, {
-          upAreas: [{ fields: [ReplicaField(),] }],
-          basicFields: [ImageField(i18n),]
+          upAreas: [{ fields: [ReplicaField()] }],
+          basicFields: [ImageField(i18n)],
         }),
-        tabs: [{
-          title: i18n.t('dovetail.detail'),
-          key: 'detail',
-          groups: [
-            
-            PodsGroup(),
-            ConditionsGroup(i18n)
-          ]
-        }, EventsTab(i18n)],
+        tabs: [
+          {
+            title: i18n.t('dovetail.detail'),
+            key: 'detail',
+            groups: [PodsGroup(), ConditionsGroup(i18n)],
+          },
+          EventsTab({ i18n }),
+        ],
       }}
       Dropdown={WorkloadDropdown}
     />

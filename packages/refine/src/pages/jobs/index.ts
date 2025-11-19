@@ -15,7 +15,7 @@ import {
   AgeColumnRenderer,
   WorkloadImageColumnRenderer,
   DurationColumnRenderer,
-  CompletionsCountColumnRenderer,
+  PodCountOfJobColumnRenderer,
   StateDisplayColumnRenderer,
   RestartsColumnRenderer,
 } from '../../hooks/useEagleTable/columns';
@@ -32,34 +32,35 @@ export const JobConfig = (i18n: i18n): ResourceConfig<JobModel> => ({
     [
       StateDisplayColumnRenderer(i18n),
       WorkloadImageColumnRenderer(i18n),
-      CompletionsCountColumnRenderer(i18n),
+      PodCountOfJobColumnRenderer(i18n),
       RestartsColumnRenderer(i18n),
       DurationColumnRenderer(i18n),
       AgeColumnRenderer(i18n),
     ] as Column<JobModel>[],
   showConfig: () => ({
-    tabs: [{
-      title: i18n.t('dovetail.detail'),
-      key: 'detail',
-      groups: [
-        BasicGroup(i18n, {
-          basicFields: [
-            StartTimeField(i18n),
-            ImageField(i18n),
-          ],
-          upAreas: [{
-            fields: [ReplicaField()]
-          }]
-        }),
-        PodsGroup(),
-        ConditionsGroup(i18n)
-      ]
-    }],
+    tabs: [
+      {
+        title: i18n.t('dovetail.detail'),
+        key: 'detail',
+        groups: [
+          BasicGroup(i18n, {
+            basicFields: [StartTimeField(i18n), ImageField(i18n)],
+            upAreas: [
+              {
+                fields: [ReplicaField()],
+              },
+            ],
+          }),
+          PodsGroup(),
+          ConditionsGroup(i18n),
+        ],
+      },
+    ],
   }),
   initValue: JOB_INIT_VALUE,
   Dropdown: K8sDropdown,
   formConfig: {
     formType: FormType.FORM,
     formContainerType: FormContainerType.MODAL,
-  }
+  },
 });

@@ -25,8 +25,6 @@ import {
   ShowArea,
   ShowGroup,
   NamespaceField,
-  LabelsField,
-  AnnotationsField,
   AgeField,
   PodsField,
   ConditionsField,
@@ -62,8 +60,6 @@ export const BasicGroup = <Model extends ResourceModel>(
     {
       fields: (isShowNamespace ? [NamespaceField<Model>(i18n)] : []).concat([
         ...basicFields,
-        LabelsField(i18n),
-        AnnotationsField(i18n),
         AgeField(i18n),
       ]),
     },
@@ -113,7 +109,9 @@ export const ServicePodsGroup = <Model extends ServiceModel>(): ShowGroup<Model>
   ],
 });
 
-export const PVCPodsGroup = <Model extends PersistentVolumeClaimModel>(): ShowGroup<Model> => ({
+export const PVCPodsGroup = <
+  Model extends PersistentVolumeClaimModel
+>(): ShowGroup<Model> => ({
   title: 'Pod',
   areas: [
     {
@@ -173,7 +171,7 @@ export const IngressRulesGroup = <Model extends IngressModel>(
 });
 
 export const PodSelectorGroup = <
-  Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>,
+  Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>
 >(
   i18n: I18nType
 ): ShowGroup<Model> => ({
