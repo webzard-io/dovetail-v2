@@ -54,7 +54,7 @@ export const StatefulSetConfig = (i18n: i18n): ResourceConfig<StatefulSetModel> 
           ConditionsGroup(i18n)
         ]
       },
-      EventsTab(i18n)
+      EventsTab({ i18n })
     ]
   }),
   Dropdown: ReplicasDropdown,

@@ -105,7 +105,6 @@
   "create_failed_tip": "Please address the following issues and try again: ",
   "save_failed": "Failed to save.",
   "save_failed_tip": "Please address the following issues and try again: ",
-  "completion_num_tooltip": "Completed/Expected",
   "ready_num_tooltip": "Ready/Expected",
   "realtime_log": "Real-time logs",
   "previous_log": "Last startup logs",

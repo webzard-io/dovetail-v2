@@ -1,4 +1,4 @@
-import { StatusCapsuleColor, Units } from '@cloudtower/eagle';
+import { StatusCapsuleColor, Tooltip, Units } from '@cloudtower/eagle';
 import { useTable, CrudFilters } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
 import { Unstructured } from 'k8s-api-provider';
@@ -20,6 +20,7 @@ import {
   ServiceOutClusterAccessTitle,
   ServiceInClusterAccessTitle,
 } from 'src/hooks/useEagleTable/columns';
+import { DashedTitleStyle } from 'src/styles/show';
 import {
   JobModel,
   ResourceModel,
@@ -60,12 +61,14 @@ export type ShowField<Model extends ResourceModel> = {
   render?: (
     val: unknown,
     record: Model,
-    field: ShowField<Model>
+    field: ShowField<Model>,
+    size: 'small' | 'medium'
   ) => React.ReactNode | undefined;
   renderContent?: (
     val: unknown,
     record: Model,
-    field: ShowField<Model>
+    field: ShowField<Model>,
+    size: 'small' | 'medium'
   ) => React.ReactNode | undefined;
 };
 
@@ -88,6 +91,7 @@ export type ShowTab<Model extends ResourceModel> = {
   title: string;
   key: string;
   groups: ShowGroup<Model>[];
+  background?: 'white' | 'gray';
 };
 
 export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
@@ -116,7 +120,7 @@ export const ImageField = <Model extends WorkloadBaseModel>(
 };
 
 export const ReplicaField = <
-  Model extends WorkloadModel | JobModel,
+  Model extends WorkloadModel | JobModel
 >(): ShowField<Model> => {
   return {
     key: 'Replicas',
@@ -285,7 +289,7 @@ export const ServicePodsField = <Model extends ResourceModel>(): ShowField<Model
 };
 
 export const IngressRulesTableTabField = <
-  Model extends IngressModel,
+  Model extends IngressModel
 >(): ShowField<Model> => {
   return {
     key: 'rules',
@@ -296,13 +300,17 @@ export const IngressRulesTableTabField = <
   };
 };
 
-export const EventsTableTabField = <Model extends ResourceModel>(): ShowField<Model> => {
+export const EventsTableTabField = <Model extends ResourceModel>({
+  size,
+}: {
+  size?: 'small' | 'medium';
+}): ShowField<Model> => {
   return {
     key: 'event',
     path: [],
     renderContent: (_, record) => {
       return (
-        <div style={{ padding: '0 24px', height: '100%' }}>
+        <div style={{ padding: size === 'small' ? '0 12px' : '0 24px', height: '100%' }}>
           <EventsTable uid={record.metadata?.uid as string} />
         </div>
       );
@@ -358,7 +366,7 @@ export const AnnotationsField = <Model extends ResourceModel>(
 });
 
 export const ServiceInnerClusterAccessField = <
-  Model extends ServiceModel,
+  Model extends ServiceModel
 >(): ShowField<Model> => ({
   key: 'innerClusterAccess',
   col: 12,
@@ -388,7 +396,7 @@ export const ServiceOutClusterAccessField = <Model extends ServiceModel>(
 });
 
 export const PodSelectorField = <
-  Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>,
+  Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>
 >(): ShowField<Model> => ({
   key: 'podSelector',
   path: [],
@@ -437,7 +445,7 @@ export const StorageClassProvisionerField = <Model extends StorageClassModel>(
 };
 
 export const StorageClassPvField = <
-  Model extends StorageClassModel,
+  Model extends StorageClassModel
 >(): ShowField<Model> => {
   return {
     key: 'pvs',
@@ -514,7 +522,7 @@ export const PVRefField = <Model extends PersistentVolumeClaimModel>(
 };
 
 export const PVStorageClassField = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
 >(
   i18n: I18nType
 ): ShowField<Model> => {
@@ -532,7 +540,7 @@ export const PVStorageClassField = <
 };
 
 export const PVPhaseField = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
 >(
   i18n: I18nType
 ): ShowField<Model> => {
@@ -548,7 +556,7 @@ export const PVPhaseField = <
 };
 
 export const PVVolumeModeField = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
 >(
   i18n: I18nType
 ): ShowField<Model> => {
@@ -564,7 +572,7 @@ export const PVVolumeModeField = <
 };
 
 export const PVAccessModeField = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
 >(
   i18n: I18nType
 ): ShowField<Model> => {
@@ -580,7 +588,7 @@ export const PVAccessModeField = <
 };
 
 export const PVCPodsField = <
-  Model extends PersistentVolumeClaimModel,
+  Model extends PersistentVolumeClaimModel
 >(): ShowField<Model> => {
   return {
     key: 'pods',
@@ -689,6 +697,24 @@ export const ResourceTableField = <Model extends ResourceModel>(
     path: [],
     renderContent() {
       return <ResourceTable resource={resource} useTableParams={useTableParams} />;
+    },
+  };
+};
+
+export const PodCountOfJobField = <Model extends JobModel>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'podCount',
+    path: [],
+    col: 12,
+    title: (
+      <Tooltip title={i18n.t('dovetail.job_pod_count_tooltip')}>
+        <span className={DashedTitleStyle}>{i18n.t('dovetail.pod_num')}</span>
+      </Tooltip>
+    ),
+    renderContent: (_, record) => {
+      return <span>{record.podCountDisplay}</span>;
     },
   };
 };

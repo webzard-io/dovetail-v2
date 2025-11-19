@@ -15,10 +15,7 @@ export class JobModel extends WorkloadBaseModel {
   public declare spec?: RequiredJob['spec'];
   public declare status?: RequiredJob['status'];
 
-  constructor(
-    public _rawYaml: RequiredJob,
-    _globalStore: GlobalStore
-  ) {
+  constructor(public _rawYaml: RequiredJob, _globalStore: GlobalStore) {
     super(_rawYaml, _globalStore);
   }
 
@@ -43,7 +40,7 @@ export class JobModel extends WorkloadBaseModel {
     const startTime = this._rawYaml.status?.startTime;
 
     if (!completionTime && startTime) {
-      return getSecondsDiff(startTime, (new Date()).toString());
+      return getSecondsDiff(startTime, new Date().toString());
     }
 
     if (completionTime && startTime) {
@@ -57,7 +54,17 @@ export class JobModel extends WorkloadBaseModel {
     if (this._rawYaml.spec.parallelism && !this._rawYaml.spec.completions) {
       return `0/1 of ${this._rawYaml.spec.parallelism}`;
     }
+
     return `${this._rawYaml.status?.succeeded || 0}/${this._rawYaml.spec?.completions}`;
+  }
+
+  get podCountDisplay() {
+    const count =
+      (this.status?.active || 0) +
+      (this.status?.succeeded || 0) +
+      (this.status?.failed || 0);
+
+    return `${this.succeeded}/${count}`;
   }
 
   get succeeded() {
