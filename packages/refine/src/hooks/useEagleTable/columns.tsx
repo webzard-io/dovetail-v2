@@ -721,7 +721,7 @@ export const PVCRefColumnRenderer = <Model extends PersistentVolumeModel>(
           resourceName="persistentvolumeclaims"
           namespace={pv.pvcNamespace || 'default'}
           name={value}
-          uid={pv.pvcUid}
+          query={{uid: pv.pvcUid}}
         />
       );
     },
