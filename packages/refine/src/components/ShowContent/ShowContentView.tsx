@@ -335,7 +335,7 @@ export const ShowContentView = <Model extends ResourceModel>(
   const stateDisplay = get(record, 'stateDisplay') as ResourceState;
   const topBar = (
     <div className={ToolBarWrapper}>
-      {!hideBackButton && (
+      {!hideBackButton && !showConfig.renderCustomBackButton && (
         <div
           className={cx(Typo.Label.l4_bold, BackButton)}
           onClick={() => {
@@ -353,6 +353,7 @@ export const ShowContentView = <Model extends ResourceModel>(
           </Icon>
         </div>
       )}
+      {showConfig.renderCustomBackButton?.(record)}
       <Space className={TopBarStyle}>
         <div style={{ display: 'flex' }}>
           <Tag.NameTag className={KindTagStyle}>{config.kind}</Tag.NameTag>
