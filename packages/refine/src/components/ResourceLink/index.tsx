@@ -10,7 +10,7 @@ type Props = {
   namespace: string;
   name: string;
   displayName?: string;
-  uid?: string;
+  query?: Record<string, unknown>;
 };
 
 const LinkStyle = css`
@@ -18,7 +18,7 @@ const LinkStyle = css`
 `;
 
 export const ResourceLink: React.FC<Props> = props => {
-  const { resourceName, namespace, name, uid, displayName } = props;
+  const { resourceName, namespace, name, query, displayName } = props;
   const navigation = useNavigation();
   const go = useGo();
 
@@ -41,7 +41,9 @@ export const ResourceLink: React.FC<Props> = props => {
       to: navigation.showUrl(resourceName, ''),
       query: {
         id: namespace ? `${namespace}/${name}` : name,
-        uid,
+        // from is current resource by default
+        from: resourceName,
+        ...query,
       },
       options: {
         keepQuery: true,
