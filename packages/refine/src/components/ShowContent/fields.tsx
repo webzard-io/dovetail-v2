@@ -1,4 +1,5 @@
 import { StatusCapsuleColor, Tooltip, Units } from '@cloudtower/eagle';
+import { css } from '@linaria/core';
 import { useTable, CrudFilters } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
 import { Unstructured } from 'k8s-api-provider';
@@ -57,7 +58,7 @@ export type ShowField<Model extends ResourceModel> = {
   path: string[];
   labelWidth?: string;
   col?: number;
-  hidden?: boolean;
+  hidden?: boolean | ((record: Model) => boolean);
   render?: (
     val: unknown,
     record: Model,
@@ -201,10 +202,17 @@ export const DataField = <Model extends ResourceModel>(
     path: ['data'],
     renderContent: val => {
       return (
-        <KeyValue
-          data={val as Record<string, string>}
-          empty={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.data') })}
-        />
+        <div
+          className={css`
+            padding: 16px 24px;
+            height: 100%;
+          `}
+        >
+          <KeyValue
+            data={val as Record<string, string>}
+            empty={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.data') })}
+          />
+        </div>
       );
     },
   };
@@ -219,7 +227,16 @@ export const SecretDataField = <Model extends ResourceModel>(): ShowField<Model>
       for (const key in val as Record<string, string>) {
         decodeVal[key] = atob((val as Record<string, string>)[key]);
       }
-      return <KeyValueSecret data={decodeVal} />;
+      return (
+        <div
+          className={css`
+            padding: 8px 24px 24px 24px;
+            height: 100%;
+          `}
+        >
+          <KeyValueSecret data={decodeVal} />
+        </div>
+      );
     },
   };
 };
@@ -296,7 +313,16 @@ export const IngressRulesTableTabField = <
     key: 'rules',
     path: ['spec', 'rules'],
     renderContent: (_, record) => {
-      return <IngressRulesTable ingress={record} />;
+      return (
+        <div
+          className={css`
+            padding: 0 24px;
+            height: 100%;
+          `}
+        >
+          <IngressRulesTable ingress={record} />
+        </div>
+      );
     },
   };
 };
@@ -381,7 +407,7 @@ export const ServiceInnerClusterAccessField = <
 export const ServiceOutClusterAccessField = <Model extends ServiceModel>(
   clusterVip: string
 ): ShowField<Model> => ({
-  key: 'innerClusterAccess',
+  key: 'outClusterAccess',
   col: 12,
   title: <ServiceOutClusterAccessTitle />,
   path: [],
@@ -416,7 +442,11 @@ export const PortsTableField = <Model extends ServiceModel>(): ShowField<Model> 
   key: 'ports',
   path: [],
   renderContent: (_, service) => {
-    return <PortsTable service={service} />;
+    return (
+      <div style={{ padding: '0 24px', height: '100%' }}>
+        <PortsTable service={service} />
+      </div>
+    );
   },
 });
 

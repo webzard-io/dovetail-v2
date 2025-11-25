@@ -110,7 +110,7 @@
   "previous_log": "Last startup logs",
   "auto_wrap": "Auto wrap",
   "container_num": "Containers",
-  "edit_resource_success": "{{resource}} {{name}} was edited successfully",
+  "edit_resource_success": "{{kind}} {{name}} was edited successfully",
   "redeploy_success_toast": "{{kind}} {{name}} was redeployed successfully",
   "redeploy_failed_toast": "Failed to redeploy {{kind}} {{name}}",
   "pause_success_toast": "Successfully suspended",

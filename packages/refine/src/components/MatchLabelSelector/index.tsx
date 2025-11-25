@@ -50,7 +50,6 @@ export const MatchLabelSelector = React.forwardRef<
       isValueOptional={false}
       minSize={1}
       disabledChagneDefaultValues={disabledChagneDefaultValues}
-      isHideLabelFormatPopover
     />
   );
 });

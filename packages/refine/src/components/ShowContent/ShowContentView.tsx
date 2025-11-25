@@ -261,7 +261,11 @@ export const ShowContentView = <Model extends ResourceModel>(
     if (!record) return null;
 
     return fields.map(field => {
-      if (field.hidden) return null;
+      const shouldHide =
+        typeof field.hidden === 'function' ? field.hidden(record) : field.hidden;
+
+      if (shouldHide) return null;
+
       let content;
       const value = get(record, field.path);
 

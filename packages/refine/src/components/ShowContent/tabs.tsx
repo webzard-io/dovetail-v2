@@ -3,9 +3,16 @@ import { Condition } from 'kubernetes-types/meta/v1';
 import React from 'react';
 import { LabelsAndAnnotationsShow } from 'src/components/LabelsAndAnnotationsShow';
 import { PodLog } from 'src/components/PodLog';
-import { ResourceModel, PodModel } from 'src/models';
+import { ResourceModel, PodModel, ServiceModel, IngressModel } from 'src/models';
 import { ConditionsTable } from '../ConditionsTable';
-import { ShowTab, EventsTableTabField } from './fields';
+import {
+  ShowTab,
+  EventsTableTabField,
+  PortsTableField,
+  DataField,
+  SecretDataField,
+} from './fields';
+import { IngressRulesTableTabField } from './fields';
 
 export const EventsTab = <Model extends ResourceModel>({
   i18n,
@@ -123,6 +130,70 @@ export const PodLogTab = <Model extends PodModel>(
           ],
         },
       ],
+    },
+  ],
+});
+
+export const PortsTab = <Model extends ServiceModel>({
+  i18n,
+}: {
+  i18n: I18nType;
+}): ShowTab<Model> => ({
+  title: i18n.t('dovetail.port'),
+  key: 'ports',
+  background: 'white',
+  groups: [
+    {
+      areas: [
+        {
+          fields: [PortsTableField()],
+        },
+      ],
+    },
+  ],
+});
+
+export const IngressRulesTab = <Model extends IngressModel>({
+  i18n,
+}: {
+  i18n: I18nType;
+}): ShowTab<Model> => ({
+  title: i18n.t('dovetail.rule'),
+  key: 'ingress-rules',
+  background: 'white',
+  groups: [
+    {
+      areas: [{ fields: [IngressRulesTableTabField()] }],
+    },
+  ],
+});
+
+export const DataTab = <Model extends ResourceModel>({
+  i18n,
+}: {
+  i18n: I18nType;
+}): ShowTab<Model> => ({
+  title: i18n.t('dovetail.data'),
+  key: 'data',
+  background: 'white',
+  groups: [
+    {
+      areas: [{ fields: [DataField(i18n)] }],
+    },
+  ],
+});
+
+export const SecretDataTab = <Model extends ResourceModel>({
+  i18n,
+}: {
+  i18n: I18nType;
+}): ShowTab<Model> => ({
+  title: i18n.t('dovetail.data'),
+  key: 'secret-data',
+  background: 'white',
+  groups: [
+    {
+      areas: [{ fields: [SecretDataField()] }],
     },
   ],
 });

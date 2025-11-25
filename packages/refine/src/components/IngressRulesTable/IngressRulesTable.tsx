@@ -26,11 +26,12 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
     meta: {
       kind: 'Service',
       apiVersion: 'v1',
-    }
+    },
   });
-  const flattenedRules = useMemo(() => (
-    serviceData?.data ? ingress.getFlattenedRules(serviceData?.data) : []
-  ), [serviceData?.data, ingress]);
+  const flattenedRules = useMemo(
+    () => (serviceData?.data ? ingress.getFlattenedRules(serviceData?.data) : []),
+    [serviceData?.data, ingress]
+  );
   const rows = useMemo(() => {
     return addId(flattenedRules || [], 'fullPath');
   }, [flattenedRules]);
@@ -56,13 +57,13 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       sortable: true,
       render(value: string) {
         return <LinkFallback fullPath={value} />;
-      }
+      },
     },
     {
       key: 'serviceName',
       display: true,
       dataIndex: 'serviceName',
-      title: t('dovetail.backend'),
+      title: t('dovetail.target_service'),
       sortable: true,
       width: 160,
       render: (serviceName: string, record: RuleItem) => {
@@ -72,14 +73,16 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
             namespace={ingress.metadata.namespace || 'default'}
             name={serviceName}
           />
-        ) : record.resourceName;
+        ) : (
+          <ValueDisplay value="" />
+        );
       },
     },
     {
       key: 'servicePort',
       display: true,
       dataIndex: 'servicePort',
-      title: t('dovetail.port'),
+      title: t('dovetail.target_service_port'),
       width: 120,
       sortable: true,
     },
@@ -87,10 +90,12 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       key: 'secret',
       display: true,
       dataIndex: 'host',
-      title: 'Secret',
+      title: t('dovetail.cert'),
       width: 160,
       render(host: string) {
-        const secretName = ingress._rawYaml.spec.tls?.find(({ hosts }) => hosts?.includes(host))?.secretName;
+        const secretName = ingress._rawYaml.spec.tls?.find(({ hosts }) =>
+          hosts?.includes(host)
+        )?.secretName;
 
         return secretName ? (
           <ResourceLink
@@ -98,7 +103,9 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
             namespace={ingress.metadata.namespace || 'default'}
             name={secretName}
           />
-        ) : <ValueDisplay value="" />;
+        ) : (
+          <ValueDisplay value="" />
+        );
       },
       sortable: true,
     },
@@ -111,14 +118,16 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
     onSorterChange,
   } = useTableData({
     columns,
-    data: rows
+    data: rows,
   });
 
   if (rows?.length === 0) {
-    return <ErrorContent
-      errorText={t('dovetail.no_resource', { kind: t('dovetail.rule') })}
-      type={ErrorContentType.Card}
-    />;
+    return (
+      <ErrorContent
+        errorText={t('dovetail.no_resource', { kind: t('dovetail.rule') })}
+        type={ErrorContentType.List}
+      />
+    );
   }
 
   return (

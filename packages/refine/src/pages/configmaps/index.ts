@@ -1,5 +1,5 @@
 import { i18n } from 'i18next';
-import { DataGroup, BasicGroup, } from '../../components/ShowContent';
+import { BasicGroup } from '../../components/ShowContent';
 import { AgeColumnRenderer, DataKeysColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig } from '../../types';
@@ -19,7 +19,6 @@ export const ConfigMapConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
         key: 'detail',
         groups: [
           BasicGroup(i18n),
-          DataGroup(i18n)
         ]
       },
     ],

@@ -16,6 +16,7 @@ import React, {
   useRef,
   useState,
   useCallback,
+  useMemo,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { readFileAsBase64 } from 'src/utils/file';
@@ -79,6 +80,44 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
   const [_value, _setValue] = useState<RowType[]>(value || defaultValue);
   const [forceUpdateCount, setForceUpdateCount] = useState(0);
 
+  const finalExtraAction = useMemo(() => {
+    if (extraAction) {
+      return extraAction;
+    }
+
+    if (canImportFromFile) {
+      return (
+        <Upload
+          multiple={true}
+          showUploadList={false}
+          onChange={async e => {
+            const fileValue = {
+              key: e.file.name,
+              value: await readFileAsBase64(e.file.originFileObj as File),
+            };
+
+            let newValue = [..._value, fileValue] as RowType[];
+
+            if (_value.some(v => v.key === fileValue.key)) {
+              newValue = _value.map(v =>
+                v.key === fileValue.key ? fileValue : v
+              ) as RowType[];
+            }
+
+            _setValue(newValue);
+            tableFormRef.current?.setData(newValue);
+            onChange?.(newValue);
+          }}
+        >
+          <Button type="link" size="small">
+            {t('dovetail.import_from_file')}
+          </Button>
+        </Upload>
+      );
+    }
+
+    return null;
+  }, [canImportFromFile, t, _value, onChange, extraAction]);
   const validate = useCallback(() => {
     return new Promise<boolean>(resolve => {
       tableFormRef.current?.validateWholeFields();
@@ -227,7 +266,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         rowAddConfig={{
           addible: true,
           text: () => addButtonText,
-          extraAction,
+          extraAction: finalExtraAction,
         }}
         defaultData={_value}
         row={{
@@ -244,34 +283,6 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
       {isHideLabelFormatPopover ? null : (
         <LabelFormatPopover noValueValidation={noValueValidation} />
       )}
-      {canImportFromFile ? (
-        <Upload
-          multiple={false}
-          showUploadList={false}
-          onChange={async e => {
-            const fileValue = {
-              key: e.file.name,
-              value: await readFileAsBase64(e.file.originFileObj as File),
-            };
-
-            let newValue = [..._value, fileValue] as RowType[];
-
-            if (_value.some(v => v.key === fileValue.key)) {
-              newValue = _value.map(v =>
-                v.key === fileValue.key ? fileValue : v
-              ) as RowType[];
-            }
-
-            _setValue(newValue);
-            tableFormRef.current?.setData(newValue);
-            onChange?.(newValue);
-          }}
-        >
-          <Button type="link" size="small">
-            {t('dovetail.import_from_file')}
-          </Button>
-        </Upload>
-      ) : null}
     </Space>
   );
 }
