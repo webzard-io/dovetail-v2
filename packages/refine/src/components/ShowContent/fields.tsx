@@ -98,6 +98,7 @@ export interface ShowConfig<Model extends ResourceModel = ResourceModel> {
   basicGroup?: ShowGroup<Model>;
   tabs?: ShowTab<Model>[];
   renderExtraButton?: (record: Model) => React.ReactNode;
+  renderCustomBackButton?: (record: Model) => React.ReactNode;
   resourceStateMap?: {
     color: Record<string, StatusCapsuleColor | 'loading'>;
     text: Record<string, string>;
@@ -623,7 +624,7 @@ export const PVCRefField = <Model extends PersistentVolumeModel>(
           resourceName="persistentvolumeclaims"
           namespace={pv.pvcNamespace || 'default'}
           name={value as string}
-          uid={pv.pvcUid}
+          query={{uid: pv.pvcUid}}
         />
       );
     },
