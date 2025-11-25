@@ -33,10 +33,10 @@ export class IngressModel extends ResourceModel<IngressTypes> {
     return `${protocal}${hostValue}${portText}${path}`;
   }
 
-  public getFlattenedRules(services: Service[]) {
+  public getFlattenedRules(services?: Service[]) {
     const protocal = !!this._rawYaml.spec.tls ? 'https' : 'http';
     const servicePort = services
-      .find(s => s.metadata?.name === 'contour-envoy' && s.spec?.type === 'NodePort')
+      ?.find(s => s.metadata?.name === 'contour-envoy' && s.spec?.type === 'NodePort')
       ?.spec?.ports?.find(p => p.name === protocal);
 
     return this._rawYaml.spec.rules?.reduce<RuleItem[]>((res, rule) => {

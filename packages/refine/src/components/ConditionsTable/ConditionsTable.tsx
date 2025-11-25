@@ -1,11 +1,11 @@
- import { Condition } from 'kubernetes-types/meta/v1';
+import { Condition } from 'kubernetes-types/meta/v1';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/InternalBaseTable';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
-import useTableData from 'src/hooks/useTableData'; 
+import useTableData from 'src/hooks/useTableData';
 import { WithId } from 'src/types';
 import { addId } from '../../utils/addId';
 import { Time } from '../Time';
@@ -68,21 +68,30 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       width: 403,
     },
   ];
-  const { data: finalData, currentPage, onPageChange, onSorterChange } = useTableData({
+  const {
+    data: finalData,
+    currentPage,
+    onPageChange,
+    onSorterChange,
+  } = useTableData({
     data: conditionsWithId,
     columns,
-    defaultSorters: [{
-      field: 'lastUpdateTime',
-      order: 'desc'
-    }]
+    defaultSorters: [
+      {
+        field: 'lastUpdateTime',
+        order: 'desc',
+      },
+    ],
   });
   const currentSize = 10;
 
   if (conditionsWithId.length === 0) {
-    return <ErrorContent
-      errorText={t('dovetail.no_resource', { kind: t('dovetail.condition') })}
-      type={ErrorContentType.Card}
-    />;
+    return (
+      <ErrorContent
+        errorText={t('dovetail.no_resource', { kind: t('dovetail.condition') })}
+        type={ErrorContentType.List}
+      />
+    );
   }
 
   return (

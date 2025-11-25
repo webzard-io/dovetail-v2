@@ -2,7 +2,7 @@ import { i18n } from 'i18next';
 import { Unstructured } from 'k8s-api-provider';
 import { Secret } from 'kubernetes-types/core/v1';
 import { SECRET_OPAQUE_INIT_VALUE } from 'src/constants/k8s';
-import { SecretDataGroup, BasicGroup } from '../../components/ShowContent';
+import { BasicGroup } from '../../components/ShowContent';
 import { AgeColumnRenderer, DataKeysColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../models';
 import { FormType, RESOURCE_GROUP, ResourceConfig } from '../../types';
@@ -58,7 +58,7 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
       {
         title: i18n.t('dovetail.detail'),
         key: 'detail',
-        groups: [BasicGroup(i18n), SecretDataGroup()],
+        groups: [BasicGroup(i18n)],
       },
     ],
   }),

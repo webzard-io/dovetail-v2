@@ -19,13 +19,13 @@ const PopoverContentStyle = css`
   width: 463px;
 `;
 const PopoverTitleStyle = css`
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 `;
 const PopoverContentBodyStyle = css`
-  padding: 20px;
+  padding: 12px;
 `;
 const PopoverContentFooterStyle = css`
-  padding: 8px 20px;
+  padding: 8px 12px;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -33,7 +33,7 @@ const PopoverContentFooterStyle = css`
 const FormWrapperStyle = css`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 `;
 
 const FormItem = Form.Item;
@@ -55,6 +55,8 @@ function ResourceMatchLabelSelector({
   value,
   onChange,
 }: ResourceMatchLabelSelectorProps) {
+  const { t } = useTranslation();
+
   return (
     <ResourceSelect
       namespace={namespace}
@@ -62,6 +64,7 @@ function ResourceMatchLabelSelector({
       resourceBasePath={resourceBasePath}
       kind={kind}
       value={value}
+      placeholder={t('dovetail.select_workload')}
       onChange={(newValue, object) => {
         const resourceItem = (object as { object: Deployment | StatefulSet | DaemonSet })
           .object;
@@ -116,7 +119,7 @@ export function SelectMatchLabelButton(props: SelectMatchLabelButtonProps) {
         content={
           <div className={PopoverContentStyle}>
             <div className={PopoverContentBodyStyle}>
-              <div className={cx(Typo.Display.d3_bold_title, PopoverTitleStyle)}>
+              <div className={cx(Typo.Heading.h2_bold_title, PopoverTitleStyle)}>
                 {t('dovetail.specify_workload')}
               </div>
               <div className={FormWrapperStyle}>
@@ -161,11 +164,13 @@ export function SelectMatchLabelButton(props: SelectMatchLabelButtonProps) {
             </div>
             <Divider style={{ margin: '0' }} />
             <div className={PopoverContentFooterStyle}>
-              <Button onClick={() => setPopoverVisible(false)} type="quiet">
+              <Button onClick={() => setPopoverVisible(false)} type="quiet" size="small">
                 {t('dovetail.cancel')}
               </Button>
               <Button
                 type="primary"
+                size="small"
+                disabled={!selectedResource}
                 onClick={() => {
                   onChange?.(selector);
                   setPopoverVisible(false);
