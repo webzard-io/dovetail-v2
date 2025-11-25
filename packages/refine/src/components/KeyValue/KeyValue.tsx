@@ -34,10 +34,11 @@ export interface KeyValueProps {
   data: Record<string, string>;
   empty?: string;
   hideSecret?: boolean;
+  errorContent?: ErrorContentType;
 }
 
 export const KeyValue: React.FC<KeyValueProps> = (props: KeyValueProps) => {
-  const { data = {}, hideSecret, empty } = props;
+  const { data = {}, hideSecret, empty, errorContent = ErrorContentType.List } = props;
   const { t } = useTranslation();
 
   const result = Object.keys(data).map(key => (
@@ -50,10 +51,7 @@ export const KeyValue: React.FC<KeyValueProps> = (props: KeyValueProps) => {
   ));
 
   if (!result.length) {
-    return <ErrorContent
-      errorText={empty || t('dovetail.empty')}
-      type={ErrorContentType.Card}
-    />;
+    return <ErrorContent errorText={empty || t('dovetail.empty')} type={errorContent} />;
   }
 
   return <>{result}</>;

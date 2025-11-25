@@ -9,6 +9,7 @@ type ResourceSelectProps = {
   namespace?: string;
   kind: string;
   value: string;
+  placeholder?: string;
   onChange: (
     value: string | string[],
     object: { object: Record<string, unknown> } | { object: Record<string, unknown> }[]
@@ -26,6 +27,7 @@ export function ResourceSelect(props: ResourceSelectProps) {
     selectProps,
     value,
     onChange,
+    placeholder,
   } = props;
   const { data, isLoading, isError } = useList({
     resource,
@@ -41,6 +43,7 @@ export function ResourceSelect(props: ResourceSelectProps) {
   return (
     <Select
       className={className}
+      placeholder={placeholder}
       input={{
         value,
         onChange,

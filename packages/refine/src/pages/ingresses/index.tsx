@@ -1,9 +1,5 @@
 import { i18n } from 'i18next';
-import {
-  Column,
-  BasicGroup,
-  IngressRulesGroup,
-} from 'src/components';
+import { Column, BasicGroup } from 'src/components';
 import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
 import { INGRESS_INIT_VALUE } from '../../constants/k8s';
 import {
@@ -33,7 +29,7 @@ export const IngressConfig = (i18n: i18n): ResourceConfig<IngressModel> => ({
       {
         title: i18n.t('dovetail.detail'),
         key: 'detail',
-        groups: [BasicGroup(i18n), IngressRulesGroup(i18n)]
+        groups: [BasicGroup(i18n)],
       },
     ],
   }),
@@ -42,5 +38,5 @@ export const IngressConfig = (i18n: i18n): ResourceConfig<IngressModel> => ({
   formConfig: {
     formType: FormType.FORM,
     formContainerType: FormContainerType.MODAL,
-  }
+  },
 });

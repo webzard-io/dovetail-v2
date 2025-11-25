@@ -1,7 +1,6 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import type { Deployment } from 'kubernetes-types/apps/v1';
 import { ReplicaSetList } from 'kubernetes-types/apps/v1';
-import { cloneDeep } from 'lodash-es';
 import { ResourceState } from '../constants';
 import { ReplicaSetModel } from './replicaset-model';
 import { WorkloadModel } from './workload-model';
@@ -34,14 +33,14 @@ export class DeploymentModel extends WorkloadModel {
     // 通过ownerReference匹配ReplicaSets
     const myReplicaSets = replicaSets.items.filter(rs => {
       const ownerRef = rs.metadata?.ownerReferences?.find(
-        ref => ref.kind === 'Deployment' && 
-               ref.apiVersion === 'apps/v1' &&
-               ref.name === this.name &&
-               ref.uid === this.metadata.uid
+        ref => ref.kind === 'Deployment' &&
+          ref.apiVersion === 'apps/v1' &&
+          ref.name === this.name &&
+          ref.uid === this.metadata.uid
       );
       return !!ownerRef && rs.metadata?.namespace === this.metadata.namespace;
     }) as ReplicaSetModel[];
- 
+
     this.replicaSets = myReplicaSets;
   }
 

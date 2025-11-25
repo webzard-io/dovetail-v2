@@ -1,6 +1,7 @@
 import { css } from '@linaria/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
 import { KeyValue } from 'src/components/KeyValue';
 import { Tags } from 'src/components/Tags';
 import { SmallSectionTitleStyle } from 'src/styles/show';
@@ -37,11 +38,18 @@ export const LabelsAndAnnotationsShow = ({
     >
       <div className={ItemWrapperStyle}>
         <div className={SmallSectionTitleStyle}>{sksI18n.t('dovetail.label')}</div>
-        <Tags value={labels} />
+        {Object.keys(labels || {}).length ? (
+          <Tags value={labels} />
+        ) : (
+          <ErrorContent
+            errorText={sksI18n.t('dovetail.empty')}
+            type={ErrorContentType.Card}
+          />
+        )}
       </div>
       <div className={ItemWrapperStyle}>
         <div className={SmallSectionTitleStyle}>{sksI18n.t('dovetail.annotation')}</div>
-        <KeyValue data={annotations} />
+        <KeyValue data={annotations} errorContent={ErrorContentType.Card} />
       </div>
     </div>
   );

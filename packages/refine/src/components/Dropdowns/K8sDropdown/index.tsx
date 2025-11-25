@@ -18,6 +18,7 @@ import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useOpenForm } from 'src/hooks/useOpenForm';
 import { FormType } from 'src/types';
 import { getResourceNameByKind } from 'src/utils';
+import { transformResourceKindInSentence } from 'src/utils/string';
 import { useGlobalStore } from '../../../hooks';
 import { ResourceModel } from '../../../models';
 export type DropdownSize = 'normal' | 'large';
@@ -35,7 +36,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const configs = useContext(ConfigsContext);
   const resourceName = getResourceNameByKind(record.kind || '', configs);
   const config = configs[resourceName || ''];
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { openDeleteConfirmModal } = useDeleteModal({ resourceName: resourceName || '' });
   const download = useDownloadYAML();
   const openForm = useOpenForm();
@@ -65,7 +66,10 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
               <Menu.Item onClick={() => openForm({ id: record.id, resourceName })}>
                 <Icon src={EditPen16PrimaryIcon}>
                   {formType === FormType.FORM
-                    ? t('dovetail.edit')
+                    ? `${t('dovetail.edit')}${transformResourceKindInSentence(
+                        config?.displayName || record.kind || '',
+                        i18n.language
+                      )}`
                     : t('dovetail.edit_yaml')}
                 </Icon>
               </Menu.Item>

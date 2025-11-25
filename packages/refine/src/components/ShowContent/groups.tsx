@@ -15,7 +15,6 @@ import {
   JobModel,
   CronJobModel,
   PodModel,
-  IngressModel,
   ServiceType,
   StorageClassModel,
   PersistentVolumeClaimModel,
@@ -30,11 +29,8 @@ import {
   ConditionsField,
   ServicePodsField,
   JobsField,
-  SecretDataField,
-  IngressRulesTableTabField,
   PodSelectorField,
   PortsTableField,
-  DataField,
   StorageClassPvField,
   ResourceTableField,
   NodeTaintsField,
@@ -142,30 +138,11 @@ export const NodeTaintsGroup = (
   ],
 });
 
-export const SecretDataGroup = <Model extends ResourceModel>(): ShowGroup<Model> => ({
-  areas: [
-    {
-      fields: [SecretDataField()],
-    },
-  ],
-});
-
 export const JobsGroup = <Model extends JobModel | CronJobModel>(): ShowGroup<Model> => ({
   title: 'Job',
   areas: [
     {
       fields: [JobsField()],
-    },
-  ],
-});
-
-export const IngressRulesGroup = <Model extends IngressModel>(
-  i18n: I18nType
-): ShowGroup<Model> => ({
-  title: i18n.t('dovetail.rule'),
-  areas: [
-    {
-      fields: [IngressRulesTableTabField()],
     },
   ],
 });
@@ -190,17 +167,6 @@ export const PortsGroup = <Model extends ServiceModel>(
   areas: [
     {
       fields: [PortsTableField()],
-    },
-  ],
-});
-
-export const DataGroup = <Model extends ResourceModel>(
-  i18n: I18nType
-): ShowGroup<Model> => ({
-  title: i18n.t('dovetail.data'),
-  areas: [
-    {
-      fields: [DataField(i18n)],
     },
   ],
 });
