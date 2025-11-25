@@ -3,3 +3,4 @@ export * from './k8s';
 export * from './match-selector';
 export * from './getResourceNameByKind';
 export * from './validation';
+export * from './string';

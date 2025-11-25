@@ -266,5 +266,7 @@
   "label_annotations": "标签与注解",
   "target_service": "目标服务",
   "target_service_port": "目标服务端口",
-  "select_workload": "选择工作负载"
+  "select_workload": "选择工作负载",
+  "no_search_result": "无搜索结果",
+  "clear_search_condition": "清空搜索条件"
 }
