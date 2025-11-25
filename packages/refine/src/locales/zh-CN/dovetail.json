@@ -80,7 +80,7 @@
   "fold": "收起",
   "rule": "规则",
   "default_backend": "默认后端",
-  "ingress_class": "Ingress 类",
+  "ingress_class": "IngressClass",
   "port": "端口",
   "pod_ready_num": "Pod 就绪数量",
   "pod_complete_num": "Pod 完成数量",
@@ -263,5 +263,8 @@
   "node_port_duplicated": "端口已被占用。",
   "all": "全部",
   "optional_with_bracket": "（选填）",
-  "label_annotations": "标签与注解"
+  "label_annotations": "标签与注解",
+  "target_service": "目标服务",
+  "target_service_port": "目标服务端口",
+  "select_workload": "选择工作负载"
 }

@@ -114,11 +114,10 @@ const MemoizedFormField = memo(function FormField({
       control={control}
       name={fieldConfig.path.join('.')}
       rules={{
-        async validate(value) {
+        async validate(value, formValue) {
           // 如果字段在禁止编辑，则跳过验证
           if (fieldConfig.disabledWhenEdit && action === 'edit') return true;
 
-          const formValue = watchedFormValues || getValues();
           if (!fieldConfig.validators || fieldConfig.validators.length === 0) return true;
           for (const func of fieldConfig.validators) {
             const { isValid, errorMsg } = await func(value, formValue, FormType.FORM);
@@ -158,7 +157,11 @@ const MemoizedFormField = memo(function FormField({
                 : { flex: `0 0 ${formConfig?.labelWidth || '216px'}` }
             }
             help={fieldConfig.isHideErrorStatus ? '' : fieldState.error?.message}
-            extra={fieldConfig.helperText}
+            extra={
+              fieldState.error?.message === fieldConfig.helperText
+                ? ''
+                : fieldConfig.helperText
+            }
             validateStatus={
               fieldState.invalid && !fieldConfig.isHideErrorStatus ? 'error' : undefined
             }

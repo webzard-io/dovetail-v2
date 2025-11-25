@@ -92,7 +92,7 @@ export const PortsConfigForm = React.forwardRef<
       },
       {
         key: 'name',
-        title: `${i18n.t('dovetail.name')}${i18n.t('dovetail.optional_with_bracket')}`,
+        title: i18n.t('dovetail.port_name'),
         type: 'input',
         validator: ({ value: portName, rowIndex }) => {
           const { errorMessage } = validateRfc1123Name({
