@@ -180,6 +180,8 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   hideCreate?: boolean;
   /** 资源的描述信息 */
   description?: React.ReactNode;
+  /** 自定义资源列表标题 */
+  customListTitle?: string;
   /** 父级资源名称，用于建立资源层级关系。在 Dovetail2 中用不到这个 */
   parent?: string;
   /** 格式化数据参数，目前暂未完全实现，可能会删除 */
