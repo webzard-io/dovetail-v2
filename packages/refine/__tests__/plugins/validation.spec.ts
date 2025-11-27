@@ -1,5 +1,9 @@
 import { validateLabelKey, validateLabelValue } from '../../src/utils/validation';
 
+const mockI18n = {
+  t: (key: string) => key,
+} as any;
+
 describe('validation', () => {
   it('validateLabelKey', async () => {
     const validArray = ['a', 'a/b', 'x-io/a'];
@@ -27,16 +31,32 @@ describe('validation', () => {
     ).toBe(true);
   });
   it('validateLabelValue', async () => {
-    const validArray = ['', 'a', 'a-._b'];
+    // 空字符串在 isOptional=true 时有效
+    const validArrayOptional = ['', 'a', 'a-._b'];
+    // 空字符串在 isOptional=false（默认）时无效
+    const validArrayRequired = ['a', 'a-._b'];
     const invalidArray = ['-', '.', '_', '$#@(&', genStr(64)];
+
+    // 测试 isOptional = true 的情况
     expect(
-      validArray.every(str => {
-        return validateLabelValue(str).isValid;
+      validArrayOptional.every(str => {
+        return validateLabelValue(str, mockI18n, true).isValid;
       })
     ).toBe(true);
+
+    // 测试 isOptional = false（默认）的情况
+    expect(
+      validArrayRequired.every(str => {
+        return validateLabelValue(str, mockI18n).isValid;
+      })
+    ).toBe(true);
+
+    // 空字符串在非可选时应该无效
+    expect(validateLabelValue('', mockI18n).isValid).toBe(false);
+
     expect(
       invalidArray.every(str => {
-        return !validateLabelValue(str).isValid;
+        return !validateLabelValue(str, mockI18n).isValid;
       })
     ).toBe(true);
   });
