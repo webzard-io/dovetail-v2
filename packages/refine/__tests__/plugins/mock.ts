@@ -1,17 +1,75 @@
 import { DeploymentList } from 'kubernetes-types/apps/v1';
-import { PodList } from 'kubernetes-types/core/v1';
-import { PodModel, ResourceModel } from '../../src/models';
+import { ReplicaSetList } from 'kubernetes-types/apps/v1';
+import { ServiceList, PodList } from 'kubernetes-types/core/v1';
+import { IngressList } from 'kubernetes-types/networking/v1';
+import {
+  PodModel,
+  ReplicaSetModel,
+  DeploymentModel,
+  ServiceModel,
+  IngressModel,
+  ResourceModel,
+} from '../../src/models';
 
 export const mockGlobalStore: any = {
-  get() {
-    return {
-      ...RawPodList,
-      items: RawPodList.items.map(pod => new PodModel(pod as any, {} as any)),
-    };
+  get(resource: 'pods' | 'services' | 'ingresses' | 'deployments' | 'replicasets') {
+    switch (resource) {
+      case 'pods':
+        return {
+          ...RawPodList,
+          items: RawPodList.items.map(pod => {
+            const podModel = new PodModel(pod as any, mockGlobalStore);
+            podModel.init();
+            return podModel;
+          }),
+        };
+      case 'services':
+        return {
+          ...RawServiceList,
+          items: RawServiceList.items.map(service => {
+            const serviceModel = new ServiceModel(service as any, mockGlobalStore);
+            serviceModel.init();
+            return serviceModel;
+          }),
+        };
+      case 'ingresses':
+        return {
+          ...RawIngressList,
+          items: RawIngressList.items.map(ingress => {
+            const ingressModel = new IngressModel(ingress as any, mockGlobalStore);
+            ingressModel.init();
+            return ingressModel;
+          }),
+        };
+      case 'deployments':
+        return {
+          ...RawDeploymentList,
+          items: RawDeploymentList.items.map(deployment => {
+            const deploymentModel = new DeploymentModel(
+              deployment as any,
+              mockGlobalStore
+            );
+            deploymentModel.init();
+            return deploymentModel;
+          }),
+        };
+      case 'replicasets':
+        return {
+          ...RawReplicaSetList,
+          items: RawReplicaSetList.items.map(replicaset => {
+            const replicasetModel = new ReplicaSetModel(
+              replicaset as any,
+              mockGlobalStore
+            );
+            replicasetModel.init();
+            return replicasetModel;
+          }),
+        };
+    }
   },
   restoreItem(model: ResourceModel) {
     return model._rawYaml;
-  }
+  },
 };
 
 export const RawPodList: PodList = {
@@ -751,6 +809,496 @@ export const RawPodList: PodList = {
         qosClass: 'Burstable',
       },
     },
+    {
+      metadata: {
+        name: 'calico-apiserver-bc9d74f4c-g459l',
+        generateName: 'calico-apiserver-bc9d74f4c-',
+        namespace: 'calico-apiserver',
+        uid: '51b62728-b3c6-45fa-8ada-fda86f58569c',
+        resourceVersion: '1962255',
+        creationTimestamp: '2025-11-19T03:14:10Z',
+        labels: {
+          apiserver: 'true',
+          'app.kubernetes.io/name': 'calico-apiserver',
+          'k8s-app': 'calico-apiserver',
+          'pod-template-hash': 'bc9d74f4c',
+        },
+        annotations: {
+          'cni.projectcalico.org/containerID':
+            '609d199f94a2001cb015f2b022e6302334200695cd1ec4db891bbe160d174f66',
+          'cni.projectcalico.org/podIP': '172.16.134.77/32',
+          'cni.projectcalico.org/podIPs': '172.16.134.77/32',
+          'sks-system.hash.operator.tigera.io/calico-apiserver-certs':
+            'cfce08d43050bd86ff9244be2bc2c05e17a4315b',
+        },
+        ownerReferences: [
+          {
+            apiVersion: 'apps/v1',
+            kind: 'ReplicaSet',
+            name: 'calico-apiserver-bc9d74f4c',
+            uid: '5de4af98-7605-496c-9b76-04d98fda9285',
+            controller: true,
+            blockOwnerDeletion: true,
+          },
+        ],
+        managedFields: [
+          {
+            manager: 'kube-controller-manager',
+            operation: 'Update',
+            apiVersion: 'v1',
+            time: '2025-11-19T03:14:10Z',
+            fieldsType: 'FieldsV1',
+            fieldsV1: {
+              'f:metadata': {
+                'f:annotations': {
+                  '.': {},
+                  'f:sks-system.hash.operator.tigera.io/calico-apiserver-certs': {},
+                },
+                'f:generateName': {},
+                'f:labels': {
+                  '.': {},
+                  'f:apiserver': {},
+                  'f:app.kubernetes.io/name': {},
+                  'f:k8s-app': {},
+                  'f:pod-template-hash': {},
+                },
+                'f:ownerReferences': {
+                  '.': {},
+                  'k:{"uid":"5de4af98-7605-496c-9b76-04d98fda9285"}': {},
+                },
+              },
+              'f:spec': {
+                'f:affinity': {
+                  '.': {},
+                  'f:podAntiAffinity': {
+                    '.': {},
+                    'f:preferredDuringSchedulingIgnoredDuringExecution': {},
+                  },
+                },
+                'f:containers': {
+                  'k:{"name":"calico-apiserver"}': {
+                    '.': {},
+                    'f:args': {},
+                    'f:env': {
+                      '.': {},
+                      'k:{"name":"DATASTORE_TYPE"}': {
+                        '.': {},
+                        'f:name': {},
+                        'f:value': {},
+                      },
+                      'k:{"name":"KUBERNETES_SERVICE_HOST"}': {
+                        '.': {},
+                        'f:name': {},
+                        'f:value': {},
+                      },
+                      'k:{"name":"KUBERNETES_SERVICE_PORT"}': {
+                        '.': {},
+                        'f:name': {},
+                        'f:value': {},
+                      },
+                      'k:{"name":"MULTI_INTERFACE_MODE"}': {
+                        '.': {},
+                        'f:name': {},
+                        'f:value': {},
+                      },
+                    },
+                    'f:image': {},
+                    'f:imagePullPolicy': {},
+                    'f:name': {},
+                    'f:readinessProbe': {
+                      '.': {},
+                      'f:failureThreshold': {},
+                      'f:httpGet': {
+                        '.': {},
+                        'f:path': {},
+                        'f:port': {},
+                        'f:scheme': {},
+                      },
+                      'f:periodSeconds': {},
+                      'f:successThreshold': {},
+                      'f:timeoutSeconds': {},
+                    },
+                    'f:resources': {},
+                    'f:securityContext': {
+                      '.': {},
+                      'f:allowPrivilegeEscalation': {},
+                      'f:capabilities': {
+                        '.': {},
+                        'f:drop': {},
+                      },
+                      'f:privileged': {},
+                      'f:runAsGroup': {},
+                      'f:runAsNonRoot': {},
+                      'f:runAsUser': {},
+                      'f:seccompProfile': {
+                        '.': {},
+                        'f:type': {},
+                      },
+                    },
+                    'f:terminationMessagePath': {},
+                    'f:terminationMessagePolicy': {},
+                    'f:volumeMounts': {
+                      '.': {},
+                      'k:{"mountPath":"/calico-apiserver-certs"}': {
+                        '.': {},
+                        'f:mountPath': {},
+                        'f:name': {},
+                        'f:readOnly': {},
+                      },
+                    },
+                  },
+                },
+                'f:dnsPolicy': {},
+                'f:enableServiceLinks': {},
+                'f:nodeSelector': {},
+                'f:restartPolicy': {},
+                'f:schedulerName': {},
+                'f:securityContext': {},
+                'f:serviceAccount': {},
+                'f:serviceAccountName': {},
+                'f:terminationGracePeriodSeconds': {},
+                'f:tolerations': {},
+                'f:volumes': {
+                  '.': {},
+                  'k:{"name":"calico-apiserver-certs"}': {
+                    '.': {},
+                    'f:name': {},
+                    'f:secret': {
+                      '.': {},
+                      'f:defaultMode': {},
+                      'f:secretName': {},
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            manager: 'calico',
+            operation: 'Update',
+            apiVersion: 'v1',
+            time: '2025-11-19T03:14:13Z',
+            fieldsType: 'FieldsV1',
+            fieldsV1: {
+              'f:metadata': {
+                'f:annotations': {
+                  'f:cni.projectcalico.org/containerID': {},
+                  'f:cni.projectcalico.org/podIP': {},
+                  'f:cni.projectcalico.org/podIPs': {},
+                },
+              },
+            },
+            subresource: 'status',
+          },
+          {
+            manager: 'kubelet',
+            operation: 'Update',
+            apiVersion: 'v1',
+            time: '2025-11-24T05:16:02Z',
+            fieldsType: 'FieldsV1',
+            fieldsV1: {
+              'f:status': {
+                'f:conditions': {
+                  'k:{"type":"ContainersReady"}': {
+                    '.': {},
+                    'f:lastProbeTime': {},
+                    'f:lastTransitionTime': {},
+                    'f:status': {},
+                    'f:type': {},
+                  },
+                  'k:{"type":"Initialized"}': {
+                    '.': {},
+                    'f:lastProbeTime': {},
+                    'f:lastTransitionTime': {},
+                    'f:status': {},
+                    'f:type': {},
+                  },
+                  'k:{"type":"Ready"}': {
+                    '.': {},
+                    'f:lastProbeTime': {},
+                    'f:lastTransitionTime': {},
+                    'f:status': {},
+                    'f:type': {},
+                  },
+                },
+                'f:containerStatuses': {},
+                'f:hostIP': {},
+                'f:phase': {},
+                'f:podIP': {},
+                'f:podIPs': {
+                  '.': {},
+                  'k:{"ip":"172.16.134.77"}': {
+                    '.': {},
+                    'f:ip': {},
+                  },
+                },
+                'f:startTime': {},
+              },
+            },
+            subresource: 'status',
+          },
+        ],
+      },
+      spec: {
+        volumes: [
+          {
+            name: 'calico-apiserver-certs',
+            secret: {
+              secretName: 'calico-apiserver-certs',
+              defaultMode: 420,
+            },
+          },
+          {
+            name: 'kube-api-access-2fpzt',
+            projected: {
+              sources: [
+                {
+                  serviceAccountToken: {
+                    expirationSeconds: 3607,
+                    path: 'token',
+                  },
+                },
+                {
+                  configMap: {
+                    name: 'kube-root-ca.crt',
+                    items: [
+                      {
+                        key: 'ca.crt',
+                        path: 'ca.crt',
+                      },
+                    ],
+                  },
+                },
+                {
+                  downwardAPI: {
+                    items: [
+                      {
+                        path: 'namespace',
+                        fieldRef: {
+                          apiVersion: 'v1',
+                          fieldPath: 'metadata.namespace',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+              defaultMode: 420,
+            },
+          },
+        ],
+        containers: [
+          {
+            name: 'calico-apiserver',
+            image: '10.255.233.201/sks/calico/apiserver:v3.29.5',
+            args: [
+              '--secure-port=5443',
+              '--tls-private-key-file=/calico-apiserver-certs/tls.key',
+              '--tls-cert-file=/calico-apiserver-certs/tls.crt',
+              '--enable-validating-admission-policy=false',
+            ],
+            env: [
+              {
+                name: 'DATASTORE_TYPE',
+                value: 'kubernetes',
+              },
+              {
+                name: 'KUBERNETES_SERVICE_HOST',
+                value: '10.96.0.1',
+              },
+              {
+                name: 'KUBERNETES_SERVICE_PORT',
+                value: '443',
+              },
+              {
+                name: 'MULTI_INTERFACE_MODE',
+                value: 'none',
+              },
+            ],
+            resources: {},
+            volumeMounts: [
+              {
+                name: 'calico-apiserver-certs',
+                readOnly: true,
+                mountPath: '/calico-apiserver-certs',
+              },
+              {
+                name: 'kube-api-access-2fpzt',
+                readOnly: true,
+                mountPath: '/var/run/secrets/kubernetes.io/serviceaccount',
+              },
+            ],
+            readinessProbe: {
+              httpGet: {
+                path: '/readyz',
+                port: 5443,
+                scheme: 'HTTPS',
+              },
+              timeoutSeconds: 5,
+              periodSeconds: 60,
+              successThreshold: 1,
+              failureThreshold: 3,
+            },
+            terminationMessagePath: '/dev/termination-log',
+            terminationMessagePolicy: 'File',
+            imagePullPolicy: 'IfNotPresent',
+            securityContext: {
+              capabilities: {
+                drop: ['ALL'],
+              },
+              privileged: false,
+              runAsUser: 10001,
+              runAsGroup: 10001,
+              runAsNonRoot: true,
+              allowPrivilegeEscalation: false,
+              seccompProfile: {
+                type: 'RuntimeDefault',
+              },
+            },
+          },
+        ],
+        restartPolicy: 'Always',
+        terminationGracePeriodSeconds: 30,
+        dnsPolicy: 'ClusterFirst',
+        nodeSelector: {
+          'kubernetes.io/os': 'linux',
+        },
+        serviceAccountName: 'calico-apiserver',
+        serviceAccount: 'calico-apiserver',
+        nodeName: 'test-controlplane-z2vkt',
+        securityContext: {},
+        affinity: {
+          podAntiAffinity: {
+            preferredDuringSchedulingIgnoredDuringExecution: [
+              {
+                weight: 100,
+                podAffinityTerm: {
+                  labelSelector: {
+                    matchLabels: {
+                      'k8s-app': 'calico-apiserver',
+                    },
+                  },
+                  namespaces: ['calico-apiserver'],
+                  topologyKey: 'kubernetes.io/hostname',
+                },
+              },
+              {
+                weight: 100,
+                podAffinityTerm: {
+                  labelSelector: {
+                    matchLabels: {
+                      'k8s-app': 'calico-apiserver',
+                    },
+                  },
+                  namespaces: ['calico-apiserver'],
+                  topologyKey: 'topology.kubernetes.io/zone',
+                },
+              },
+            ],
+          },
+        },
+        schedulerName: 'default-scheduler',
+        tolerations: [
+          {
+            key: 'node-role.kubernetes.io/master',
+            effect: 'NoSchedule',
+          },
+          {
+            key: 'node-role.kubernetes.io/control-plane',
+            effect: 'NoSchedule',
+          },
+          {
+            key: 'node.kubernetes.io/not-ready',
+            effect: 'NoSchedule',
+          },
+          {
+            key: 'node.kubernetes.io/network-unavailable',
+            effect: 'NoSchedule',
+          },
+          {
+            key: 'node.kubernetes.io/unreachable',
+            effect: 'NoSchedule',
+          },
+          {
+            key: 'node.kubernetes.io/not-ready',
+            effect: 'NoExecute',
+          },
+          {
+            key: 'node.kubernetes.io/unreachable',
+            effect: 'NoExecute',
+            tolerationSeconds: 300,
+          },
+          {
+            key: 'node-role.kubernetes.io/master',
+            effect: 'NoSchedule',
+          },
+          {
+            key: 'node-role.kubernetes.io/control-plane',
+            effect: 'NoSchedule',
+          },
+        ],
+        priority: 0,
+        enableServiceLinks: true,
+        preemptionPolicy: 'PreemptLowerPriority',
+      },
+      status: {
+        phase: 'Running',
+        conditions: [
+          {
+            type: 'Initialized',
+            status: 'True',
+            lastProbeTime: null,
+            lastTransitionTime: '2025-11-19T03:14:10Z',
+          },
+          {
+            type: 'Ready',
+            status: 'True',
+            lastProbeTime: null,
+            lastTransitionTime: '2025-11-24T05:16:01Z',
+          },
+          {
+            type: 'ContainersReady',
+            status: 'True',
+            lastProbeTime: null,
+            lastTransitionTime: '2025-11-24T05:16:01Z',
+          },
+          {
+            type: 'PodScheduled',
+            status: 'True',
+            lastProbeTime: null,
+            lastTransitionTime: '2025-11-19T03:14:10Z',
+          },
+        ],
+        hostIP: '10.255.1.39',
+        podIP: '172.16.134.77',
+        podIPs: [
+          {
+            ip: '172.16.134.77',
+          },
+        ],
+        startTime: '2025-11-19T03:14:10Z',
+        containerStatuses: [
+          {
+            name: 'calico-apiserver',
+            state: {
+              running: {
+                startedAt: '2025-11-19T03:14:15Z',
+              },
+            },
+            lastState: {},
+            ready: true,
+            restartCount: 0,
+            image: '10.255.233.201/sks/calico/apiserver:v3.29.5',
+            imageID:
+              '10.255.233.201/sks/calico/apiserver@sha256:a49e68b0b6fff0ab3e2826e6728d46798a04d8031ab405d1f44cd4f26fd0a521',
+            containerID:
+              'containerd://ed4113066f7370bd2051a6057bd2a95902cb24b53d7aadf9c8fb7dc8fc3ddfa5',
+            started: true,
+          },
+        ],
+        qosClass: 'BestEffort',
+      },
+    },
   ],
 };
 
@@ -1423,6 +1971,1003 @@ export const RawDeploymentList: DeploymentList = {
             message: 'Deployment has minimum availability.',
           },
         ],
+      },
+    },
+    {
+      metadata: {
+        name: 'calico-apiserver',
+        namespace: 'calico-apiserver',
+        uid: 'f24292d6-1323-4f94-be3a-c624b06bcbd7',
+        resourceVersion: '2124',
+        generation: 1,
+        creationTimestamp: '2025-11-18T05:54:42Z',
+        labels: {
+          apiserver: 'true',
+          'app.kubernetes.io/name': 'calico-apiserver',
+          'k8s-app': 'calico-apiserver',
+        },
+        annotations: {
+          'deployment.kubernetes.io/revision': '1',
+        },
+        ownerReferences: [
+          {
+            apiVersion: 'operator.tigera.io/v1',
+            kind: 'APIServer',
+            name: 'default',
+            uid: '0b3450e6-73df-4b9c-9aab-1d3cf0907f75',
+            controller: true,
+            blockOwnerDeletion: true,
+          },
+        ],
+        managedFields: [
+          {
+            manager: 'operator',
+            operation: 'Update',
+            apiVersion: 'apps/v1',
+            time: '2025-11-18T05:54:42Z',
+            fieldsType: 'FieldsV1',
+            fieldsV1: {
+              'f:metadata': {
+                'f:labels': {
+                  '.': {},
+                  'f:apiserver': {},
+                  'f:app.kubernetes.io/name': {},
+                  'f:k8s-app': {},
+                },
+                'f:ownerReferences': {
+                  '.': {},
+                  'k:{"uid":"0b3450e6-73df-4b9c-9aab-1d3cf0907f75"}': {},
+                },
+              },
+              'f:spec': {
+                'f:progressDeadlineSeconds': {},
+                'f:replicas': {},
+                'f:revisionHistoryLimit': {},
+                'f:selector': {},
+                'f:strategy': {
+                  'f:rollingUpdate': {
+                    '.': {},
+                    'f:maxSurge': {},
+                    'f:maxUnavailable': {},
+                  },
+                  'f:type': {},
+                },
+                'f:template': {
+                  'f:metadata': {
+                    'f:annotations': {
+                      '.': {},
+                      'f:sks-system.hash.operator.tigera.io/calico-apiserver-certs': {},
+                    },
+                    'f:labels': {
+                      '.': {},
+                      'f:apiserver': {},
+                      'f:app.kubernetes.io/name': {},
+                      'f:k8s-app': {},
+                    },
+                    'f:name': {},
+                    'f:namespace': {},
+                  },
+                  'f:spec': {
+                    'f:affinity': {
+                      '.': {},
+                      'f:podAntiAffinity': {
+                        '.': {},
+                        'f:preferredDuringSchedulingIgnoredDuringExecution': {},
+                      },
+                    },
+                    'f:containers': {
+                      'k:{"name":"calico-apiserver"}': {
+                        '.': {},
+                        'f:args': {},
+                        'f:env': {
+                          '.': {},
+                          'k:{"name":"DATASTORE_TYPE"}': {
+                            '.': {},
+                            'f:name': {},
+                            'f:value': {},
+                          },
+                          'k:{"name":"KUBERNETES_SERVICE_HOST"}': {
+                            '.': {},
+                            'f:name': {},
+                            'f:value': {},
+                          },
+                          'k:{"name":"KUBERNETES_SERVICE_PORT"}': {
+                            '.': {},
+                            'f:name': {},
+                            'f:value': {},
+                          },
+                          'k:{"name":"MULTI_INTERFACE_MODE"}': {
+                            '.': {},
+                            'f:name': {},
+                            'f:value': {},
+                          },
+                        },
+                        'f:image': {},
+                        'f:imagePullPolicy': {},
+                        'f:name': {},
+                        'f:readinessProbe': {
+                          '.': {},
+                          'f:failureThreshold': {},
+                          'f:httpGet': {
+                            '.': {},
+                            'f:path': {},
+                            'f:port': {},
+                            'f:scheme': {},
+                          },
+                          'f:periodSeconds': {},
+                          'f:successThreshold': {},
+                          'f:timeoutSeconds': {},
+                        },
+                        'f:resources': {},
+                        'f:securityContext': {
+                          '.': {},
+                          'f:allowPrivilegeEscalation': {},
+                          'f:capabilities': {
+                            '.': {},
+                            'f:drop': {},
+                          },
+                          'f:privileged': {},
+                          'f:runAsGroup': {},
+                          'f:runAsNonRoot': {},
+                          'f:runAsUser': {},
+                          'f:seccompProfile': {
+                            '.': {},
+                            'f:type': {},
+                          },
+                        },
+                        'f:terminationMessagePath': {},
+                        'f:terminationMessagePolicy': {},
+                        'f:volumeMounts': {
+                          '.': {},
+                          'k:{"mountPath":"/calico-apiserver-certs"}': {
+                            '.': {},
+                            'f:mountPath': {},
+                            'f:name': {},
+                            'f:readOnly': {},
+                          },
+                        },
+                      },
+                    },
+                    'f:dnsPolicy': {},
+                    'f:nodeSelector': {},
+                    'f:restartPolicy': {},
+                    'f:schedulerName': {},
+                    'f:securityContext': {},
+                    'f:serviceAccount': {},
+                    'f:serviceAccountName': {},
+                    'f:terminationGracePeriodSeconds': {},
+                    'f:tolerations': {},
+                    'f:volumes': {
+                      '.': {},
+                      'k:{"name":"calico-apiserver-certs"}': {
+                        '.': {},
+                        'f:name': {},
+                        'f:secret': {
+                          '.': {},
+                          'f:defaultMode': {},
+                          'f:secretName': {},
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            manager: 'kube-controller-manager',
+            operation: 'Update',
+            apiVersion: 'apps/v1',
+            time: '2025-11-18T05:55:20Z',
+            fieldsType: 'FieldsV1',
+            fieldsV1: {
+              'f:metadata': {
+                'f:annotations': {
+                  '.': {},
+                  'f:deployment.kubernetes.io/revision': {},
+                },
+              },
+              'f:status': {
+                'f:availableReplicas': {},
+                'f:conditions': {
+                  '.': {},
+                  'k:{"type":"Available"}': {
+                    '.': {},
+                    'f:lastTransitionTime': {},
+                    'f:lastUpdateTime': {},
+                    'f:message': {},
+                    'f:reason': {},
+                    'f:status': {},
+                    'f:type': {},
+                  },
+                  'k:{"type":"Progressing"}': {
+                    '.': {},
+                    'f:lastTransitionTime': {},
+                    'f:lastUpdateTime': {},
+                    'f:message': {},
+                    'f:reason': {},
+                    'f:status': {},
+                    'f:type': {},
+                  },
+                },
+                'f:observedGeneration': {},
+                'f:readyReplicas': {},
+                'f:replicas': {},
+                'f:updatedReplicas': {},
+              },
+            },
+            subresource: 'status',
+          },
+        ],
+      },
+      spec: {
+        replicas: 2,
+        selector: {
+          matchLabels: {
+            apiserver: 'true',
+          },
+        },
+        template: {
+          metadata: {
+            name: 'calico-apiserver',
+            namespace: 'calico-apiserver',
+            creationTimestamp: null,
+            labels: {
+              apiserver: 'true',
+              'app.kubernetes.io/name': 'calico-apiserver',
+              'k8s-app': 'calico-apiserver',
+            },
+            annotations: {
+              'sks-system.hash.operator.tigera.io/calico-apiserver-certs':
+                'ee83409424d1e7323ad90ae7e6d828cf8517b8ea',
+            },
+          },
+          spec: {
+            volumes: [
+              {
+                name: 'calico-apiserver-certs',
+                secret: {
+                  secretName: 'calico-apiserver-certs',
+                  defaultMode: 420,
+                },
+              },
+            ],
+            containers: [
+              {
+                name: 'calico-apiserver',
+                image: '10.255.233.201/sks/calico/apiserver:v3.29.5',
+                args: [
+                  '--secure-port=5443',
+                  '--tls-private-key-file=/calico-apiserver-certs/tls.key',
+                  '--tls-cert-file=/calico-apiserver-certs/tls.crt',
+                  '--enable-validating-admission-policy=false',
+                ],
+                env: [
+                  {
+                    name: 'DATASTORE_TYPE',
+                    value: 'kubernetes',
+                  },
+                  {
+                    name: 'KUBERNETES_SERVICE_HOST',
+                    value: '10.96.0.1',
+                  },
+                  {
+                    name: 'KUBERNETES_SERVICE_PORT',
+                    value: '443',
+                  },
+                  {
+                    name: 'MULTI_INTERFACE_MODE',
+                    value: 'none',
+                  },
+                ],
+                resources: {},
+                volumeMounts: [
+                  {
+                    name: 'calico-apiserver-certs',
+                    readOnly: true,
+                    mountPath: '/calico-apiserver-certs',
+                  },
+                ],
+                readinessProbe: {
+                  httpGet: {
+                    path: '/readyz',
+                    port: 5443,
+                    scheme: 'HTTPS',
+                  },
+                  timeoutSeconds: 5,
+                  periodSeconds: 60,
+                  successThreshold: 1,
+                  failureThreshold: 3,
+                },
+                terminationMessagePath: '/dev/termination-log',
+                terminationMessagePolicy: 'File',
+                imagePullPolicy: 'IfNotPresent',
+                securityContext: {
+                  capabilities: {
+                    drop: ['ALL'],
+                  },
+                  privileged: false,
+                  runAsUser: 10001,
+                  runAsGroup: 10001,
+                  runAsNonRoot: true,
+                  allowPrivilegeEscalation: false,
+                  seccompProfile: {
+                    type: 'RuntimeDefault',
+                  },
+                },
+              },
+            ],
+            restartPolicy: 'Always',
+            terminationGracePeriodSeconds: 30,
+            dnsPolicy: 'ClusterFirst',
+            nodeSelector: {
+              'kubernetes.io/os': 'linux',
+            },
+            serviceAccountName: 'calico-apiserver',
+            serviceAccount: 'calico-apiserver',
+            securityContext: {},
+            affinity: {
+              podAntiAffinity: {
+                preferredDuringSchedulingIgnoredDuringExecution: [
+                  {
+                    weight: 100,
+                    podAffinityTerm: {
+                      labelSelector: {
+                        matchLabels: {
+                          'k8s-app': 'calico-apiserver',
+                        },
+                      },
+                      namespaces: ['calico-apiserver'],
+                      topologyKey: 'kubernetes.io/hostname',
+                    },
+                  },
+                  {
+                    weight: 100,
+                    podAffinityTerm: {
+                      labelSelector: {
+                        matchLabels: {
+                          'k8s-app': 'calico-apiserver',
+                        },
+                      },
+                      namespaces: ['calico-apiserver'],
+                      topologyKey: 'topology.kubernetes.io/zone',
+                    },
+                  },
+                ],
+              },
+            },
+            schedulerName: 'default-scheduler',
+            tolerations: [
+              {
+                key: 'node-role.kubernetes.io/master',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node-role.kubernetes.io/control-plane',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node.kubernetes.io/not-ready',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node.kubernetes.io/network-unavailable',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node.kubernetes.io/unreachable',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node.kubernetes.io/not-ready',
+                effect: 'NoExecute',
+              },
+              {
+                key: 'node.kubernetes.io/unreachable',
+                effect: 'NoExecute',
+                tolerationSeconds: 300,
+              },
+              {
+                key: 'node-role.kubernetes.io/master',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node-role.kubernetes.io/control-plane',
+                effect: 'NoSchedule',
+              },
+            ],
+          },
+        },
+        strategy: {
+          type: 'RollingUpdate',
+          rollingUpdate: {
+            maxUnavailable: '25%',
+            maxSurge: '25%',
+          },
+        },
+        revisionHistoryLimit: 10,
+        progressDeadlineSeconds: 600,
+      },
+      status: {
+        observedGeneration: 1,
+        replicas: 2,
+        updatedReplicas: 2,
+        readyReplicas: 2,
+        availableReplicas: 2,
+        conditions: [
+          {
+            type: 'Available',
+            status: 'True',
+            lastUpdateTime: '2025-11-18T05:55:20Z',
+            lastTransitionTime: '2025-11-18T05:55:20Z',
+            reason: 'MinimumReplicasAvailable',
+            message: 'Deployment has minimum availability.',
+          },
+          {
+            type: 'Progressing',
+            status: 'True',
+            lastUpdateTime: '2025-11-18T05:55:20Z',
+            lastTransitionTime: '2025-11-18T05:54:42Z',
+            reason: 'NewReplicaSetAvailable',
+            message:
+              'ReplicaSet "calico-apiserver-848d547c9c" has successfully progressed.',
+          },
+        ],
+      },
+    },
+  ],
+};
+
+export const RawServiceList: ServiceList = {
+  kind: 'ServiceList',
+  apiVersion: 'v1',
+  metadata: {
+    resourceVersion: '6238435',
+  },
+  items: [
+    {
+      metadata: {
+        name: 'calico-api',
+        namespace: 'calico-apiserver',
+        uid: '86f79b36-40ee-4e6e-9a48-d0f5a560f8b2',
+        resourceVersion: '1114',
+        creationTimestamp: '2025-11-19T03:13:32Z',
+        labels: {
+          'k8s-app': 'tigera-api',
+          apiserver: 'true',
+        },
+        ownerReferences: [
+          {
+            apiVersion: 'operator.tigera.io/v1',
+            kind: 'APIServer',
+            name: 'default',
+            uid: '1e7e788e-79f5-414b-8072-edd21c63315b',
+            controller: true,
+            blockOwnerDeletion: true,
+          },
+        ],
+        managedFields: [
+          {
+            manager: 'operator',
+            operation: 'Update',
+            apiVersion: 'v1',
+            time: '2025-11-19T03:13:32Z',
+            fieldsType: 'FieldsV1',
+            fieldsV1: {
+              'f:metadata': {
+                'f:labels': {
+                  '.': {},
+                  'f:k8s-app': {},
+                },
+                'f:ownerReferences': {
+                  '.': {},
+                  'k:{"uid":"1e7e788e-79f5-414b-8072-edd21c63315b"}': {},
+                },
+              },
+              'f:spec': {
+                'f:internalTrafficPolicy': {},
+                'f:ports': {
+                  '.': {},
+                  'k:{"port":443,"protocol":"TCP"}': {
+                    '.': {},
+                    'f:name': {},
+                    'f:port': {},
+                    'f:protocol': {},
+                    'f:targetPort': {},
+                  },
+                },
+                'f:selector': {},
+                'f:sessionAffinity': {},
+                'f:type': {},
+              },
+            },
+          },
+        ],
+      },
+      spec: {
+        ports: [
+          {
+            name: 'apiserver',
+            protocol: 'TCP',
+            port: 443,
+            targetPort: 5443,
+          },
+        ],
+        selector: {
+          apiserver: 'true',
+        },
+        clusterIP: '10.96.1.85',
+        clusterIPs: ['10.96.1.85'],
+        type: 'ClusterIP',
+        sessionAffinity: 'None',
+        ipFamilies: ['IPv4'],
+        ipFamilyPolicy: 'SingleStack',
+        internalTrafficPolicy: 'Cluster',
+      },
+      status: {
+        loadBalancer: {},
+      },
+    },
+  ],
+};
+
+export const RawIngressList: IngressList = {
+  kind: 'IngressList',
+  apiVersion: 'networking.k8s.io/v1',
+  metadata: {
+    resourceVersion: '6238435',
+  },
+  items: [
+    {
+      kind: 'Ingress',
+      apiVersion: 'networking.k8s.io/v1',
+      metadata: {
+        name: 'calico-api',
+        namespace: 'calico-apiserver',
+        uid: '07c8ca63-4ef3-44a3-9f94-6afae175ea39',
+        resourceVersion: '4620706',
+        generation: 1,
+        creationTimestamp: '2025-11-27T09:43:04Z',
+        managedFields: [
+          {
+            manager: 'refine',
+            operation: 'Update',
+            apiVersion: 'networking.k8s.io/v1',
+            time: '2025-11-27T09:43:04Z',
+            fieldsType: 'FieldsV1',
+            fieldsV1: {
+              'f:spec': {
+                'f:rules': {},
+              },
+            },
+          },
+        ],
+      },
+      spec: {
+        ingressClassName: '',
+        rules: [
+          {
+            http: {
+              paths: [
+                {
+                  path: '/api',
+                  pathType: 'Prefix',
+                  backend: {
+                    service: {
+                      name: 'calico-api',
+                      port: {
+                        number: 443,
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+      status: {
+        loadBalancer: {},
+      },
+    },
+  ],
+};
+
+export const RawReplicaSetList: ReplicaSetList = {
+  kind: 'ReplicaSetList',
+  apiVersion: 'apps/v1',
+  metadata: {
+    resourceVersion: '6238435',
+  },
+  items: [
+    {
+      metadata: {
+        name: 'calico-apiserver-848d547c9c',
+        namespace: 'calico-apiserver',
+        uid: '832853e5-f664-49f8-b28a-91b6f048021f',
+        resourceVersion: '2120',
+        generation: 1,
+        creationTimestamp: '2025-11-18T05:54:42Z',
+        labels: {
+          apiserver: 'true',
+          'app.kubernetes.io/name': 'calico-apiserver',
+          'k8s-app': 'calico-apiserver',
+          'pod-template-hash': '848d547c9c',
+        },
+        annotations: {
+          'deployment.kubernetes.io/desired-replicas': '2',
+          'deployment.kubernetes.io/max-replicas': '3',
+          'deployment.kubernetes.io/revision': '1',
+        },
+        ownerReferences: [
+          {
+            apiVersion: 'apps/v1',
+            kind: 'Deployment',
+            name: 'calico-apiserver',
+            uid: 'f24292d6-1323-4f94-be3a-c624b06bcbd7',
+            controller: true,
+            blockOwnerDeletion: true,
+          },
+        ],
+        managedFields: [
+          {
+            manager: 'kube-controller-manager',
+            operation: 'Update',
+            apiVersion: 'apps/v1',
+            time: '2025-11-18T05:54:42Z',
+            fieldsType: 'FieldsV1',
+            fieldsV1: {
+              'f:metadata': {
+                'f:annotations': {
+                  '.': {},
+                  'f:deployment.kubernetes.io/desired-replicas': {},
+                  'f:deployment.kubernetes.io/max-replicas': {},
+                  'f:deployment.kubernetes.io/revision': {},
+                },
+                'f:labels': {
+                  '.': {},
+                  'f:apiserver': {},
+                  'f:app.kubernetes.io/name': {},
+                  'f:k8s-app': {},
+                  'f:pod-template-hash': {},
+                },
+                'f:ownerReferences': {
+                  '.': {},
+                  'k:{"uid":"f24292d6-1323-4f94-be3a-c624b06bcbd7"}': {},
+                },
+              },
+              'f:spec': {
+                'f:replicas': {},
+                'f:selector': {},
+                'f:template': {
+                  'f:metadata': {
+                    'f:annotations': {
+                      '.': {},
+                      'f:sks-system.hash.operator.tigera.io/calico-apiserver-certs': {},
+                    },
+                    'f:labels': {
+                      '.': {},
+                      'f:apiserver': {},
+                      'f:app.kubernetes.io/name': {},
+                      'f:k8s-app': {},
+                      'f:pod-template-hash': {},
+                    },
+                    'f:name': {},
+                    'f:namespace': {},
+                  },
+                  'f:spec': {
+                    'f:affinity': {
+                      '.': {},
+                      'f:podAntiAffinity': {
+                        '.': {},
+                        'f:preferredDuringSchedulingIgnoredDuringExecution': {},
+                      },
+                    },
+                    'f:containers': {
+                      'k:{"name":"calico-apiserver"}': {
+                        '.': {},
+                        'f:args': {},
+                        'f:env': {
+                          '.': {},
+                          'k:{"name":"DATASTORE_TYPE"}': {
+                            '.': {},
+                            'f:name': {},
+                            'f:value': {},
+                          },
+                          'k:{"name":"KUBERNETES_SERVICE_HOST"}': {
+                            '.': {},
+                            'f:name': {},
+                            'f:value': {},
+                          },
+                          'k:{"name":"KUBERNETES_SERVICE_PORT"}': {
+                            '.': {},
+                            'f:name': {},
+                            'f:value': {},
+                          },
+                          'k:{"name":"MULTI_INTERFACE_MODE"}': {
+                            '.': {},
+                            'f:name': {},
+                            'f:value': {},
+                          },
+                        },
+                        'f:image': {},
+                        'f:imagePullPolicy': {},
+                        'f:name': {},
+                        'f:readinessProbe': {
+                          '.': {},
+                          'f:failureThreshold': {},
+                          'f:httpGet': {
+                            '.': {},
+                            'f:path': {},
+                            'f:port': {},
+                            'f:scheme': {},
+                          },
+                          'f:periodSeconds': {},
+                          'f:successThreshold': {},
+                          'f:timeoutSeconds': {},
+                        },
+                        'f:resources': {},
+                        'f:securityContext': {
+                          '.': {},
+                          'f:allowPrivilegeEscalation': {},
+                          'f:capabilities': {
+                            '.': {},
+                            'f:drop': {},
+                          },
+                          'f:privileged': {},
+                          'f:runAsGroup': {},
+                          'f:runAsNonRoot': {},
+                          'f:runAsUser': {},
+                          'f:seccompProfile': {
+                            '.': {},
+                            'f:type': {},
+                          },
+                        },
+                        'f:terminationMessagePath': {},
+                        'f:terminationMessagePolicy': {},
+                        'f:volumeMounts': {
+                          '.': {},
+                          'k:{"mountPath":"/calico-apiserver-certs"}': {
+                            '.': {},
+                            'f:mountPath': {},
+                            'f:name': {},
+                            'f:readOnly': {},
+                          },
+                        },
+                      },
+                    },
+                    'f:dnsPolicy': {},
+                    'f:nodeSelector': {},
+                    'f:restartPolicy': {},
+                    'f:schedulerName': {},
+                    'f:securityContext': {},
+                    'f:serviceAccount': {},
+                    'f:serviceAccountName': {},
+                    'f:terminationGracePeriodSeconds': {},
+                    'f:tolerations': {},
+                    'f:volumes': {
+                      '.': {},
+                      'k:{"name":"calico-apiserver-certs"}': {
+                        '.': {},
+                        'f:name': {},
+                        'f:secret': {
+                          '.': {},
+                          'f:defaultMode': {},
+                          'f:secretName': {},
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            manager: 'kube-controller-manager',
+            operation: 'Update',
+            apiVersion: 'apps/v1',
+            time: '2025-11-18T05:55:20Z',
+            fieldsType: 'FieldsV1',
+            fieldsV1: {
+              'f:status': {
+                'f:availableReplicas': {},
+                'f:fullyLabeledReplicas': {},
+                'f:observedGeneration': {},
+                'f:readyReplicas': {},
+                'f:replicas': {},
+              },
+            },
+            subresource: 'status',
+          },
+        ],
+      },
+      spec: {
+        replicas: 2,
+        selector: {
+          matchLabels: {
+            apiserver: 'true',
+            'pod-template-hash': '848d547c9c',
+          },
+        },
+        template: {
+          metadata: {
+            name: 'calico-apiserver',
+            namespace: 'calico-apiserver',
+            creationTimestamp: null,
+            labels: {
+              apiserver: 'true',
+              'app.kubernetes.io/name': 'calico-apiserver',
+              'k8s-app': 'calico-apiserver',
+              'pod-template-hash': '848d547c9c',
+            },
+            annotations: {
+              'sks-system.hash.operator.tigera.io/calico-apiserver-certs':
+                'ee83409424d1e7323ad90ae7e6d828cf8517b8ea',
+            },
+          },
+          spec: {
+            volumes: [
+              {
+                name: 'calico-apiserver-certs',
+                secret: {
+                  secretName: 'calico-apiserver-certs',
+                  defaultMode: 420,
+                },
+              },
+            ],
+            containers: [
+              {
+                name: 'calico-apiserver',
+                image: '10.255.233.201/sks/calico/apiserver:v3.29.5',
+                args: [
+                  '--secure-port=5443',
+                  '--tls-private-key-file=/calico-apiserver-certs/tls.key',
+                  '--tls-cert-file=/calico-apiserver-certs/tls.crt',
+                  '--enable-validating-admission-policy=false',
+                ],
+                env: [
+                  {
+                    name: 'DATASTORE_TYPE',
+                    value: 'kubernetes',
+                  },
+                  {
+                    name: 'KUBERNETES_SERVICE_HOST',
+                    value: '10.96.0.1',
+                  },
+                  {
+                    name: 'KUBERNETES_SERVICE_PORT',
+                    value: '443',
+                  },
+                  {
+                    name: 'MULTI_INTERFACE_MODE',
+                    value: 'none',
+                  },
+                ],
+                resources: {},
+                volumeMounts: [
+                  {
+                    name: 'calico-apiserver-certs',
+                    readOnly: true,
+                    mountPath: '/calico-apiserver-certs',
+                  },
+                ],
+                readinessProbe: {
+                  httpGet: {
+                    path: '/readyz',
+                    port: 5443,
+                    scheme: 'HTTPS',
+                  },
+                  timeoutSeconds: 5,
+                  periodSeconds: 60,
+                  successThreshold: 1,
+                  failureThreshold: 3,
+                },
+                terminationMessagePath: '/dev/termination-log',
+                terminationMessagePolicy: 'File',
+                imagePullPolicy: 'IfNotPresent',
+                securityContext: {
+                  capabilities: {
+                    drop: ['ALL'],
+                  },
+                  privileged: false,
+                  runAsUser: 10001,
+                  runAsGroup: 10001,
+                  runAsNonRoot: true,
+                  allowPrivilegeEscalation: false,
+                  seccompProfile: {
+                    type: 'RuntimeDefault',
+                  },
+                },
+              },
+            ],
+            restartPolicy: 'Always',
+            terminationGracePeriodSeconds: 30,
+            dnsPolicy: 'ClusterFirst',
+            nodeSelector: {
+              'kubernetes.io/os': 'linux',
+            },
+            serviceAccountName: 'calico-apiserver',
+            serviceAccount: 'calico-apiserver',
+            securityContext: {},
+            affinity: {
+              podAntiAffinity: {
+                preferredDuringSchedulingIgnoredDuringExecution: [
+                  {
+                    weight: 100,
+                    podAffinityTerm: {
+                      labelSelector: {
+                        matchLabels: {
+                          'k8s-app': 'calico-apiserver',
+                        },
+                      },
+                      namespaces: ['calico-apiserver'],
+                      topologyKey: 'kubernetes.io/hostname',
+                    },
+                  },
+                  {
+                    weight: 100,
+                    podAffinityTerm: {
+                      labelSelector: {
+                        matchLabels: {
+                          'k8s-app': 'calico-apiserver',
+                        },
+                      },
+                      namespaces: ['calico-apiserver'],
+                      topologyKey: 'topology.kubernetes.io/zone',
+                    },
+                  },
+                ],
+              },
+            },
+            schedulerName: 'default-scheduler',
+            tolerations: [
+              {
+                key: 'node-role.kubernetes.io/master',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node-role.kubernetes.io/control-plane',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node.kubernetes.io/not-ready',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node.kubernetes.io/network-unavailable',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node.kubernetes.io/unreachable',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node.kubernetes.io/not-ready',
+                effect: 'NoExecute',
+              },
+              {
+                key: 'node.kubernetes.io/unreachable',
+                effect: 'NoExecute',
+                tolerationSeconds: 300,
+              },
+              {
+                key: 'node-role.kubernetes.io/master',
+                effect: 'NoSchedule',
+              },
+              {
+                key: 'node-role.kubernetes.io/control-plane',
+                effect: 'NoSchedule',
+              },
+            ],
+          },
+        },
+      },
+      status: {
+        replicas: 2,
+        fullyLabeledReplicas: 2,
+        readyReplicas: 2,
+        availableReplicas: 2,
+        observedGeneration: 1,
       },
     },
   ],

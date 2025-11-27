@@ -17,8 +17,17 @@ describe('Test Plugins together', () => {
   it('should return deployment model', async () => {
     const result = await processListByPlugins(RawDeploymentList as UnstructuredList);
     const deploymentModel = result.items[0] as WorkloadModel;
-    expect(result.items.length).toEqual(2);
+    const calicoApiServerDeployment = result.items.find(
+      deployment => deployment?.metadata?.name === 'calico-apiserver'
+    );
+
+    expect(result.items.length).toEqual(3);
     expect(deploymentModel.restarts).toEqual(5);
+    expect((calicoApiServerDeployment as WorkloadModel)?.services.length).toEqual(1);
+    expect(
+      (calicoApiServerDeployment as WorkloadModel)?.services[0].ingresses.length
+    ).toEqual(1);
+    expect((calicoApiServerDeployment as WorkloadModel)?.ingresses.length).toEqual(1);
   });
 
   it('should return deployment model with relation', async () => {

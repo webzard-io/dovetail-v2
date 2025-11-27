@@ -162,6 +162,9 @@ export function validateLabelKey(key: string): {
     return { isValid: false };
   }
 
+  if (!labelRegex.test(name)) {
+    return { isValid: false };
+  }
   if (name && name.length > 63) {
     return { isValid: false };
   }
