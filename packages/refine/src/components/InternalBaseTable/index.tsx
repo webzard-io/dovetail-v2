@@ -52,6 +52,8 @@ export type InternalTableProps<Data extends { id: string; }> = {
   showMenuColumn?: boolean;
   hideNamespacesFilter?: boolean;
   customNamespaceFilter?: React.ReactNode;
+  /* 清除url中name_keyword参数的回调函数 */
+  onClearSearchKeyword?: () => void;
 };
 
 function Table<Data extends { id: string; }>(props: InternalTableProps<Data>) {

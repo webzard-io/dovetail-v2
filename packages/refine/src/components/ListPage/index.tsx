@@ -58,7 +58,7 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
         <>
           <TableToolBar
             selectedKeys={selectedKeys}
-            title={config?.displayName}
+            title={config?.customListTitle || config?.displayName || config.kind}
             description={config?.description}
             hideCreate={config?.hideCreate}
           />
@@ -78,9 +78,11 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
         className={cx(ListContentStyle, contentClassName)}
         style={config.hideNamespacesFilter ? { paddingTop: 0 } : {}}
       >
-        {!config.hideNamespacesFilter ? (
-          config.customNamespaceFilter || <NamespacesFilter className={NamespaceFilterStyle} />
-        ) : undefined}
+        {!config.hideNamespacesFilter
+          ? config.customNamespaceFilter || (
+              <NamespacesFilter className={NamespaceFilterStyle} />
+            )
+          : undefined}
         <div className={TableStyle}>
           <Table
             tableProps={{

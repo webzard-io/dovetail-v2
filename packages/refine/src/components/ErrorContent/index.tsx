@@ -80,6 +80,7 @@ const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = pro
         <p className={cx(fontMap[type], 'title', `${type}-title`)}>
           {errorText || t('dovetail.obtain_data_error')}
         </p>
+        {props.children}
         {!refetch ? null : (
           <kit.button
             size={type === ErrorContentType.List ? 'middle' : 'small'}

@@ -2,12 +2,12 @@ import { IResourceComponentsProps } from '@refinedev/core';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column } from 'src/components/InternalBaseTable';
+import { useRefineFilters } from 'src/hooks';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import {
   NameColumnRenderer,
   PlainTextNameColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
-import useNamespaceRefineFilter from 'src/hooks/useNamespaceRefineFilter';
 import { ResourceModel } from 'src/models';
 import { ResourceConfig } from 'src/types';
 import { ListPage } from '../../ListPage';
@@ -23,7 +23,7 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
   const nameRenderer: Column<Model> = noShow
     ? PlainTextNameColumnRenderer(i18n)
     : NameColumnRenderer(i18n);
-  const filters = useNamespaceRefineFilter();
+  const filters = useRefineFilters();
 
   const { tableProps, selectedKeys } = useEagleTable<Model>({
     useTableParams: {

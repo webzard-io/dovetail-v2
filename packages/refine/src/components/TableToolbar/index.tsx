@@ -39,9 +39,7 @@ export const TableToolBar: React.FC<Props> = ({
   return (
     <div className={cx(ToolbarWrapperStyle, 'table-toolbar')}>
       <Space className={ToolbarStyle}>
-        <span className={cx(Typo.Display.d2_regular_title, TitleStyle)}>
-          {title || resource?.meta?.kind}
-        </span>
+        <span className={cx(Typo.Display.d2_regular_title, TitleStyle)}>{title}</span>
         <Space>
           {selectedKeys.length > 0 ? <DeleteManyButton ids={selectedKeys} /> : undefined}
           <CanAccess resource={resource?.name} action={AccessControlAuth.Create}>
