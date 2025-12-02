@@ -1,4 +1,4 @@
-import { ModalProps } from '@cloudtower/eagle';
+import { LegacyModalProps } from '@cloudtower/eagle';
 import { BaseKey, useDeleteMany } from '@refinedev/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,7 @@ export const useDeleteManyModal = (resource: string, ids: BaseKey[]) => {
   const { mutate } = useDeleteMany();
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation();
-  const modalProps: ModalProps = {
+  const modalProps: LegacyModalProps = {
     title: t('dovetail.delete'),
     okText: t('dovetail.delete'),
     okButtonProps: {
