@@ -22,6 +22,8 @@ import {
   PersistentVolumeModel,
   PersistentVolumeClaimModel,
   ReplicaSetModel,
+  ControllerRevisionModel,
+  IngressClassModel,
 } from '../models';
 
 export class ModelPlugin implements IProviderPlugin<ResourceModel> {
@@ -44,6 +46,8 @@ export class ModelPlugin implements IProviderPlugin<ResourceModel> {
       PersistentVolume: PersistentVolumeModel,
       PersistentVolumeClaim: PersistentVolumeClaimModel,
       ReplicaSet: ReplicaSetModel,
+      ControllerRevision: ControllerRevisionModel,
+      IngressClass: IngressClassModel,
     })
   );
 

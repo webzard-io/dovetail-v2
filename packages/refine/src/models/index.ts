@@ -17,3 +17,5 @@ export * from './node-model';
 export * from './storage-class';
 export * from './persistent-volume';
 export * from './persistent-volume-claim';
+export * from './controller-revison-model';
+export * from './ingress-class-model';
