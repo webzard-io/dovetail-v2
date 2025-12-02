@@ -246,7 +246,7 @@ export const AgeColumnRenderer = <Model extends ResourceModel>(
     dataIndex,
     title: i18n.t('dovetail.created_time'),
     width: 120,
-    sorter: true,
+    sorter: CommonSorter(dataIndex),
     render: (value: string) => {
       return isRelativeTime ? (
         <Time date={new Date(value)} />
@@ -721,7 +721,7 @@ export const PVCRefColumnRenderer = <Model extends PersistentVolumeModel>(
           resourceName="persistentvolumeclaims"
           namespace={pv.pvcNamespace || 'default'}
           name={value}
-          query={{uid: pv.pvcUid}}
+          query={{ uid: pv.pvcUid }}
         />
       );
     },

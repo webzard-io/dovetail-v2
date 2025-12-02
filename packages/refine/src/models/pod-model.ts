@@ -4,6 +4,7 @@ import { ResourceState } from '../constants';
 import { shortenedImage } from '../utils/string';
 import { formatSi, parseSi } from '../utils/unit';
 import { DeploymentModel } from './deployment-model';
+import { ReplicaSetModel } from './replicaset-model';
 import { ResourceQuantity } from './types/metric';
 import { WorkloadBaseModel } from './workload-base-model';
 
@@ -19,10 +20,7 @@ export class PodModel extends WorkloadBaseModel {
   public declare spec?: RequiredPod['spec'];
   public declare status?: RequiredPod['status'];
 
-  constructor(
-    public _rawYaml: RequiredPod,
-    _globalStore: GlobalStore
-  ) {
+  constructor(public _rawYaml: RequiredPod, _globalStore: GlobalStore) {
     super(_rawYaml, _globalStore);
 
     let cpuRequestNum = 0;
@@ -68,9 +66,9 @@ export class PodModel extends WorkloadBaseModel {
     };
   }
 
-  getBelongToDeployment(deployments: DeploymentModel[]) {
+  getBelongToDeployment(deployments: DeploymentModel[], replicaSets: ReplicaSetModel[]) {
     return deployments.find(deployment => {
-      return deployment.replicaSets.find(replicaSet => {
+      return deployment.getReplicaSets(replicaSets).find(replicaSet => {
         return replicaSet.pods.find(pod => pod.metadata.uid === this.metadata.uid);
       });
     });
@@ -86,18 +84,21 @@ export class PodModel extends WorkloadBaseModel {
 
   get restarts() {
     if (this._rawYaml.status?.containerStatuses) {
-      return this._rawYaml.status?.containerStatuses.reduce((count, container) => {
-        count += container.restartCount;
-        return count;
-      }, 0) || 0;
+      return (
+        this._rawYaml.status?.containerStatuses.reduce((count, container) => {
+          count += container.restartCount;
+          return count;
+        }, 0) || 0
+      );
     }
 
     return 0;
   }
 
   get readyDisplay() {
-    return `${this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length || 0}/${this
-      ._rawYaml.spec?.containers.length || 0}`;
+    return `${
+      this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length || 0
+    }/${this._rawYaml.spec?.containers.length || 0}`;
   }
   get readyContainerCount() {
     return this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length;
@@ -149,9 +150,11 @@ export class PodModel extends WorkloadBaseModel {
   }
 
   get hasDnsConfig() {
-    return !!(this.spec?.dnsConfig &&
+    return !!(
+      this.spec?.dnsConfig &&
       (this.spec.dnsConfig.nameservers?.length ||
         this.spec.dnsConfig.searches?.length ||
-        this.spec.dnsConfig.options?.length));
+        this.spec.dnsConfig.options?.length)
+    );
   }
 }
