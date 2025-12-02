@@ -1,4 +1,4 @@
-import { Button, Modal } from '@cloudtower/eagle';
+import { Button, LegacyModal } from '@cloudtower/eagle';
 import { useResource } from '@refinedev/core';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +21,7 @@ export const DeleteManyButton: React.FC<{ ids: string[] }> = props => {
       <Button type="primary" danger onClick={onClick}>
         {t('dovetail.delete')}
       </Button>
-      {visible ? <Modal {...modalProps} /> : null}
+      {visible ? <LegacyModal {...modalProps} /> : null}
     </>
   );
 };

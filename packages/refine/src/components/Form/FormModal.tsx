@@ -1,4 +1,10 @@
-import { usePopModal, usePushModal, Modal, Typo, WizardDialog } from '@cloudtower/eagle';
+import {
+  usePopModal,
+  usePushModal,
+  LegacyModal,
+  Typo,
+  WizardDialog,
+} from '@cloudtower/eagle';
 import { WizardDialogProps } from '@cloudtower/eagle/dist/src/core/WizardDialog/type';
 import { css } from '@linaria/core';
 import { BaseRecord, CreateResponse, UpdateResponse, useResource } from '@refinedev/core';
@@ -52,7 +58,7 @@ function ConfirmModal({ onOk }: ConfirmModalProps) {
   const popModal = usePopModal();
 
   return (
-    <Modal
+    <LegacyModal
       className={SmallModalStyle}
       width="414px"
       title={t('dovetail.edit_form')}
@@ -69,7 +75,7 @@ function ConfirmModal({ onOk }: ConfirmModalProps) {
       destroyOnClose
     >
       <div className={Typo.Label.l2_regular}>{t('dovetail.exit_yaml_tip')}</div>
-    </Modal>
+    </LegacyModal>
   );
 }
 

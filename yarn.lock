@@ -1688,13 +1688,13 @@
   resolved "https://registry.npmmirror.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cloudtower/eagle@^0.34.6":
-  version "0.34.6"
-  resolved "https://registry.yarnpkg.com/@cloudtower/eagle/-/eagle-0.34.6.tgz#825d7a8a11c5aa9486f298242253692b4983ddd5"
-  integrity sha512-FJR2QEESdINzqP07ch1tbbYvLPqLZZXej5eITKQhnHO0vprci8raNF+z+4FbBVOjVki/gDLBlmUh42YbkUr9Uw==
+"@cloudtower/eagle@^0.34.24":
+  version "0.34.24"
+  resolved "https://registry.yarnpkg.com/@cloudtower/eagle/-/eagle-0.34.24.tgz#dccfd389b8787aceb31950549e750ba19029a40f"
+  integrity sha512-/M1bBUHpAQDvOgZvH3ilPvI0nt+ffskixK0GWV/OkdniHxNRfGYF7mmtEQnn9YvRa2JLfjcn9SfaQZb6oTt0SQ==
   dependencies:
-    "@cloudtower/icons-react" "^0.34.6"
-    "@cloudtower/parrot" "^0.34.6"
+    "@cloudtower/icons-react" "^0.34.24"
+    "@cloudtower/parrot" "^0.34.24"
     "@cloudtower/rc-notification" "^4.6.1"
     "@linaria/core" "^4.2.2"
     "@linaria/react" "^4.3.0"
@@ -1712,15 +1712,15 @@
     redux "^4.2.0"
     timezones.json "^1.6.1"
 
-"@cloudtower/icons-react@^0.34.6":
-  version "0.34.6"
-  resolved "https://registry.yarnpkg.com/@cloudtower/icons-react/-/icons-react-0.34.6.tgz#0494241f549f35e9ec0231ecc3e6fe095771e5e5"
-  integrity sha512-5JSBp4D+9PLWzqEnPmshg/maviZqPAjmdaglaB8yBrPeMlITNJwv/f7vbgxOoKCjoIPzJ2q7KRM/YklV6W1qoQ==
+"@cloudtower/icons-react@^0.34.24":
+  version "0.34.24"
+  resolved "https://registry.yarnpkg.com/@cloudtower/icons-react/-/icons-react-0.34.24.tgz#3bef539d5d5a061bd7a0d2f2afc163fe2d840b00"
+  integrity sha512-IYt3w7FiKynb61GzGae2gQt5jl8g3V7r7nv8q04JuXo7aBmsFFO64vH7k/thpvYHMm4CusKxPQoN/mvyQrk9Pw==
 
-"@cloudtower/parrot@^0.34.6":
-  version "0.34.6"
-  resolved "https://registry.yarnpkg.com/@cloudtower/parrot/-/parrot-0.34.6.tgz#91f52ef66ee951071b7335e78a266b7dc52240e7"
-  integrity sha512-CJ6kvPNuJc5Q/KyPBiJCm00YzZa+Nc+UjmpbCLxjBTVw4fniJ5INNnaQSEELu7DdcKtlCWT3JgCtoUYTScOEig==
+"@cloudtower/parrot@^0.34.24":
+  version "0.34.24"
+  resolved "https://registry.yarnpkg.com/@cloudtower/parrot/-/parrot-0.34.24.tgz#d76011c72d0cc724b3a893c0fa0239c319ee8854"
+  integrity sha512-ofBRXnixFyKwFPjcIKuGJCLFGTXoG7Ugmr9YGmZhkEZgP3b+p7cNlHV/vP3A/sBLN5KZgjVAB2xSXKNv7BEl+A==
   dependencies:
     i18next "^23.2.3"
     lodash.merge "^4.6.2"
