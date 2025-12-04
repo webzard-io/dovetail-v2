@@ -199,6 +199,7 @@
   "edit_distribute_storage": "编辑分配量",
   "edit_distribute_storage_success_toast": "编辑分配量成功",
   "edit_distribute_storage_failed_toast": "编辑分配量失败",
+  "edit_taint": "编辑污点",
   "edit_node_taint": "编辑污点",
   "edit_node_taint_success_toast": "编辑节点 {{name}} 的污点成功",
   "node_taint_NoSchedule": "仅阻止调度",
