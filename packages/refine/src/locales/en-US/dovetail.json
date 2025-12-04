@@ -202,6 +202,7 @@
   "edit_distribute_storage": "Edit capacity allocation",
   "edit_distribute_storage_success_toast": "Successfully edited the capacity allocation",
   "edit_distribute_storage_failed_toast": "Failed to edit the capacity allocation",
+  "edit_taint": "Edit taint",
   "edit_node_taint": "Edit taint",
   "edit_node_taint_success_toast": "Successfully edited the taint for the node {{name}}",
   "node_taint_NoSchedule": "NoSchedule",
