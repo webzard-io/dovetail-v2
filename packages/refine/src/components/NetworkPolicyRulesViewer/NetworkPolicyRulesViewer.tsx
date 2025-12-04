@@ -34,7 +34,7 @@ export const NetworkPolicyRulesViewer: React.FC<Props> = ({ ingressOrEgress, kin
     return (
       <ErrorContent
         errorText={t('dovetail.no_resource', { kind: kind || t('dovetail.rule') })}
-        type={ErrorContentType.Card}
+        type={ErrorContentType.List}
       />
     );
   }
@@ -44,7 +44,7 @@ export const NetworkPolicyRulesViewer: React.FC<Props> = ({ ingressOrEgress, kin
       <MonacoYamlEditor
         schemas={[]}
         defaultValue={yaml.dump(ingressOrEgress)}
-        height="300px"
+        height="100%"
         className={EditorStyle}
         readOnly
         isScrollOnFocus

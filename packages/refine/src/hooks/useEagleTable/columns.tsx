@@ -593,11 +593,11 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(
         <OverflowTooltip
           content={
             <span style={{ whiteSpace: 'pre' }}>
-              {v.servicePort} &gt; {v.targetPort}/{v.protocol}
+              {v.servicePort} → {v.targetPort}/{v.protocol}
             </span>
           }
           key={v.servicePort}
-          tooltip={`${v.servicePort} > ${v.targetPort}/${v.protocol}`}
+          tooltip={`${v.servicePort} → ${v.targetPort}/${v.protocol}`}
         ></OverflowTooltip>
       ));
 

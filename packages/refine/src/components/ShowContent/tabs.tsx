@@ -1,9 +1,16 @@
+import { css } from '@linaria/core';
 import { i18n as I18nType } from 'i18next';
 import { Condition } from 'kubernetes-types/meta/v1';
+import type {
+  NetworkPolicyIngressRule,
+  NetworkPolicyEgressRule,
+} from 'kubernetes-types/networking/v1';
 import React from 'react';
 import { LabelsAndAnnotationsShow } from 'src/components/LabelsAndAnnotationsShow';
+import { NetworkPolicyRulesViewer } from 'src/components/NetworkPolicyRulesViewer';
 import { PodLog } from 'src/components/PodLog';
 import { ResourceModel, PodModel, ServiceModel, IngressModel } from 'src/models';
+import { NetworkPolicyModel } from 'src/models';
 import { ConditionsTable } from '../ConditionsTable';
 import {
   ShowTab,
@@ -194,6 +201,79 @@ export const SecretDataTab = <Model extends ResourceModel>({
   groups: [
     {
       areas: [{ fields: [SecretDataField()] }],
+    },
+  ],
+});
+
+const NetworkPolicyRulesViewerStyle = css`
+  padding: 16px 24px;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+`;
+
+export const NetworkPolicyIngressRulesTab = <Model extends NetworkPolicyModel>({
+  i18n,
+}: {
+  i18n: I18nType;
+}): ShowTab<Model> => ({
+  title: i18n.t('dovetail.ingress_rule'),
+  key: 'ingress-rules',
+  background: 'white',
+  groups: [
+    {
+      areas: [
+        {
+          fields: [
+            {
+              key: 'Ingress',
+              path: ['spec', 'ingress'],
+              render: ingress => {
+                return (
+                  <div className={NetworkPolicyRulesViewerStyle}>
+                    <NetworkPolicyRulesViewer
+                      ingressOrEgress={ingress as NetworkPolicyIngressRule[]}
+                    />
+                  </div>
+                );
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ],
+});
+
+export const NetworkPolicyEgressRulesTab = <Model extends NetworkPolicyModel>({
+  i18n,
+}: {
+  i18n: I18nType;
+}): ShowTab<Model> => ({
+  title: i18n.t('dovetail.egress_rule'),
+  key: 'egress-rules',
+  background: 'white',
+  groups: [
+    {
+      areas: [
+        {
+          fields: [
+            {
+              key: 'Egress',
+              path: ['spec', 'egress'],
+              render: egress => {
+                return (
+                  <div className={NetworkPolicyRulesViewerStyle}>
+                    <NetworkPolicyRulesViewer
+                      ingressOrEgress={egress as NetworkPolicyEgressRule[]}
+                    />
+                  </div>
+                );
+              },
+            },
+          ],
+        },
+      ],
     },
   ],
 });

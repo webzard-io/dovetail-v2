@@ -39,10 +39,6 @@ const ShowContentWrapperStyle = css`
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, $white 0%, $gray-20 100%);
-
-  .ant-row {
-    margin-right: 0 !important;
-  }
 `;
 const BackButton = css`
   color: $gray-a30-10;
@@ -344,7 +340,15 @@ export const ShowContentView = <Model extends ResourceModel>(
 
     if (shouldRenderRow) {
       FieldContainer = Row;
-      fieldContainerProps = { gutter: [24, 8] };
+      fieldContainerProps = {
+        gutter: [24, 8],
+        className: css`
+          &.ant-row {
+            row-gap: 4px;
+            margin-right: 0 !important;
+          }
+        `,
+      };
     }
 
     return (
