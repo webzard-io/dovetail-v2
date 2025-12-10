@@ -66,6 +66,8 @@ export type UseFormProps<
   initialValuesForEdit?: Record<string, unknown>;
   transformInitValues?: (values: Record<string, unknown>) => Record<string, unknown>;
   transformApplyValues?: (values: Unstructured) => Unstructured;
+  beforeSubmit?: (values: Unstructured, setErrors: (errors: string[]) => void) => Promise<Unstructured>;
+  onBeforeSubmitError?: (errors: string[]) => void;
   rules?: YamlFormRule[];
 };
 
@@ -101,6 +103,7 @@ export type UseFormReturnType<
   loadSchemaError: Error | null;
   fetchSchema: () => void;
   errorResponseBody?: Record<string, unknown> | null;
+  beforeSubmitErrors: string[];
 };
 
 const useYamlForm = <
@@ -141,6 +144,8 @@ const useYamlForm = <
   initialValuesForEdit,
   transformInitValues,
   transformApplyValues,
+  beforeSubmit,
+  onBeforeSubmitError,
   rules,
 }: UseFormProps<
   TQueryFnData,
@@ -163,6 +168,8 @@ const useYamlForm = <
   const [isSchemaValid, setIsSchemaValid] = useState(true);
   const [editorErrors, setEditorErrors] = useState<string[]>([]);
   const [rulesErrors, setRulesErrors] = useState<string[]>([]);
+  const [isBeforeSubmitLoading, setIsBeforeSubmitLoading] = useState(false);
+  const [beforeSubmitErrors, setBeforeSubmitErrors] = useState<string[]>([]);
   const [errorResponseBody, setErrorResponseBody] = useState<Record<
     string,
     unknown
@@ -259,12 +266,12 @@ const useYamlForm = <
   }, [schema]);
   const saveButtonProps = useMemo(
     () => ({
-      loading: formLoading,
+      loading: formLoading || isBeforeSubmitLoading,
       onClick: () => {
         form.submit();
       },
     }),
-    [formLoading, form]
+    [formLoading, form, isBeforeSubmitLoading]
   );
   const emptySchemas = useMemo(() => {
     return [];
@@ -352,6 +359,9 @@ const useYamlForm = <
     formProps: {
       ...formSF.formProps,
       onFinish: async (values) => {
+        // 清空之前的错误
+        setBeforeSubmitErrors([]);
+
         const errors = [
           !isYamlValid ? t('dovetail.yaml_format_wrong') : '',
           !isSchemaValid ? t('dovetail.yaml_value_wrong') : '',
@@ -374,8 +384,36 @@ const useYamlForm = <
           const objectValues = editor.current
             ? (yaml.load(editor.current?.getEditorValue() || '') as Unstructured)
             : values;
-          const finalValues =
+          let finalValues =
             transformApplyValues?.(objectValues as Unstructured) || objectValues;
+
+          // 调用 beforeSubmit 钩子
+          if (beforeSubmit) {
+            try {
+              let hasErrors = false;
+
+              setIsBeforeSubmitLoading(true);
+              const result = await beforeSubmit(finalValues as Unstructured, (errors: string[]) => {
+                if (errors && errors.length > 0) {
+                  setBeforeSubmitErrors(errors);
+                  onBeforeSubmitError?.(errors);
+                  hasErrors = true;
+                }
+              });
+
+              // 如果有错误，则不继续提交
+              if (hasErrors) {
+                return;
+              }
+
+              // 使用 beforeSubmit 返回的值（如果有的话）
+              if (result !== undefined) {
+                finalValues = result;
+              }
+            } finally {
+              setIsBeforeSubmitLoading(false);
+            }
+          }
 
           return onFinish(finalValues as TVariables);
         } catch (error: unknown) {
@@ -398,6 +436,7 @@ const useYamlForm = <
     saveButtonProps,
     ...useFormCoreResult,
     errorResponseBody,
+    beforeSubmitErrors,
     editorProps,
     schemas: schema ? [schema] : [],
     isLoadingSchema,

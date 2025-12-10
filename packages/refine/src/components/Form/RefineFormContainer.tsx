@@ -68,7 +68,14 @@ const RefineFormContainer = React.forwardRef<
       ...formConfig?.refineCoreProps,
     },
     formConfig,
-    options,
+    options: {
+      ...options,
+      onBeforeSubmitError: (errors: string[]) => {
+        if (errors.length) {
+          onError?.();
+        }
+      },
+    },
   });
   const fieldsConfig = useFieldsConfig(
     config,
@@ -114,6 +121,7 @@ const RefineFormContainer = React.forwardRef<
             validators: 'validators' in config ? config.validators : undefined,
           })),
         onSaveButtonPropsChange,
+        beforeSubmit: formConfig?.beforeSubmit,
         onErrorsChange(errors: string[]) {
           if (errors.length) {
             onError?.();
@@ -134,6 +142,7 @@ const RefineFormContainer = React.forwardRef<
     config,
     id,
     refineFormResult,
+    formConfig?.beforeSubmit,
     transformApplyValues,
     onSaveButtonPropsChange,
     onSuccess,
@@ -185,7 +194,10 @@ const RefineFormContainer = React.forwardRef<
           config={config}
           step={step}
           formConfig={formConfig}
-          errorMsgs={refineFormResult.responseErrorMsgs}
+          errorMsgs={[
+            ...refineFormResult.responseErrorMsgs,
+            ...refineFormResult.beforeSubmitErrors,
+          ]}
           resourceId={id as string}
           transformedInitValues={refineFormResult.formResult.transformedInitValues}
           customOptions={options?.customOptions}

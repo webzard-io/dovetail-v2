@@ -119,6 +119,13 @@ export type CommonFormConfig<Model extends ResourceModel = ResourceModel> = {
    * @returns YAML格式的数据
    */
   transformApplyValues?: (values: Record<string, unknown>) => Model['_rawYaml'];
+  /**
+   * 提交前回调函数
+   * @param values 表单值
+   * @param setErrors 设置错误信息的函数，如果调用此函数并传入错误信息，将阻止提交
+   * @returns 可选的处理后的值，如果返回值存在，将使用返回值替代原始值进行提交
+   */
+  beforeSubmit?: (values: Record<string, unknown>, setErrors: (errors: string[]) => void) => Promise<Model['_rawYaml']>;
   /** 表单容器类型：页面形式或模态框形式
    * PAGE 或者 MODAL
   */
