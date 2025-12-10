@@ -48,6 +48,10 @@ export interface YamlFormProps<Model extends ResourceModel = ResourceModel> {
   rules?: YamlFormRule[];
   transformInitValues?: (values: Record<string, unknown>) => Record<string, unknown>;
   transformApplyValues?: (values: Unstructured) => Unstructured;
+  beforeSubmit?: (
+    values: Unstructured,
+    setErrors: (errors: string[]) => void
+  ) => Promise<Unstructured>;
   onSaveButtonPropsChange?: (saveButtonProps: {
     disabled?: boolean;
     onClick: () => void;
@@ -70,6 +74,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     config,
     transformInitValues,
     transformApplyValues,
+    beforeSubmit,
     onSaveButtonPropsChange,
     onErrorsChange,
     rules,
@@ -84,6 +89,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     saveButtonProps,
     editorProps,
     errorResponseBody,
+    beforeSubmitErrors,
     mutationResult,
     isLoadingSchema,
     queryResult,
@@ -99,6 +105,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     initialValuesForCreate: props.initialValuesForCreate ?? BASE_INIT_VALUE,
     initialValuesForEdit: props.initialValuesForEdit,
     rules,
+    beforeSubmit,
     successNotification(data) {
       const displayName = config.displayName || resource?.meta?.kind;
       return {
@@ -134,6 +141,18 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     () => (errorResponseBody ? getCommonErrors(errorResponseBody, i18n) : []),
     [errorResponseBody, i18n]
   );
+  const finalErrors = useMemo(() => {
+    if (beforeSubmitErrors.length) {
+      return beforeSubmitErrors;
+    }
+    if (mutationResult.error) {
+      if (responseErrors.length) {
+        return responseErrors;
+      }
+      return [mutationResult.error.message];
+    }
+    return [];
+  }, [responseErrors, beforeSubmitErrors, mutationResult.error]);
 
   const onFinish = useCallback(
     async store => {
@@ -157,8 +176,8 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     onSaveButtonPropsChange?.(saveButtonProps);
   }, [saveButtonProps, onSaveButtonPropsChange]);
   useEffect(() => {
-    onErrorsChange?.(responseErrors);
-  }, [responseErrors, onErrorsChange]);
+    onErrorsChange?.(finalErrors);
+  }, [finalErrors, onErrorsChange]);
 
   return (
     <FormWrapper {...formWrapperProps}>
@@ -184,11 +203,9 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
                 />
               </Form.Item>
               <Form.Item>
-                {mutationResult.error && (
+                {finalErrors.length > 0 && (
                   <FormErrorAlert
-                    errorMsgs={
-                      errorResponseBody ? responseErrors : [mutationResult.error.message]
-                    }
+                    errorMsgs={finalErrors}
                     style={{ marginBottom: 16 }}
                     isEdit={action === 'edit'}
                   />

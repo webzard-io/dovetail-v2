@@ -43,6 +43,7 @@ function YamlFormContainer({
       config,
       transformInitValues,
       transformApplyValues,
+      beforeSubmit: formConfig?.beforeSubmit,
       initialValuesForCreate:
         customYamlFormProps?.initialValuesForCreate || getInitialValues(config),
       initialValuesForEdit: undefined,
@@ -66,6 +67,7 @@ function YamlFormContainer({
     action,
     customYamlFormProps,
     config,
+    formConfig?.beforeSubmit,
     transformInitValues,
     transformApplyValues,
     onSuccess,

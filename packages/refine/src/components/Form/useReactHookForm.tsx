@@ -46,6 +46,7 @@ export type UseFormReturnType<
     disabled: boolean;
     onClick: (e: React.BaseSyntheticEvent) => void;
   };
+  beforeSubmitErrors: string[];
 };
 
 export type UseFormProps<
@@ -82,6 +83,11 @@ export type UseFormProps<
   disableServerSideValidation?: boolean;
   transformApplyValues?: (values: TVariables) => TVariables;
   transformInitValues?: (values: Record<string, unknown>) => DefaultValues<TVariables>;
+  beforeSubmit?: (
+    values: TVariables,
+    setErrors: (errors: string[]) => void
+  ) => Promise<TVariables>;
+  onBeforeSubmitError?: (errors: string[]) => void;
 } & UseHookFormProps<TVariables, TContext>;
 
 export const useForm = <
@@ -98,6 +104,8 @@ export const useForm = <
   disableServerSideValidation: disableServerSideValidationProp = false,
   transformApplyValues,
   transformInitValues,
+  beforeSubmit,
+  onBeforeSubmitError,
   ...rest
 }: UseFormProps<
   TQueryFnData,
@@ -137,6 +145,8 @@ export const useForm = <
   const [transformedInitValues, setTransformedInitValues] = useState<
     TVariables | undefined
   >(useHookFormResult.getValues());
+  const [beforeSubmitErrors, setBeforeSubmitErrors] = useState<string[]>([]);
+  const [isBeforeSubmitLoading, setIsBeforeSubmitLoading] = useState(false);
 
   const {
     watch,
@@ -281,14 +291,57 @@ export const useForm = <
   const saveButtonProps = useMemo(() => {
     return {
       disabled: formLoading,
-      onClick: (e: React.BaseSyntheticEvent) => {
+      loading: formLoading || isBeforeSubmitLoading,
+      onClick: async (e: React.BaseSyntheticEvent) => {
+        // 清空之前的错误
+        setBeforeSubmitErrors([]);
+
         handleSubmit(
-          v => onFinish(transformApplyValues ? transformApplyValues(v) : v),
+          async v => {
+            let finalValues = transformApplyValues ? transformApplyValues(v) : v;
+
+            if (beforeSubmit) {
+              try {
+                setIsBeforeSubmitLoading(true);
+                let hasErrors = false;
+
+                const result = await beforeSubmit(finalValues, (errors: string[]) => {
+                  if (errors && errors.length > 0) {
+                    setBeforeSubmitErrors(errors);
+                    onBeforeSubmitError?.(errors);
+                    hasErrors = true;
+                  }
+                });
+
+                // 如果有错误，则不继续提交
+                if (hasErrors) {
+                  return;
+                }
+
+                // 使用 beforeSubmit 返回的值（如果有的话）
+                if (result !== undefined) {
+                  finalValues = result as TVariables;
+                }
+              } finally {
+                setIsBeforeSubmitLoading(false);
+              }
+            }
+
+            return onFinish(finalValues);
+          },
           () => false
         )(e);
       },
     };
-  }, [formLoading, handleSubmit, onFinish, transformApplyValues]);
+  }, [
+    formLoading,
+    isBeforeSubmitLoading,
+    handleSubmit,
+    onFinish,
+    transformApplyValues,
+    beforeSubmit,
+    onBeforeSubmitError,
+  ]);
 
   return {
     ...useHookFormResult,
@@ -296,5 +349,6 @@ export const useForm = <
     handleSubmit,
     refineCore: useFormCoreResult,
     saveButtonProps,
+    beforeSubmitErrors,
   };
 };
