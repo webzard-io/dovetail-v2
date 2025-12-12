@@ -280,7 +280,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         disableBatchFilling
         hideEmptyTable
       />
-      {isHideLabelFormatPopover ? null : (
+      {isHideLabelFormatPopover || _value.length === 0 ? null : (
         <LabelFormatPopover noValueValidation={noValueValidation} />
       )}
     </Space>

@@ -1,8 +1,8 @@
 import { i18n as I18n } from 'i18next';
 
-const Rfc1123NameRegExp = /(^[a-z0-9]$)|(^[a-z0-9][a-z0-9-]*[a-z0-9]$)/;
-const Rfc1035NameRegExp = /(^[a-z]$)|(^[a-z][a-z0-9\-]*[a-z0-9]$)/;
-const DnsSubdomainRegExp = /(^[a-z0-9]$)|(^[a-z0-9][a-z0-9-.]*[a-z0-9]$)/;
+export const Rfc1123NameRegExp = /(^[a-z0-9]$)|(^[a-z0-9][a-z0-9-]*[a-z0-9]$)/;
+export const Rfc1035NameRegExp = /(^[a-z]$)|(^[a-z][a-z0-9\-]*[a-z0-9]$)/;
+export const DnsSubdomainRegExp = /(^[a-z0-9]$)|(^[a-z0-9][a-z0-9-.]*[a-z0-9]$)/;
 
 interface ValidateResourceNameOptions {
   v: string;
@@ -34,9 +34,11 @@ export function validateResourceName({
 
     return {
       isValid: false,
-      errorMessage: emptyText || i18n.t('dovetail.required_field', {
-        label: i18n.t('dovetail.name'),
-      }),
+      errorMessage:
+        emptyText ||
+        i18n.t('dovetail.required_field', {
+          label: i18n.t('dovetail.name'),
+        }),
     };
   }
 
@@ -61,9 +63,11 @@ export function validateResourceName({
   if (allNames.includes(v)) {
     return {
       isValid: false,
-      errorMessage: duplicatedText || i18n.t('dovetail.name_duplicated', {
-        name: v,
-      }),
+      errorMessage:
+        duplicatedText ||
+        i18n.t('dovetail.name_duplicated', {
+          name: v,
+        }),
     };
   }
   return {
@@ -175,7 +179,7 @@ export function validateLabelKey(key: string): {
 export function validateLabelValue(
   value: string,
   i18n: I18n,
-  isOptional?: boolean,
+  isOptional?: boolean
 ): {
   isValid: boolean;
   errorMessage?: string;
@@ -185,7 +189,12 @@ export function validateLabelValue(
   if (isOptional && value === '') {
     return { isValid: true };
   } else if (value === '') {
-    return { isValid: false, errorMessage: i18n.t('dovetail.required_field', { label: i18n.t('dovetail.value') }) };
+    return {
+      isValid: false,
+      errorMessage: i18n.t('dovetail.required_field', {
+        label: i18n.t('dovetail.value'),
+      }),
+    };
   }
 
   if (value.length > 63) {
@@ -216,11 +225,14 @@ export function validateDataKey(key: string): {
   return { isValid: true };
 }
 
-export function validatePort(port: string | number, options: {
-  isOptional?: boolean;
-  emptyText?: string;
-  i18n: I18n;
-}): {
+export function validatePort(
+  port: string | number,
+  options: {
+    isOptional?: boolean;
+    emptyText?: string;
+    i18n: I18n;
+  }
+): {
   isValid: boolean;
   errorMessage?: string;
 } {
@@ -229,9 +241,11 @@ export function validatePort(port: string | number, options: {
   if (port === '' && !isOptional) {
     return {
       isValid: false,
-      errorMessage: emptyText || i18n.t('dovetail.required_field', {
-        label: i18n.t('dovetail.port'),
-      })
+      errorMessage:
+        emptyText ||
+        i18n.t('dovetail.required_field', {
+          label: i18n.t('dovetail.port'),
+        }),
     };
   }
 
@@ -244,15 +258,20 @@ export function validatePort(port: string | number, options: {
   return { isValid: true };
 }
 
-export function validateNodePort(nodePort: number | null, allNodePorts: number[], i18n: I18n): {
+export function validateNodePort(
+  nodePort: number | string | null,
+  allNodePorts: number[],
+  i18n: I18n
+): {
   isValid: boolean;
   errorMessage?: string;
 } {
-  if (!nodePort) {
+  if (nodePort === '') {
     return {
-      isValid: false, errorMessage: i18n.t('dovetail.required_field', {
+      isValid: false,
+      errorMessage: i18n.t('dovetail.required_field', {
         label: i18n.t('dovetail.specify_port'),
-      })
+      }),
     };
   }
 

@@ -579,11 +579,7 @@ export const PortMappingColumnRenderer = <Model extends ServiceModel>(
 ): Column<Model> => {
   return {
     key: 'displayPortMapping',
-    title: (
-      <Tooltip title={i18n.t('dovetail.port_mapping_title_tooltip')}>
-        <span className={DashedTitleStyle}>{i18n.t('dovetail.port_mapping')}</span>
-      </Tooltip>
-    ),
+    title: i18n.t('dovetail.port_mapping'),
     display: true,
     dataIndex: ['displayPortMapping'],
     width: 300,

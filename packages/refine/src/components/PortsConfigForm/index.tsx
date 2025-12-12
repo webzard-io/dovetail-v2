@@ -92,7 +92,7 @@ export const PortsConfigForm = React.forwardRef<
       },
       {
         key: 'name',
-        title: i18n.t('dovetail.port_name'),
+        title: `${i18n.t('dovetail.name')} ${i18n.t('dovetail.optional_with_bracket')}`,
         type: 'input',
         validator: ({ value: portName, rowIndex }) => {
           const { errorMessage } = validateRfc1123Name({
@@ -121,7 +121,7 @@ export const PortsConfigForm = React.forwardRef<
           );
         },
         validator: ({ value }) => {
-          const { isValid, errorMessage } = validatePort(value || '', {
+          const { isValid, errorMessage } = validatePort(value ?? '', {
             isOptional: false,
             i18n,
             emptyText: i18n.t('dovetail.required_field', {
@@ -146,7 +146,7 @@ export const PortsConfigForm = React.forwardRef<
           );
         },
         validator: ({ value }) => {
-          const { isValid, errorMessage } = validatePort(value || '', {
+          const { isValid, errorMessage } = validatePort(value ?? '', {
             isOptional: false,
             i18n,
             emptyText: i18n.t('dovetail.required_field', {
@@ -188,7 +188,7 @@ export const PortsConfigForm = React.forwardRef<
           const { isValid, errorMessage } =
             value.mode === 'auto'
               ? { isValid: true, errorMessage: undefined }
-              : validateNodePort(value.value, allNodePorts, i18n);
+              : validateNodePort(value.value ?? '', allNodePorts, i18n);
 
           if (!isValid) return errorMessage;
         },
