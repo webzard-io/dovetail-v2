@@ -47,7 +47,7 @@ export const MatchLabelSelector = React.forwardRef<
         />
       }
       onChange={onChange}
-      isValueOptional={false}
+      isValueOptional={true}
       minSize={1}
       disabledChagneDefaultValues={disabledChagneDefaultValues}
     />
