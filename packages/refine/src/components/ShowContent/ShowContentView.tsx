@@ -324,7 +324,7 @@ export const ShowContentView = <Model extends ResourceModel>(
       | React.FC<ShowGroupComponentProps>
       | React.FC<BasicShowGroupComponentProps> = React.Fragment;
     let FieldContainer = React.Fragment;
-    const groupContainerProps = { title: group.title || '', size };
+    let groupContainerProps = { title: group.title || '', size };
     let fieldContainerProps = {};
 
     if (isBasicGroup) {
@@ -333,6 +333,10 @@ export const ShowContentView = <Model extends ResourceModel>(
     } else if (group.title) {
       // 有标题时，需要用有标题的容器
       GroupContainer = ShowGroupWithTitleComponent;
+    } else {
+      // 默认的容器是GroupContainer，不应该有任何参数，否则控制台会报错
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      groupContainerProps = {} as any;
     }
 
     // 基本组和有标题的时候，都需要Row组件包裹，以便showConfig里的col的属性生效
