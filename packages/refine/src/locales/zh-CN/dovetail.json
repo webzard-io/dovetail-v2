@@ -269,5 +269,7 @@
   "target_service_port": "目标服务端口",
   "select_workload": "选择工作负载",
   "no_search_result": "无搜索结果",
-  "clear_search_condition": "清空搜索条件"
+  "clear_search_condition": "清空搜索条件",
+  "no_labels": "无标签",
+  "no_annotations": "无注解"
 }

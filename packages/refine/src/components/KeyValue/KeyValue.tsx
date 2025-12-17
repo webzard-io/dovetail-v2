@@ -3,6 +3,7 @@ import { css, cx } from '@linaria/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import ValueDisplay from 'src/components/ValueDisplay';
 
 const ContentBlockStyle = css`
   display: flex;
@@ -41,14 +42,18 @@ export const KeyValue: React.FC<KeyValueProps> = (props: KeyValueProps) => {
   const { data = {}, hideSecret, empty, errorContent = ErrorContentType.List } = props;
   const { t } = useTranslation();
 
-  const result = Object.keys(data).map(key => (
-    <div key={key} className={ContentBlockStyle}>
-      <span className={cx(KeyStyle, Typo.Label.l4_regular)}>{key}</span>
-      <span className={cx(Typo.Label.l4_regular, ValueStyle)}>
-        {hideSecret ? toAsterisk(data[key]) : data[key]}
-      </span>
-    </div>
-  ));
+  const result = Object.keys(data).map(key => {
+    const value = hideSecret ? toAsterisk(data[key]) : data[key];
+
+    return (
+      <div key={key} className={ContentBlockStyle}>
+        <span className={cx(KeyStyle, Typo.Label.l4_regular)}>{key}</span>
+        <span className={cx(Typo.Label.l4_regular, ValueStyle)}>
+          {value || <ValueDisplay value="" />}
+        </span>
+      </div>
+    );
+  });
 
   if (!result.length) {
     return <ErrorContent errorText={empty || t('dovetail.empty')} type={errorContent} />;

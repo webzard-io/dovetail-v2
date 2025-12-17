@@ -60,6 +60,7 @@ export type YamlEditorProps<T extends string | Record<string, unknown> = string>
   readOnly?: boolean;
   debounceTime?: number;
   isScrollOnFocus?: boolean;
+  isHideActions?: boolean;
   onChange?: (value: T) => void;
   onValidate?: (valid: boolean, schemaValid: boolean) => void;
   onEditorCreate?: (editor: editor.IStandaloneCodeEditor) => void;
@@ -91,6 +92,7 @@ export const YamlEditorComponent = forwardRef(
       className,
       debounceTime,
       isScrollOnFocus = true,
+      isHideActions = false,
     } = props;
     const { t } = useTranslation();
     const [isCollapsed, setIsCollapsed] = useState(
@@ -196,95 +198,99 @@ export const YamlEditorComponent = forwardRef(
                 {title || t('dovetail.configure_file')}
               </div>
             </Space>
-            <Space size={14}>
-              {isDiff ? undefined : (
-                <>
+            {
+              isHideActions ? null : (
+                <Space size={14}>
+                  {isDiff ? undefined : (
+                    <>
+                      <Tooltip
+                        title={isCollapsed ? '' : copyTooltip}
+                        onVisibleChange={visible => {
+                          if (!visible) {
+                            setTimeout(() => {
+                              setCopyTooltip(t('dovetail.copy'));
+                            }, 80);
+                          }
+                        }}
+                      >
+                        <Icon
+                          data-disabled={isCollapsed}
+                          src={ClipboardCopy16GradientGrayIcon}
+                          hoverSrc={isCollapsed ? undefined : ClipboardCopy16GradientBlueIcon}
+                          className={IconStyle}
+                          iconWidth={16}
+                          iconHeight={16}
+                          onClick={() => {
+                            if (!isCollapsed) {
+                              copyToClipboard(getEditorValue());
+                              setCopyTooltip(t('dovetail.copied'));
+                            }
+                          }}
+                        />
+                      </Tooltip>
+                      <Separator />
+                      <Tooltip
+                        title={isCollapsed ? '' : resetTooltip}
+                        onVisibleChange={visible => {
+                          if (!visible) {
+                            setTimeout(() => {
+                              setResetTooltip(t('dovetail.reset_arguments'));
+                            }, 80);
+                          }
+                        }}
+                      >
+                        <Icon
+                          data-disabled={isCollapsed}
+                          src={Retry16GradientGrayIcon}
+                          hoverSrc={isCollapsed ? undefined : Retry16GradientBlueIcon}
+                          className={IconStyle}
+                          iconWidth={16}
+                          iconHeight={16}
+                          onClick={() => {
+                            if (!isCollapsed) {
+                              editorInstance.current?.setValue(defaultValueString);
+                              setResetTooltip(t('dovetail.already_reset'));
+                            }
+                          }}
+                        />
+                      </Tooltip>
+                      <Separator />
+                    </>
+                  )}
                   <Tooltip
-                    title={isCollapsed ? '' : copyTooltip}
-                    onVisibleChange={visible => {
-                      if (!visible) {
-                        setTimeout(() => {
-                          setCopyTooltip(t('dovetail.copy'));
-                        }, 80);
-                      }
-                    }}
+                    title={
+                      isCollapsed
+                        ? ''
+                        : isDiff
+                        ? t('dovetail.back_to_edit')
+                        : t('dovetail.view_changes')
+                    }
                   >
-                    <Icon
-                      data-disabled={isCollapsed}
-                      src={ClipboardCopy16GradientGrayIcon}
-                      hoverSrc={isCollapsed ? undefined : ClipboardCopy16GradientBlueIcon}
-                      className={IconStyle}
-                      iconWidth={16}
-                      iconHeight={16}
-                      onClick={() => {
-                        if (!isCollapsed) {
-                          copyToClipboard(getEditorValue());
-                          setCopyTooltip(t('dovetail.copied'));
-                        }
-                      }}
-                    />
+                    {isDiff ? (
+                      <Icon
+                        data-disabled={isCollapsed}
+                        src={EditPen16GradientGrayIcon}
+                        hoverSrc={isCollapsed ? undefined : EditPen16GradientBlueIcon}
+                        className={IconStyle}
+                        iconWidth={16}
+                        iconHeight={16}
+                        onClick={() => (isCollapsed ? undefined : setIsDiff(false))}
+                      />
+                    ) : (
+                      <Icon
+                        data-disabled={isCollapsed}
+                        src={Showdiff16GradientGrayIcon}
+                        hoverSrc={isCollapsed ? undefined : Showdiff16GradientBlueIcon}
+                        className={IconStyle}
+                        iconWidth={16}
+                        iconHeight={16}
+                        onClick={() => (isCollapsed ? undefined : setIsDiff(true))}
+                      />
+                    )}
                   </Tooltip>
-                  <Separator />
-                  <Tooltip
-                    title={isCollapsed ? '' : resetTooltip}
-                    onVisibleChange={visible => {
-                      if (!visible) {
-                        setTimeout(() => {
-                          setResetTooltip(t('dovetail.reset_arguments'));
-                        }, 80);
-                      }
-                    }}
-                  >
-                    <Icon
-                      data-disabled={isCollapsed}
-                      src={Retry16GradientGrayIcon}
-                      hoverSrc={isCollapsed ? undefined : Retry16GradientBlueIcon}
-                      className={IconStyle}
-                      iconWidth={16}
-                      iconHeight={16}
-                      onClick={() => {
-                        if (!isCollapsed) {
-                          editorInstance.current?.setValue(defaultValueString);
-                          setResetTooltip(t('dovetail.already_reset'));
-                        }
-                      }}
-                    />
-                  </Tooltip>
-                  <Separator />
-                </>
-              )}
-              <Tooltip
-                title={
-                  isCollapsed
-                    ? ''
-                    : isDiff
-                    ? t('dovetail.back_to_edit')
-                    : t('dovetail.view_changes')
-                }
-              >
-                {isDiff ? (
-                  <Icon
-                    data-disabled={isCollapsed}
-                    src={EditPen16GradientGrayIcon}
-                    hoverSrc={isCollapsed ? undefined : EditPen16GradientBlueIcon}
-                    className={IconStyle}
-                    iconWidth={16}
-                    iconHeight={16}
-                    onClick={() => (isCollapsed ? undefined : setIsDiff(false))}
-                  />
-                ) : (
-                  <Icon
-                    data-disabled={isCollapsed}
-                    src={Showdiff16GradientGrayIcon}
-                    hoverSrc={isCollapsed ? undefined : Showdiff16GradientBlueIcon}
-                    className={IconStyle}
-                    iconWidth={16}
-                    iconHeight={16}
-                    onClick={() => (isCollapsed ? undefined : setIsDiff(true))}
-                  />
-                )}
-              </Tooltip>
-            </Space>
+                </Space> 
+              )
+            }
           </Space>
           {errorMsgs.length ? (
             <Space className={ErrorWrapperStyle} size={8} align="start">

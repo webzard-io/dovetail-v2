@@ -33,6 +33,10 @@ export const ErrorWrapper = styled.div`
   &.card .error-content {
     height: 96px;
   }
+
+  &.item .title {
+    color: rgba(0, 21, 64, 0.3);
+  }
 `;
 
 export const ErrorContent = styled.div`
@@ -54,6 +58,7 @@ export enum ErrorContentType {
   List = 'list',
   Card = 'card',
   Widget = 'widget',
+  Item = 'item',
 }
 
 export type WidgetErrorContentProps = {
@@ -69,9 +74,14 @@ const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = pro
   const kit = useContext(kitContext);
   const { t } = useTranslation();
   const fontMap = {
+    // 小卡片
     [ErrorContentType.Widget]: Typo.Label.l1_regular_title,
+    // 详情里整个大卡片
     [ErrorContentType.Card]: Typo.Label.l1_bold,
+    // 列表
     [ErrorContentType.List]: Typo.Display.d2_bold_title,
+    // 详情里的某一项
+    [ErrorContentType.Item]: Typo.Heading.h2_bold_title,
   };
 
   return (

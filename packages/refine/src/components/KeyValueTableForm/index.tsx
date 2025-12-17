@@ -170,6 +170,8 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
     rowIndex?: number;
     disabled?: boolean;
   }) => {
+    const record = _value[rowIndex || 0];
+
     return (
       <AutoComplete
         options={keyOptions || []}
@@ -182,7 +184,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         }
         disabled={
           disabled ||
-          (disabledChagneDefaultValues && (rowIndex || 0) < (defaultValue.length || 0))
+          (disabledChagneDefaultValues && defaultValue.some(row => isEqual(row, record)))
         }
         allowClear
       />
@@ -199,6 +201,8 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
     rowIndex?: number;
     disabled?: boolean;
   }) => {
+    const record = _value[rowIndex || 0];
+
     return (
       <TextArea
         autoSize
@@ -209,7 +213,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         value={value}
         disabled={
           disabled ||
-          (disabledChagneDefaultValues && (rowIndex || 0) < (defaultValue.length || 0))
+          (disabledChagneDefaultValues && defaultValue.some(row => isEqual(row, record)))
         }
         onChange={e => {
           onChange(e.target.value);
@@ -271,8 +275,13 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         defaultData={_value}
         row={{
           deletable: _value.length > (minSize || 0),
-          disableActions(rowIndex) {
-            if (disabledChagneDefaultValues && rowIndex < (defaultValue.length || 0)) {
+          disableActions(rowIndex, datas) {
+            const record = datas[rowIndex];
+
+            if (
+              disabledChagneDefaultValues &&
+              defaultValue.some(row => isEqual(row, record))
+            ) {
               return ['delete'];
             }
           },

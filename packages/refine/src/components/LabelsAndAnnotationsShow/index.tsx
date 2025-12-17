@@ -42,14 +42,18 @@ export const LabelsAndAnnotationsShow = ({
           <Tags value={labels} />
         ) : (
           <ErrorContent
-            errorText={sksI18n.t('dovetail.empty')}
-            type={ErrorContentType.Card}
+            errorText={sksI18n.t('dovetail.no_labels')}
+            type={ErrorContentType.Item}
           />
         )}
       </div>
       <div className={ItemWrapperStyle}>
         <div className={SmallSectionTitleStyle}>{sksI18n.t('dovetail.annotation')}</div>
-        <KeyValue data={annotations} errorContent={ErrorContentType.Card} />
+        <KeyValue
+          data={annotations}
+          empty={sksI18n.t('dovetail.no_annotations')}
+          errorContent={ErrorContentType.Item}
+        />
       </div>
     </div>
   );
