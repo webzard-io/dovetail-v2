@@ -1,3 +1,5 @@
+import { StatusCapsule } from '@cloudtower/eagle';
+import { cx } from '@linaria/core';
 import { Condition } from 'kubernetes-types/meta/v1';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +8,7 @@ import BaseTable from 'src/components/InternalBaseTable';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import useTableData from 'src/hooks/useTableData';
+import { StateTagStyle } from 'src/styles/tag';
 import { WithId } from 'src/types';
 import { addId } from '../../utils/addId';
 import { Time } from '../Time';
@@ -36,7 +39,14 @@ export const ConditionsTable: React.FC<Props> = ({ conditions = [] }) => {
       width: 120,
       sortable: true,
       render: (value: string) => {
-        return value;
+        return (
+          <StatusCapsule
+            color={value === 'True' ? 'green' : 'red'}
+            className={cx(StateTagStyle, 'no-background')}
+          >
+            {value === 'True' ? t('dovetail.true') : t('dovetail.false')}
+          </StatusCapsule>
+        );
       },
     },
     {

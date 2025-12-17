@@ -40,7 +40,9 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const { openDeleteConfirmModal } = useDeleteModal({ resourceName: resourceName || '' });
   const download = useDownloadYAML();
   const openForm = useOpenForm();
-  const isInShowPage = useResourceResult.action === 'show';
+  const isInShowPage =
+    useResourceResult.action === 'show' &&
+    useResourceResult.resource?.name === config.name;
   const { data: canEditData } = useCan({
     resource: resourceName,
     action: AccessControlAuth.Edit,
@@ -102,22 +104,24 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
         }
         trigger={['click']}
       >
-        {customButton || <Button
-          type="quiet"
-          size={size === 'large' ? 'middle' : 'small'}
-          prefixIcon={
-            size === 'large' ? (
-              <Icon
-                src={MoreEllipsis324BoldSecondaryIcon}
-                hoverSrc={MoreEllipsis324BoldBlueIcon}
-                iconWidth={24}
-                iconHeight={24}
-              />
-            ) : (
-              <Icon src={MoreEllipsis316BoldBlueIcon} />
-            )
-          }
-        ></Button>}
+        {customButton || (
+          <Button
+            type="quiet"
+            size={size === 'large' ? 'middle' : 'small'}
+            prefixIcon={
+              size === 'large' ? (
+                <Icon
+                  src={MoreEllipsis324BoldSecondaryIcon}
+                  hoverSrc={MoreEllipsis324BoldBlueIcon}
+                  iconWidth={24}
+                  iconHeight={24}
+                />
+              ) : (
+                <Icon src={MoreEllipsis316BoldBlueIcon} />
+              )
+            }
+          ></Button>
+        )}
       </Dropdown>
     </>
   );
