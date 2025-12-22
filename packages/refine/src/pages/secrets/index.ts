@@ -16,7 +16,7 @@ function isBase64(value: string) {
   }
 }
 
-export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
+export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel<Unstructured & Secret>> => ({
   name: 'secrets',
   kind: 'Secret',
   basePath: '/api/v1',
@@ -42,7 +42,7 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
       const data = (value as Secret).data || {};
 
       return {
-        ...(value as Unstructured),
+        ...(value as unknown as Unstructured & Secret),
         data: Object.keys(data).reduce((result: Record<string, string>, key) => {
           const value = data[key];
 

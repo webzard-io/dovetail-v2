@@ -1,10 +1,12 @@
 import { i18n } from 'i18next';
+import { Unstructured } from 'k8s-api-provider';
+import { ConfigMap } from 'kubernetes-types/core/v1';
 import { BasicGroup } from '../../components/ShowContent';
 import { AgeColumnRenderer, DataKeysColumnRenderer } from '../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../models';
 import { RESOURCE_GROUP, ResourceConfig } from '../../types';
 
-export const ConfigMapConfig = (i18n: i18n): ResourceConfig<ResourceModel> => ({
+export const ConfigMapConfig = (i18n: i18n): ResourceConfig<ResourceModel<Unstructured & ConfigMap>> => ({
   name: 'configmaps',
   kind: 'ConfigMap',
   basePath: '/api/v1',
