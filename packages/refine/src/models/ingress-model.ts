@@ -22,6 +22,10 @@ export class IngressModel extends ResourceModel<IngressTypes> {
     super(_rawYaml, _globalStore);
   }
 
+  get spec() {
+    return this._rawYaml.spec;
+  }
+
   private getFullPath(rule: IngressRule, path = '', port?: number) {
     if (!rule.host) {
       return path || '';
