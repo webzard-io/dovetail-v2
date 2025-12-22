@@ -1,5 +1,7 @@
 import { css } from '@linaria/core';
 import { i18n as I18nType } from 'i18next';
+import { Unstructured } from 'k8s-api-provider';
+import { ConfigMap, Secret } from 'kubernetes-types/core/v1';
 import { Condition } from 'kubernetes-types/meta/v1';
 import type {
   NetworkPolicyIngressRule,
@@ -175,7 +177,9 @@ export const IngressRulesTab = <Model extends IngressModel>({
   ],
 });
 
-export const DataTab = <Model extends ResourceModel>({
+export const DataTab = <
+  Model extends ResourceModel<Unstructured & (ConfigMap | Secret)>
+>({
   i18n,
 }: {
   i18n: I18nType;

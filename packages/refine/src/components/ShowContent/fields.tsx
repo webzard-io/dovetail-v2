@@ -4,6 +4,7 @@ import { useTable, CrudFilters } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
 import { Unstructured } from 'k8s-api-provider';
 import { Taint } from 'kubernetes-types/core/v1';
+import { ConfigMap, Secret } from 'kubernetes-types/core/v1';
 import { Condition } from 'kubernetes-types/meta/v1';
 import { NetworkPolicy } from 'kubernetes-types/networking/v1';
 import React from 'react';
@@ -194,13 +195,19 @@ export const JobsField = <Model extends JobModel | CronJobModel>(): ShowField<Mo
   };
 };
 
-export const DataField = <Model extends ResourceModel>(
+export const DataField = <
+  Model extends ResourceModel<Unstructured & (ConfigMap | Secret)>
+>(
   i18n: I18nType
 ): ShowField<Model> => {
   return {
     key: 'data',
     path: ['data'],
-    renderContent: val => {
+    renderContent: (val, record) => {
+      const finalData = {
+        ...(val as Record<string, string>),
+        ...('binaryData' in record._rawYaml ? record._rawYaml.binaryData : {}),
+      };
       return (
         <div
           className={css`
@@ -209,7 +216,7 @@ export const DataField = <Model extends ResourceModel>(
           `}
         >
           <KeyValue
-            data={val as Record<string, string>}
+            data={finalData}
             empty={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.data') })}
           />
         </div>
@@ -654,7 +661,7 @@ export const PVCRefField = <Model extends PersistentVolumeModel>(
           resourceName="persistentvolumeclaims"
           namespace={pv.pvcNamespace || 'default'}
           name={value as string}
-          query={{uid: pv.pvcUid}}
+          query={{ uid: pv.pvcUid }}
         />
       );
     },

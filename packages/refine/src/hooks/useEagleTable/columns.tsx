@@ -9,6 +9,8 @@ import {
 import { css } from '@linaria/core';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
 import { i18n as I18nType } from 'i18next';
+import { Unstructured } from 'k8s-api-provider';
+import { ConfigMap, Secret } from 'kubernetes-types/core/v1';
 import type { OwnerReference } from 'kubernetes-types/meta/v1';
 import type { IngressBackend, IngressTLS } from 'kubernetes-types/networking/v1';
 import { get } from 'lodash';
@@ -551,7 +553,9 @@ export const PodContainersNumColumnRenderer = <Model extends PodModel>(
   };
 };
 
-export const DataKeysColumnRenderer = <Model extends ResourceModel>(
+export const DataKeysColumnRenderer = <
+  Model extends ResourceModel<Unstructured & (ConfigMap | Secret)>
+>(
   i18n: I18nType
 ): Column<Model> => {
   return {
@@ -559,8 +563,11 @@ export const DataKeysColumnRenderer = <Model extends ResourceModel>(
     display: true,
     dataIndex: ['data'],
     title: i18n.t('dovetail.data'),
-    render(data) {
-      const keys = Object.keys(data || {});
+    render(data, record) {
+      const keys = Object.keys({
+        ...data,
+        ...('binaryData' in record._rawYaml ? record._rawYaml.binaryData : {}),
+      });
 
       return keys.length ? (
         keys.map(key => <OverflowTooltip content={key} key={key} />)
