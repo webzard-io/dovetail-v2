@@ -36,7 +36,7 @@ export class ResourceModel<T extends Unstructured = Unstructured> {
     return this._rawYaml.metadata?.name;
   }
   get namespace() {
-    return this._rawYaml.metadata?.namespace;
+    return this._rawYaml.metadata?.namespace || 'default';
   }
   get labels() {
     return this._rawYaml.metadata?.labels;
