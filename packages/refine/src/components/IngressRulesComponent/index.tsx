@@ -14,12 +14,28 @@ export const IngressRulesComponent: React.FC<{
     meta: {
       kind: 'Service',
       apiVersion: 'v1',
-    }
+    },
   });
-  const flattenedRules = serviceData?.data ? ingress.getFlattenedRules(serviceData?.data) : [];
+
+  const flattenedRules = serviceData?.data
+    ? ingress.getFlattenedRules(serviceData?.data)
+    : [];
 
   const result = flattenedRules.map(r => {
-    const divider = ' > ';
+    const arrow = ' → ';
+    const divider = ' | ';
+
+    const secretName = ingress.spec.tls?.find(({ hosts }) =>
+      hosts?.includes(r.host || '')
+    )?.secretName;
+
+    let tooltip = r.fullPath;
+    if (r.serviceName) {
+      tooltip += `${arrow}${r.serviceName}:${r.servicePort}`;
+    }
+    if (secretName) {
+      tooltip += `${divider}${secretName}`;
+    }
 
     return (
       <OverflowTooltip
@@ -27,7 +43,7 @@ export const IngressRulesComponent: React.FC<{
         content={
           <>
             <LinkFallback fullPath={r.fullPath} />
-            <span>{divider}</span>
+            <span>{arrow}</span>
             {r.serviceName ? (
               <>
                 <ResourceLink
@@ -40,9 +56,19 @@ export const IngressRulesComponent: React.FC<{
             ) : (
               r.resourceName
             )}
+            {secretName ? (
+              <>
+                <span>{divider}</span>
+                <ResourceLink
+                  resourceName="secrets"
+                  namespace={ingress.metadata.namespace || 'default'}
+                  name={secretName}
+                />
+              </>
+            ) : undefined}
           </>
         }
-        tooltip={`${r.fullPath}${divider}:${r.servicePort}`}
+        tooltip={tooltip}
       />
     );
   });
