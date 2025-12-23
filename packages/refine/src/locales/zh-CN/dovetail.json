@@ -271,5 +271,6 @@
   "no_search_result": "无搜索结果",
   "clear_search_condition": "清空搜索条件",
   "no_labels": "无标签",
-  "no_annotations": "无注解"
+  "no_annotations": "无注解",
+  "pause_scheduling": "暂停调度"
 }

@@ -5,6 +5,7 @@ import {
   OverflowTooltip,
   Divider,
   Units,
+  Tag,
 } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { useGo, useNavigation, useParsed } from '@refinedev/core';
@@ -45,6 +46,7 @@ import {
   StorageClassModel,
   PersistentVolumeModel,
   PersistentVolumeClaimModel,
+  DeploymentModel,
 } from '../../models';
 
 const ServiceClusterTooltipStyle = css`
@@ -155,6 +157,7 @@ export const StateDisplayColumnRenderer = <
     | ServiceModel
     | DaemonSetModel
     | JobModel
+    | DeploymentModel
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -167,7 +170,19 @@ export const StateDisplayColumnRenderer = <
     sortable: true,
     width: 120,
     sorter: CommonSorter(dataIndex),
-    render: v => <StateTag state={v} hideBackground />,
+    render: (v, record) => {
+      if (record.kind === 'Deployment' && (record as DeploymentModel).isPaused) {
+        return (
+          <span>
+            <StateTag state={v} hideBackground />
+            <Tag color="yellow" style={{ marginLeft: '4px' }}>
+              {i18n.t('dovetail.pause_scheduling')}
+            </Tag>
+          </span>
+        );
+      }
+      return <StateTag state={v} hideBackground />;
+    },
   };
 };
 

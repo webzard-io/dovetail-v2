@@ -45,6 +45,10 @@ export class DeploymentModel extends WorkloadModel {
     return this.metadata?.annotations?.['deployment.kubernetes.io/revision'];
   }
 
+  get isPaused() {
+    return !!this.spec?.paused;
+  }
+
   getCurrentReplicaSet(replicaSets: ReplicaSetModel[]) {
     const myReplicaSets = this.getReplicaSets(replicaSets);
 
