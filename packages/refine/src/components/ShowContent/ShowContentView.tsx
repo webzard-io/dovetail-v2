@@ -10,15 +10,13 @@ import {
   Tag,
 } from '@cloudtower/eagle';
 import {
-  ArrowChevronDownSmall16BlueIcon,
   ArrowChevronLeft16BoldTertiaryIcon,
   ArrowChevronLeftSmall16BoldBlueIcon,
-  ArrowChevronUpSmall16BlueIcon,
 } from '@cloudtower/icons-react';
 import { css, cx } from '@linaria/core';
 import { useShow, useNavigation, useGo, CanAccess } from '@refinedev/core';
 import { get } from 'lodash-es';
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import K8sDropdown from 'src/components/Dropdowns/K8sDropdown';
 import { Tabs as BaseTabs } from 'src/components/Tabs';
@@ -167,7 +165,6 @@ export type ShowContentViewProps<Model extends ResourceModel> = React.PropsWithC
   formatter?: (r: Model) => Model;
   Dropdown?: React.FC<{ record: Model }>;
   hideBackButton?: boolean;
-  canCollapseTabs?: boolean;
   hideTopBar?: boolean;
   className?: string;
   size?: 'small' | 'medium';
@@ -226,7 +223,6 @@ export const ShowContentView = <Model extends ResourceModel>(
     children,
     Dropdown = K8sDropdown,
     hideBackButton = false,
-    canCollapseTabs = false,
     className,
     hideTopBar = false,
     size = 'medium',
@@ -479,35 +475,8 @@ export const ShowContentView = <Model extends ResourceModel>(
       )}
       {basicInfo}
 
-      {canCollapseTabs ? <CollapseTabs>{tabs}</CollapseTabs> : tabs}
+      {tabs}
       {children}
     </div>
-  );
-};
-
-const CollapseTabs: React.FC = props => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const { t } = useTranslation();
-  return (
-    <>
-      {isCollapsed ? null : props.children}
-      <div style={{ display: 'flex' }}>
-        <Button
-          style={{ margin: '8px auto', cursor: 'pointer' }}
-          size="small"
-          type="link"
-          onClick={() => setIsCollapsed(v => !v)}
-          suffixIcon={
-            isCollapsed ? (
-              <Icon src={ArrowChevronDownSmall16BlueIcon} />
-            ) : (
-              <Icon src={ArrowChevronUpSmall16BlueIcon} />
-            )
-          }
-        >
-          {isCollapsed ? t('dovetail.view_all_info') : t('dovetail.collapse')}
-        </Button>
-      </div>
-    </>
   );
 };

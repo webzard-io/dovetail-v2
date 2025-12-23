@@ -9,7 +9,7 @@ type Props<Model extends ResourceModel> = React.PropsWithChildren<
 >;
 
 export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) => {
-  const { showConfig, formatter, Dropdown = K8sDropdown, children, canCollapseTabs } = props;
+  const { showConfig, formatter, Dropdown = K8sDropdown, children } = props;
   const parsed = useParsed();
   const { resource } = useResource();
   const id = parsed?.params?.id;
@@ -21,7 +21,6 @@ export const ShowContent = <Model extends ResourceModel>(props: Props<Model>) =>
       showConfig={showConfig}
       formatter={formatter}
       Dropdown={Dropdown}
-      canCollapseTabs={canCollapseTabs}
     >
       {children}
     </ShowContentView>
