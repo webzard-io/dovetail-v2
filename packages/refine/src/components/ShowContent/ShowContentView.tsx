@@ -8,6 +8,7 @@ import {
   Row,
   Button,
   Tag,
+  StatusCapsule,
 } from '@cloudtower/eagle';
 import {
   ArrowChevronLeft16BoldTertiaryIcon,
@@ -25,10 +26,11 @@ import { AccessControlAuth } from 'src/constants/auth';
 import ComponentContext from 'src/contexts/component';
 import ConfigsContext from 'src/contexts/configs';
 import { useOpenForm } from 'src/hooks/useOpenForm';
+import { StateTagStyle } from 'src/styles/tag';
 import { FormType } from 'src/types';
 import { transformResourceKindInSentence } from 'src/utils/string';
 import { ResourceState } from '../../constants';
-import { ResourceModel } from '../../models';
+import { DeploymentModel, ResourceModel } from '../../models';
 import { StateTag } from '../StateTag';
 import { ShowConfig, ShowField, AreaType, ShowGroup } from './fields';
 
@@ -368,6 +370,9 @@ export const ShowContentView = <Model extends ResourceModel>(
   }
 
   const stateDisplay = get(record, 'stateDisplay') as ResourceState;
+  const isPausedDeployment =
+    record.kind === 'Deployment' && (record as unknown as DeploymentModel).isPaused;
+
   const topBar = (
     <div
       className={ToolBarWrapper}
@@ -406,6 +411,19 @@ export const ShowContentView = <Model extends ResourceModel>(
               customResourceStateMap={showConfig.resourceStateMap}
             />
           ) : undefined}
+          {isPausedDeployment ? (
+            <StatusCapsule
+              className={cx(
+                StateTagStyle,
+                css`
+                  margin-left: 8px;
+                `
+              )}
+              color="yellow"
+            >
+              {i18n.t('dovetail.pause_scheduling')}
+            </StatusCapsule>
+          ) : null}
         </div>
         <Space>
           {showConfig.renderExtraButton?.(record)}
