@@ -1,6 +1,6 @@
 import { Button } from '@cloudtower/eagle';
 import { cx } from '@linaria/core';
-import {  useParsed } from '@refinedev/core';
+import { useParsed } from '@refinedev/core';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { WidgetErrorContentProps } from 'src/components/ErrorContent';
@@ -16,10 +16,11 @@ interface TableProps<Model extends ResourceModel> {
   tableProps: InternalTableProps<Model>;
   displayName: string;
   errorContentProps?: WidgetErrorContentProps;
+  isSearching?: boolean;
 }
 
 export function Table<Model extends ResourceModel>(props: TableProps<Model>) {
-  const { tableProps, displayName, errorContentProps } = props;
+  const { tableProps, displayName, errorContentProps, isSearching } = props;
   const { Table: TableComponent } = useContext(ComponentContext);
   const Table = TableComponent || InternalBaseTable;
   const { params } = useParsed();
@@ -28,7 +29,7 @@ export function Table<Model extends ResourceModel>(props: TableProps<Model>) {
   if (!tableProps.data?.length && !tableProps.loading) {
     const nameKeyword = (params?.[NAME_KEYWORD_PARAM] as string) || '';
     // 若url中存在name_keyword参数，则显示清空搜索条件的按钮
-    if (nameKeyword) {
+    if (nameKeyword || isSearching) {
       const onClear = () => {
         tableProps.onClearSearchKeyword?.();
       };

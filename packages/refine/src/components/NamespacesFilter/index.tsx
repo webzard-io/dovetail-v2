@@ -1,4 +1,14 @@
-import { Select, SearchInput, OverflowTooltip, AntdOption, AntdSelectOptGroup, Loading, Token, Tooltip, Divider } from '@cloudtower/eagle';
+import {
+  Select,
+  SearchInput,
+  OverflowTooltip,
+  AntdOption,
+  AntdSelectOptGroup,
+  Loading,
+  Token,
+  Tooltip,
+  Divider,
+} from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import { useList, useResource } from '@refinedev/core';
 import { last, debounce } from 'lodash-es';
@@ -8,33 +18,33 @@ import { useLocalStorage } from 'usehooks-ts';
 import { ConfigsContext } from '../../contexts';
 
 const SelectStyle = css`
-&.ant-select {
-  align-self: flex-start;
-  min-width: 276px;
-  max-width: 100%;
+  &.ant-select {
+    align-self: flex-start;
+    min-width: 276px;
+    max-width: 100%;
 
-  .ant-select-selector {
-    display: block;
-    overflow: hidden;
-    padding-right: 32px;
-    white-space: nowrap;
+    .ant-select-selector {
+      display: block;
+      overflow: hidden;
+      padding-right: 32px;
+      white-space: nowrap;
 
-    & > span:nth-child(-n + 8):not(.ant-select-selection-search) {
-      display: inline-block;
-      max-width: var(--tag-max-width);
-      margin-right: 4px;
+      & > span:nth-child(-n + 8):not(.ant-select-selection-search) {
+        display: inline-block;
+        max-width: var(--tag-max-width);
+        margin-right: 4px;
+      }
+    }
+
+    .ant-select-selection-search {
+      display: none;
+    }
+
+    .zoom-leave {
+      opacity: 0;
+      position: absolute;
     }
   }
-
-  .ant-select-selection-search {
-    display: none;
-  }
-
-  .zoom-leave {
-    opacity: 0;
-    position: absolute;
-  }
-}
 `;
 const DropdownStyle = css`
   border-radius: 6px;
@@ -42,7 +52,7 @@ const DropdownStyle = css`
 const SearchInputStyle = css`
   &.ant-input-affix-wrapper.ant-input-affix-wrapper {
     border: unset;
-    border-bottom: 1px solid rgba(211, 218, 235, .6);
+    border-bottom: 1px solid rgba(211, 218, 235, 0.6);
     border-radius: unset;
     box-shadow: unset;
     outline: unset;
@@ -72,8 +82,7 @@ const CountTokenStyle = css`
   flex-shrink: 0;
   margin-right: 0 !important;
 `;
-const SelectOptionGroupStyle = css`
-`;
+const SelectOptionGroupStyle = css``;
 const LabelWrapperStyle = css`
   margin-right: 8px;
 `;
@@ -105,8 +114,9 @@ export const useNamespacesFilter = () => {
   const [value] = useLocalStorage<string[]>(NS_STORE_KEY, [ALL_NS]);
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
+  const config = configs[resource?.name || ''];
 
-  if (resource?.name && configs[resource?.name].hideNamespacesFilter) {
+  if (config && (config.hideNamespacesFilter || config.ignoreNamespacesFilter)) {
     // if namespaceFilter is hidden, don't read filter in localstorage
     return {
       value: [],
@@ -133,8 +143,8 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
       kind: 'Namespace',
     },
     pagination: {
-      mode: 'off'
-    }
+      mode: 'off',
+    },
   });
   const [value, setValue] = useLocalStorage<string[]>(NS_STORE_KEY, [ALL_NS]);
   const [open, setOpen] = useState<boolean>(false);
@@ -175,9 +185,7 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
       <Select
         loading={isLoading}
         className={cx(SelectStyle, SELECT_CLASS, className)}
-        style={
-          { '--tag-max-width': tagMaxWidth } as React.CSSProperties
-        }
+        style={{ '--tag-max-width': tagMaxWidth } as React.CSSProperties}
         dropdownClassName={DropdownStyle}
         searchValue={search}
         virtual={false}
@@ -191,7 +199,7 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
             }
           },
         }}
-        dropdownRender={(menu) => (
+        dropdownRender={menu => (
           <div className={SelectContentStyle}>
             <SearchInput
               style={{ width: '100%' }}
@@ -208,57 +216,78 @@ export const NamespacesFilter: React.FC<NamespaceFilterProps> = ({ className }) 
           const isAll = namespaceValue === ALL_NS;
 
           return (
-            <span onClick={() => { setOpen(!open); }}>
-              {
-                isAll ? (
-                  <span style={{ marginLeft: 8 }}>{label}</span>
-                ) : (
-                  <Token
-                    className={cx(isCountToken ? CountTokenStyle : TokenStyle, isCountToken ? '' : 'closable-token')}
-                    closable={closable}
-                    size='medium'
-                    onClose={onClose}
-                  >
-
-                    <OverflowTooltip
-                      content={
-                        isCountToken ?
-                          (
-                            <Tooltip
-                              title={(
-                                isCountToken ? value.slice(MAX_TAG_COUNT).map((namespace, index) => (
+            <span
+              onClick={() => {
+                setOpen(!open);
+              }}
+            >
+              {isAll ? (
+                <span style={{ marginLeft: 8 }}>{label}</span>
+              ) : (
+                <Token
+                  className={cx(
+                    isCountToken ? CountTokenStyle : TokenStyle,
+                    isCountToken ? '' : 'closable-token'
+                  )}
+                  closable={closable}
+                  size="medium"
+                  onClose={onClose}
+                >
+                  <OverflowTooltip
+                    content={
+                      isCountToken ? (
+                        <Tooltip
+                          title={
+                            isCountToken
+                              ? value.slice(MAX_TAG_COUNT).map((namespace, index) => (
                                   <>
                                     <div>{namespace}</div>
-                                    {
-                                      index !== value.length - 1 - MAX_TAG_COUNT ? <Divider style={{ margin: '6px 0', borderColor: 'rgba(107, 128, 167, 0.60)' }} /> : null
-                                    }
+                                    {index !== value.length - 1 - MAX_TAG_COUNT ? (
+                                      <Divider
+                                        style={{
+                                          margin: '6px 0',
+                                          borderColor: 'rgba(107, 128, 167, 0.60)',
+                                        }}
+                                      />
+                                    ) : null}
                                   </>
-                                )) : null
-                              )}
-                              trigger={['hover']}
-                            >
-                              <span>{label.replace(/[\s\.]/g, '')}</span>
-                            </Tooltip>
-                          ) :
-                          label
-                      }
-                    />
-                  </Token>
-                )
-              }
+                                ))
+                              : null
+                          }
+                          trigger={['hover']}
+                        >
+                          <span>{label.replace(/[\s\.]/g, '')}</span>
+                        </Tooltip>
+                      ) : (
+                        label
+                      )
+                    }
+                  />
+                </Token>
+              )}
             </span>
           );
         }}
         maxTagCount={MAX_TAG_COUNT}
-        optionLabelProp='label'
+        optionLabelProp="label"
         showArrow
         showSearch={false}
         open={open}
-        onDropdownVisibleChange={(open) => { setOpen(open); }}
+        onDropdownVisibleChange={open => {
+          setOpen(open);
+        }}
         multiple
       >
-        <AntdOption key="_all" value="_all" label={t('dovetail.all_namespaces')} className={AllNamespaceOptionStyle}>
-          <OverflowTooltip content={t('dovetail.all_namespaces')} className={LabelWrapperStyle} />
+        <AntdOption
+          key="_all"
+          value="_all"
+          label={t('dovetail.all_namespaces')}
+          className={AllNamespaceOptionStyle}
+        >
+          <OverflowTooltip
+            content={t('dovetail.all_namespaces')}
+            className={LabelWrapperStyle}
+          />
         </AntdOption>
         <AntdSelectOptGroup label="" className={SelectOptionGroupStyle}>
           {data?.data.map(namespace => {

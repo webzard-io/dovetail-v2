@@ -1,5 +1,6 @@
 import { Space } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
+import { CrudFilters } from '@refinedev/core';
 import { OwnerReference } from 'kubernetes-types/meta/v1';
 import React, { useState, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -75,7 +76,7 @@ export const CronjobJobsTable: React.FC<{
         resource: 'jobs',
         meta: { resourceBasePath: '/apis/batch/v1', kind: 'Job' },
         filters: {
-          permanent: [
+          initial: [
             {
               field: '',
               value: '',
@@ -83,7 +84,8 @@ export const CronjobJobsTable: React.FC<{
                 return owner ? matchOwner(item, owner) : true;
               },
             },
-          ] as any,
+          ] as unknown as CrudFilters,
+          defaultBehavior: 'replace' as const,
         },
       },
     }),

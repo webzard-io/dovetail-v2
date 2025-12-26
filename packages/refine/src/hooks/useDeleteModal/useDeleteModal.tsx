@@ -9,6 +9,8 @@ import { useFailedModal } from './useFailedModal';
 
 type useDeleteDialogProps = {
   resourceName: string;
+  displayName?: string;
+  meta?: Record<string, string>;
   deleteDialogProps?: Partial<DeleteDialogProps>;
 };
 
@@ -17,17 +19,27 @@ type useDeleteDialogProps = {
  */
 export const useDeleteModal = ({
   resourceName,
+  displayName,
+  meta,
   deleteDialogProps,
 }: useDeleteDialogProps) => {
   const { i18n } = useTranslation();
   const configs = useContext(ConfigsContext);
   const config = configs[resourceName];
 
-  const { openFailedModal } = useFailedModal(resourceName);
+  const { openFailedModal } = useFailedModal({
+    resource: resourceName,
+    displayName,
+  });
 
   const { openDeleteConfirmModal, closeDeleteConfirmModal } = useDeleteModalOnly({
     resource: resourceName,
-    deleteDialogProps: { secondaryDesc: config.deleteTip, ...deleteDialogProps },
+    displayName,
+    meta,
+    deleteDialogProps: {
+      secondaryDesc: config?.deleteTip || i18n.t('dovetail.delete_tip'),
+      ...deleteDialogProps,
+    },
     onError: async (id, error: HttpError | undefined) => {
       closeDeleteConfirmModal();
       openFailedModal(id, getCommonErrors(await error?.response.json(), i18n));

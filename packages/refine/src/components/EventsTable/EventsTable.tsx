@@ -80,7 +80,7 @@ export const EventsTable: React.FC<EventTableProps> = ({ uid }: EventTableProps)
         resource: 'events',
         meta: { resourceBasePath: '/apis/events.k8s.io/v1', kind: 'Event' },
         filters: {
-          permanent: [
+          initial: [
             {
               operator: 'and',
               value: [
@@ -92,6 +92,7 @@ export const EventsTable: React.FC<EventTableProps> = ({ uid }: EventTableProps)
               ],
             },
           ] as CrudFilters,
+          defaultBehavior: 'replace' as const,
         },
       },
     }),
