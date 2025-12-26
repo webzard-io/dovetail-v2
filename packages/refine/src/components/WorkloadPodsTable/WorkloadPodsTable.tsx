@@ -1,5 +1,6 @@
 import { Loading, Space } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
+import { CrudFilters } from '@refinedev/core';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -66,15 +67,18 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
       resource: 'pods',
       meta: { resourceBasePath: '/api/v1', kind: 'Pod' },
       filters: {
-        permanent: [{
-          field: '',
-          value: '',
-          fn(item: PodModel) {
-            return filter ? filter(item) : matchSelector(item, selector, namespace);
-          }
-        }] as any
-      }
-    }
+        initial: [
+          {
+            field: '',
+            value: '',
+            fn(item: PodModel) {
+              return filter ? filter(item) : matchSelector(item, selector, namespace);
+            },
+          },
+        ] as unknown as CrudFilters,
+        defaultBehavior: 'replace' as const,
+      },
+    },
   });
 
   if (tableProps.loading) {
@@ -82,23 +86,26 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
   }
 
   if (tableProps.data?.length === 0) {
-    return <ErrorContent
-      errorText={i18n.t('dovetail.no_resource', { kind: ` ${i18n.t('dovetail.pod')}` })}
-      type={ErrorContentType.Card}
-    />;
+    return (
+      <ErrorContent
+        errorText={i18n.t('dovetail.no_resource', { kind: ` ${i18n.t('dovetail.pod')}` })}
+        type={ErrorContentType.Card}
+      />
+    );
   }
 
   return (
     <Space
       direction="vertical"
-      className={cx(css`
-        width: 100%;
-        vertical-align: top;
-      `, className)}
-    >
-      {hideToolbar ? null : (
-        <TableToolBar selectedKeys={selectedKeys} hideCreate />
+      className={cx(
+        css`
+          width: 100%;
+          vertical-align: top;
+        `,
+        className
       )}
+    >
+      {hideToolbar ? null : <TableToolBar selectedKeys={selectedKeys} hideCreate />}
       <Table
         {...tableProps}
         tableKey="pods"

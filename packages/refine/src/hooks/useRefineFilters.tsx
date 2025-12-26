@@ -10,10 +10,7 @@ interface UseRefineFiltersOptions {
 }
 
 export function useRefineFilters(options: UseRefineFiltersOptions = {}) {
-  const {
-    disableNamespaceFilter = false,
-    disableNameKeywordFilter = false,
-  } = options;
+  const { disableNamespaceFilter = false, disableNameKeywordFilter = false } = options;
 
   // Namespace filter logic
   const { value: nsFilters = [] } = useNamespacesFilter();
@@ -59,7 +56,8 @@ export function useRefineFilters(options: UseRefineFiltersOptions = {}) {
   // Combine filters
   const filters = useMemo(
     () => ({
-      permanent: [...namespaceFilters, ...nameKeywordFilters],
+      initial: [...namespaceFilters, ...nameKeywordFilters],
+      defaultBehavior: 'replace' as const,
     }),
     [namespaceFilters, nameKeywordFilters]
   );

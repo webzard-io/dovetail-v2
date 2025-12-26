@@ -494,7 +494,7 @@ export const StorageClassPvField = <
           resource="persistentvolumes"
           useTableParams={{
             filters: {
-              permanent: [
+              initial: [
                 {
                   field: '',
                   value: '',
@@ -503,6 +503,7 @@ export const StorageClassPvField = <
                   },
                 },
               ] as unknown as CrudFilters,
+              defaultBehavior: 'replace' as const,
             },
           }}
         />
