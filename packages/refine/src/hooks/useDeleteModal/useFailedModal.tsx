@@ -11,13 +11,14 @@ import ConfigsContext from 'src/contexts/configs';
 import { NameTagStyle } from 'src/styles/tag';
 import { transformResourceKindInSentence } from 'src/utils/string';
 
-export const useFailedModal = (resource: string) => {
+export const useFailedModal = (props: { resource: string; displayName?: string }) => {
+  const { resource, displayName: displayNameFromProps } = props;
   const configs = useContext(ConfigsContext);
   const config = configs[resource];
   const { t, i18n } = useTranslation();
   const pushModal = usePushModal();
   const popModal = usePopModal();
-  const displayName = config.displayName || config.kind;
+  const displayName = displayNameFromProps || config?.displayName || config?.kind;
   const resourceDisplayName = transformResourceKindInSentence(displayName, i18n.language);
 
   function openFailedModal(id: string, errorMsgs: string[]) {
