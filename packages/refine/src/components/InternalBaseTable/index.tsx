@@ -50,8 +50,8 @@ export type InternalTableProps<Data extends { id: string; }> = {
   RowMenu?: React.FC<{ record: Data; formType?: FormContainerType; }>;
   empty?: string;
   showMenuColumn?: boolean;
-  hideNamespacesFilter?: boolean;
-  customNamespaceFilter?: React.ReactNode;
+  nonNsResource?: boolean;
+  customFilterBar?: React.ReactNode;
   /* 清除url中name_keyword参数的回调函数 */
   onClearSearchKeyword?: () => void;
 };

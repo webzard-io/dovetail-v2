@@ -76,13 +76,12 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
 
       <div
         className={cx(ListContentStyle, contentClassName)}
-        style={config.hideNamespacesFilter ? { paddingTop: 0 } : {}}
+        style={!config.customFilterBar && config.nonNsResource ? { paddingTop: 0 } : {}}
       >
-        {!config.hideNamespacesFilter
-          ? config.customNamespaceFilter || (
-              <NamespacesFilter className={NamespaceFilterStyle} />
-            )
-          : undefined}
+        {config.customFilterBar ||
+          (!config.nonNsResource && (
+            <NamespacesFilter className={NamespaceFilterStyle} />
+          ))}
         <div className={TableStyle}>
           <Table
             tableProps={{

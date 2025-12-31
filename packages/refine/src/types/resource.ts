@@ -177,10 +177,10 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   displayName?: string;
   /** 是否隐藏列表页的工具栏。会连标题和描述一起去掉 */
   hideListToolBar?: boolean;
-  /** 是否隐藏命名空间过滤器 */
-  hideNamespacesFilter?: boolean;
-  /** 自定义命名空间过滤器 */
-  customNamespaceFilter?: React.ReactNode;
+  /** 非命名空间资源，不展示默认的 NsFilter，并且禁用根据 ns 筛选的逻辑 */
+  nonNsResource?: boolean;
+  /** 自定义过滤栏 */
+  customFilterBar?: React.ReactNode;
   /** 是否隐藏编辑功能。会隐藏 Dropdown 和详情中的编辑按钮 */
   hideEdit?: boolean;
   /** 是否隐藏创建功能 */

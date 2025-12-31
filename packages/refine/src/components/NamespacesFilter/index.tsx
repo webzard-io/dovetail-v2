@@ -106,7 +106,7 @@ export const useNamespacesFilter = () => {
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
 
-  if (resource?.name && configs[resource?.name].hideNamespacesFilter) {
+  if (resource?.name && configs[resource?.name].nonNsResource) {
     // if namespaceFilter is hidden, don't read filter in localstorage
     return {
       value: [],
