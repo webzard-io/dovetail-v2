@@ -52,7 +52,7 @@ export const ServiceOutClusterAccessComponent: React.FC<
           ?.filter(v => !!v)
           .map(p => ([
             <Link
-              href={`//${clusterVip}:${p.nodePort}`}
+              href={`http://${clusterVip}:${p.nodePort}`}
               target="_blank"
               key={p.name}
               className={cx(LinkStyle, Typo.Label.l4_regular_title)}
@@ -83,7 +83,7 @@ export const ServiceOutClusterAccessComponent: React.FC<
             key={p.nodePort}
             content={
               <Link
-                href={`//${clusterVip}:${p.nodePort}`}
+                href={`http://${clusterVip}:${p.nodePort}`}
                 target="_blank"
                 className={cx(Typo.Label.l4_regular_title, BreakLineStyle, LinkStyle)}
               >
@@ -120,5 +120,5 @@ export const ServiceOutClusterAccessComponent: React.FC<
       break;
   }
 
-  return <div style={{ whiteSpace: 'pre-wrap' }}>{content || '-'}</div>;
+  return <div style={{ whiteSpace: 'pre-wrap', color: '#0080ff' }}>{content || '-'}</div>;
 };
