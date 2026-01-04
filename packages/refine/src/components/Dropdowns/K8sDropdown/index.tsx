@@ -1,4 +1,11 @@
-import { Icon, Divider, Dropdown, Menu, Button } from '@cloudtower/eagle';
+import {
+  Icon,
+  Divider,
+  Dropdown,
+  Menu,
+  Button,
+  DeleteDialogProps,
+} from '@cloudtower/eagle';
 import {
   EditPen16PrimaryIcon,
   MoreEllipsis324BoldSecondaryIcon,
@@ -27,22 +34,46 @@ interface K8sDropdownProps {
   record: ResourceModel;
   size?: DropdownSize;
   customButton?: React.ReactNode;
+  resourceName?: string;
+  displayName?: string;
+  deleteDialogProps?: Partial<DeleteDialogProps>;
+  hideEdit?: boolean;
 }
 
 export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
-  const { record, size = 'normal', customButton } = props;
+  const {
+    record,
+    size = 'normal',
+    resourceName: resourceNameFromProps,
+    customButton,
+    deleteDialogProps,
+    displayName,
+    hideEdit,
+  } = props;
   const globalStore = useGlobalStore();
   const useResourceResult = useResource();
   const configs = useContext(ConfigsContext);
-  const resourceName = getResourceNameByKind(record.kind || '', configs);
+  const resourceName =
+    resourceNameFromProps || getResourceNameByKind(record.kind || '', configs);
   const config = configs[resourceName || ''];
   const { t, i18n } = useTranslation();
-  const { openDeleteConfirmModal } = useDeleteModal({ resourceName: resourceName || '' });
+  const { openDeleteConfirmModal } = useDeleteModal({
+    resourceName: resourceName || '',
+    deleteDialogProps,
+    displayName,
+    meta: record.apiVersion
+      ? {
+          kind: record.kind || '',
+          resourceBasePath:
+            (record.apiVersion?.includes('/') ? 'apis' : 'api') + `/${record.apiVersion}`,
+        }
+      : undefined,
+  });
   const download = useDownloadYAML();
   const openForm = useOpenForm();
   const isInShowPage =
     useResourceResult.action === 'show' &&
-    useResourceResult.resource?.name === config.name;
+    useResourceResult.resource?.name === resourceName;
   const { data: canEditData } = useCan({
     resource: resourceName,
     action: AccessControlAuth.Edit,
@@ -57,14 +88,17 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
       namespace: record.namespace,
     },
   });
-  const formType = config.formConfig?.formType || FormType.FORM;
+  const formType = config?.formConfig?.formType;
 
   return (
     <>
       <Dropdown
         overlay={
           <Menu>
-            {isInShowPage || canEditData?.can === false || config.hideEdit ? null : (
+            {isInShowPage ||
+            canEditData?.can === false ||
+            hideEdit ||
+            config?.hideEdit ? null : (
               <Menu.Item onClick={() => openForm({ id: record.id, resourceName })}>
                 <Icon src={EditPen16PrimaryIcon}>
                   {formType === FormType.FORM

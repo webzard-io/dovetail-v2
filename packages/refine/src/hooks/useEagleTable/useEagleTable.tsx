@@ -4,7 +4,11 @@ import { merge } from 'lodash-es';
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import ValueDisplay from 'src/components/ValueDisplay';
 import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
-import { Column, InternalTableProps, SorterOrder } from '../../components/InternalBaseTable';
+import {
+  Column,
+  InternalTableProps,
+  SorterOrder,
+} from '../../components/InternalBaseTable';
 import { ResourceModel } from '../../models';
 
 type Params<Model extends ResourceModel> = {
@@ -25,14 +29,13 @@ export enum ColumnKeys {
   podImage = 'podImage',
 }
 
-export function addDefaultRenderToColumns<Data, Col extends RequiredColumnProps<Data> = RequiredColumnProps<Data>>(columns: Col[]) {
+export function addDefaultRenderToColumns<
+  Data,
+  Col extends RequiredColumnProps<Data> = RequiredColumnProps<Data>
+>(columns: Col[]) {
   return columns.map(col => ({
     render(value: unknown) {
-      return (
-        <ValueDisplay
-          value={value}
-        />
-      );
+      return <ValueDisplay value={value} />;
     },
     ...col,
   }));
@@ -56,8 +59,8 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     });
     return mergedParams;
   }, [params.useTableParams, currentSize, resource]);
-  const finalColumns: Column<Model>[] = useMemo(() =>
-    addDefaultRenderToColumns<Model, Column<Model>>(columns),
+  const finalColumns: Column<Model>[] = useMemo(
+    () => addDefaultRenderToColumns<Model, Column<Model>>(columns),
     [columns]
   );
 
@@ -69,18 +72,23 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     },
     [setCurrentPage, table]
   );
-  const onSorterChange = useCallback((order?: SorterOrder | null, key?: string) => {
-    const ORDER_MAP = {
-      descend: 'desc',
-      ascend: 'asc'
-    } as const;
-    const sorters = [{
-      field: columns.find(col => col.key === key)?.dataIndex,
-      order: order ? ORDER_MAP[order] : order,
-    }];
+  const onSorterChange = useCallback(
+    (order?: SorterOrder | null, key?: string) => {
+      const ORDER_MAP = {
+        descend: 'desc',
+        ascend: 'asc',
+      } as const;
+      const sorters = [
+        {
+          field: columns.find(col => col.key === key)?.dataIndex,
+          order: order ? ORDER_MAP[order] : order,
+        },
+      ];
 
-    table.setSorters(sorters as any);
-  }, [table, columns]);
+      table.setSorters(sorters as any);
+    },
+    [table, columns]
+  );
 
   const data = table.tableQueryResult.data?.data;
   const total = table.tableQueryResult.data?.total || 0;
@@ -106,12 +114,22 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
   };
 
   useEffect(() => {
-    table.setSorters([{
-      field: 'metadata.creationTimestamp',
-      order: 'desc'
-    }]);
+    table.setSorters([
+      {
+        field: 'metadata.creationTimestamp',
+        order: 'desc',
+      },
+    ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { tableProps: finalProps, selectedKeys, ...table };
+  return {
+    tableProps: finalProps,
+    selectedKeys,
+    ...table,
+    setCurrent: (current: number) => {
+      setCurrentPage(current);
+      table.setCurrent?.(current);
+    },
+  };
 };
