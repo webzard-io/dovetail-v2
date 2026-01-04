@@ -44,10 +44,19 @@ interface ListPageProps<T extends ResourceModel> {
   tableProps: InternalTableProps<T>;
   contentClassName?: string;
   belowToolBarContent?: React.ReactNode;
+  customFilterBar?: React.ReactNode;
+  isSearching?: boolean;
 }
 
 export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
-  const { selectedKeys, tableProps, contentClassName, belowToolBarContent } = props;
+  const {
+    selectedKeys,
+    tableProps,
+    contentClassName,
+    belowToolBarContent,
+    customFilterBar,
+    isSearching,
+  } = props;
   const { resource } = useResource();
   const configs = useContext(ConfigsContext);
   const config = configs[resource?.name || ''];
@@ -76,9 +85,14 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
 
       <div
         className={cx(ListContentStyle, contentClassName)}
-        style={!config.customFilterBar && config.nonNsResource ? { paddingTop: 0 } : {}}
+        style={
+          !customFilterBar && !config.customFilterBar && config.nonNsResource
+            ? { paddingTop: 0 }
+            : {}
+        }
       >
-        {config.customFilterBar ||
+        {customFilterBar ||
+          config.customFilterBar ||
           (!config.nonNsResource && (
             <NamespacesFilter className={NamespaceFilterStyle} />
           ))}
@@ -89,6 +103,7 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
               scroll: { y: 'calc(100% - 48px)' },
             }}
             displayName={config?.displayName || config.kind}
+            isSearching={isSearching}
           />
         </div>
       </div>
