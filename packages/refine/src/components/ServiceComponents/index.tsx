@@ -122,5 +122,5 @@ export const ServiceOutClusterAccessComponent: React.FC<
       break;
   }
 
-  return <div style={{ whiteSpace: 'pre-wrap', color: '#0080ff' }}>{content || '-'}</div>;
+  return <div style={{ whiteSpace: 'pre-wrap', color: '#0080ff', height: '18px' }}>{content || '-'}</div>;
 };
