@@ -15,7 +15,10 @@ import { YamlForm, YamlFormProps } from './YamlForm';
 interface RefineFormContainerProps {
   id: string;
   isYamlMode: boolean;
-  config: ResourceConfig;
+  config: Pick<
+    ResourceConfig,
+    'name' | 'displayName' | 'kind' | 'initValue' | 'basePath' | 'formConfig'
+  >;
   step: number;
   formConfig: (RefineFormConfig & CommonFormConfig) | undefined;
   customYamlFormProps?: YamlFormProps;

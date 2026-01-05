@@ -11,7 +11,18 @@ import { YamlForm, YamlFormProps } from './YamlForm';
 
 interface YamlFormContainerProps {
   id: string;
-  config: ResourceConfig;
+  config: Pick<
+    ResourceConfig,
+    | 'name'
+    | 'displayName'
+    | 'kind'
+    | 'initValue'
+    | 'apiVersion'
+    | 'basePath'
+    | 'formConfig'
+    | 'dataProviderName'
+    | 'parent'
+  >;
   customYamlFormProps?: YamlFormProps;
   formConfig?: YamlFormConfig & CommonFormConfig;
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;

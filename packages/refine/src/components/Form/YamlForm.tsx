@@ -39,7 +39,10 @@ export interface YamlFormProps<Model extends ResourceModel = ResourceModel> {
   id?: string;
   resource?: string;
   action?: FormAction;
-  config: ResourceConfig<Model>;
+  config: Pick<
+    ResourceConfig<Model>,
+    'displayName' | 'dataProviderName' | 'basePath' | 'kind' | 'parent'
+  >;
   initialValuesForCreate?: Record<string, unknown>;
   initialValuesForEdit?: Record<string, unknown>;
   schemaStrategy?: SchemaStrategy;
@@ -131,6 +134,10 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     transformApplyValues,
     mutationMeta: {
       updateType: 'put',
+      dataProviderName: config.dataProviderName,
+      resourceBasePath: config.basePath,
+      kind: config.kind,
+      label: `${config.kind}s`,
     },
     ...useFormProps,
   });

@@ -4,7 +4,10 @@ import { ResourceModel } from 'src/models';
 import { RefineFormConfig, ResourceConfig } from 'src/types';
 
 function useFieldsConfig<Model extends ResourceModel>(
-  config?: ResourceConfig<Model>,
+  config?: Pick<
+    ResourceConfig<Model>,
+    'name' | 'displayName' | 'kind' | 'initValue' | 'basePath' | 'formConfig'
+  >,
   formConfig?: { fields: RefineFormConfig['fields'] },
   resourceId?: string,
   step?: number,

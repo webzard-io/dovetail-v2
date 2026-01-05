@@ -23,7 +23,7 @@ import ConfigsContext from 'src/contexts/configs';
 import { useDeleteModal } from 'src/hooks/useDeleteModal';
 import { useDownloadYAML } from 'src/hooks/useDownloadYAML';
 import { useOpenForm } from 'src/hooks/useOpenForm';
-import { FormType } from 'src/types';
+import { FormType, ResourceConfig } from 'src/types';
 import { getResourceNameByKind } from 'src/utils';
 import { transformResourceKindInSentence } from 'src/utils/string';
 import { useGlobalStore } from '../../../hooks';
@@ -35,6 +35,17 @@ interface K8sDropdownProps {
   size?: DropdownSize;
   customButton?: React.ReactNode;
   resourceName?: string;
+  config?: Pick<
+    ResourceConfig,
+    | 'name'
+    | 'displayName'
+    | 'kind'
+    | 'initValue'
+    | 'apiVersion'
+    | 'basePath'
+    | 'formConfig'
+    | 'hideEdit'
+  >;
   displayName?: string;
   deleteDialogProps?: Partial<DeleteDialogProps>;
   hideEdit?: boolean;
@@ -45,6 +56,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
     record,
     size = 'normal',
     resourceName: resourceNameFromProps,
+    config: configFromProps,
     customButton,
     deleteDialogProps,
     displayName,
@@ -55,7 +67,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const configs = useContext(ConfigsContext);
   const resourceName =
     resourceNameFromProps || getResourceNameByKind(record.kind || '', configs);
-  const config = configs[resourceName || ''];
+  const config = configFromProps || configs[resourceName || ''];
   const { t, i18n } = useTranslation();
   const { openDeleteConfirmModal } = useDeleteModal({
     resourceName: resourceName || '',
@@ -65,6 +77,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
       ? {
           kind: record.kind || '',
           resourceBasePath:
+            // k8s 通用规则，apiVersion 包含 / 则使用 apis，否则使用 api
             (record.apiVersion?.includes('/') ? 'apis' : 'api') + `/${record.apiVersion}`,
         }
       : undefined,
@@ -99,11 +112,13 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
             canEditData?.can === false ||
             hideEdit ||
             config?.hideEdit ? null : (
-              <Menu.Item onClick={() => openForm({ id: record.id, resourceName })}>
+              <Menu.Item
+                onClick={() => openForm({ id: record.id, resourceName, config })}
+              >
                 <Icon src={EditPen16PrimaryIcon}>
                   {formType === FormType.FORM
                     ? `${t('dovetail.edit')}${transformResourceKindInSentence(
-                        config?.displayName || record.kind || '',
+                        displayName || config?.displayName || record.kind || '',
                         i18n.language
                       )}`
                     : t('dovetail.edit_yaml')}

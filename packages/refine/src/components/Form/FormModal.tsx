@@ -7,14 +7,14 @@ import {
 } from '@cloudtower/eagle';
 import { WizardDialogProps } from '@cloudtower/eagle/dist/src/core/WizardDialog/type';
 import { css } from '@linaria/core';
-import { BaseRecord, CreateResponse, UpdateResponse, useResource } from '@refinedev/core';
+import { BaseRecord, CreateResponse, UpdateResponse } from '@refinedev/core';
 import { omit } from 'lodash-es';
-import React, { useState, useContext, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import ConfigsContext from 'src/contexts/configs';
 import { WarningButtonStyle } from 'src/styles/button';
 import { SmallModalStyle } from 'src/styles/modal';
 import { FormType, FormMode, RefineFormConfig, CommonFormConfig } from 'src/types';
+import { ResourceConfig } from 'src/types';
 import { transformResourceKindInSentence } from 'src/utils/string';
 import FormModeSegmentControl from './FormModeSegmentControl';
 import RefineFormContainer, { RefineFormContainerRef } from './RefineFormContainer';
@@ -80,8 +80,17 @@ function ConfirmModal({ onOk }: ConfirmModalProps) {
 }
 
 export type FormModalProps = {
-  resource?: string;
   id?: string;
+  config: Pick<
+    ResourceConfig,
+    | 'name'
+    | 'displayName'
+    | 'kind'
+    | 'initValue'
+    | 'apiVersion'
+    | 'basePath'
+    | 'formConfig'
+  >;
   yamlFormProps?: YamlFormProps;
   options?: {
     initialValues?: Record<string, unknown>;
@@ -93,16 +102,14 @@ export type FormModalProps = {
 
 export function FormModal(props: FormModalProps) {
   const {
-    resource: resourceFromProps,
     id,
     yamlFormProps: customYamlFormProps,
     modalProps,
     options,
+    config,
     onSuccess,
   } = props;
   const { i18n } = useTranslation();
-  const { resource } = useResource();
-  const configs = useContext(ConfigsContext);
   const [saveButtonProps, setSaveButtonProps] = useState<SaveButtonProps>({});
   const [isError, setIsError] = useState<boolean>(false);
   const [mode, setMode] = useState<FormMode>(FormMode.FORM);
@@ -111,7 +118,6 @@ export function FormModal(props: FormModalProps) {
   const refineFormContainerRef = useRef<RefineFormContainerRef>(null);
   const popModal = usePopModal();
   const pushModal = usePushModal();
-  const config = configs[resourceFromProps || resource?.name || ''];
   const isDisabledChangeMode =
     config.formConfig &&
     'isDisabledChangeMode' in config.formConfig &&

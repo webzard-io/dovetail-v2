@@ -25,7 +25,10 @@ import {
 import useFieldsConfig from './useFieldsConfig';
 
 type RefineFormContentProps<Model extends ResourceModel> = {
-  config?: ResourceConfig<Model>;
+  config?: Pick<
+    ResourceConfig<Model>,
+    'name' | 'displayName' | 'kind' | 'initValue' | 'basePath' | 'formConfig'
+  >;
   step?: number;
   formConfig?: CommonFormConfig & RefineFormConfig;
   formResult: UseFormReturnType;
