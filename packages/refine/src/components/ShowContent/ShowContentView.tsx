@@ -38,7 +38,7 @@ const ShowContentWrapperStyle = css`
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, $white 0%, $gray-20 100%);
+  background: white;
 `;
 const BackButton = css`
   color: $gray-a30-10;
@@ -157,7 +157,10 @@ const KindTagStyle = css`
   margin: auto 0;
   margin-right: 8px;
   border: 1px solid #acbad399;
-  background-color: white;
+  background-color: white !important;
+  padding: 2px 5px;
+  height: 22px;
+  color: #1D326C !important;
 `;
 
 export type ShowContentViewProps<Model extends ResourceModel> = React.PropsWithChildren<{
@@ -481,10 +484,7 @@ export const ShowContentView = <Model extends ResourceModel>(
 
   return (
     <div
-      className={cx(ShowContentWrapperStyle, className)}
-      style={{
-        background: size === 'small' ? '#fff' : undefined,
-      }}
+      className={cx(ShowContentWrapperStyle, className)} 
     >
       {hideTopBar ? null : (
         <Space direction="vertical" className={ShowContentHeaderStyle}>

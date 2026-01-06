@@ -14,10 +14,6 @@ const ContentBlockStyle = css`
   align-self: stretch;
   border-radius: 4px;
   background: $gray-a60-1;
-
-  &:not(:last-of-type) {
-    margin-bottom: 8px;
-  }
 `;
 const KeyStyle = css`
   color: rgba(44, 56, 82, 0.75);

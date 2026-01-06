@@ -113,12 +113,14 @@ export const ServiceOutClusterAccessComponent: React.FC<
       );
       break;
     case ServiceTypeEnum.ClusterIP:
-      content = i18n.t('dovetail.not_support');
+      content = (
+        <span style={{ color: '#00122e' }}>{i18n.t('dovetail.not_support')}</span>
+      );
       break;
     default:
       content = <ValueDisplay useOverflow={false} value="" />;
       break;
   }
 
-  return <div style={{ whiteSpace: 'pre-wrap', color: '#0080ff' }}>{content || '-'}</div>;
+  return <div style={{ whiteSpace: 'pre-wrap', color: '#0080ff', height: '18px' }}>{content || '-'}</div>;
 };
