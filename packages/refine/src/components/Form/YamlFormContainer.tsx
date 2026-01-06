@@ -11,7 +11,18 @@ import { YamlForm, YamlFormProps } from './YamlForm';
 
 interface YamlFormContainerProps {
   id: string;
-  config: ResourceConfig;
+  resourceConfig: Pick<
+    ResourceConfig,
+    | 'name'
+    | 'displayName'
+    | 'kind'
+    | 'initValue'
+    | 'apiVersion'
+    | 'basePath'
+    | 'formConfig'
+    | 'dataProviderName'
+    | 'parent'
+  >;
   customYamlFormProps?: YamlFormProps;
   formConfig?: YamlFormConfig & CommonFormConfig;
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
@@ -22,7 +33,7 @@ interface YamlFormContainerProps {
 function YamlFormContainer({
   id,
   customYamlFormProps,
-  config,
+  resourceConfig,
   formConfig,
   onSuccess,
   onError,
@@ -39,13 +50,13 @@ function YamlFormContainer({
   const yamlFormProps: YamlFormProps = useMemo(() => {
     return {
       ...customYamlFormProps,
-      resource: config.name,
-      config,
+      resource: resourceConfig.name,
+      resourceConfig,
       transformInitValues,
       transformApplyValues,
       beforeSubmit: formConfig?.beforeSubmit,
       initialValuesForCreate:
-        customYamlFormProps?.initialValuesForCreate || getInitialValues(config),
+        customYamlFormProps?.initialValuesForCreate || getInitialValues(resourceConfig),
       initialValuesForEdit: undefined,
       id,
       action,
@@ -66,7 +77,7 @@ function YamlFormContainer({
     id,
     action,
     customYamlFormProps,
-    config,
+    resourceConfig,
     formConfig?.beforeSubmit,
     transformInitValues,
     transformApplyValues,

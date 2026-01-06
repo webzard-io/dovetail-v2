@@ -12,10 +12,21 @@ import React from 'react';
 import ConfigsContext from 'src/contexts/configs';
 import { useEdit } from 'src/hooks/useEdit';
 import { FormContainerType } from 'src/types';
+import { ResourceConfig } from 'src/types';
 import { FormModal } from '../components';
 
 interface OpenFormOptions {
   id?: string;
+  resourceConfig?: Pick<
+    ResourceConfig,
+    | 'name'
+    | 'displayName'
+    | 'kind'
+    | 'initValue'
+    | 'apiVersion'
+    | 'basePath'
+    | 'formConfig'
+  >;
   resourceName?: string;
   initialValues?: Record<string, unknown>;
   customOptions?: Record<string, unknown>;
@@ -31,23 +42,25 @@ export function useOpenForm() {
   const go = useGo();
 
   return function openForm(options?: OpenFormOptions) {
-    const finalResourceName = options?.resourceName || resource?.name;
+    const finalResourceName =
+      options?.resourceName || options?.resourceConfig?.name || resource?.name;
 
-    if (finalResourceName) {
-      const config = configs[finalResourceName];
-      const formType = config.formConfig?.formContainerType;
+    if (finalResourceName || options?.resourceConfig) {
+      const resourceConfig = options?.resourceConfig || configs[finalResourceName || ''];
+      const formType = resourceConfig.formConfig?.formContainerType;
 
       if (formType === undefined || formType === FormContainerType.MODAL) {
-        pushModal<'FormModal'>({
+        pushModal({
           component: () => {
-            const ModalComponent = config.formConfig?.CustomFormModal || FormModal;
+            const ModalComponent =
+              resourceConfig.formConfig?.CustomFormModal || FormModal;
 
             return (
               <ModalComponent
-                resource={finalResourceName}
                 id={options?.id}
+                resourceConfig={resourceConfig}
                 yamlFormProps={{
-                  config,
+                  resourceConfig: resourceConfig,
                 }}
                 options={options}
                 onSuccess={options?.onSuccess}
@@ -60,7 +73,7 @@ export function useOpenForm() {
         edit(options.id);
       } else {
         go({
-          to: navigation.createUrl(finalResourceName),
+          to: navigation.createUrl(finalResourceName || ''),
           options: {
             keepQuery: true,
           },

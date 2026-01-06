@@ -39,7 +39,10 @@ export interface YamlFormProps<Model extends ResourceModel = ResourceModel> {
   id?: string;
   resource?: string;
   action?: FormAction;
-  config: ResourceConfig<Model>;
+  resourceConfig: Pick<
+    ResourceConfig<Model>,
+    'displayName' | 'dataProviderName' | 'basePath' | 'kind' | 'parent'
+  >;
   initialValuesForCreate?: Record<string, unknown>;
   initialValuesForEdit?: Record<string, unknown>;
   schemaStrategy?: SchemaStrategy;
@@ -71,7 +74,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     schemaStrategy = SchemaStrategy.Optional,
     isShowLayout = true,
     useFormProps,
-    config,
+    resourceConfig,
     transformInitValues,
     transformApplyValues,
     beforeSubmit,
@@ -107,7 +110,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     rules,
     beforeSubmit,
     successNotification(data) {
-      const displayName = config.displayName || resource?.meta?.kind;
+      const displayName = resourceConfig.displayName || resource?.meta?.kind;
       return {
         message: i18n
           .t(
@@ -131,6 +134,10 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     transformApplyValues,
     mutationMeta: {
       updateType: 'put',
+      dataProviderName: resourceConfig.dataProviderName,
+      resourceBasePath: resourceConfig.basePath,
+      kind: resourceConfig.kind,
+      label: `${resourceConfig.kind}s`,
     },
     ...useFormProps,
   });

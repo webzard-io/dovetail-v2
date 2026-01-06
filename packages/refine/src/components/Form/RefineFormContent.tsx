@@ -25,7 +25,10 @@ import {
 import useFieldsConfig from './useFieldsConfig';
 
 type RefineFormContentProps<Model extends ResourceModel> = {
-  config?: ResourceConfig<Model>;
+  resourceConfig?: Pick<
+    ResourceConfig<Model>,
+    'name' | 'displayName' | 'kind' | 'initValue' | 'basePath' | 'formConfig'
+  >;
   step?: number;
   formConfig?: CommonFormConfig & RefineFormConfig;
   formResult: UseFormReturnType;
@@ -69,7 +72,12 @@ export function renderCommonFormFiled(props: RefineFormFieldRenderProps) {
 
 type FieldsContentProps<Model extends ResourceModel> = Pick<
   RefineFormContentProps<Model>,
-  'config' | 'formConfig' | 'resourceId' | 'step' | 'formResult' | 'transformedInitValues'
+  | 'resourceConfig'
+  | 'formConfig'
+  | 'resourceId'
+  | 'step'
+  | 'formResult'
+  | 'transformedInitValues'
 > & {
   fields: RefineFormConfig['fields'];
   // 动态的表单选项
@@ -180,7 +188,7 @@ const MemoizedFormField = memo(function FormField({
 
 function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Model>) {
   const {
-    config,
+    resourceConfig,
     formConfig,
     resourceId,
     step,
@@ -193,7 +201,7 @@ function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Mo
   const action = resourceId ? 'edit' : 'create';
 
   const formFieldsConfig = useFieldsConfig(
-    config,
+    resourceConfig,
     { fields },
     resourceId,
     step,
@@ -212,7 +220,7 @@ function FieldsContent<Model extends ResourceModel>(props: FieldsContentProps<Mo
           >
             <div className={ContentWrapper}>
               <FieldsContent
-                config={config}
+                resourceConfig={resourceConfig}
                 formConfig={formConfig}
                 resourceId={resourceId}
                 step={step}
@@ -247,7 +255,7 @@ export const RefineFormContent = <Model extends ResourceModel>(
   props: RefineFormContentProps<Model>
 ) => {
   const {
-    config,
+    resourceConfig: config,
     formResult,
     resourceId,
     errorMsgs,
@@ -261,7 +269,7 @@ export const RefineFormContent = <Model extends ResourceModel>(
   return (
     <Space direction="vertical" size={16} className={SpaceStyle}>
       <FieldsContent
-        config={config}
+        resourceConfig={config}
         formConfig={formConfig}
         fields={formConfig?.fields}
         resourceId={resourceId}

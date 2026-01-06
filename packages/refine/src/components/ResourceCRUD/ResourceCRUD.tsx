@@ -28,10 +28,10 @@ export function ResourceCRUD(props: Props) {
               config.formConfig?.formContainerType === FormContainerType.PAGE ? (
                 <>
                   <Route path={`${urlPrefix}/${config.name}/create`}>
-                    <ResourceForm config={config} />
+                    <ResourceForm resourceConfig={config} />
                   </Route>
                   <Route path={`${urlPrefix}/${config.name}/edit`}>
-                    <ResourceForm config={config} />
+                    <ResourceForm resourceConfig={config} />
                   </Route>
                 </>
               ) : null

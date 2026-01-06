@@ -8,5 +8,5 @@ export const CronJobForm: React.FC<FormProps> = () => {
   const configs = useContext(ConfigsContext);
   const config = configs['cronjobs'];
 
-  return <YamlForm initialValuesForCreate={CRONJOB_INIT_VALUE} config={config} />;
+  return <YamlForm initialValuesForCreate={CRONJOB_INIT_VALUE} resourceConfig={config} />;
 };

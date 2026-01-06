@@ -8,5 +8,5 @@ export const PodForm: React.FC<FormProps> = () => {
   const configs = useContext(ConfigsContext);
   const config = configs['pods'];
 
-  return <YamlForm initialValuesForCreate={POD_INIT_VALUE} config={config} />;
+  return <YamlForm initialValuesForCreate={POD_INIT_VALUE} resourceConfig={config} />;
 };

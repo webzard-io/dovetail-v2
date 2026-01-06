@@ -7,14 +7,14 @@ import {
 } from '@cloudtower/eagle';
 import { WizardDialogProps } from '@cloudtower/eagle/dist/src/core/WizardDialog/type';
 import { css } from '@linaria/core';
-import { BaseRecord, CreateResponse, UpdateResponse, useResource } from '@refinedev/core';
+import { BaseRecord, CreateResponse, UpdateResponse } from '@refinedev/core';
 import { omit } from 'lodash-es';
-import React, { useState, useContext, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import ConfigsContext from 'src/contexts/configs';
 import { WarningButtonStyle } from 'src/styles/button';
 import { SmallModalStyle } from 'src/styles/modal';
 import { FormType, FormMode, RefineFormConfig, CommonFormConfig } from 'src/types';
+import { ResourceConfig } from 'src/types';
 import { transformResourceKindInSentence } from 'src/utils/string';
 import FormModeSegmentControl from './FormModeSegmentControl';
 import RefineFormContainer, { RefineFormContainerRef } from './RefineFormContainer';
@@ -80,8 +80,17 @@ function ConfirmModal({ onOk }: ConfirmModalProps) {
 }
 
 export type FormModalProps = {
-  resource?: string;
   id?: string;
+  resourceConfig: Pick<
+    ResourceConfig,
+    | 'name'
+    | 'displayName'
+    | 'kind'
+    | 'initValue'
+    | 'apiVersion'
+    | 'basePath'
+    | 'formConfig'
+  >;
   yamlFormProps?: YamlFormProps;
   options?: {
     initialValues?: Record<string, unknown>;
@@ -93,16 +102,14 @@ export type FormModalProps = {
 
 export function FormModal(props: FormModalProps) {
   const {
-    resource: resourceFromProps,
     id,
     yamlFormProps: customYamlFormProps,
     modalProps,
     options,
+    resourceConfig,
     onSuccess,
   } = props;
   const { i18n } = useTranslation();
-  const { resource } = useResource();
-  const configs = useContext(ConfigsContext);
   const [saveButtonProps, setSaveButtonProps] = useState<SaveButtonProps>({});
   const [isError, setIsError] = useState<boolean>(false);
   const [mode, setMode] = useState<FormMode>(FormMode.FORM);
@@ -111,15 +118,14 @@ export function FormModal(props: FormModalProps) {
   const refineFormContainerRef = useRef<RefineFormContainerRef>(null);
   const popModal = usePopModal();
   const pushModal = usePushModal();
-  const config = configs[resourceFromProps || resource?.name || ''];
   const isDisabledChangeMode =
-    config.formConfig &&
-    'isDisabledChangeMode' in config.formConfig &&
-    config.formConfig.isDisabledChangeMode;
+    resourceConfig.formConfig &&
+    'isDisabledChangeMode' in resourceConfig.formConfig &&
+    resourceConfig.formConfig.isDisabledChangeMode;
   const okText = i18n.t(id ? 'dovetail.save' : 'dovetail.create');
   const action = id ? 'edit' : 'create';
 
-  const isYamlForm = config.formConfig?.formType === FormType.YAML;
+  const isYamlForm = resourceConfig.formConfig?.formType === FormType.YAML;
 
   const onOk = useCallback(
     e => {
@@ -153,31 +159,38 @@ export function FormModal(props: FormModalProps) {
     return '';
   }, [isError, id, i18n]);
   const title = useMemo(() => {
-    if (typeof config.formConfig?.formTitle === 'string')
-      return config.formConfig?.formTitle;
+    if (typeof resourceConfig.formConfig?.formTitle === 'string')
+      return resourceConfig.formConfig?.formTitle;
 
-    if (typeof config.formConfig?.formTitle === 'function') {
-      return config.formConfig?.formTitle(action);
+    if (typeof resourceConfig.formConfig?.formTitle === 'function') {
+      return resourceConfig.formConfig?.formTitle(action);
     }
-    const label = config.displayName || config?.kind;
+    const label = resourceConfig.displayName || resourceConfig?.kind;
 
     return i18n.t(id ? 'dovetail.edit_resource' : 'dovetail.create_resource', {
       resource: transformResourceKindInSentence(label, i18n.language),
     });
-  }, [action, config.formConfig, config.displayName, config?.kind, i18n, id]);
+  }, [
+    action,
+    resourceConfig.formConfig,
+    resourceConfig.displayName,
+    resourceConfig?.kind,
+    i18n,
+    id,
+  ]);
   const desc = useMemo(() => {
-    if (typeof config.formConfig?.formDesc === 'string')
-      return config.formConfig?.formDesc;
+    if (typeof resourceConfig.formConfig?.formDesc === 'string')
+      return resourceConfig.formConfig?.formDesc;
 
-    if (typeof config.formConfig?.formDesc === 'function') {
-      return config.formConfig?.formDesc(action);
+    if (typeof resourceConfig.formConfig?.formDesc === 'function') {
+      return resourceConfig.formConfig?.formDesc(action);
     }
     return '';
-  }, [action, config.formConfig]);
+  }, [action, resourceConfig.formConfig]);
   const formEle = useMemo(() => {
     const commonFormProps = {
       id: id as string,
-      config,
+      resourceConfig,
       customYamlFormProps,
       onSaveButtonPropsChange: setSaveButtonProps,
       onError: () => {
@@ -191,8 +204,9 @@ export function FormModal(props: FormModalProps) {
     };
 
     if (
-      config.formConfig &&
-      (config.formConfig?.formType === FormType.FORM || 'fields' in config.formConfig)
+      resourceConfig.formConfig &&
+      (resourceConfig.formConfig?.formType === FormType.FORM ||
+        'fields' in resourceConfig.formConfig)
     ) {
       return (
         <RefineFormContainer
@@ -201,16 +215,18 @@ export function FormModal(props: FormModalProps) {
           step={step}
           options={options}
           isYamlMode={isYamlMode}
-          formConfig={config.formConfig as RefineFormConfig & CommonFormConfig}
+          formConfig={resourceConfig.formConfig as RefineFormConfig & CommonFormConfig}
         />
       );
     }
 
-    return <YamlFormContainer {...commonFormProps} formConfig={config.formConfig} />;
+    return (
+      <YamlFormContainer {...commonFormProps} formConfig={resourceConfig.formConfig} />
+    );
   }, [
     id,
     customYamlFormProps,
-    config,
+    resourceConfig,
     isYamlMode,
     step,
     options,
@@ -223,8 +239,8 @@ export function FormModal(props: FormModalProps) {
       return undefined;
     }
 
-    if (config.formConfig && 'steps' in config.formConfig) {
-      return config.formConfig?.steps?.map((step, index) => ({
+    if (resourceConfig.formConfig && 'steps' in resourceConfig.formConfig) {
+      return resourceConfig.formConfig?.steps?.map((step, index) => ({
         title: step.title,
         children: (
           <>
@@ -238,7 +254,7 @@ export function FormModal(props: FormModalProps) {
     }
 
     return undefined;
-  }, [config.formConfig, desc, formEle, isYamlMode]);
+  }, [resourceConfig.formConfig, desc, formEle, isYamlMode]);
 
   const handleStepChange = useCallback(
     async (nextStep: number) => {
@@ -269,9 +285,9 @@ export function FormModal(props: FormModalProps) {
       title={
         <div className={TitleWrapperStyle}>
           <span>{title}</span>
-          {config.formConfig?.formType === FormType.FORM ? (
+          {resourceConfig.formConfig?.formType === FormType.FORM ? (
             <FormModeSegmentControl
-              formConfig={config.formConfig}
+              formConfig={resourceConfig.formConfig}
               mode={mode}
               onChangeMode={onChangeMode}
             />
@@ -285,9 +301,9 @@ export function FormModal(props: FormModalProps) {
       onOk={onOk}
       okButtonProps={{
         ...omit(saveButtonProps, 'onClick'),
-        children: config.formConfig?.saveButtonText,
+        children: resourceConfig.formConfig?.saveButtonText,
       }}
-      okText={config.formConfig?.saveButtonText || okText}
+      okText={resourceConfig.formConfig?.saveButtonText || okText}
       destroyOnClose
       destroyOtherStep
       {...modalProps}

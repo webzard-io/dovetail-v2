@@ -16,7 +16,7 @@ export const RefineFormPage = (props: Props) => {
   const { t } = useTranslation();
   const { id } = useParsed();
   const { formResult } = useRefineForm({
-    config,
+    resourceConfig: config,
     id: id as string,
   });
   const action = id ? 'edit' : 'create';
@@ -40,7 +40,7 @@ export const RefineFormPage = (props: Props) => {
       `}
     >
       <RefineFormContent
-        config={config}
+        resourceConfig={config}
         formResult={formResult}
         resourceId={id as string}
         transformedInitValues={formResult.transformedInitValues}

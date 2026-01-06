@@ -8,5 +8,7 @@ export const DaemonSetForm: React.FC<FormProps> = () => {
   const configs = useContext(ConfigsContext);
   const config = configs['daemonsets'];
 
-  return <YamlForm initialValuesForCreate={DAEMONSET_INIT_VALUE} config={config} />;
+  return (
+    <YamlForm initialValuesForCreate={DAEMONSET_INIT_VALUE} resourceConfig={config} />
+  );
 };

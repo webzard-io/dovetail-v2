@@ -15,7 +15,10 @@ import { YamlForm, YamlFormProps } from './YamlForm';
 interface RefineFormContainerProps {
   id: string;
   isYamlMode: boolean;
-  config: ResourceConfig;
+  resourceConfig: Pick<
+    ResourceConfig,
+    'name' | 'displayName' | 'kind' | 'initValue' | 'basePath' | 'formConfig'
+  >;
   step: number;
   formConfig: (RefineFormConfig & CommonFormConfig) | undefined;
   customYamlFormProps?: YamlFormProps;
@@ -38,7 +41,7 @@ const RefineFormContainer = React.forwardRef<
 >(function RefineFormContainer(
   {
     id,
-    config,
+    resourceConfig,
     step,
     customYamlFormProps,
     formConfig,
@@ -52,7 +55,7 @@ const RefineFormContainer = React.forwardRef<
 ) {
   const action = id ? 'edit' : 'create';
   const refineFormResult = useRefineForm({
-    config,
+    resourceConfig: resourceConfig,
     id,
     refineProps: {
       onMutationSuccess: data => {
@@ -78,7 +81,7 @@ const RefineFormContainer = React.forwardRef<
     },
   });
   const fieldsConfig = useFieldsConfig(
-    config,
+    resourceConfig,
     { fields: formConfig?.fields },
     id,
     step,
@@ -96,8 +99,8 @@ const RefineFormContainer = React.forwardRef<
     if (isYamlMode) {
       return {
         ...customYamlFormProps,
-        resource: config.name,
-        config,
+        resource: resourceConfig.name,
+        resourceConfig,
         transformInitValues: undefined,
         transformApplyValues: undefined,
         initialValuesForCreate: transformApplyValues(
@@ -132,14 +135,14 @@ const RefineFormContainer = React.forwardRef<
     }
 
     return {
-      config,
+      resourceConfig,
     };
   }, [
     action,
     isYamlMode,
     customYamlFormProps,
     fieldsConfig,
-    config,
+    resourceConfig,
     id,
     refineFormResult,
     formConfig?.beforeSubmit,
@@ -191,7 +194,7 @@ const RefineFormContainer = React.forwardRef<
       ) : (
         <RefineFormContent
           formResult={refineFormResult.formResult}
-          config={config}
+          resourceConfig={resourceConfig}
           step={step}
           formConfig={formConfig}
           errorMsgs={[
