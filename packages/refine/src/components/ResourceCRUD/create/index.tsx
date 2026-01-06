@@ -6,22 +6,22 @@ import { FormType, ResourceConfig } from '../../../types';
 import { RefineFormPage } from '../../Form';
 
 type Props<Model extends ResourceModel> = {
-  config: ResourceConfig<Model>;
+  resourceConfig: ResourceConfig<Model>;
 };
 
 export function ResourceForm<Model extends ResourceModel>(props: Props<Model>) {
-  const { config } = props;
+  const { resourceConfig: resourceConfig } = props;
   const formProps: YamlFormProps<Model> = useMemo(() => {
     return {
-      initialValues: getInitialValues(config),
-      transformInitValues: config.formConfig?.transformInitValues,
-      transformApplyValues: config.formConfig?.transformApplyValues,
-      config,
+      initialValues: getInitialValues(resourceConfig),
+      transformInitValues: resourceConfig.formConfig?.transformInitValues,
+      transformApplyValues: resourceConfig.formConfig?.transformApplyValues,
+      resourceConfig,
     };
-  }, [config]);
+  }, [resourceConfig]);
 
-  if (config.formConfig?.formType === FormType.FORM) {
-    return <RefineFormPage config={config} />;
+  if (resourceConfig.formConfig?.formType === FormType.FORM) {
+    return <RefineFormPage config={resourceConfig} />;
   }
 
   return <YamlForm<Model> {...formProps} />;
