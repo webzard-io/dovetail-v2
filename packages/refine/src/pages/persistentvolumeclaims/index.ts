@@ -18,7 +18,9 @@ import {
 } from '../../components';
 import { PersistentVolumeClaimModel } from '../../models';
 
-export const PersistentVolumeClaimConfig = (i18n: I18n): ResourceConfig<PersistentVolumeClaimModel> => ({
+export const PersistentVolumeClaimConfig = (
+  i18n: I18n
+): ResourceConfig<PersistentVolumeClaimModel> => ({
   name: 'persistentvolumeclaims',
   basePath: '/api/v1',
   apiVersion: 'v1',
@@ -42,7 +44,7 @@ export const PersistentVolumeClaimConfig = (i18n: I18n): ResourceConfig<Persiste
         groups: [
           BasicGroup(i18n, {
             basicFields: [
-              PVCStorageField(i18n),
+              PVCStorageField({ i18n }),
               PVStorageClassField(i18n),
               PVPhaseField(i18n),
               PVVolumeModeField(i18n),

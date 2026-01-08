@@ -525,16 +525,30 @@ export const PVCapacityField = <Model extends PersistentVolumeModel>(
   };
 };
 
-export const PVCStorageField = <Model extends PersistentVolumeClaimModel>(
-  i18n: I18nType
-): ShowField<Model> => {
+export const PVCStorageField = <Model extends PersistentVolumeClaimModel>({
+  i18n,
+  editProps,
+}: {
+  i18n: I18nType;
+  editProps?: {
+    label?: React.ReactNode;
+    onBlur?: (value: number, setValue: (value: number) => void) => void;
+  };
+}): ShowField<Model> => {
   return {
     key: 'storage',
     col: 12,
     path: ['spec', 'resources', 'requests', 'storage'],
     title: i18n.t('dovetail.distributed'),
     renderContent(value, pvc) {
-      return <PVCDistributeStorage pvc={pvc} editable />;
+      return (
+        <PVCDistributeStorage
+          pvc={pvc}
+          label={editProps?.label}
+          onBlur={editProps?.onBlur}
+          editable
+        />
+      );
     },
   };
 };

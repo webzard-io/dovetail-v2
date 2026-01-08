@@ -1,5 +1,10 @@
 import React from 'react';
-import { Control, UseFormTrigger, FieldValues, ControllerRenderProps } from 'react-hook-form';
+import {
+  Control,
+  UseFormTrigger,
+  FieldValues,
+  ControllerRenderProps,
+} from 'react-hook-form';
 import { ResourceModel } from 'src/models';
 import { FormType } from 'src/types/resource';
 
@@ -12,7 +17,9 @@ export type RefineFormValidator = (
   value: unknown,
   formValue: unknown,
   formMode: FormType
-) => { isValid: boolean; errorMsg: string } | Promise<{ isValid: boolean; errorMsg: string }>;
+) =>
+  | { isValid: boolean; errorMsg: string }
+  | Promise<{ isValid: boolean; errorMsg: string }>;
 
 export type RefineFormFieldRenderProps = {
   field: ControllerRenderProps<FieldValues, string>;
@@ -26,7 +33,7 @@ export type RefineFormFieldRenderProps = {
 export type RefineFormField = {
   path: string[];
   key: string;
-  label: string;
+  label: React.ReactNode | ((formValue: FieldValues) => React.ReactNode);
   placeholder?: string;
   helperText?: React.ReactNode;
   type?: 'number';
@@ -54,4 +61,4 @@ export type RefineFormSection<Model extends ResourceModel = ResourceModel> = {
     action: 'create' | 'edit';
     step?: number;
   }) => RefineFormField[];
-}
+};
