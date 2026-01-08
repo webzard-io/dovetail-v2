@@ -1,6 +1,6 @@
 import { RequiredColumnProps } from '@cloudtower/eagle';
-import { useTable, useResource } from '@refinedev/core';
-import { merge } from 'lodash-es';
+import { useTable, useResource, CrudFilters, CrudSorting } from '@refinedev/core';
+import { merge, isEqual } from 'lodash-es';
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import ValueDisplay from 'src/components/ValueDisplay';
 import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
@@ -16,6 +16,7 @@ type Params<Model extends ResourceModel> = {
   columns: Column<Model>[];
   tableProps?: Partial<InternalTableProps<Model>>;
   formatter?: (d: Model) => Model;
+  filters?: CrudFilters;
   Dropdown?: React.FC<{ record: Model }>;
 };
 
@@ -85,7 +86,7 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
         },
       ];
 
-      table.setSorters(sorters as any);
+      table.setSorters(sorters as CrudSorting);
     },
     [table, columns]
   );
@@ -122,6 +123,14 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (isEqual(params.filters, table.filters)) {
+      return;
+    }
+
+    table.setFilters(params.filters || [], 'replace');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.filters]);
 
   return {
     tableProps: finalProps,
