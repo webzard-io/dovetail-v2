@@ -1,7 +1,7 @@
 import { RequiredColumnProps } from '@cloudtower/eagle';
-import { useTable, useResource } from '@refinedev/core';
-import { merge } from 'lodash-es';
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import { useTable, useResource, CrudFilters, CrudSorting } from '@refinedev/core';
+import { merge, isEqual } from 'lodash-es';
+import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import ValueDisplay from 'src/components/ValueDisplay';
 import K8sDropdown from '../../components/Dropdowns/K8sDropdown';
 import {
@@ -16,6 +16,7 @@ type Params<Model extends ResourceModel> = {
   columns: Column<Model>[];
   tableProps?: Partial<InternalTableProps<Model>>;
   formatter?: (d: Model) => Model;
+  filters?: CrudFilters;
   Dropdown?: React.FC<{ record: Model }>;
 };
 
@@ -45,6 +46,8 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
   const { columns, tableProps, formatter, Dropdown = K8sDropdown } = params;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(tableProps?.currentPage || 1);
+  // 用来比较传入的 filters 是否发生变化
+  const prevFiltersRef = useRef<CrudFilters>([]);
   const { resource } = useResource();
   const currentSize = tableProps?.defaultSize || 10;
 
@@ -85,7 +88,7 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
         },
       ];
 
-      table.setSorters(sorters as any);
+      table.setSorters(sorters as CrudSorting);
     },
     [table, columns]
   );
@@ -122,6 +125,15 @@ export const useEagleTable = <Model extends ResourceModel>(params: Params<Model>
     ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (isEqual(params.filters, prevFiltersRef.current)) {
+      return;
+    }
+
+    table.setFilters(params.filters || [], 'replace');
+    prevFiltersRef.current = params.filters || [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.filters]);
 
   return {
     tableProps: finalProps,
