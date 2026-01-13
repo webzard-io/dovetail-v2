@@ -157,7 +157,11 @@ const MemoizedFormField = memo(function FormField({
         return (
           <Form.Item
             key={fieldConfig.key}
-            label={fieldConfig.label}
+            label={
+              typeof fieldConfig.label === 'function'
+                ? fieldConfig.label(currentFormValue)
+                : fieldConfig.label
+            }
             colon={false}
             labelCol={
               fieldConfig.layout === FormItemLayout.VERTICAL

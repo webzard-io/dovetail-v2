@@ -10,33 +10,24 @@ interface UseRefineFiltersOptions {
 }
 
 export function useRefineFilters(options: UseRefineFiltersOptions = {}) {
-  const {
-    disableNamespaceFilter = false,
-    disableNameKeywordFilter = false,
-  } = options;
+  const { disableNamespaceFilter = false, disableNameKeywordFilter = false } = options;
 
   // Namespace filter logic
   const { value: nsFilters = [] } = useNamespacesFilter();
-  const namespaceFilters = useMemo(() => {
-    if (disableNamespaceFilter) {
-      return [];
-    }
-
+  const namespaceFilters = useMemo((): CrudFilters => {
     const filters = nsFilters.filter(filter => filter !== ALL_NS);
-    if (filters.length === 0) {
+
+    if (disableNamespaceFilter || filters.length === 0) {
       return [];
     }
 
     return [
       {
-        operator: 'or',
-        value: filters.map(filter => ({
-          field: 'metadata.namespace',
-          operator: 'eq',
-          value: filter,
-        })),
+        field: 'metadata.namespace',
+        operator: 'in',
+        value: filters,
       },
-    ] as CrudFilters;
+    ];
   }, [nsFilters, disableNamespaceFilter]);
 
   // Name keyword filter logic
@@ -58,9 +49,7 @@ export function useRefineFilters(options: UseRefineFiltersOptions = {}) {
 
   // Combine filters
   const filters = useMemo(
-    () => ({
-      permanent: [...namespaceFilters, ...nameKeywordFilters],
-    }),
+    () => [...namespaceFilters, ...nameKeywordFilters],
     [namespaceFilters, nameKeywordFilters]
   );
 

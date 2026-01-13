@@ -460,6 +460,7 @@ export const PodWorkloadColumnRenderer = <Model extends PodModel>(
       return value.map(o => (
         <ReferenceLink
           key={o.name}
+          pod={record}
           ownerReference={o}
           namespace={record.metadata.namespace || 'default'}
         />

@@ -26,9 +26,8 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
   const filters = useRefineFilters();
 
   const { tableProps, selectedKeys } = useEagleTable<Model>({
-    useTableParams: {
-      filters,
-    },
+    useTableParams: {},
+    filters,
     columns: [nameRenderer, ...(columns?.() || [])],
     tableProps: {
       defaultSize: 50,

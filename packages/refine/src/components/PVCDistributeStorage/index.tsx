@@ -1,6 +1,12 @@
 import { Fields, Form, Units } from '@cloudtower/eagle';
 import { useResource, useUpdate } from '@refinedev/core';
-import React, { useCallback, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { EditField } from 'src/components/EditField';
 import { PersistentVolumeClaimModel } from 'src/models';
@@ -15,10 +21,15 @@ interface DistributeStorageFormHandler {
 interface DistributeStorageFormProps {
   pvc: PersistentVolumeClaimModel;
   defaultValue: number;
+  label?: React.ReactNode;
+  onBlur?: (value: number, setValue: (value: number) => void) => void;
 }
 
-export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandler, DistributeStorageFormProps>(function DistributeStorageForm(props, ref) {
-  const { defaultValue, pvc } = props;
+export const DistributeStorageForm = React.forwardRef<
+  DistributeStorageFormHandler,
+  DistributeStorageFormProps
+>(function DistributeStorageForm(props, ref) {
+  const { defaultValue, pvc, label, onBlur } = props;
   const { resource } = useResource();
   const { mutateAsync } = useUpdate();
   const { t } = useTranslation();
@@ -27,7 +38,7 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
   const [validateResult, setValidateResult] = useState<{
     distributeStorage: string;
   }>({
-    distributeStorage: ''
+    distributeStorage: '',
   });
 
   const validators = useMemo(() => {
@@ -42,7 +53,7 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
         }
 
         return '';
-      }
+      },
     };
   }, [t, defaultValue]);
 
@@ -68,23 +79,27 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
             kind: pvc.kind,
             name: pvc.id,
             interpolation: {
-              escapeValue: false
-            }
+              escapeValue: false,
+            },
           }),
-          type: 'success'
+          type: 'success',
         };
       },
       errorNotification: false,
     });
   }, [pvc, distributeStorage, resource?.name, validators, mutateAsync, t]);
 
-  useImperativeHandle(ref, () => ({
-    submit,
-  }), [submit]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      submit,
+    }),
+    [submit]
+  );
 
   return (
     <Form.Item
-      label={<span style={{ width: '134px' }}>{t('dovetail.distributed')}</span>}
+      label={<span style={{ width: '134px' }}>{label || t('dovetail.distributed')}</span>}
       colon={false}
       help={validateResult.distributeStorage}
       validateStatus={validateResult.distributeStorage ? 'error' : ''}
@@ -94,15 +109,22 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
         input={{
           name: 'distributeStorage',
           value: distributeStorage,
-          onChange: (value) => {
+          onChange: value => {
             const v = Number(value);
 
             setDistributeStorage(v);
             setValidateResult({
-              distributeStorage: validators.distributeStorage(v)
+              distributeStorage: validators.distributeStorage(v),
             });
           },
-          onBlur: () => undefined,
+          onBlur: () => {
+            onBlur?.(distributeStorage, newValue => {
+              setDistributeStorage(newValue);
+              setValidateResult({
+                distributeStorage: validators.distributeStorage(newValue),
+              });
+            });
+          },
           onFocus: () => undefined,
         }}
         min={1}
@@ -116,9 +138,16 @@ export const DistributeStorageForm = React.forwardRef<DistributeStorageFormHandl
 interface PVCDistributeStorageProps {
   pvc: PersistentVolumeClaimModel;
   editable: boolean;
+  label?: React.ReactNode;
+  onBlur?: (value: number, setValue: (value: number) => void) => void;
 }
 
-function PVCDistributeStorage({ pvc, editable }: PVCDistributeStorageProps) {
+function PVCDistributeStorage({
+  pvc,
+  editable,
+  label,
+  onBlur,
+}: PVCDistributeStorageProps) {
   const { t } = useTranslation();
   const formRef = useRef<DistributeStorageFormHandler>(null);
 
@@ -127,26 +156,26 @@ function PVCDistributeStorage({ pvc, editable }: PVCDistributeStorageProps) {
   return (
     <div>
       <Units.Byte rawValue={parseSi(value as string)} decimals={2} />
-      {
-        editable && (
-          <EditField
-            modalProps={{
-              formRef,
-              title: t('dovetail.edit_distribute_storage'),
-              namespace: pvc.namespace || '',
-              renderContent() {
-                return (
-                  <DistributeStorageForm
-                    ref={formRef}
-                    defaultValue={value ? transformStorageUnit(value, StorageUnit.Gi) : 0}
-                    pvc={pvc}
-                  />
-                );
-              }
-            }}
-          />
-        )
-      }
+      {editable && (
+        <EditField
+          modalProps={{
+            formRef,
+            title: t('dovetail.edit_distribute_storage'),
+            namespace: pvc.namespace || '',
+            renderContent() {
+              return (
+                <DistributeStorageForm
+                  ref={formRef}
+                  defaultValue={value ? transformStorageUnit(value, StorageUnit.Gi) : 0}
+                  pvc={pvc}
+                  label={label}
+                  onBlur={onBlur}
+                />
+              );
+            },
+          }}
+        />
+      )}
     </div>
   );
 }
