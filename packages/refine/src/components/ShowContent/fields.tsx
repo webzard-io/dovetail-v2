@@ -6,6 +6,7 @@ import { Unstructured } from 'k8s-api-provider';
 import { Taint } from 'kubernetes-types/core/v1';
 import { ConfigMap, Secret } from 'kubernetes-types/core/v1';
 import { Condition } from 'kubernetes-types/meta/v1';
+import { OwnerReference } from 'kubernetes-types/meta/v1';
 import { NetworkPolicy } from 'kubernetes-types/networking/v1';
 import React from 'react';
 import { DurationTime } from 'src/components/DurationTime';
@@ -35,6 +36,7 @@ import {
   StorageClassModel,
   PersistentVolumeModel,
   PersistentVolumeClaimModel,
+  PodModel,
 } from '../../models';
 import { ExtendObjectMeta } from '../../plugins/relation-plugin';
 import { parseSi } from '../../utils/unit';
@@ -45,11 +47,13 @@ import { ImageNames } from '../ImageNames';
 import { IngressRulesTable } from '../IngressRulesTable';
 import { KeyValue, KeyValueAnnotation, KeyValueSecret } from '../KeyValue';
 import { NodeTaintsTable } from '../NodeTaintsTable';
+import { ReferenceLink } from '../ReferenceLink';
 import { PVVolumeModeDisplay } from '../ResourceFiledDisplays';
 import { ResourceLink } from '../ResourceLink';
 import { ResourceTable } from '../ResourceTable';
 import { StateTag } from '../StateTag';
 import { Time } from '../Time';
+import ValueDisplay from '../ValueDisplay';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
 
@@ -767,6 +771,33 @@ export const PodCountOfJobField = <Model extends JobModel>(
     ),
     renderContent: (_, record) => {
       return <span>{record.podCountDisplay}</span>;
+    },
+  };
+};
+
+export const PodWorkloadField = <Model extends PodModel>(
+  i18n: I18nType
+): ShowField<Model> => {
+  return {
+    key: 'podWorkload',
+    title: i18n.t('dovetail.workload'),
+    path: ['metadata', 'ownerReferences'],
+    col: 12,
+    renderContent(value, record) {
+      const ownerReferences = value as OwnerReference[];
+
+      if (!ownerReferences?.length) {
+        return <ValueDisplay value="" />;
+      }
+
+      return ownerReferences.map(o => (
+        <ReferenceLink
+          key={o.name}
+          pod={record}
+          ownerReference={o}
+          namespace={record.metadata.namespace || 'default'}
+        />
+      ));
     },
   };
 };
