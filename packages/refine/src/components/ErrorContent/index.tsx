@@ -46,8 +46,6 @@ export const ErrorContent = styled.div`
   justify-content: center;
 
   .title {
-    margin-bottom: 8px;
-
     &.list-title {
       margin-bottom: 16px;
     }
@@ -87,7 +85,12 @@ const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = pro
   return (
     <ErrorWrapper className={cx(props.className, type)} style={props.style}>
       <ErrorContent className="error-content">
-        <p className={cx(fontMap[type], 'title', `${type}-title`)}>
+        <p
+          className={cx(fontMap[type], 'title', `${type}-title`)}
+          style={{
+            marginBottom: !!refetch ? '8px' : '0',
+          }}
+        >
           {errorText || t('dovetail.obtain_data_error')}
         </p>
         {props.children}
