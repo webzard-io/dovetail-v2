@@ -1688,13 +1688,13 @@
   resolved "https://registry.npmmirror.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cloudtower/eagle@^0.34.24":
-  version "0.34.24"
-  resolved "https://registry.yarnpkg.com/@cloudtower/eagle/-/eagle-0.34.24.tgz#dccfd389b8787aceb31950549e750ba19029a40f"
-  integrity sha512-/M1bBUHpAQDvOgZvH3ilPvI0nt+ffskixK0GWV/OkdniHxNRfGYF7mmtEQnn9YvRa2JLfjcn9SfaQZb6oTt0SQ==
+"@cloudtower/eagle@^490.0.1":
+  version "490.0.1"
+  resolved "https://registry.yarnpkg.com/@cloudtower/eagle/-/eagle-490.0.1.tgz#2e8e3dbc2814b647fb91ec72733d4e4c79fcfc6f"
+  integrity sha512-/NJLZph6ZikxBKJAtFb8+Q1FKhz/acTFTdq+NQFxSQfp/a2P3X2ilppCWrF4p6dYYFersgUtPrwwBRHRrDqExw==
   dependencies:
-    "@cloudtower/icons-react" "^0.34.24"
-    "@cloudtower/parrot" "^0.34.24"
+    "@cloudtower/icons-react" "^490.0.1"
+    "@cloudtower/parrot" "^490.0.1"
     "@cloudtower/rc-notification" "^4.6.1"
     "@linaria/core" "^4.2.2"
     "@linaria/react" "^4.3.0"
@@ -1703,6 +1703,7 @@
     classnames "2.3.2"
     dayjs "^1.11.10"
     react-beautiful-dnd "^13.0.0"
+    react-copy-to-clipboard "^5.1.0"
     react-highlight-words "^0.17.0"
     react-i18next "^13.0.1"
     react-redux "^7.1.3"
@@ -1712,15 +1713,15 @@
     redux "^4.2.0"
     timezones.json "^1.6.1"
 
-"@cloudtower/icons-react@^0.34.24":
-  version "0.34.24"
-  resolved "https://registry.yarnpkg.com/@cloudtower/icons-react/-/icons-react-0.34.24.tgz#3bef539d5d5a061bd7a0d2f2afc163fe2d840b00"
-  integrity sha512-IYt3w7FiKynb61GzGae2gQt5jl8g3V7r7nv8q04JuXo7aBmsFFO64vH7k/thpvYHMm4CusKxPQoN/mvyQrk9Pw==
+"@cloudtower/icons-react@^490.0.1":
+  version "490.0.1"
+  resolved "https://registry.yarnpkg.com/@cloudtower/icons-react/-/icons-react-490.0.1.tgz#5483072e3cfdbb2b164af747a91fab0295794fae"
+  integrity sha512-1wdacRw1JeDaUmOWmJaK/RK1SRXCsvF38OAHMJKibP5IyKoQA17AlIeG8njRH8Fs8lin8XhtxJU7VLdUoRb3nA==
 
-"@cloudtower/parrot@^0.34.24":
-  version "0.34.24"
-  resolved "https://registry.yarnpkg.com/@cloudtower/parrot/-/parrot-0.34.24.tgz#d76011c72d0cc724b3a893c0fa0239c319ee8854"
-  integrity sha512-ofBRXnixFyKwFPjcIKuGJCLFGTXoG7Ugmr9YGmZhkEZgP3b+p7cNlHV/vP3A/sBLN5KZgjVAB2xSXKNv7BEl+A==
+"@cloudtower/parrot@^490.0.1":
+  version "490.0.1"
+  resolved "https://registry.yarnpkg.com/@cloudtower/parrot/-/parrot-490.0.1.tgz#76abe0fc1cddf1bbab326ab85c7d6158ba44a6e6"
+  integrity sha512-Jn5uA494Nl3AkmjH+24b2w2rSfnOi+mSOYIT9IPzUz+E55E1WlvLu49fXrViRxNfLN6ayXLba1o1nc+K+5EnCg==
   dependencies:
     i18next "^23.2.3"
     lodash.merge "^4.6.2"
@@ -5148,7 +5149,7 @@ copy-descriptor@^0.1.0:
   resolved "https://registry.npmmirror.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
   integrity sha512-XgZ0pFcakEUlbwQEVNg3+QAis1FyTL3Qel9FYy8pSkQqoG3PNoT0bOCQtOXcOkur21r2Eq2kI+IE+gsmAEVlYw==
 
-copy-to-clipboard@^3.2.0, copy-to-clipboard@^3.3.3:
+copy-to-clipboard@^3.2.0, copy-to-clipboard@^3.3.1, copy-to-clipboard@^3.3.3:
   version "3.3.3"
   resolved "https://registry.npmmirror.com/copy-to-clipboard/-/copy-to-clipboard-3.3.3.tgz#55ac43a1db8ae639a4bd99511c148cdd1b83a1b0"
   integrity sha512-2KV8NhB5JqC3ky0r9PMCAZKbUHSwtEo4CwCs0KXgruG43gX5PMqDEBbVU4OUzw2MuAWUfsuFmWvEKG5QRfSnJA==
@@ -10845,6 +10846,14 @@ react-children-utilities@^1.2.1:
   version "1.3.3"
   resolved "https://registry.npmmirror.com/react-children-utilities/-/react-children-utilities-1.3.3.tgz#4d6725b51471c119e5319a309d07c51543b65cb2"
   integrity sha512-4VnHQweSerPlsKS65dBeKuAPDhHAOllDgsjDLLdluMOZ+1yOE29pFqdGAnnOnFVfhIhvYnGyRbiJ7NtMemsu7w==
+
+react-copy-to-clipboard@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/react-copy-to-clipboard/-/react-copy-to-clipboard-5.1.0.tgz#09aae5ec4c62750ccb2e6421a58725eabc41255c"
+  integrity sha512-k61RsNgAayIJNoy9yDsYzDe/yAZAzEbEgcz3DZMhF686LEyukcE1hzurxe85JandPUG+yTfGVFzuEw3xt8WP/A==
+  dependencies:
+    copy-to-clipboard "^3.3.1"
+    prop-types "^15.8.1"
 
 react-devtools-core@^4.19.1:
   version "4.28.0"
