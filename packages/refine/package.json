@@ -1,6 +1,6 @@
 {
   "name": "@dovetail-v2/refine",
-  "version": "0.3.20-alpha.2",
+  "version": "0.3.21-alpha.0",
   "type": "module",
   "files": [
     "dist",
@@ -10,8 +10,8 @@
   "module": "./dist/refine.js",
   "types": "./dist/index.d.ts",
   "dependencies": {
-    "@cloudtower/eagle": "^0.34.24",
-    "@cloudtower/icons-react": "^0.34.24",
+    "@cloudtower/eagle": "^490.0.1",
+    "@cloudtower/icons-react": "^490.0.1",
     "@patternfly/react-core": "^5.1.1",
     "@patternfly/react-log-viewer": "^5.0.0",
     "@refinedev/core": "^4.47.2",
@@ -86,8 +86,8 @@
     "vite-plugin-commonjs": "^0.10.0"
   },
   "peerDependencies": {
-    "@cloudtower/eagle": "^0.34.24",
-    "@cloudtower/icons-react": "^0.34.24",
+    "@cloudtower/eagle": "^490.0.1",
+    "@cloudtower/icons-react": "^490.0.1",
     "@refinedev/core": "^4.47.2",
     "antd": "4.5.0",
     "i18next": "^23.2.3",
