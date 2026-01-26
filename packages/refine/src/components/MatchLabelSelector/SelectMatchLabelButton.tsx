@@ -14,6 +14,9 @@ const PopoverOverlayStyle = css`
   .ant-popover-inner-content {
     padding: 0;
   }
+  .ant-popover-arrow {
+    display: none;
+  }
 `;
 const PopoverContentStyle = css`
   width: 463px;
