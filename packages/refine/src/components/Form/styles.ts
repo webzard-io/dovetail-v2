@@ -10,6 +10,14 @@ export const VerticalFormItemStyle = css`
   &.ant-form-item {
     flex-direction: column !important;
     gap: 8px;
+
+    .ant-form-item-label > label {
+      min-height: auto;
+    }
+
+    .ant-form-item-control-input {
+      min-height: auto;
+    }
   }
 `;
 
