@@ -1,16 +1,25 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Typo, DonutChart, Form, Fields } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
-import { useResource, useUpdate } from '@refinedev/core';
-import React, { useState, useMemo, useCallback, useImperativeHandle, useRef } from 'react';
+import { useUpdate } from '@refinedev/core';
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useContext,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { EditField } from 'src/components/EditField';
+import { ConfigsContext } from 'src/contexts';
+import { getResourceNameByKind } from 'src/utils';
 import { WorkloadModel, JobModel } from '../../models';
 import { pruneBeforeEdit } from '../../utils/k8s';
 
 const WorkloadReplicasWrapperStyle = css`
   border-radius: 8px;
-  border: 1px solid rgba(211, 218, 235, 0.60);
+  border: 1px solid rgba(211, 218, 235, 0.6);
   padding: 16px;
   display: inline-flex;
 `;
@@ -29,10 +38,10 @@ const DonutChartCenterStyle = css`
   transform: translate(-50%, -50%);
 `;
 const ReadyValueStyle = css`
-  color: #00122E;
+  color: #00122e;
 `;
 const ReplicasValueStyle = css`
-  color: rgba(44, 56, 82, 0.60);
+  color: rgba(44, 56, 82, 0.6);
 `;
 const ContentWrapperStyle = css`
   display: table;
@@ -44,7 +53,7 @@ const LabelStyle = css`
   color: rgba(44, 56, 82, 0.75);
 `;
 const ValueStyle = css`
-  color: #00122E;
+  color: #00122e;
 `;
 
 interface WorkloadReplicasFormProps {
@@ -57,10 +66,13 @@ interface WorkloadReplicasFormHandler {
   submit: () => Promise<unknown> | undefined;
 }
 
-export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler, WorkloadReplicasFormProps>(function WorkloadReplicasForm(props, ref) {
+export const WorkloadReplicasForm = React.forwardRef<
+  WorkloadReplicasFormHandler,
+  WorkloadReplicasFormProps
+>(function WorkloadReplicasForm(props, ref) {
   const { defaultValue, record, label } = props;
-  const { resource } = useResource();
   const { mutateAsync } = useUpdate();
+  const configs = useContext(ConfigsContext);
   const { t } = useTranslation();
 
   const [replicas, setReplicas] = useState(defaultValue);
@@ -68,12 +80,13 @@ export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler
   const submit = useCallback(() => {
     const v = record.scale(replicas);
     const id = record.id;
+    const resourceName = getResourceNameByKind(v.kind, configs) || '';
 
     pruneBeforeEdit(v);
 
     return mutateAsync({
       id,
-      resource: resource?.name || '',
+      resource: resourceName,
       values: v,
       successNotification() {
         return {
@@ -81,35 +94,36 @@ export const WorkloadReplicasForm = React.forwardRef<WorkloadReplicasFormHandler
             kind: record.kind,
             name: record.id,
             interpolation: {
-              escapeValue: false
-            }
+              escapeValue: false,
+            },
           }),
-          type: 'success'
+          type: 'success',
         };
       },
       errorNotification: false,
     });
-  }, [record, replicas, resource?.name, mutateAsync, t]);
+  }, [record, replicas, mutateAsync, t, configs]);
 
-  useImperativeHandle(ref, () => ({
-    submit,
-  }), [submit]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      submit,
+    }),
+    [submit]
+  );
 
   return (
-    <Form.Item
-      label={<span style={{ width: '134px' }}>{label}</span>}
-      colon={false}
-    >
+    <Form.Item label={<span style={{ width: '134px' }}>{label}</span>} colon={false}>
       <Fields.Integer
         style={{ width: '142px' }}
         input={{
           name: 'replicas',
           value: replicas,
-          onChange: (value) => {
+          onChange: value => {
             setReplicas(Number(value));
           },
-          onBlur: () => { },
-          onFocus: () => { },
+          onBlur: () => {},
+          onFocus: () => {},
         }}
         min={0}
         meta={{}}
@@ -128,24 +142,32 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
   const { t } = useTranslation();
   const formRef = useRef<WorkloadReplicasFormHandler | null>(null);
 
-  const readyReplicas = (('succeeded' in record && record.succeeded) || ('readyReplicas' in record && record.readyReplicas)) || 0;
-  const replicas = (('completions' in record && record.completions) || ('replicas' in record && record.replicas)) || 0;
+  const readyReplicas =
+    ('succeeded' in record && record.succeeded) ||
+    ('readyReplicas' in record && record.readyReplicas) ||
+    0;
+  const replicas =
+    ('completions' in record && record.completions) ||
+    ('replicas' in record && record.replicas) ||
+    0;
 
   const canScale = record.kind === 'Deployment' || record.kind === 'StatefulSet';
 
   const donutData = useMemo(() => {
-    const data = [{
-      name: 'ready',
-      value: readyReplicas,
-      color: 'rgba(33, 190, 106, 1)'
-    }];
+    const data = [
+      {
+        name: 'ready',
+        value: readyReplicas,
+        color: 'rgba(33, 190, 106, 1)',
+      },
+    ];
     const remain = replicas - readyReplicas;
 
     if (remain > 0 || replicas === 0) {
       data.push({
         name: 'remain',
         value: replicas === 0 ? 1 : remain,
-        color: 'rgba(162, 240, 213, 1)'
+        color: 'rgba(162, 240, 213, 1)',
       });
     }
 
@@ -162,50 +184,57 @@ export function WorkloadReplicas({ record, editable }: WorkloadReplicasProps) {
           height={70}
           innerRadius={28}
           outerRadius={34}
-          centerRender={(
+          centerRender={
             <div className={DonutChartCenterStyle}>
-              <span className={cx(ReadyValueStyle, Typo.Display.d2_bold_title)}>{readyReplicas}</span>
-              <span className={cx(ReplicasValueStyle, Typo.Label.l1_bold_title)}>/{replicas}</span>
+              <span className={cx(ReadyValueStyle, Typo.Display.d2_bold_title)}>
+                {readyReplicas}
+              </span>
+              <span className={cx(ReplicasValueStyle, Typo.Label.l1_bold_title)}>
+                /{replicas}
+              </span>
             </div>
-          )}
+          }
           widthPadding={false}
           showLegend={false}
-        >
-        </DonutChart>
+        ></DonutChart>
       </div>
       <div className={ContentWrapperStyle}>
         <tr>
-          <td className={cx(LabelStyle, Typo.Label.l3_regular)}>{record.kind === 'Job' ? t('dovetail.pod_complete_num') : t('dovetail.pod_ready_num')}</td>
+          <td className={cx(LabelStyle, Typo.Label.l3_regular)}>
+            {record.kind === 'Job'
+              ? t('dovetail.pod_complete_num')
+              : t('dovetail.pod_ready_num')}
+          </td>
           <td className={cx(ValueStyle, Typo.Label.l3_regular)}>{readyReplicas}</td>
         </tr>
         <tr>
-          <td className={cx(LabelStyle, Typo.Label.l3_regular)}>{t('dovetail.pod_replicas_num')}</td>
+          <td className={cx(LabelStyle, Typo.Label.l3_regular)}>
+            {t('dovetail.pod_replicas_num')}
+          </td>
           <td className={cx(ValueStyle, Typo.Label.l3_regular)}>{replicas}</td>
           <td>
-            {
-              editable && canScale && (
-                <EditField
-                  modalProps={{
-                    formRef,
-                    title: t('dovetail.edit_replicas'),
-                    namespace: record.namespace || '',
-                    renderContent() {
-                      return (
-                        <WorkloadReplicasForm
-                          ref={formRef}
-                          defaultValue={replicas}
-                          record={record as WorkloadModel}
-                          label={t('dovetail.pod_replicas_num')}
-                        />
-                      );
-                    }
-                  }}
-                />
-              )
-            }
+            {editable && canScale && (
+              <EditField
+                modalProps={{
+                  formRef,
+                  title: t('dovetail.edit_replicas'),
+                  namespace: record.namespace || '',
+                  renderContent() {
+                    return (
+                      <WorkloadReplicasForm
+                        ref={formRef}
+                        defaultValue={replicas}
+                        record={record as WorkloadModel}
+                        label={t('dovetail.pod_replicas_num')}
+                      />
+                    );
+                  },
+                }}
+              />
+            )}
           </td>
         </tr>
       </div>
-    </span >
+    </span>
   );
 }
