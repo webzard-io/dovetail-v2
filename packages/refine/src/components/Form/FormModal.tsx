@@ -142,11 +142,13 @@ export function FormModal(props: FormModalProps) {
           props: {
             onOk: () => {
               setMode(FormMode.FORM);
+              setStep(0);
             },
           },
         });
       } else {
         setMode(value);
+        setStep(0);
       }
     },
     [pushModal]
