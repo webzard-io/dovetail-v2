@@ -45,6 +45,7 @@ interface KeyValueTableFormProps<T extends KeyValuePair> {
   validateKey?: (key: string) => { isValid: boolean; errorMessage?: string };
   validateValue?: (value: string) => { isValid: boolean; errorMessage?: string };
   onSubmit?: (value: T[]) => Promise<unknown> | undefined;
+  keyTitle?: string;
 }
 
 export type KeyValueTableFormHandle<T extends KeyValuePair = KeyValuePair> = {
@@ -74,6 +75,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
     validateKey,
     validateValue,
     onSubmit,
+    keyTitle,
   } = props;
   const { t, i18n } = useTranslation();
   const tableFormRef = useRef<TableFormHandle>(null);
@@ -239,7 +241,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         columns={[
           {
             key: 'key',
-            title: t('dovetail.key'),
+            title: keyTitle || t('dovetail.key'),
             type: 'input',
             validator: ({ value }) => {
               if (!value) return t('dovetail.key_empty_text');
