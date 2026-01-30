@@ -303,7 +303,6 @@ export const ShowContentView = <Model extends ResourceModel>(
                   <ValueDisplay
                     className={cx(Typo.Label.l4_regular_title, ValueStyle)}
                     value={content}
-                    useOverflow={false}
                   />
                 </span>
               </div>
@@ -315,7 +314,7 @@ export const ShowContentView = <Model extends ResourceModel>(
       return field.render ? (
         field.render(value, record, field, size)
       ) : (
-        <ValueDisplay style={{ height: '100%' }} value={content} useOverflow={false} />
+        <ValueDisplay style={{ height: '100%' }} value={content} />
       );
     });
   }
