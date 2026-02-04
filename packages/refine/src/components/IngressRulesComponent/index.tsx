@@ -8,7 +8,8 @@ import { ResourceLink } from '../ResourceLink';
 
 export const IngressRulesComponent: React.FC<{
   ingress: IngressModel;
-}> = ({ ingress }) => {
+  noLink?: boolean;
+}> = ({ ingress, noLink }) => {
   const { data: serviceData } = useList<Service>({
     resource: 'services',
     meta: {
@@ -46,11 +47,15 @@ export const IngressRulesComponent: React.FC<{
             <span>{arrow}</span>
             {r.serviceName ? (
               <>
-                <ResourceLink
-                  resourceName="services"
-                  namespace={ingress.metadata.namespace || 'default'}
-                  name={r.serviceName}
-                />
+                {noLink ? (
+                  <span>{r.serviceName}</span>
+                ) : (
+                  <ResourceLink
+                    resourceName="services"
+                    namespace={ingress.metadata.namespace || 'default'}
+                    name={r.serviceName}
+                  />
+                )}
                 <span>:{r.servicePort}</span>
               </>
             ) : (
@@ -59,11 +64,15 @@ export const IngressRulesComponent: React.FC<{
             {secretName ? (
               <>
                 <span>{divider}</span>
-                <ResourceLink
-                  resourceName="secrets"
-                  namespace={ingress.metadata.namespace || 'default'}
-                  name={secretName}
-                />
+                {noLink ? (
+                  <span>{secretName}</span>
+                ) : (
+                  <ResourceLink
+                    resourceName="secrets"
+                    namespace={ingress.metadata.namespace || 'default'}
+                    name={secretName}
+                  />
+                )}
               </>
             ) : undefined}
           </>

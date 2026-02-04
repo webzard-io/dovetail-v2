@@ -469,9 +469,13 @@ export const PodWorkloadColumnRenderer = <Model extends PodModel>(
   };
 };
 
-export const IngressRulesColumnRenderer = <Model extends IngressModel>(
-  i18n: I18nType
-): Column<Model> => {
+export const IngressRulesColumnRenderer = <Model extends IngressModel>({
+  i18n,
+  noLink,
+}: {
+  i18n: I18nType;
+  noLink?: boolean;
+}): Column<Model> => {
   const dataIndex = ['spec', 'rules'];
   return {
     key: 'type',
@@ -482,7 +486,7 @@ export const IngressRulesColumnRenderer = <Model extends IngressModel>(
     sorter: undefined,
     width: 300,
     render(_, record) {
-      return <IngressRulesComponent ingress={record} />;
+      return <IngressRulesComponent ingress={record} noLink={noLink} />;
     },
   };
 };

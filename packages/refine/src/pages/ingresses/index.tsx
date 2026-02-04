@@ -20,7 +20,7 @@ export const IngressConfig = (i18n: i18n): ResourceConfig<IngressModel> => ({
   columns: () =>
     [
       IngressDefaultBackendColumnRenderer(i18n),
-      IngressRulesColumnRenderer(i18n),
+      IngressRulesColumnRenderer({ i18n }),
       IngressClassColumnRenderer(i18n),
       AgeColumnRenderer(i18n),
     ] as Column<IngressModel>[],
