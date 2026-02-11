@@ -256,6 +256,7 @@
   "name_duplicated": "名称已存在。",
   "input_correct_port": "请填写有效的端口号。",
   "port_range_limit": "仅支持 1-65535 之间的整数。",
+  "target_port_range_limit": "仅支持 1-65535 之间的整数或字符串。",
   "node_port_range_limit": "仅支持 30000-32767 之间的整数。",
   "auto_generate": "自动生成",
   "specify_port": "指定端口",
@@ -270,5 +271,6 @@
   "clear_search_condition": "清空搜索条件",
   "no_labels": "无标签",
   "no_annotations": "无注解",
-  "pause_scheduling": "暂停调度"
+  "pause_scheduling": "暂停调度",
+  "service_port_name_tip": "当端口数量为 1 个时，名称为选填项，当端口数量大于 1 个时，名称为必填项。"
 }
