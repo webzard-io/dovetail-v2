@@ -1,9 +1,11 @@
 import {
   Select,
   TableForm,
+  Input,
   InputInteger,
   TableFormHandle,
   TableFormColumn,
+  Tooltip,
 } from '@cloudtower/eagle';
 import { useList } from '@refinedev/core';
 import { ServicePort } from 'kubernetes-types/core/v1';
@@ -11,9 +13,11 @@ import isEqual from 'lodash-es/isEqual';
 import React, { useEffect, useRef, useState, useMemo, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ServiceModel } from 'src/models/service-model';
+import { DashedTitleStyle } from 'src/styles/show';
 import {
   validateNodePort,
   validatePort,
+  validatePortNameAndNumber,
   validateRfc1123Name,
 } from 'src/utils/validation';
 import { NodePort, NodePortMode } from './NodePort';
@@ -92,7 +96,11 @@ export const PortsConfigForm = React.forwardRef<
       },
       {
         key: 'name',
-        title: `${i18n.t('dovetail.name')} ${i18n.t('dovetail.optional_with_bracket')}`,
+        title: (
+          <Tooltip title={i18n.t('dovetail.service_port_name_tip')}>
+            <span className={DashedTitleStyle}>{i18n.t('dovetail.name')}</span>
+          </Tooltip>
+        ),
         type: 'input',
         validator: ({ value: portName, rowIndex }) => {
           const { errorMessage } = validateRfc1123Name({
@@ -137,16 +145,19 @@ export const PortsConfigForm = React.forwardRef<
         title: i18n.t('dovetail.container_port'),
         render: ({ value, onChange }) => {
           return (
-            <InputInteger
+            <Input
               value={value}
               size="small"
-              placeholder="1-65535"
-              onChange={onChange}
+              onChange={e => {
+                const v = e.target.value;
+                const num = Number(v);
+                onChange(!v || isNaN(num) ? v : num);
+              }}
             />
           );
         },
         validator: ({ value }) => {
-          const { isValid, errorMessage } = validatePort(value ?? '', {
+          const { isValid, errorMessage } = validatePortNameAndNumber(value ?? '', {
             isOptional: false,
             i18n,
             emptyText: i18n.t('dovetail.required_field', {

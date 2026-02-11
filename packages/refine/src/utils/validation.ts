@@ -258,6 +258,45 @@ export function validatePort(
   return { isValid: true };
 }
 
+export function validatePortNameAndNumber(
+  port: string | number,
+  options: {
+    isOptional?: boolean;
+    emptyText?: string;
+    i18n: I18n;
+  }
+): {
+  isValid: boolean;
+  errorMessage?: string;
+} {
+  const { isOptional, emptyText, i18n } = options;
+
+  if (port === '' && !isOptional) {
+    return {
+      isValid: false,
+      errorMessage:
+        emptyText ||
+        i18n.t('dovetail.required_field', {
+          label: i18n.t('dovetail.port'),
+        }),
+    };
+  }
+
+  if (port === '') {
+    return { isValid: true };
+  }
+
+  const portNumber = Number(port);
+
+  if (!isNaN(portNumber)) {
+    if (portNumber < 1 || portNumber > 65535) {
+      return { isValid: false, errorMessage: i18n.t('dovetail.target_port_range_limit') };
+    }
+  }
+
+  return { isValid: true };
+}
+
 export function validateNodePort(
   nodePort: number | string | null,
   allNodePorts: number[],
