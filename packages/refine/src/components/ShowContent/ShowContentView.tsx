@@ -9,6 +9,7 @@ import {
   Button,
   Tag,
   StatusCapsule,
+  OverflowTooltip,
 } from '@cloudtower/eagle';
 import {
   ArrowChevronLeft16BoldTertiaryIcon,
@@ -26,6 +27,7 @@ import { AccessControlAuth } from 'src/constants/auth';
 import ComponentContext from 'src/contexts/component';
 import ConfigsContext from 'src/contexts/configs';
 import { useOpenForm } from 'src/hooks/useOpenForm';
+import { HorizontalContainer } from 'src/styles/show';
 import { StateTagStyle } from 'src/styles/tag';
 import { FormType } from 'src/types';
 import { transformResourceKindInSentence } from 'src/utils/string';
@@ -160,7 +162,8 @@ const KindTagStyle = css`
   background-color: white !important;
   padding: 2px 5px;
   height: 22px;
-  color: #1D326C !important;
+  color: #1d326c !important;
+  flex-shrink: 0;
 `;
 
 export type ShowContentViewProps<Model extends ResourceModel> = React.PropsWithChildren<{
@@ -401,12 +404,13 @@ export const ShowContentView = <Model extends ResourceModel>(
         </div>
       )}
       {showConfig.renderCustomBackButton?.(record)}
-      <Space className={TopBarStyle}>
-        <div style={{ display: 'flex' }}>
+      <HorizontalContainer className={TopBarStyle}>
+        <HorizontalContainer>
           <Tag.NameTag className={KindTagStyle}>{config.kind}</Tag.NameTag>
-          <span className={cx(Typo.Display.d2_regular_title, NameStyle)}>
-            {showConfig.displayName?.(record) || record?.metadata?.name}
-          </span>
+          <OverflowTooltip
+            content={showConfig.displayName?.(record) || record?.metadata?.name}
+            className={cx(Typo.Display.d2_regular_title, NameStyle)}
+          />
           {stateDisplay ? (
             <StateTag
               state={stateDisplay}
@@ -426,8 +430,8 @@ export const ShowContentView = <Model extends ResourceModel>(
               {i18n.t('dovetail.pause_scheduling')}
             </StatusCapsule>
           ) : null}
-        </div>
-        <Space>
+        </HorizontalContainer>
+        <HorizontalContainer style={{ flexShrink: 0 }}>
           {showConfig.renderExtraButton?.(record)}
           {!config.hideEdit ? (
             <CanAccess
@@ -448,8 +452,8 @@ export const ShowContentView = <Model extends ResourceModel>(
             </CanAccess>
           ) : null}
           <Dropdown record={record} size="large" />
-        </Space>
-      </Space>
+        </HorizontalContainer>
+      </HorizontalContainer>
     </div>
   );
   const tabs = (
@@ -482,9 +486,7 @@ export const ShowContentView = <Model extends ResourceModel>(
     : null;
 
   return (
-    <div
-      className={cx(ShowContentWrapperStyle, className)} 
-    >
+    <div className={cx(ShowContentWrapperStyle, className)}>
       {hideTopBar ? null : (
         <Space direction="vertical" className={ShowContentHeaderStyle}>
           {topBar}

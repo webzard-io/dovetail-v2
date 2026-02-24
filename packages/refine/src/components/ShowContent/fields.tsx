@@ -212,11 +212,15 @@ export const DataField = <
         ...(val as Record<string, string>),
         ...('binaryData' in record._rawYaml ? record._rawYaml.binaryData : {}),
       };
+
       return (
         <div
           className={css`
             padding: 16px 24px;
             height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
           `}
         >
           <KeyValue
