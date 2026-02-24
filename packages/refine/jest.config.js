@@ -11,7 +11,7 @@ export default {
     ],
   },
 
-  moduleFileExtensions: ['ts', 'js'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
 
   testMatch: ['<rootDir>/__tests__/**/**.spec.ts', '<rootDir>/src/**/**.spec.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/lib/', '<rootDir>/lib/'],
