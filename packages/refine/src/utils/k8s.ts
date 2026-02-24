@@ -6,4 +6,7 @@ export function getApiVersion(resourceBasePath: string): string {
 
 export function pruneBeforeEdit(v: BaseRecord) {
   delete v.id;
+  if (v.metadata) {
+    delete v.metadata.relations;
+  }
 }
