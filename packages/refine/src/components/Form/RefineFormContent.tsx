@@ -1,4 +1,5 @@
 import { Fields, Form, Space } from '@cloudtower/eagle';
+import { cx } from '@linaria/core';
 import { UseFormReturnType } from '@refinedev/react-hook-form';
 import { get } from 'lodash-es';
 import React, { memo } from 'react';
@@ -22,6 +23,7 @@ import {
   SpaceStyle,
   VerticalFormItemStyle,
 } from './styles';
+import { FormItemStyle } from './styles';
 import useFieldsConfig from './useFieldsConfig';
 
 type RefineFormContentProps<Model extends ResourceModel> = {
@@ -179,7 +181,9 @@ const MemoizedFormField = memo(function FormField({
             }
             data-test-id={fieldConfig.key}
             className={
-              fieldConfig.layout === FormItemLayout.VERTICAL ? VerticalFormItemStyle : ''
+              fieldConfig.layout === FormItemLayout.VERTICAL
+                ? cx(VerticalFormItemStyle, FormItemStyle)
+                : FormItemStyle
             }
           >
             {ele}

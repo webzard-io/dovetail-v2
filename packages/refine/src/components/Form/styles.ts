@@ -6,6 +6,14 @@ export const SpaceStyle = css`
   margin: 0 auto;
 `;
 
+export const FormItemStyle = css`
+  &.ant-form-item {
+    & > .ant-form-item-control {
+      min-width: 0;
+    }
+  }
+`;
+
 export const VerticalFormItemStyle = css`
   &.ant-form-item {
     flex-direction: column !important;

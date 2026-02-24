@@ -37,6 +37,12 @@ const FormWrapperStyle = css`
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  & > .ant-form-item {
+    & > .ant-form-item-control {
+      min-width: 0;
+    }
+  }
 `;
 
 const FormItem = Form.Item;
