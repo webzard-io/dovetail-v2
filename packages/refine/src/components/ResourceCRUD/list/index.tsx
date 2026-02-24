@@ -1,5 +1,6 @@
 import { IResourceComponentsProps } from '@refinedev/core';
-import React, { useEffect } from 'react';
+import { isEqual } from 'lodash-es';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Column } from 'src/components/InternalBaseTable';
 import { useRefineFilters } from 'src/hooks';
@@ -37,7 +38,12 @@ export function ResourceList<Model extends ResourceModel>(props: Props<Model>) {
     Dropdown,
   });
 
+  const prevFiltersRef = useRef(filters);
   useEffect(() => {
+    if (isEqual(prevFiltersRef.current, filters)) {
+      return;
+    }
+    prevFiltersRef.current = filters;
     tableProps.onPageChange(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
