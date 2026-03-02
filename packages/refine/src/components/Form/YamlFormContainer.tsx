@@ -9,7 +9,7 @@ import { YamlFormConfig } from 'src/types';
 import { getInitialValues } from 'src/utils/form';
 import { YamlForm, YamlFormProps } from './YamlForm';
 
-interface YamlFormContainerProps {
+export interface YamlFormContainerProps {
   id: string;
   resourceConfig: Pick<
     ResourceConfig,

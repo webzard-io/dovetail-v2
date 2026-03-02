@@ -118,6 +118,20 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 </Icon>
               </Menu.Item>
             )}
+            {isInShowPage || canEditData?.can === false || config?.hideEdit ? null : (
+              <Menu.Item
+                onClick={() =>
+                  openForm({
+                    id: record.id,
+                    resourceName,
+                    resourceConfig: config,
+                    useYamlEditor: true,
+                  })
+                }
+              >
+                <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_yaml')}</Icon>
+              </Menu.Item>
+            )}
             <Menu.Item
               onClick={() => {
                 if (record.id) {

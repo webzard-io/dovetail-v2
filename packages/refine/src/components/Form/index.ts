@@ -5,3 +5,4 @@ export * from './YamlForm';
 export * from './useRefineForm';
 export * from './useYamlForm';
 export * from './type';
+export * from './RawYamlFormModal';

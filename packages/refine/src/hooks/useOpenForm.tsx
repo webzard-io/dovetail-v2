@@ -9,6 +9,7 @@ import {
 } from '@refinedev/core';
 import { useContext } from 'react';
 import React from 'react';
+import { RawYamlFormModal } from 'src/components/Form/RawYamlFormModal';
 import ConfigsContext from 'src/contexts/configs';
 import { useEdit } from 'src/hooks/useEdit';
 import { FormContainerType } from 'src/types';
@@ -31,6 +32,7 @@ interface OpenFormOptions {
   initialValues?: Record<string, unknown>;
   customOptions?: Record<string, unknown>;
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;
+  useYamlEditor?: boolean;
 }
 
 export function useOpenForm() {
@@ -52,6 +54,18 @@ export function useOpenForm() {
       if (formType === undefined || formType === FormContainerType.MODAL) {
         pushModal({
           component: () => {
+            if (options?.useYamlEditor) {
+              return (
+                <RawYamlFormModal
+                  id={options?.id}
+                  resourceConfig={resourceConfig}
+                  yamlFormProps={{
+                    resourceConfig: resourceConfig,
+                  }}
+                  onSuccess={options?.onSuccess}
+                />
+              );
+            }
             const ModalComponent =
               resourceConfig.formConfig?.CustomFormModal || FormModal;
 
