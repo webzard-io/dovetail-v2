@@ -118,7 +118,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 </Icon>
               </Menu.Item>
             )}
-            {isInShowPage || canEditData?.can === false || config?.hideEdit ? null : (
+            {canEditData?.can === false || config?.hideEdit ? null : (
               <Menu.Item
                 onClick={() =>
                   openForm({
