@@ -1,3 +1,4 @@
+import { OverflowTooltip } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React from 'react';
 
@@ -5,17 +6,11 @@ const EMPTY_VALUES: unknown[] = [undefined, null, '', '-'];
 
 const EmptyStyle = css`
   &.empty-text {
-    color: rgba(0,21,64,.3);
+    color: rgba(0, 21, 64, 0.3);
   }
 `;
 const ContentStyle = css`
   width: 100%;
-
-  &.overflow {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 `;
 
 interface ValueDisplayProps {
@@ -27,17 +22,28 @@ interface ValueDisplayProps {
 
 export function ValueDisplay(props: ValueDisplayProps) {
   const { value, useOverflow = true, className, style } = props;
-
-  return EMPTY_VALUES.includes(value) ? (
-    <div className={cx(EmptyStyle, 'empty-text', className)} style={style}>-</div>
+  const result = useOverflow ? (
+    <OverflowTooltip
+      content={value}
+      style={style}
+      className={cx(className, ContentStyle)}
+    />
   ) : (
     <div
       style={style}
-      className={cx(className, ContentStyle, useOverflow && 'overflow')}
+      className={cx(className, ContentStyle)}
       title={typeof value === 'string' || typeof value === 'number' ? String(value) : ''}
     >
       {value}
     </div>
+  );
+
+  return EMPTY_VALUES.includes(value) ? (
+    <div className={cx(EmptyStyle, 'empty-text', className)} style={style}>
+      -
+    </div>
+  ) : (
+    result
   );
 }
 

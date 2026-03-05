@@ -317,7 +317,7 @@ export const ShowContentView = <Model extends ResourceModel>(
       return field.render ? (
         field.render(value, record, field, size)
       ) : (
-        <ValueDisplay style={{ height: '100%' }} value={content} />
+        <ValueDisplay style={{ height: '100%' }} value={content} useOverflow={false} />
       );
     });
   }
