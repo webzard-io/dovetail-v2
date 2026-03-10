@@ -78,9 +78,12 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   });
   const download = useDownloadYAML();
   const openForm = useOpenForm();
-  const isInShowPage =
-    useResourceResult.action === 'show' &&
-    useResourceResult.resource?.name === resourceName;
+  // 当前是否在详情页
+  const isInShowPage = useResourceResult.action === 'show';
+  // dropdown 资源是否为当前详情页的附属资源（如 CronJob 详情中的 Job、Job 详情中的 Pod）
+  // 附属资源不应单独编辑 YAML 或下载 YAML
+  const isChildResource =
+    isInShowPage && useResourceResult.resource?.name !== resourceName;
   const { data: canEditData } = useCan({
     resource: resourceName,
     action: AccessControlAuth.Edit,
@@ -102,6 +105,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
       <Dropdown
         overlay={
           <Menu>
+            {/* 编辑资源按钮：详情页一律隐藏（无论同资源还是附属资源） */}
             {isInShowPage || canEditData?.can === false || config?.hideEdit ? null : (
               <Menu.Item
                 onClick={() =>
@@ -118,7 +122,8 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 </Icon>
               </Menu.Item>
             )}
-            {canEditData?.can === false || config?.hideEdit ? null : (
+            {/* 编辑 YAML 按钮：附属资源时隐藏（同资源时仍展示） */}
+            {isChildResource || canEditData?.can === false || config?.hideEdit ? null : (
               <Menu.Item
                 onClick={() =>
                   openForm({
@@ -132,18 +137,21 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_yaml')}</Icon>
               </Menu.Item>
             )}
-            <Menu.Item
-              onClick={() => {
-                if (record.id) {
-                  download({
-                    name: record.metadata?.name || record.kind || '',
-                    item: omit(globalStore?.restoreItem(record) || record, 'id'),
-                  });
-                }
-              }}
-            >
-              <Icon src={Download16GradientBlueIcon}>{t('dovetail.download_yaml')}</Icon>
-            </Menu.Item>
+            {/* 下载 YAML 按钮：附属资源时隐藏（同资源时仍展示） */}
+            {isChildResource ? null : (
+              <Menu.Item
+                onClick={() => {
+                  if (record.id) {
+                    download({
+                      name: record.metadata?.name || record.kind || '',
+                      item: omit(globalStore?.restoreItem(record) || record, 'id'),
+                    });
+                  }
+                }}
+              >
+                <Icon src={Download16GradientBlueIcon}>{t('dovetail.download_yaml')}</Icon>
+              </Menu.Item>
+            )}
             {props.children}
             {canDeleteData?.can !== false ? <Divider style={{ margin: 0 }} /> : null}
             {canDeleteData?.can !== false ? (
