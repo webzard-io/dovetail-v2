@@ -22,17 +22,16 @@ interface ValueDisplayProps {
 
 export function ValueDisplay(props: ValueDisplayProps) {
   const { value, useOverflow = true, className, style } = props;
+  const htmlTitle = typeof value === 'string' || typeof value === 'number' ? String(value) : undefined;
   const result = useOverflow ? (
-    <OverflowTooltip
-      content={value}
-      style={style}
-      className={cx(className, ContentStyle)}
-    />
+    <div title={htmlTitle} style={style} className={cx(className, ContentStyle)}>
+      <OverflowTooltip content={value} className={ContentStyle} />
+    </div>
   ) : (
     <div
       style={style}
       className={cx(className, ContentStyle)}
-      title={typeof value === 'string' || typeof value === 'number' ? String(value) : ''}
+      title={htmlTitle ?? ''}
     >
       {value}
     </div>
