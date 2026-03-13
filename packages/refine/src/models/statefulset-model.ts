@@ -18,7 +18,7 @@ export class StatefulSetModel extends WorkloadModel {
     return controllerVisions.filter(controllerRevision =>
       controllerRevision.metadata?.ownerReferences?.some(
         ownerReference =>
-          ownerReference.kind === 'DaemonSet' && ownerReference.uid === this.metadata.uid
+          ownerReference.kind === 'StatefulSet' && ownerReference.uid === this.metadata.uid
       )
     );
   }
