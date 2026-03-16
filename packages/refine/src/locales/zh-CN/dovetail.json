@@ -272,5 +272,5 @@
   "no_labels": "无标签",
   "no_annotations": "无注解",
   "pause_scheduling": "暂停调度",
-  "service_port_name_tip": "当端口数量为 1 个时，名称为选填项，当端口数量大于 1 个时，名称为必填项。"
+  "service_port_name_tip": "端口数量为 1 时，名称为选填项；大于 1 时，名称为必填项。"
 }
