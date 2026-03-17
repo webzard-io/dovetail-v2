@@ -46,6 +46,12 @@ interface K8sDropdownProps {
     | 'hideEdit'
   >;
   deleteDialogProps?: Partial<DeleteDialogProps>;
+  /**
+   * 为 true 时跳过基于路由上下文的操作隐藏逻辑，始终显示全部操作按钮（编辑、编辑 YAML、下载 YAML）。
+   * 适用于在详情页或表单中嵌套渲染的子资源列表（如 AccessMethodForm 中的 Service/Ingress），
+   * 这些场景下子资源需要独立的编辑和下载能力，不应被父资源详情页的隐藏规则影响。
+   */
+  forceShowAllActions?: boolean;
 }
 
 export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
@@ -55,6 +61,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
     resourceConfig,
     customButton,
     deleteDialogProps,
+    forceShowAllActions,
   } = props;
   const globalStore = useGlobalStore();
   const useResourceResult = useResource();
@@ -79,11 +86,12 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   const download = useDownloadYAML();
   const openForm = useOpenForm();
   // 当前是否在详情页
-  const isInShowPage = useResourceResult.action === 'show';
+  const isInShowPage = forceShowAllActions ? false : useResourceResult.action === 'show';
   // dropdown 资源是否为当前详情页的附属资源（如 CronJob 详情中的 Job、Job 详情中的 Pod）
   // 附属资源不应单独编辑 YAML 或下载 YAML
-  const isChildResource =
-    isInShowPage && useResourceResult.resource?.name !== resourceName;
+  const isChildResource = forceShowAllActions
+    ? false
+    : isInShowPage && useResourceResult.resource?.name !== resourceName;
   const { data: canEditData } = useCan({
     resource: resourceName,
     action: AccessControlAuth.Edit,
