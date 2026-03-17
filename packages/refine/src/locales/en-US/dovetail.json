@@ -272,5 +272,6 @@
   "no_annotations": "No annotations",
   "pause_scheduling": "Suspend scheduling",
   "port_name": "Port name",
-  "target_port_range_limit": "Only integers between 1 and 65535, or strings, are supported."
+  "target_port_range_limit": "Only integers between 1 and 65535, or strings, are supported.",
+  "service_port_name_tip": "When the port count is 1, this field is optional; when it is greater than 1, this field is mandatory."
 }
