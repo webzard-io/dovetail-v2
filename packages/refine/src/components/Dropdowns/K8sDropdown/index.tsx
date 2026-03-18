@@ -14,7 +14,7 @@ import {
   TrashBinDelete16Icon,
   Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
-import { useResource, useCan } from '@refinedev/core';
+import { useCan } from '@refinedev/core';
 import { omit } from 'lodash-es';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -46,6 +46,12 @@ interface K8sDropdownProps {
     | 'hideEdit'
   >;
   deleteDialogProps?: Partial<DeleteDialogProps>;
+  /** 隐藏「编辑」按钮 */
+  hideEdit?: boolean;
+  /** 隐藏「编辑 YAML」按钮 */
+  hideEditYaml?: boolean;
+  /** 隐藏「下载 YAML」按钮 */
+  hideDownloadYaml?: boolean;
 }
 
 export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
@@ -55,9 +61,11 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
     resourceConfig,
     customButton,
     deleteDialogProps,
+    hideEdit: hideEditProp,
+    hideEditYaml,
+    hideDownloadYaml,
   } = props;
   const globalStore = useGlobalStore();
-  const useResourceResult = useResource();
   const configs = useContext(ConfigsContext);
   const resourceName =
     resourceConfig?.name || getResourceNameByKind(record.kind || '', configs);
@@ -78,12 +86,6 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   });
   const download = useDownloadYAML();
   const openForm = useOpenForm();
-  // 当前是否在详情页
-  const isInShowPage = useResourceResult.action === 'show';
-  // dropdown 资源是否为当前详情页的附属资源（如 CronJob 详情中的 Job、Job 详情中的 Pod）
-  // 附属资源不应单独编辑 YAML 或下载 YAML
-  const isChildResource =
-    isInShowPage && useResourceResult.resource?.name !== resourceName;
   const { data: canEditData } = useCan({
     resource: resourceName,
     action: AccessControlAuth.Edit,
@@ -105,8 +107,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
       <Dropdown
         overlay={
           <Menu>
-            {/* 编辑资源按钮：详情页一律隐藏（无论同资源还是附属资源） */}
-            {isInShowPage || canEditData?.can === false || config?.hideEdit ? null : (
+            {hideEditProp || canEditData?.can === false || config?.hideEdit ? null : (
               <Menu.Item
                 onClick={() =>
                   openForm({ id: record.id, resourceName, resourceConfig: config })
@@ -122,8 +123,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 </Icon>
               </Menu.Item>
             )}
-            {/* 编辑 YAML 按钮：附属资源时隐藏（同资源时仍展示） */}
-            {isChildResource || canEditData?.can === false || config?.hideEdit ? null : (
+            {hideEditYaml || canEditData?.can === false || config?.hideEdit ? null : (
               <Menu.Item
                 onClick={() =>
                   openForm({
@@ -137,8 +137,7 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_yaml')}</Icon>
               </Menu.Item>
             )}
-            {/* 下载 YAML 按钮：附属资源时隐藏（同资源时仍展示） */}
-            {isChildResource ? null : (
+            {hideDownloadYaml ? null : (
               <Menu.Item
                 onClick={() => {
                   if (record.id) {
