@@ -7,6 +7,7 @@ import {
   Button,
   Upload,
   AutoComplete,
+  ValidateTriggerType,
 } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import { isEqual } from 'lodash-es';
@@ -164,11 +165,13 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
   const renderAutoCompleteFunc = ({
     value,
     onChange,
+    onBlur,
     rowIndex,
     disabled,
   }: {
     value?: string;
     onChange: (v: string) => void;
+    onBlur?: () => void;
     rowIndex?: number;
     disabled?: boolean;
   }) => {
@@ -179,6 +182,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         options={keyOptions || []}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         size="small"
         filterOption={(inputValue, option) =>
           option?.label?.toString().toLowerCase().includes(inputValue.toLowerCase()) ||
@@ -195,11 +199,13 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
   const renderTextAreaFunc = ({
     value,
     onChange,
+    onBlur,
     rowIndex,
     disabled,
   }: {
     value?: string;
     onChange: (v: string) => void;
+    onBlur?: () => void;
     rowIndex?: number;
     disabled?: boolean;
   }) => {
@@ -220,6 +226,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         onChange={e => {
           onChange(e.target.value);
         }}
+        onBlur={onBlur}
       />
     );
   };
@@ -288,6 +295,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
             }
           },
         }}
+        validateTriggerType={ValidateTriggerType.Aggressive}
         disableBatchFilling
         hideEmptyTable
       />
