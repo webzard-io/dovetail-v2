@@ -547,7 +547,7 @@ export const PVCStorageField = <Model extends PersistentVolumeClaimModel>({
     key: 'storage',
     col: 12,
     path: ['spec', 'resources', 'requests', 'storage'],
-    title: i18n.t('dovetail.distributed'),
+    title: i18n.t('dovetail.request_capacity'),
     renderContent(value, pvc) {
       return (
         <PVCDistributeStorage

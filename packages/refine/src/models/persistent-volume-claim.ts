@@ -42,6 +42,10 @@ export class PersistentVolumeClaimModel extends ResourceModel {
     return parseSi(get(this._rawYaml, 'spec.resources.requests.storage') || '0Gi');
   }
 
+  get allocatedStorageBytes() {
+    return parseSi(get(this._rawYaml, 'status.capacity.storage') || '0Gi');
+  }
+
   public updateDistributeStorage(distributeStorage: number) {
     const yaml = cloneDeep(this._globalStore.restoreItem(this));
 
