@@ -24,7 +24,7 @@ export function ValueDisplay(props: ValueDisplayProps) {
   const { value, useOverflow = true, className, style } = props;
   const htmlTitle = typeof value === 'string' || typeof value === 'number' ? String(value) : undefined;
   const result = useOverflow ? (
-    <div title={htmlTitle} style={style} className={cx(className, ContentStyle)}>
+    <div style={style} className={cx(className, ContentStyle)}>
       <OverflowTooltip content={value} className={ContentStyle} />
     </div>
   ) : (
