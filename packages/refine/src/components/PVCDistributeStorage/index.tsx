@@ -75,7 +75,7 @@ export const DistributeStorageForm = React.forwardRef<
       values: v,
       successNotification() {
         return {
-          message: t('dovetail.edit_distribute_storage_success_toast', {
+          message: t('dovetail.edit_request_capacity_success_toast', {
             kind: pvc.kind,
             name: pvc.id,
             interpolation: {
@@ -99,7 +99,7 @@ export const DistributeStorageForm = React.forwardRef<
 
   return (
     <Form.Item
-      label={<span style={{ width: '134px' }}>{label || t('dovetail.distributed')}</span>}
+      label={<span style={{ width: '134px' }}>{label || t('dovetail.request_capacity')}</span>}
       colon={false}
       help={validateResult.distributeStorage}
       validateStatus={validateResult.distributeStorage ? 'error' : ''}
@@ -160,7 +160,7 @@ function PVCDistributeStorage({
         <EditField
           modalProps={{
             formRef,
-            title: t('dovetail.edit_distribute_storage'),
+            title: t('dovetail.edit_request_capacity'),
             namespace: pvc.namespace || '',
             renderContent() {
               return (
