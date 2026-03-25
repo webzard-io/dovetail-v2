@@ -159,6 +159,7 @@
   "not_support": "不支持",
   "stopped_state": "已停止",
   "any_node_ip": "任意节点 IP",
+  "default_http_protocol_tooltip": "当前链接默认使用 HTTP 协议。",
   "storage_class": "存储类",
   "persistent_volume": "持久卷",
   "provisioner": "制备器",

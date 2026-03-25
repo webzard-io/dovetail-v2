@@ -1,4 +1,4 @@
-import { OverflowTooltip, Typo, Link } from '@cloudtower/eagle';
+import { Tooltip, Typo, Link } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,8 +30,25 @@ const BreakLineStyle = css`
 const LinkStyle = css`
   &.ant-btn-link.ant-btn {
     padding: 0;
-    height: 22px;
+    height: 18px;
   }
+`;
+const ShowLinkStyle = css`
+  &.ant-btn-link.ant-btn {
+    padding: 0;
+    height: 18px;
+    color: var(--blue-60) !important;
+    &:hover {
+      color: var(--blue-50) !important;
+    }
+  }
+`;
+const DashedUnderlineSpanStyle = css`
+  display: inline-block;
+  width: auto !important;
+  height: 18px;
+  line-height: 18px;
+  border-bottom: 1px dashed rgba(107, 128, 167, 0.6);
 `;
 
 export const ServiceOutClusterAccessComponent: React.FC<
@@ -50,16 +67,20 @@ export const ServiceOutClusterAccessComponent: React.FC<
       if (!breakLine) {
         content = spec.ports
           ?.filter(v => !!v)
-          .map(p => ([
+          .map(p => [
             <Link
+              key={p.name}
               href={`http://${clusterVip}:${p.nodePort}`}
               target="_blank"
-              key={p.name}
-              className={cx(LinkStyle, Typo.Label.l4_regular_title)}
+              className={cx(ShowLinkStyle, Typo.Label.l4_regular_title)}
             >
-              {`${clusterVip}:${p.nodePort}`}
-            </Link>
-          ]));
+              <Tooltip title={i18n.t('dovetail.default_http_protocol_tooltip')}>
+                <span
+                  className={DashedUnderlineSpanStyle}
+                >{`${clusterVip}:${p.nodePort}`}</span>
+              </Tooltip>
+            </Link>,
+          ]);
 
         if (content && content instanceof Array) {
           const result = [];
@@ -67,7 +88,7 @@ export const ServiceOutClusterAccessComponent: React.FC<
           for (let i = 0; i < content.length; i++) {
             result.push(content[i]);
             if (i < content.length - 1) {
-              result.push(',');
+              result.push(', ');
             }
           }
 
@@ -79,19 +100,18 @@ export const ServiceOutClusterAccessComponent: React.FC<
       content = spec.ports
         ?.filter(v => !!v)
         .map(p => (
-          <OverflowTooltip
+          <Link
             key={p.nodePort}
-            content={
-              <Link
-                href={`http://${clusterVip}:${p.nodePort}`}
-                target="_blank"
-                className={cx(Typo.Label.l4_regular_title, BreakLineStyle, LinkStyle)}
-              >
+            href={`http://${clusterVip}:${p.nodePort}`}
+            target="_blank"
+            className={cx(Typo.Label.l4_regular_title, BreakLineStyle, LinkStyle)}
+          >
+            <Tooltip title={i18n.t('dovetail.default_http_protocol_tooltip')}>
+              <span className={DashedUnderlineSpanStyle}>
                 {clusterVip}:{p.nodePort}
-              </Link>
-            }
-            tooltip={`${i18n.t('dovetail.any_node_ip')}:${p.nodePort}`}
-          />
+              </span>
+            </Tooltip>
+          </Link>
         ));
       return <ul>{content}</ul>;
     case ServiceTypeEnum.ExternalName:
