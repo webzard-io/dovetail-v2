@@ -209,8 +209,8 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
    * 开启后，Dovetail不会为该资源创建路由，也不会渲染默认的UI组件。
    */
   isCustom?: boolean;
-  /** 创建按钮的文本 */
-  createButtonText?: string;
+  /** 自定义创建按钮元素，提供时替代默认的 CreateButton 组件 */
+  createButtonElement?: React.ReactNode;
   /** 删除操作的提示文本
    * 默认是：该操作无法被撤回。
    */
