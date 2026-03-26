@@ -154,6 +154,7 @@
   "not_support": "Not supported",
   "stopped_state": "Stopped",
   "any_node_ip": "Any node IP",
+  "default_http_protocol_tooltip": "The link uses HTTP protocol by default.",
   "storage_class": "Storage class",
   "persistent_volume": "Persistent volume",
   "provisioner": "Provisioner",
