@@ -11,6 +11,7 @@ type Props = {
   description?: React.ReactNode;
   selectedKeys: string[];
   hideCreate?: boolean;
+  createButtonElement?: React.ReactNode;
 };
 
 const ToolbarWrapperStyle = css`
@@ -33,6 +34,7 @@ export const TableToolBar: React.FC<Props> = ({
   description,
   selectedKeys,
   hideCreate,
+  createButtonElement,
 }) => {
   const { resource } = useResource();
 
@@ -43,7 +45,7 @@ export const TableToolBar: React.FC<Props> = ({
         <Space>
           {selectedKeys.length > 0 ? <DeleteManyButton ids={selectedKeys} /> : undefined}
           <CanAccess resource={resource?.name} action={AccessControlAuth.Create}>
-            {!hideCreate ? <CreateButton label={title} /> : null}
+            {!hideCreate ? (createButtonElement || <CreateButton label={title} />) : null}
           </CanAccess>
         </Space>
       </Space>

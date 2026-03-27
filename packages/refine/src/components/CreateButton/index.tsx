@@ -1,24 +1,21 @@
 import { Button } from '@cloudtower/eagle';
 import { PlusAddCreateNew16BoldOntintIcon } from '@cloudtower/icons-react';
 import { useResource } from '@refinedev/core';
-import React, { useContext } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ConfigsContext } from 'src/contexts';
 import { useOpenForm } from 'src/hooks/useOpenForm';
 import { transformResourceKindInSentence } from 'src/utils/string';
 
 interface CreateButtonProps {
   label?: string;
+  children?: React.ReactNode;
 }
 
 export function CreateButton(props: CreateButtonProps) {
   const { t, i18n } = useTranslation();
   const openForm = useOpenForm();
   const { resource } = useResource();
-  const configs = useContext(ConfigsContext);
-  const config = configs[resource?.name || ''];
   const label = props.label || resource?.meta?.kind;
-  const createButtonText = config.createButtonText;
 
   return (
     <Button
@@ -26,7 +23,7 @@ export function CreateButton(props: CreateButtonProps) {
       type="primary"
       onClick={() => openForm()}
     >
-      {createButtonText ||
+      {props.children ||
         t('dovetail.create_resource', {
           resource: transformResourceKindInSentence(label, i18n.language),
         })}

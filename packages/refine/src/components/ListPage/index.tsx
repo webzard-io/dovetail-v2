@@ -70,6 +70,7 @@ export function ListPage<T extends ResourceModel>(props: ListPageProps<T>) {
             title={config?.customListTitle || config?.displayName || config.kind}
             description={config?.description}
             hideCreate={config?.hideCreate}
+            createButtonElement={config?.createButtonElement}
           />
           {belowToolBarContent}
           <Divider
