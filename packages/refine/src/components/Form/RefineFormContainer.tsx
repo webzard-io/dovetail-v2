@@ -1,12 +1,14 @@
-import { Alert, Loading } from '@cloudtower/eagle';
+import { Alert, Loading, usePushModal, usePopModal } from '@cloudtower/eagle';
 import { BaseRecord, CreateResponse, UpdateResponse } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
-import React, { useMemo, useEffect, useImperativeHandle } from 'react';
+import React, { useMemo, useEffect, useImperativeHandle, useRef } from 'react';
 import { type SaveButtonProps } from 'src/components/Form/FormModal';
 import usePathMap from 'src/hooks/usePathMap';
+import { useResourceVersionCheck } from 'src/hooks/useResourceVersionCheck';
 import i18n from 'src/i18n';
 import { ResourceConfig } from 'src/types';
 import { CommonFormConfig, RefineFormConfig } from 'src/types';
+import { DataExpiredModal } from './DataExpiredModal';
 import { RefineFormContent } from './RefineFormContent';
 import useFieldsConfig from './useFieldsConfig';
 import { useRefineForm } from './useRefineForm';
@@ -54,6 +56,10 @@ const RefineFormContainer = React.forwardRef<
   ref
 ) {
   const action = id ? 'edit' : 'create';
+  const pushModal = usePushModal();
+  const popModal = usePopModal();
+  const hasShownExpiredRef = useRef(false);
+
   const refineFormResult = useRefineForm({
     resourceConfig: resourceConfig,
     id,
@@ -80,6 +86,24 @@ const RefineFormContainer = React.forwardRef<
       },
     },
   });
+  const isExpired = useResourceVersionCheck({
+    queryResult: refineFormResult.formResult.refineCore.queryResult,
+  });
+
+  useEffect(() => {
+    if (isExpired && !hasShownExpiredRef.current) {
+      hasShownExpiredRef.current = true;
+      pushModal<'DataExpiredModal'>({
+        component: DataExpiredModal,
+        props: {
+          onAbandon: () => {
+            popModal();
+          },
+        },
+      });
+    }
+  }, [isExpired, pushModal, popModal]);
+
   const fieldsConfig = useFieldsConfig(
     resourceConfig,
     { fields: formConfig?.fields },
