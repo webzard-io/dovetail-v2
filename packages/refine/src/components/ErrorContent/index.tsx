@@ -23,7 +23,7 @@ export const ErrorWrapper = styled.div`
   }
 
   &.card {
-    padding: 15px 0;
+    padding: 8px 0;
 
     .title {
       color: $gray-a30-10;
