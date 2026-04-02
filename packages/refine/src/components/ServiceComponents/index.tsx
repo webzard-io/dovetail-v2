@@ -55,8 +55,9 @@ export const ServiceOutClusterAccessComponent: React.FC<
   Props & {
     breakLine?: boolean;
     clusterVip: string;
+    showDashedUnderline?: boolean;
   }
-> = ({ service, breakLine = true, clusterVip }) => {
+> = ({ service, breakLine = true, clusterVip, showDashedUnderline = true }) => {
   const { i18n } = useTranslation();
   const spec = service._rawYaml.spec;
   const status = service._rawYaml.status;
@@ -77,6 +78,7 @@ export const ServiceOutClusterAccessComponent: React.FC<
               <Tooltip title={i18n.t('dovetail.default_http_protocol_tooltip')}>
                 <span
                   className={DashedUnderlineSpanStyle}
+                  style={showDashedUnderline ? undefined : { borderBottom: 'none' }}
                 >{`${clusterVip}:${p.nodePort}`}</span>
               </Tooltip>
             </Link>,
@@ -107,7 +109,8 @@ export const ServiceOutClusterAccessComponent: React.FC<
             className={cx(Typo.Label.l4_regular_title, BreakLineStyle, LinkStyle)}
           >
             <Tooltip title={i18n.t('dovetail.default_http_protocol_tooltip')}>
-              <span className={DashedUnderlineSpanStyle}>
+              <span className={DashedUnderlineSpanStyle}
+                  style={showDashedUnderline ? undefined : { borderBottom: 'none' }}>
                 {clusterVip}:{p.nodePort}
               </span>
             </Tooltip>
