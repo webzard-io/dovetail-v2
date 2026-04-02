@@ -432,6 +432,7 @@ export const ServiceOutClusterAccessField = <Model extends ServiceModel>(
         service={record}
         breakLine={false}
         clusterVip={clusterVip}
+        showDashedUnderline={false}
       />
     );
   },
