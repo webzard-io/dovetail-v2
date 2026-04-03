@@ -14,7 +14,7 @@ import {
   TrashBinDelete16Icon,
   Download16GradientBlueIcon,
 } from '@cloudtower/icons-react';
-import { useCan } from '@refinedev/core';
+import { useCan, useParsed, useResource } from '@refinedev/core';
 import { omit } from 'lodash-es';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -102,12 +102,29 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
   });
   const formType = config?.formConfig?.formType;
 
+  // 在详情页（show page）中，ShowContentView 已经渲染了独立的编辑按钮，
+  // 因此 Dropdown 中的编辑项需要根据情况隐藏以避免重复。
+  // 通过比较 Dropdown 操作的资源与当前页面资源，确保只在操作同一资源时隐藏，
+  // 这样 AccessMethodForm 等子资源表格中的 Dropdown 不会受影响。
+  const { action } = useParsed();
+  const { resource } = useResource();
+  const isInShowPage = action === 'show';
+  const isSameResource = resourceName === resource?.name;
+  const isShowPageSameResource = isInShowPage && isSameResource;
+
+  // Item 1（"编辑{Kind}" 或 "编辑 YAML"）：详情页且同资源时隐藏，因为与独立按钮完全重复
+  const shouldHideEdit = hideEditProp || isShowPageSameResource;
+  // Item 2（"编辑 YAML"）：当 formType 不是 FORM 时隐藏，
+  // 因为此时 Item 1 已经是"编辑 YAML"，两者文案和功能完全重复。
+  // 当 formType 是 FORM 时保留，因为它提供了与 Item 1（"编辑{Kind}"）不同的操作。
+  const shouldHideEditYaml = hideEditYaml || formType !== FormType.FORM;
+
   return (
     <>
       <Dropdown
         overlay={
           <Menu>
-            {hideEditProp || canEditData?.can === false || config?.hideEdit ? null : (
+            {shouldHideEdit || canEditData?.can === false || config?.hideEdit ? null : (
               <Menu.Item
                 onClick={() =>
                   openForm({ id: record.id, resourceName, resourceConfig: config })
@@ -123,7 +140,9 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                 </Icon>
               </Menu.Item>
             )}
-            {hideEditYaml || canEditData?.can === false || config?.hideEdit ? null : (
+            {shouldHideEditYaml ||
+            canEditData?.can === false ||
+            config?.hideEdit ? null : (
               <Menu.Item
                 onClick={() =>
                   openForm({
@@ -148,7 +167,9 @@ export function K8sDropdown(props: React.PropsWithChildren<K8sDropdownProps>) {
                   }
                 }}
               >
-                <Icon src={Download16GradientBlueIcon}>{t('dovetail.download_yaml')}</Icon>
+                <Icon src={Download16GradientBlueIcon}>
+                  {t('dovetail.download_yaml')}
+                </Icon>
               </Menu.Item>
             )}
             {props.children}
