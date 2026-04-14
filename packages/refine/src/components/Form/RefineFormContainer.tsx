@@ -1,7 +1,7 @@
 import { Alert, Loading, usePushModal, usePopModal } from '@cloudtower/eagle';
 import { BaseRecord, CreateResponse, UpdateResponse } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
-import React, { useMemo, useEffect, useImperativeHandle, useRef } from 'react';
+import React, { useMemo, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { type SaveButtonProps } from 'src/components/Form/FormModal';
 import usePathMap from 'src/hooks/usePathMap';
 import { useResourceVersionCheck } from 'src/hooks/useResourceVersionCheck';
@@ -59,6 +59,7 @@ const RefineFormContainer = React.forwardRef<
   const pushModal = usePushModal();
   const popModal = usePopModal();
   const hasShownExpiredRef = useRef(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const refineFormResult = useRefineForm({
     resourceConfig: resourceConfig,
@@ -68,6 +69,7 @@ const RefineFormContainer = React.forwardRef<
         onSuccess?.(data);
       },
       onMutationError() {
+        setIsSubmitting(false);
         onError?.();
       },
       redirect: false,
@@ -81,8 +83,15 @@ const RefineFormContainer = React.forwardRef<
       ...options,
       onBeforeSubmitError: (errors: string[]) => {
         if (errors.length) {
+          setIsSubmitting(false);
           onError?.();
         }
+      },
+      onSubmitStart: () => {
+        setIsSubmitting(true);
+      },
+      onSubmitAbort: () => {
+        setIsSubmitting(false);
       },
     },
   });
@@ -91,18 +100,20 @@ const RefineFormContainer = React.forwardRef<
   });
 
   useEffect(() => {
-    if (isExpired && !hasShownExpiredRef.current) {
-      hasShownExpiredRef.current = true;
-      pushModal<'DataExpiredModal'>({
-        component: DataExpiredModal,
-        props: {
-          onAbandon: () => {
-            popModal();
-          },
-        },
-      });
+    if (!isExpired || isSubmitting || hasShownExpiredRef.current) {
+      return;
     }
-  }, [isExpired, pushModal, popModal]);
+
+    hasShownExpiredRef.current = true;
+    pushModal<'DataExpiredModal'>({
+      component: DataExpiredModal,
+      props: {
+        onAbandon: () => {
+          popModal();
+        },
+      },
+    });
+  }, [isExpired, isSubmitting, pushModal, popModal]);
 
   const fieldsConfig = useFieldsConfig(
     resourceConfig,
@@ -138,6 +149,12 @@ const RefineFormContainer = React.forwardRef<
         isShowLayout: false,
         useFormProps: {
           redirect: false,
+          onSubmitStart: () => {
+            setIsSubmitting(true);
+          },
+          onSubmitAbort: () => {
+            setIsSubmitting(false);
+          },
         },
         rules: fieldsConfig
           ?.filter(

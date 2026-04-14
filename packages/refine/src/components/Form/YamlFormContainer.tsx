@@ -1,7 +1,7 @@
 import { usePushModal, usePopModal } from '@cloudtower/eagle';
 import { BaseRecord, CreateResponse, UpdateResponse, useOne } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect, useRef, useState } from 'react';
 import { type SaveButtonProps } from 'src/components/Form/FormModal';
 import usePathMap from 'src/hooks/usePathMap';
 import { useResourceVersionCheck } from 'src/hooks/useResourceVersionCheck';
@@ -46,6 +46,7 @@ function YamlFormContainer({
   const pushModal = usePushModal();
   const popModal = usePopModal();
   const hasShownExpiredRef = useRef(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const queryResult = useOne({
     resource: resourceConfig.name,
@@ -57,18 +58,20 @@ function YamlFormContainer({
   const isExpired = useResourceVersionCheck({ queryResult });
 
   useEffect(() => {
-    if (isExpired && !hasShownExpiredRef.current) {
-      hasShownExpiredRef.current = true;
-      pushModal<'DataExpiredModal'>({
-        component: DataExpiredModal,
-        props: {
-          onAbandon: () => {
-            popModal();
-          },
-        },
-      });
+    if (!isExpired || isSubmitting || hasShownExpiredRef.current) {
+      return;
     }
-  }, [isExpired, pushModal, popModal]);
+
+    hasShownExpiredRef.current = true;
+    pushModal<'DataExpiredModal'>({
+      component: DataExpiredModal,
+      props: {
+        onAbandon: () => {
+          popModal();
+        },
+      },
+    });
+  }, [isExpired, isSubmitting, pushModal, popModal]);
 
   const { transformInitValues, transformApplyValues } = usePathMap({
     pathMap: formConfig?.pathMap,
@@ -93,6 +96,12 @@ function YamlFormContainer({
       isShowLayout: false,
       useFormProps: {
         redirect: false,
+        onSubmitStart: () => {
+          setIsSubmitting(true);
+        },
+        onSubmitAbort: () => {
+          setIsSubmitting(false);
+        },
       },
       rules: undefined,
       onSaveButtonPropsChange,

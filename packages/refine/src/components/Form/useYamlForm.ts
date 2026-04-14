@@ -68,6 +68,8 @@ export type UseFormProps<
   transformApplyValues?: (values: Unstructured) => Unstructured;
   beforeSubmit?: (values: Unstructured, setErrors: (errors: string[]) => void) => Promise<Unstructured>;
   onBeforeSubmitError?: (errors: string[]) => void;
+  onSubmitStart?: () => void;
+  onSubmitAbort?: () => void;
   rules?: YamlFormRule[];
 };
 
@@ -146,6 +148,8 @@ const useYamlForm = <
   transformApplyValues,
   beforeSubmit,
   onBeforeSubmitError,
+  onSubmitStart,
+  onSubmitAbort,
   rules,
 }: UseFormProps<
   TQueryFnData,
@@ -202,6 +206,7 @@ const useYamlForm = <
   >({
     onMutationSuccess: onMutationSuccessProp ? onMutationSuccessProp : undefined,
     onMutationError: (error, ...restParams) => {
+      onSubmitAbort?.();
       const response = error.response;
 
       if (response && !response?.bodyUsed) {
@@ -361,6 +366,7 @@ const useYamlForm = <
       onFinish: async (values) => {
         // 清空之前的错误
         setBeforeSubmitErrors([]);
+        onSubmitStart?.();
 
         const errors = [
           !isYamlValid ? t('dovetail.yaml_format_wrong') : '',
@@ -368,6 +374,7 @@ const useYamlForm = <
         ].filter(error => !!error);
 
         if (errors.length) {
+          onSubmitAbort?.();
           setEditorErrors(errors);
           setRulesErrors([]);
           return;
@@ -376,6 +383,7 @@ const useYamlForm = <
         const rulesErrors = await validateRules(editor.current?.getEditorValue() || '');
 
         if (Object.keys(rulesErrors).length) {
+          onSubmitAbort?.();
           setRulesErrors(Object.values(rulesErrors));
           return;
         }
@@ -403,6 +411,7 @@ const useYamlForm = <
 
               // 如果有错误，则不继续提交
               if (hasErrors) {
+                onSubmitAbort?.();
                 return;
               }
 
@@ -417,6 +426,7 @@ const useYamlForm = <
 
           return onFinish(finalValues as TVariables);
         } catch (error: unknown) {
+          onSubmitAbort?.();
           if (error instanceof Error) {
             if (
               error.message === 'expected a single document in the stream, but found more'

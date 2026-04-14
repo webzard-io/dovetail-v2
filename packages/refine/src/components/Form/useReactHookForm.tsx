@@ -88,6 +88,8 @@ export type UseFormProps<
     setErrors: (errors: string[]) => void
   ) => Promise<TVariables>;
   onBeforeSubmitError?: (errors: string[]) => void;
+  onSubmitStart?: () => void;
+  onSubmitAbort?: () => void;
 } & UseHookFormProps<TVariables, TContext>;
 
 export const useForm = <
@@ -106,6 +108,8 @@ export const useForm = <
   transformInitValues,
   beforeSubmit,
   onBeforeSubmitError,
+  onSubmitStart,
+  onSubmitAbort,
   ...rest
 }: UseFormProps<
   TQueryFnData,
@@ -295,6 +299,7 @@ export const useForm = <
       onClick: async (e: React.BaseSyntheticEvent) => {
         // 清空之前的错误
         setBeforeSubmitErrors([]);
+        onSubmitStart?.();
 
         handleSubmit(
           async v => {
@@ -315,6 +320,7 @@ export const useForm = <
 
                 // 如果有错误，则不继续提交
                 if (hasErrors) {
+                  onSubmitAbort?.();
                   return;
                 }
 
@@ -322,6 +328,9 @@ export const useForm = <
                 if (result !== undefined) {
                   finalValues = result as TVariables;
                 }
+              } catch (error) {
+                onSubmitAbort?.();
+                throw error;
               } finally {
                 setIsBeforeSubmitLoading(false);
               }
@@ -329,7 +338,10 @@ export const useForm = <
 
             return onFinish(finalValues);
           },
-          () => false
+          () => {
+            onSubmitAbort?.();
+            return false;
+          }
         )(e);
       },
     };
@@ -341,6 +353,8 @@ export const useForm = <
     transformApplyValues,
     beforeSubmit,
     onBeforeSubmitError,
+    onSubmitStart,
+    onSubmitAbort,
   ]);
 
   return {

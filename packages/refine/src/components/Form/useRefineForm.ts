@@ -15,6 +15,8 @@ import { useForm, UseFormProps } from './useReactHookForm';
 interface UseRefineFormOptions {
   initialValues?: Record<string, unknown>;
   onBeforeSubmitError?: (errors: string[]) => void;
+  onSubmitStart?: () => void;
+  onSubmitAbort?: () => void;
 }
 
 export const useRefineForm = (props: {
@@ -69,6 +71,8 @@ export const useRefineForm = (props: {
     transformInitValues,
     beforeSubmit: formConfig?.beforeSubmit,
     onBeforeSubmitError: options?.onBeforeSubmitError,
+    onSubmitStart: options?.onSubmitStart,
+    onSubmitAbort: options?.onSubmitAbort,
     ...formConfig?.useFormProps,
   });
 
