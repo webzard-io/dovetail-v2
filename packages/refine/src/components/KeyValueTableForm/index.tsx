@@ -251,7 +251,11 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
             title: keyTitle || t('dovetail.key'),
             type: 'input',
             validator: ({ value }) => {
-              if (!value) return t('dovetail.key_empty_text');
+              if (!value) {
+                return t('dovetail.required_field', {
+                  label: keyTitle || t('dovetail.key'),
+                });
+              }
               const validate = validateKey || validateLabelKey;
               const { isValid, errorMessage } = validate(value || '');
               if (!isValid) return errorMessage || t('dovetail.format_error');
