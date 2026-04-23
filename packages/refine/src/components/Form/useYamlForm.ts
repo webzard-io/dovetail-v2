@@ -289,7 +289,7 @@ const useYamlForm = <
           ? generateYamlBySchema(initialValues || {}, schema)
           : yaml.dump(initialValues),
       schemas: schemas || emptySchemas,
-      id: useResourceResult.resource?.name || '',
+      id: resource || useResourceResult.resource?.name || '',
       errorMsgs: finalErrors,
       onValidate(yamlValid: boolean, schemaValid: boolean) {
         setIsYamlValid(yamlValid);
@@ -315,6 +315,7 @@ const useYamlForm = <
     editorOptions?.isGenerateAnnotations,
     initialValues,
     schemas,
+    resource,
     useResourceResult.resource?.name,
     action,
     finalErrors,
