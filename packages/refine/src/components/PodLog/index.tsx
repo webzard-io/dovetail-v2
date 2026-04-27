@@ -37,7 +37,7 @@ const ContentStyle = css`
   min-height: 0;
 `;
 
-export const PodLog: React.FC<{ pod: PodModel, apiUrl: string }> = ({ pod, apiUrl }) => {
+export const PodLog: React.FC<{ pod: PodModel; apiUrl: string }> = ({ pod, apiUrl }) => {
   const [selectedContainer, setSelectedContainer] = useState(
     pod.spec?.containers[0]?.name || ''
   );
@@ -249,6 +249,7 @@ export const PodLog: React.FC<{ pod: PodModel, apiUrl: string }> = ({ pod, apiUr
             theme="light"
             isTextWrapped={wrap}
             onScroll={onScroll}
+            fastRowHeightEstimationLimit={100}
           />
         )}
       </div>
