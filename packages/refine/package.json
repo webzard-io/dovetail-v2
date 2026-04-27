@@ -1,6 +1,6 @@
 {
   "name": "@dovetail-v2/refine",
-  "version": "0.3.33",
+  "version": "0.4.0",
   "type": "module",
   "files": [
     "dist",
@@ -13,7 +13,7 @@
     "@cloudtower/eagle": "^490.0.1",
     "@cloudtower/icons-react": "^490.0.1",
     "@patternfly/react-core": "^5.1.1",
-    "@patternfly/react-log-viewer": "^5.0.0",
+    "@patternfly/react-log-viewer": "^5.2.0",
     "@refinedev/core": "^4.47.2",
     "@refinedev/inferencer": "^4.5.20",
     "@refinedev/react-hook-form": "^4.8.14",
