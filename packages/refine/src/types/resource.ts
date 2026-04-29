@@ -142,6 +142,8 @@ export type CommonFormConfig<Model extends ResourceModel = ResourceModel> = {
   formDesc?: string | ((action: 'create' | 'edit') => string);
   /** 保存按钮文本 */
   saveButtonText?: string;
+  /** 提交失败时 Footer 的提示文本，如"克隆失败" */
+  formFailedText?: string;
   /**
    * 错误信息格式化函数，待完善
    * @param errorBody 错误信息体
