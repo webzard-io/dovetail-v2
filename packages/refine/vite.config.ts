@@ -7,7 +7,7 @@ import linaria from './tools/linaria';
 
 const external = [
   ...Object.keys(pkg.dependencies || {}),
-  ...Object.keys(pkg.peerDependencies || {})
+  ...Object.keys(pkg.peerDependencies || {}),
 ];
 
 export default defineConfig({
@@ -16,11 +16,11 @@ export default defineConfig({
     react(),
     linaria({
       preprocessor: 'none',
-      extension: 'scss'
+      extension: 'scss',
     }),
   ],
   optimizeDeps: {
-    exclude: ['monaco-yaml/yaml.worker.js']
+    exclude: ['monaco-yaml/yaml.worker.js'],
   },
   logLevel: 'info',
   server: {
@@ -28,12 +28,12 @@ export default defineConfig({
     proxy: {
       // '/proxy-k8s': getProxyConfig(),
       '/api': {
-        target: process.env.API_HOST || 'http://192.168.31.62',
+        target: process.env.API_HOST || 'http://192.168.26.28',
         ws: true,
         headers: {
           'Accept-Encoding': 'identity',
-          'Authorization': process.env.REACT_APP_DEV_TOKEN,
-          'Cookie': process.env.REACT_APP_DEV_COOKIE,
+          Authorization: process.env.REACT_APP_DEV_TOKEN,
+          Cookie: process.env.REACT_APP_DEV_COOKIE,
         },
         secure: false,
       },
@@ -45,8 +45,8 @@ export default defineConfig({
         ws: true,
         headers: {
           'Accept-Encoding': 'identity',
-          'Authorization': process.env.REACT_APP_DEV_TOKEN,
-          'Cookie': process.env.REACT_APP_DEV_COOKIE,
+          Authorization: process.env.REACT_APP_DEV_TOKEN,
+          Cookie: process.env.REACT_APP_DEV_COOKIE,
         },
         secure: false,
       },
@@ -66,7 +66,7 @@ export default defineConfig({
     },
   },
   resolve: {
-    preserveSymlinks: true,
+    dedupe: ['react', 'react-dom'],
     alias: {
       src: path.resolve(__dirname, 'src'),
     },
@@ -74,8 +74,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: '@import "@cloudtower/eagle/dist/variables.scss";\r\n'
-      }
-    }
-  }
+        additionalData: '@import "@cloudtower/eagle/dist/variables.scss";\r\n',
+      },
+    },
+  },
 });

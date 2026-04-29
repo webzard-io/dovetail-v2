@@ -9,31 +9,31 @@ Dovetail-v2 是一个 Kubernetes 管理面板，基于 Refine 框架构建，以
 ## 常用命令
 
 ```bash
-# 安装依赖（使用 yarn，CI 中使用 --frozen-lockfile）
-yarn install
+# 安装依赖（使用 pnpm，CI 中使用 --frozen-lockfile）
+pnpm install
 
 # 开发模式（需要配置 API_HOST、REACT_APP_DEV_TOKEN 等环境变量用于代理）
-yarn dev                          # 根目录 turbo 并行启动
-cd packages/refine && yarn dev    # 直接启动 refine 包
+pnpm dev                          # 根目录 turbo 并行启动
+cd packages/refine && pnpm dev    # 直接启动 refine 包
 
 # 构建（vite build + tsc 生成类型声明）
-yarn build                        # 根目录 turbo 构建
-cd packages/refine && yarn build  # 直接构建 refine 包
+pnpm build                        # 根目录 turbo 构建
+cd packages/refine && pnpm build  # 直接构建 refine 包
 
 # Lint
-yarn lint                                    # 根目录 lint 所有 ts/tsx
-cd packages/refine && yarn lint              # 仅 lint refine/src
+pnpm lint                                    # 根目录 lint 所有 ts/tsx
+cd packages/refine && pnpm lint              # 仅 lint refine/src
 
 # 单元测试（Jest）
-cd packages/refine && yarn unit-test         # 运行全部单元测试
+cd packages/refine && pnpm unit-test         # 运行全部单元测试
 cd packages/refine && npx jest path/to/file  # 运行单个测试文件
 cd packages/refine && npx jest --testNamePattern="pattern"  # 按名称匹配
 
 # E2E 测试（Playwright，仅 Chromium）
-cd packages/refine && yarn playwright-test
+cd packages/refine && pnpm playwright-test
 
 # 全部测试
-cd packages/refine && yarn test
+cd packages/refine && pnpm test
 ```
 
 ## CI 流程
@@ -44,7 +44,7 @@ PR 合入 main 时运行：Lint → Jest → Vite Build（Node 20，Ubuntu）。
 
 ### Monorepo 结构
 
-Yarn Workspaces monorepo，核心代码在 `packages/refine/`。Turbo 用于编排构建任务。产物为双入口库：`src/index.ts`（主入口）和 `src/shell.ts`（终端相关）。
+pnpm Workspaces monorepo，核心代码在 `packages/refine/`。Turbo 用于编排构建任务。产物为双入口库：`src/index.ts`（主入口）和 `src/shell.ts`（终端相关）。
 
 ### 核心数据流
 

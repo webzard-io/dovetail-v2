@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
-  "workspaces": [
-    "packages/*"
-  ],
+  "packageManager": "pnpm@7.33.7",
   "scripts": {
     "prepare": "husky install",
     "postbuild": "turbo run typings",
@@ -56,10 +54,12 @@
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
-  "resolutions": {
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "@types/react-dom": "^16.9.0",
-    "@types/react": "^16.9.0"
+  "pnpm": {
+    "overrides": {
+      "react": "^16.12.0",
+      "react-dom": "^16.12.0",
+      "@types/react-dom": "^16.9.0",
+      "@types/react": "^16.9.0"
+    }
   }
 }

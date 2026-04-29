@@ -58,6 +58,7 @@
     "@playwright/test": "^1.39.0",
     "@refinedev/cli": "^2.9.0",
     "@rollup/pluginutils": "^4.2.1",
+    "@tanstack/react-query": "^4.35.3",
     "@testing-library/react-hooks": "7",
     "@types/body-parser": "^1.19.5",
     "@types/jest": "^29",
@@ -74,16 +75,20 @@
     "@vitejs/plugin-react": "^4.0.0",
     "body-parser": "^1.20.2",
     "eslint": "^8.38.0",
+    "history": "^4.10.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
     "jest": "^29",
+    "json-schema": "^0.4.0",
     "jest-environment-jsdom": "^30.0.0",
     "kubernetes-types": "^1.26.0",
+    "lodash": "^4.17.21",
     "prettier": "2.8.8",
     "sass": "1.51.0",
     "ts-jest": "^29",
     "vite": "^4.5.2",
-    "vite-plugin-commonjs": "^0.10.0"
+    "vite-plugin-commonjs": "^0.10.0",
+    "ws": "^8.18.2"
   },
   "peerDependencies": {
     "@cloudtower/eagle": "^490.0.1",
@@ -103,7 +108,7 @@
     "refine": "refine",
     "unit-test": "jest",
     "playwright-test": "npx playwright test --workers 1",
-    "test": "yarn unit-test && yarn playwright-test",
+    "test": "pnpm unit-test && pnpm playwright-test",
     "lint": "eslint src --ext .ts,.tsx"
   },
   "browserslist": {
