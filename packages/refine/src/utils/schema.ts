@@ -98,6 +98,7 @@ export function resolveRef(
   options: ResolveOptions
 ) {
   const { prune, prePath = '#/components/schemas/' } = options;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const kindObj = (schema as any)['x-kubernetes-group-version-kind'];
 
   if (kindObj) {
