@@ -156,10 +156,12 @@ export function FormModal(props: FormModalProps) {
 
   const errorText = useMemo(() => {
     if (isError) {
+      const customText = resourceConfig.formConfig?.formFailedText;
+      if (customText) return customText;
       return i18n.t(id ? 'dovetail.save_failed' : 'dovetail.create_failed');
     }
     return '';
-  }, [isError, id, i18n]);
+  }, [isError, id, i18n, resourceConfig.formConfig?.formFailedText]);
   const title = useMemo(() => {
     if (typeof resourceConfig.formConfig?.formTitle === 'string')
       return resourceConfig.formConfig?.formTitle;
