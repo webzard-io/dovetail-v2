@@ -32,7 +32,9 @@ function useTableData<Data extends { id: string; }>({ data, columns, pageSize = 
         pageSize,
         current: currentPage,
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       sortData(sorters, data as any[])
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ) as any as Data[],
     currentPage,
     onPageChange: setCurrentPage,

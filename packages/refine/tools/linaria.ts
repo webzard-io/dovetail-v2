@@ -138,6 +138,12 @@ export default function linaria({
             return null;
           }
 
+          // Avoid evaluating vite pre-bundled deps in Linaria's VM —
+          // bundled chunks (especially react-dom) fail during VM evaluation
+          if (resolvedId.includes('.vite/deps')) {
+            return syncResolve(what, importer, stack);
+          }
+
           return resolvedId;
         }
 
