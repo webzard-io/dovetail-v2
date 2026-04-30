@@ -39,6 +39,7 @@ import { RESOURCE_GROUP, ResourceConfig, FormType } from './types';
 function App() {
   const history = createBrowserHistory();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const resourcesConfig = useMemo((): ResourceConfig<any>[] => {
     return [
       {
@@ -183,6 +184,7 @@ function App() {
         resourcesConfig={resourcesConfig}
         Layout={Layout}
         history={history}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         globalStoreMap={{ default: globalStore } as any}
         schemaUrlPrefix="/api/sks/api/v1/clusters/sks-mgmt/proxy/openapi/v3"
       >

@@ -8,6 +8,7 @@ import { RefineFormContent } from './RefineFormContent';
 import { useRefineForm } from './useRefineForm';
 
 type Props = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   config: ResourceConfig<any>;
 };
 

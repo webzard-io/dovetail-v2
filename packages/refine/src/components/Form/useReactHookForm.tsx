@@ -254,6 +254,7 @@ export const useForm = <
   }, [queryResult?.data, setValue, transformInitValues, formState.isDirty, getValues]);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const subscription = watch((values: any, { type }: { type?: any }) => {
       if (type === 'change') {
         onValuesChange(values);

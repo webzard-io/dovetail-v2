@@ -2,7 +2,7 @@ name: "CI Check"
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ["main", "*-dev"]
 
 # Cancel prev CI if new commit come
 concurrency:
@@ -23,14 +23,14 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - name: Setup yarn
-        run: npm install -g yarn
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
       - name: Install deps
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
         timeout-minutes: 15
       - name: Lint
-        run: cd packages/refine && yarn lint
+        run: cd packages/refine && pnpm lint
       - name: Test
-        run: cd packages/refine && yarn jest
+        run: cd packages/refine && pnpm jest
       - name: Build
-        run: cd packages/refine && yarn build
+        run: cd packages/refine && pnpm build
