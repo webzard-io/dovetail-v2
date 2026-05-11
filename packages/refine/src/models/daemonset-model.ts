@@ -1,7 +1,6 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import { DaemonSet } from 'kubernetes-types/apps/v1';
 import { ResourceState } from '../constants';
-import { ControllerRevisionModel } from './controller-revison-model';
 import { WorkloadModel } from './workload-model';
 
 type RequiredDaemonSet = Required<DaemonSet> & Unstructured;
@@ -15,25 +14,6 @@ export class DaemonSetModel extends WorkloadModel {
     _globalStore: GlobalStore
   ) {
     super(_rawYaml, _globalStore);
-  }
-
-  getControllerRevisions(controllerVisions: ControllerRevisionModel[]) {
-    return controllerVisions.filter(
-      controllerRevision =>
-        controllerRevision.metadata?.ownerReferences?.some(
-          ownerReference =>
-            ownerReference.kind === 'DaemonSet' &&
-            ownerReference.uid === this.metadata.uid
-        )
-    );
-  }
-
-  getRevision(controllerVisions: ControllerRevisionModel[]) {
-    const myControllerVisions = this.getControllerRevisions(controllerVisions);
-
-    return myControllerVisions.reduce((result, controllerRevision) => {
-      return Math.max(result, Number(controllerRevision.revision || 0));
-    }, 0);
   }
 
   get stateDisplay() {

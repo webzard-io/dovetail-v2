@@ -1,11 +1,7 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import { Job } from 'kubernetes-types/batch/v1';
-import { PodList } from 'kubernetes-types/core/v1';
-import { sumBy } from 'lodash';
 import { ResourceState } from '../constants';
-import { matchSelector } from '../utils/match-selector';
 import { getSecondsDiff } from '../utils/time';
-import { PodModel } from './pod-model';
 import { WorkloadBaseModel } from './workload-base-model';
 
 type RequiredJob = Required<Job> & Unstructured;
@@ -27,15 +23,10 @@ export class JobModel extends WorkloadBaseModel {
   }
 
   private async getRestarts() {
-    const pods = (await this._globalStore.get('pods', {
-      resourceBasePath: '/api/v1',
-      kind: 'Pod',
-    })) as PodList;
-    const myPods = pods.items.filter(p =>
-      matchSelector(p as PodModel, this.spec?.selector, this.metadata.namespace)
+    this.restarts = await this.fetchRestarts(
+      this.spec?.selector,
+      this.metadata.namespace
     );
-    const result = sumBy(myPods, 'restarts');
-    this.restarts = result;
   }
 
   get duration() {
