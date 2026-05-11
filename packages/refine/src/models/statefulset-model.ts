@@ -10,16 +10,21 @@ export class StatefulSetModel extends WorkloadModel {
   public declare spec?: RequiredStatefulSet['spec'];
   public declare status?: RequiredStatefulSet['status'];
 
-  constructor(public _rawYaml: RequiredStatefulSet, _globalStore: GlobalStore) {
+  constructor(
+    public _rawYaml: RequiredStatefulSet,
+    _globalStore: GlobalStore
+  ) {
     super(_rawYaml, _globalStore);
   }
 
   getControllerRevisions(controllerVisions: ControllerRevisionModel[]) {
-    return controllerVisions.filter(controllerRevision =>
-      controllerRevision.metadata?.ownerReferences?.some(
-        ownerReference =>
-          ownerReference.kind === 'StatefulSet' && ownerReference.uid === this.metadata.uid
-      )
+    return controllerVisions.filter(
+      controllerRevision =>
+        controllerRevision.metadata?.ownerReferences?.some(
+          ownerReference =>
+            ownerReference.kind === 'StatefulSet' &&
+            ownerReference.uid === this.metadata.uid
+        )
     );
   }
 

@@ -16,12 +16,11 @@ function useNamespaceRefineFilter() {
       permanent: [
         {
           operator: 'or',
-          value: filters
-            .map(filter => ({
-              field: 'metadata.namespace',
-              operator: 'eq',
-              value: filter,
-            })),
+          value: filters.map(filter => ({
+            field: 'metadata.namespace',
+            operator: 'eq',
+            value: filter,
+          })),
         },
       ] as CrudFilters,
     };

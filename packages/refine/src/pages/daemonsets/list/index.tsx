@@ -34,7 +34,5 @@ export const DaemonSetList: React.FC<IResourceComponentsProps> = () => {
     Dropdown: WorkloadDropdown,
   });
 
-  return (
-    <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />
-  );
+  return <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />;
 };

@@ -60,4 +60,3 @@ export * from './EditMetadataForm';
 export * from './LabelsAndAnnotationsShow';
 export * from './FormErrorAlert';
 export * from './EditField';
-

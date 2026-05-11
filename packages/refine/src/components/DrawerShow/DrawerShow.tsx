@@ -10,9 +10,7 @@ type Props<Model extends ResourceModel> = {
   formatter?: (r: Model) => Model;
 };
 
-export const DrawerShow = <Model extends ResourceModel>(
-  props: Props<Model>
-) => {
+export const DrawerShow = <Model extends ResourceModel>(props: Props<Model>) => {
   const parsed = useParsed();
   const nav = useNavigation();
   const { queryResult } = useShow({ id: parsed?.params?.id });

@@ -13,7 +13,9 @@ type Props<Model extends PodModel> = {
   size?: DropdownSize;
 };
 
-export function PodDropdown<Model extends PodModel>(props: React.PropsWithChildren<Props<Model>>) {
+export function PodDropdown<Model extends PodModel>(
+  props: React.PropsWithChildren<Props<Model>>
+) {
   const { record, size, children } = props;
   const { resource } = useResource();
   const { t } = useTranslation();
@@ -28,23 +30,20 @@ export function PodDropdown<Model extends PodModel>(props: React.PropsWithChildr
 
   return (
     <K8sDropdown record={record} size={size}>
-      {
-        canEditData?.can !== false ? (
-          <Menu.Item
-            onClick={() => {
-              pushModal<'PodShellModal'>({
-                component: PodShellModal,
-                props: {
-                  pod: record
-                }
-              });
-            }}
-          >
-            <Icon src={OpenTerminal16GradientBlueIcon}>{t('dovetail.exec_pod')}</Icon>
-          </Menu.Item>
-
-        ) : null
-      }
+      {canEditData?.can !== false ? (
+        <Menu.Item
+          onClick={() => {
+            pushModal<'PodShellModal'>({
+              component: PodShellModal,
+              props: {
+                pod: record,
+              },
+            });
+          }}
+        >
+          <Icon src={OpenTerminal16GradientBlueIcon}>{t('dovetail.exec_pod')}</Icon>
+        </Menu.Item>
+      ) : null}
       {children}
     </K8sDropdown>
   );

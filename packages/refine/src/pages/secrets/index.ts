@@ -3,7 +3,10 @@ import { Unstructured } from 'k8s-api-provider';
 import { Secret } from 'kubernetes-types/core/v1';
 import { SECRET_OPAQUE_INIT_VALUE } from 'src/constants/k8s';
 import { BasicGroup } from '../../components/ShowContent';
-import { AgeColumnRenderer, DataKeysColumnRenderer } from '../../hooks/useEagleTable/columns';
+import {
+  AgeColumnRenderer,
+  DataKeysColumnRenderer,
+} from '../../hooks/useEagleTable/columns';
 import { ResourceModel } from '../../models';
 import { FormType, RESOURCE_GROUP, ResourceConfig } from '../../types';
 
@@ -16,7 +19,9 @@ function isBase64(value: string) {
   }
 }
 
-export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel<Unstructured & Secret>> => ({
+export const SecretsConfig = (
+  i18n: i18n
+): ResourceConfig<ResourceModel<Unstructured & Secret>> => ({
   name: 'secrets',
   kind: 'Secret',
   basePath: '/api/v1',
@@ -26,7 +31,7 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel<Unstruct
   columns: () => [DataKeysColumnRenderer(i18n), AgeColumnRenderer(i18n)],
   formConfig: {
     formType: FormType.FORM,
-    transformInitValues: (value) => {
+    transformInitValues: value => {
       const data = (value as Secret).data || {};
 
       return {
@@ -35,10 +40,10 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel<Unstruct
           result[key] = window.atob(data[key]);
 
           return result;
-        }, {})
+        }, {}),
       };
     },
-    transformApplyValues: (value) => {
+    transformApplyValues: value => {
       const data = (value as Secret).data || {};
 
       return {
@@ -49,7 +54,7 @@ export const SecretsConfig = (i18n: i18n): ResourceConfig<ResourceModel<Unstruct
           result[key] = isBase64(value) ? value : window.btoa(value);
 
           return result;
-        }, {})
+        }, {}),
       };
     },
   },

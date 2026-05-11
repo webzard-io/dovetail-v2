@@ -41,20 +41,22 @@ export const NetworkPolicyConfig = (i18n: i18n): ResourceConfig<NetworkPolicyMod
         key: 'detail',
         groups: [
           BasicGroup(i18n, {
-            basicFields: [{
-              key: 'podSelector',
-              title: i18n.t('dovetail.pod_selector'),
-              path: ['spec', 'podSelector'],
-              col: 12,
-              renderContent: podSelector => {
-                return <Tags value={(podSelector as LabelSelector).matchLabels} />;
+            basicFields: [
+              {
+                key: 'podSelector',
+                title: i18n.t('dovetail.pod_selector'),
+                path: ['spec', 'podSelector'],
+                col: 12,
+                renderContent: podSelector => {
+                  return <Tags value={(podSelector as LabelSelector).matchLabels} />;
+                },
               },
-            }]
+            ],
           }),
           PodSelectorGroup(i18n),
           NetworkPolicyIngressRulesGroup(i18n),
-          NetworkPolicyEgressRulesGroup(i18n)
-        ]
+          NetworkPolicyEgressRulesGroup(i18n),
+        ],
       },
     ],
   }),

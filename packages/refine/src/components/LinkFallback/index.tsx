@@ -2,7 +2,6 @@ import { Link } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
 import React from 'react';
 
-
 const LinkStyle = css`
   padding: 0 !important;
 `;

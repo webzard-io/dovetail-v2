@@ -16,7 +16,7 @@ const TitleStyle = css`
 
 type FormLayoutProps = {
   saveButtonProps?: ButtonProps;
-}
+};
 
 function FormLayout(props: React.PropsWithChildren<FormLayoutProps>) {
   const { saveButtonProps } = props;

@@ -127,7 +127,7 @@ export const ImageField = <Model extends WorkloadBaseModel>(
 };
 
 export const ReplicaField = <
-  Model extends WorkloadModel | JobModel
+  Model extends WorkloadModel | JobModel,
 >(): ShowField<Model> => {
   return {
     key: 'Replicas',
@@ -200,7 +200,7 @@ export const JobsField = <Model extends JobModel | CronJobModel>(): ShowField<Mo
 };
 
 export const DataField = <
-  Model extends ResourceModel<Unstructured & (ConfigMap | Secret)>
+  Model extends ResourceModel<Unstructured & (ConfigMap | Secret)>,
 >(
   i18n: I18nType
 ): ShowField<Model> => {
@@ -322,7 +322,7 @@ export const ServicePodsField = <Model extends ResourceModel>(): ShowField<Model
 };
 
 export const IngressRulesTableTabField = <
-  Model extends IngressModel
+  Model extends IngressModel,
 >(): ShowField<Model> => {
   return {
     key: 'rules',
@@ -408,7 +408,7 @@ export const AnnotationsField = <Model extends ResourceModel>(
 });
 
 export const ServiceInnerClusterAccessField = <
-  Model extends ServiceModel
+  Model extends ServiceModel,
 >(): ShowField<Model> => ({
   key: 'innerClusterAccess',
   col: 12,
@@ -439,7 +439,7 @@ export const ServiceOutClusterAccessField = <Model extends ServiceModel>(
 });
 
 export const PodSelectorField = <
-  Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>
+  Model extends ResourceModel<ServiceType | (NetworkPolicy & Unstructured)>,
 >(): ShowField<Model> => ({
   key: 'podSelector',
   path: [],
@@ -492,7 +492,7 @@ export const StorageClassProvisionerField = <Model extends StorageClassModel>(
 };
 
 export const StorageClassPvField = <
-  Model extends StorageClassModel
+  Model extends StorageClassModel,
 >(): ShowField<Model> => {
   return {
     key: 'pvs',
@@ -583,7 +583,7 @@ export const PVRefField = <Model extends PersistentVolumeClaimModel>(
 };
 
 export const PVStorageClassField = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
 >(
   i18n: I18nType
 ): ShowField<Model> => {
@@ -601,7 +601,7 @@ export const PVStorageClassField = <
 };
 
 export const PVPhaseField = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
 >(
   i18n: I18nType
 ): ShowField<Model> => {
@@ -617,7 +617,7 @@ export const PVPhaseField = <
 };
 
 export const PVVolumeModeField = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
 >(
   i18n: I18nType
 ): ShowField<Model> => {
@@ -633,7 +633,7 @@ export const PVVolumeModeField = <
 };
 
 export const PVAccessModeField = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
 >(
   i18n: I18nType
 ): ShowField<Model> => {
@@ -649,7 +649,7 @@ export const PVAccessModeField = <
 };
 
 export const PVCPodsField = <
-  Model extends PersistentVolumeClaimModel
+  Model extends PersistentVolumeClaimModel,
 >(): ShowField<Model> => {
   return {
     key: 'pods',

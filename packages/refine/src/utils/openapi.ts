@@ -38,22 +38,25 @@ class K8sOpenAPI {
   private apiVersion: string;
   private schemas: Array<OpenAPIResponse['components']['schemas'][string]> | null = null;
 
-  constructor(private resourceBasePath: string, private pathPrefix: string) {
+  constructor(
+    private resourceBasePath: string,
+    private pathPrefix: string
+  ) {
     this.apiVersion = getApiVersion(resourceBasePath);
   }
 
   // Fetch and process OpenAPI schemas
-  public async fetch(): Promise<Array<OpenAPIResponse['components']['schemas'][string]> | null> {
+  public async fetch(): Promise<Array<
+    OpenAPIResponse['components']['schemas'][string]
+  > | null> {
     if (this.schemas) {
       return this.schemas;
     }
 
     try {
-      const response = await fetch(
-        `${this.pathPrefix}${this.resourceBasePath}`
-      );
+      const response = await fetch(`${this.pathPrefix}${this.resourceBasePath}`);
 
-      const result = await response.json() as OpenAPIResponse;
+      const result = (await response.json()) as OpenAPIResponse;
 
       this.schemas = Object.values(result.components.schemas);
 
@@ -70,12 +73,13 @@ class K8sOpenAPI {
 
   // Find schema by kind and version
   public findSchema(kind: string): JSONSchema7 | undefined {
-    return this.schemas?.find(schema =>
-      schema['x-kubernetes-group-version-kind']?.some(
-        ({ kind: schemaKind, version: schemaVersion, group: schemaGroup }) =>
-          kind === schemaKind &&
-          this.apiVersion === `${schemaGroup ? schemaGroup + '/' : ''}${schemaVersion}`
-      )
+    return this.schemas?.find(
+      schema =>
+        schema['x-kubernetes-group-version-kind']?.some(
+          ({ kind: schemaKind, version: schemaVersion, group: schemaGroup }) =>
+            kind === schemaKind &&
+            this.apiVersion === `${schemaGroup ? schemaGroup + '/' : ''}${schemaVersion}`
+        )
     );
   }
 

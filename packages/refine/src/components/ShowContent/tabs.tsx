@@ -178,7 +178,7 @@ export const IngressRulesTab = <Model extends IngressModel>({
 });
 
 export const DataTab = <
-  Model extends ResourceModel<Unstructured & (ConfigMap | Secret)>
+  Model extends ResourceModel<Unstructured & (ConfigMap | Secret)>,
 >({
   i18n,
 }: {

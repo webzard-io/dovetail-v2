@@ -14,15 +14,15 @@ const TagStyle = css`
   &.ant-tag {
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #1D326C;
+    color: #1d326c;
 
     &.outside-tag {
-      border: 1px solid #A3B4CC;
-      background-color: #E4E9F2;
+      border: 1px solid #a3b4cc;
+      background-color: #e4e9f2;
     }
 
     .inside-tag {
-      background-color: #CCD4E3;
+      background-color: #ccd4e3;
     }
   }
 `;

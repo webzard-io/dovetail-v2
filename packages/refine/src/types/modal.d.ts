@@ -16,7 +16,7 @@ type ModalProps = {
 
 declare module '@cloudtower/eagle' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface IModalProps extends ModalProps { }
+  interface IModalProps extends ModalProps {}
 
   export declare function pushModal<K extends keyof ModalProps>(
     modal: ModalType<ModalProps[K]>

@@ -23,10 +23,7 @@ export interface IGlobalStore<TWatchEvent> {
 
   // Methods
   get<T = UnstructuredList>(resource: string, meta?: MetaQuery): Promise<T>;
-  subscribe(
-    resource: string,
-    onEvent: (event: TWatchEvent) => void
-  ): () => void;
+  subscribe(resource: string, onEvent: (event: TWatchEvent) => void): () => void;
   publish(resource: string, event: TWatchEvent): void;
   init(params: GlobalStoreInitParams): void;
   loadPlugins(plugins?: IProviderPlugin[]): void;

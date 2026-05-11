@@ -1,4 +1,10 @@
-import { TableProps as BaseTableProps, RequiredColumnProps, Table as BaseTable, Pagination, Loading } from '@cloudtower/eagle';
+import {
+  TableProps as BaseTableProps,
+  RequiredColumnProps,
+  Table as BaseTable,
+  Pagination,
+  Loading,
+} from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,11 +31,11 @@ const TableContainerStyle = css`
   }
 `;
 
-export type Column<Data extends { id: string; }> = RequiredColumnProps<Data> & {
+export type Column<Data extends { id: string }> = RequiredColumnProps<Data> & {
   display?: boolean;
 };
 
-export type InternalTableProps<Data extends { id: string; }> = {
+export type InternalTableProps<Data extends { id: string }> = {
   tableKey: string;
   className?: string;
   loading: boolean;
@@ -47,7 +53,7 @@ export type InternalTableProps<Data extends { id: string; }> = {
   onPageChange: (page: number) => void;
   onSizeChange?: (size: number) => void;
   onSorterChange?: (order: SorterOrder | null, key?: string) => void;
-  RowMenu?: React.FC<{ record: Data; formType?: FormContainerType; }>;
+  RowMenu?: React.FC<{ record: Data; formType?: FormContainerType }>;
   empty?: string;
   showMenuColumn?: boolean;
   nonNsResource?: boolean;
@@ -56,7 +62,7 @@ export type InternalTableProps<Data extends { id: string; }> = {
   onClearSearchKeyword?: () => void;
 };
 
-function Table<Data extends { id: string; }>(props: InternalTableProps<Data>) {
+function Table<Data extends { id: string }>(props: InternalTableProps<Data>) {
   const { t } = useTranslation();
   const {
     loading,
@@ -89,10 +95,7 @@ function Table<Data extends { id: string; }>(props: InternalTableProps<Data>) {
         },
       };
 
-      return [
-        ...columns,
-        actionColumn
-      ];
+      return [...columns, actionColumn];
     }
 
     return columns;
@@ -105,14 +108,16 @@ function Table<Data extends { id: string; }>(props: InternalTableProps<Data>) {
       <ErrorContent
         errorText={t('dovetail.retry_when_access_data_failed')}
         refetch={refetch}
-        style={{ padding: '15px 0', }}
+        style={{ padding: '15px 0' }}
       />
     );
   } else if (dataSource.length === 0) {
-    return <ErrorContent
-      errorText={empty || t('dovetail.empty')}
-      style={{ padding: '15px 0' }}
-    />;
+    return (
+      <ErrorContent
+        errorText={empty || t('dovetail.empty')}
+        style={{ padding: '15px 0' }}
+      />
+    );
   }
 
   return (

@@ -1,8 +1,8 @@
 import { Buffer } from 'buffer';
 
 export type QueryParams = {
-  [key: string]: string | string[]
-}
+  [key: string]: string | string[];
+};
 
 export const stdin = (characters: string) => {
   return Buffer.from(`\x00${characters}`, 'utf8');
@@ -15,20 +15,22 @@ export function addParam(url: string, key: string, val: string | string[]): stri
   if (!Array.isArray(val)) {
     val = [val];
   }
-  out += val.map((v) => {
-    if (v === null) {
-      return `${encodeURIComponent(key)}`;
-    } else {
-      return `${encodeURIComponent(key)}=${encodeURIComponent(v)}`;
-    }
-  }).join('&');
+  out += val
+    .map(v => {
+      if (v === null) {
+        return `${encodeURIComponent(key)}`;
+      } else {
+        return `${encodeURIComponent(key)}=${encodeURIComponent(v)}`;
+      }
+    })
+    .join('&');
 
   return out;
 }
 
 export function addParams(url: string, params: QueryParams): string {
   if (params && typeof params === 'object') {
-    Object.keys(params).forEach((key) => {
+    Object.keys(params).forEach(key => {
       url = addParam(url, key, params[key]);
     });
   }
@@ -38,7 +40,7 @@ export function addParams(url: string, params: QueryParams): string {
 
 enum Alphabet {
   NORMAL = 'normal',
-  URL = 'url'
+  URL = 'url',
 }
 
 export function base64Encode(str: string, alphabet: Alphabet = Alphabet.NORMAL) {
@@ -59,7 +61,7 @@ export function base64Encode(str: string, alphabet: Alphabet = Alphabet.NORMAL) 
       '/': '_',
     };
 
-    return buf.toString('base64').replace(/[+/]|=+$/g, (char) => m[char] || '');
+    return buf.toString('base64').replace(/[+/]|=+$/g, char => m[char] || '');
   }
 
   return buf.toString('base64');
@@ -78,5 +80,9 @@ export function base64DecodeToBuffer(str: string) {
 }
 
 export function base64Decode(str: string) {
-  return !str ? str : base64DecodeToBuffer(str.replace(/[-_]/g, (char) => char === '-' ? '+' : '/')).toString();
+  return !str
+    ? str
+    : base64DecodeToBuffer(
+        str.replace(/[-_]/g, char => (char === '-' ? '+' : '/'))
+      ).toString();
 }

@@ -38,48 +38,54 @@ export interface SectionTitleRef {
   setCollapse: (collapse: boolean) => void;
 }
 
-export const SectionTitle = React.forwardRef<SectionTitleRef, SectionTitleProps>(function SectionTitle(props: SectionTitleProps, ref) {
-  const {
-    title,
-    collapsable = true,
-    defaultCollapse = false,
-    children,
-    className,
-    contentClassName,
-  } = props;
+export const SectionTitle = React.forwardRef<SectionTitleRef, SectionTitleProps>(
+  function SectionTitle(props: SectionTitleProps, ref) {
+    const {
+      title,
+      collapsable = true,
+      defaultCollapse = false,
+      children,
+      className,
+      contentClassName,
+    } = props;
 
-  const { t } = useTranslation();
-  const [collapse, setCollapse] = useState(defaultCollapse);
+    const { t } = useTranslation();
+    const [collapse, setCollapse] = useState(defaultCollapse);
 
-  useImperativeHandle(ref, () => ({
-    setCollapse,
-  }), [setCollapse]);
+    useImperativeHandle(
+      ref,
+      () => ({
+        setCollapse,
+      }),
+      [setCollapse]
+    );
 
-  return (
-    <div className={cx(className)}>
-      <div className={cx(TitleWrapperStyle, collapse && CollapsedTitleStyle)}>
-        <span className={Typo.Label.l4_bold_title}>{title}</span>
-        {collapsable ? (
-          <Button
-            type="link"
-            size="small"
-            className={cx(ButtonStyle)}
-            onClick={() => setCollapse(!collapse)}
-          >
-            {collapse ? t('dovetail.expand') : t('dovetail.fold')}
-            <Icon
-              style={{ marginLeft: 4 }}
-              src={collapse ? ArrowChevronDown16BlueIcon : ArrowChevronUp16BlueIcon}
-            />
-          </Button>
-        ) : null}
+    return (
+      <div className={cx(className)}>
+        <div className={cx(TitleWrapperStyle, collapse && CollapsedTitleStyle)}>
+          <span className={Typo.Label.l4_bold_title}>{title}</span>
+          {collapsable ? (
+            <Button
+              type="link"
+              size="small"
+              className={cx(ButtonStyle)}
+              onClick={() => setCollapse(!collapse)}
+            >
+              {collapse ? t('dovetail.expand') : t('dovetail.fold')}
+              <Icon
+                style={{ marginLeft: 4 }}
+                src={collapse ? ArrowChevronDown16BlueIcon : ArrowChevronUp16BlueIcon}
+              />
+            </Button>
+          ) : null}
+        </div>
+        <div
+          className={cx(contentClassName)}
+          style={{ display: collapse ? 'none' : 'block' }}
+        >
+          {children}
+        </div>
       </div>
-      <div
-        className={cx(contentClassName)}
-        style={{ display: collapse ? 'none' : 'block' }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-});
+    );
+  }
+);

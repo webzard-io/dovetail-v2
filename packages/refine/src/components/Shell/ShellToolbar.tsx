@@ -30,14 +30,14 @@ const IconStyle = css`
 const DividerStyle = css`
   width: 1px;
   height: 100%;
-  background: rgba(172, 186, 211, 0.60);
+  background: rgba(172, 186, 211, 0.6);
   margin: 0 16px;
 `;
 const TooltipStyle = css`
   white-space: nowrap;
 `;
 
-type OperationType = ('fontSize' | 'downloadLog' | 'clear');
+type OperationType = 'fontSize' | 'downloadLog' | 'clear';
 
 export interface ShellToolbarProps {
   className?: string;
@@ -51,7 +51,6 @@ export interface ShellToolbarProps {
   onDownloadLog?: () => void;
   onClear?: () => void;
 }
-
 
 function ShellToolbar(props: ShellToolbarProps) {
   const {
@@ -75,11 +74,15 @@ function ShellToolbar(props: ShellToolbarProps) {
           key: `${size}`,
           title: `${size}px`,
           text: `${size}px`,
-          onClick: () => { onSetFontSize?.(size); }
+          onClick: () => {
+            onSetFontSize?.(size);
+          },
         }))}
         slotsElements={{
           trigger: () => (
-            <Tooltip title={<span className={TooltipStyle}>{t('dovetail.font_size')}</span>}>
+            <Tooltip
+              title={<span className={TooltipStyle}>{t('dovetail.font_size')}</span>}
+            >
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Icon
                   className={IconStyle}
@@ -88,12 +91,16 @@ function ShellToolbar(props: ShellToolbarProps) {
                 />
               </div>
             </Tooltip>
-          )
+          ),
         }}
       />
     ),
     downloadLog: (
-      <Tooltip title={<span className={TooltipStyle}>{t('dovetail.download_shell_content')}</span>}>
+      <Tooltip
+        title={
+          <span className={TooltipStyle}>{t('dovetail.download_shell_content')}</span>
+        }
+      >
         <Icon
           className={IconStyle}
           src={LogCollection16GrayIcon}
@@ -111,36 +118,32 @@ function ShellToolbar(props: ShellToolbarProps) {
           onClick={onClear}
         />
       </Tooltip>
-    )
+    ),
   };
 
   return (
     <div className={cx(ToolbarStyle, className)}>
-      <div className={ToolbarAreaStyle}>
-        {leftSlot}
-      </div>
+      <div className={ToolbarAreaStyle}>{leftSlot}</div>
       <div className={ToolbarAreaStyle}>
         <SearchInput
           placeholder={t('dovetail.search')}
           size="small"
           total={searchMatchedTotal}
-          onChange={(str) => {
+          onChange={str => {
             onSearchNext(str);
           }}
-          onSearchNext={(str) => {
+          onSearchNext={str => {
             onSearchNext(str);
           }}
-          onSearchPrev={(str) => {
+          onSearchPrev={str => {
             onSearchPre(str);
           }}
         />
         <div className={DividerStyle}></div>
         <div className={IconWrapperStyle}>
-          {
-            operations.map(operation => (
-              typeof operation === 'string' ? operationMap[operation] || null : operation
-            ))
-          }
+          {operations.map(operation =>
+            typeof operation === 'string' ? operationMap[operation] || null : operation
+          )}
         </div>
       </div>
     </div>

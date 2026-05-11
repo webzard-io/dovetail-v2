@@ -67,7 +67,10 @@ export type UseFormProps<
   initialValuesForEdit?: Record<string, unknown>;
   transformInitValues?: (values: Record<string, unknown>) => Record<string, unknown>;
   transformApplyValues?: (values: Unstructured) => Unstructured;
-  beforeSubmit?: (values: Unstructured, setErrors: (errors: string[]) => void) => Promise<Unstructured>;
+  beforeSubmit?: (
+    values: Unstructured,
+    setErrors: (errors: string[]) => void
+  ) => Promise<Unstructured>;
   onBeforeSubmitError?: (errors: string[]) => void;
   onSubmitStart?: () => void;
   onSubmitAbort?: () => void;
@@ -266,7 +269,7 @@ const useYamlForm = <
   const initialValues = useMemo(() => {
     const initialValues =
       (action === 'edit' && queryResult?.data?.data
-        ? (initialValuesForEdit || globalStore?.restoreItem(queryResult.data.data))
+        ? initialValuesForEdit || globalStore?.restoreItem(queryResult.data.data)
         : initialValuesForCreate) || {};
 
     if (initialValues) {
@@ -274,7 +277,14 @@ const useYamlForm = <
     }
 
     return transformInitValues?.(initialValues as Unstructured) || initialValues;
-  }, [queryResult, globalStore, initialValuesForCreate, action, initialValuesForEdit, transformInitValues]);
+  }, [
+    queryResult,
+    globalStore,
+    initialValuesForCreate,
+    action,
+    initialValuesForEdit,
+    transformInitValues,
+  ]);
   const finalErrors = useMemo(() => {
     return uniq([...editorErrors, ...rulesErrors]);
   }, [editorErrors, rulesErrors]);
@@ -355,7 +365,7 @@ const useYamlForm = <
         const { path, validators } = rule;
         const value = get(formValue, path);
 
-        for (const validator of (validators || [])) {
+        for (const validator of validators || []) {
           const { isValid, errorMsg } = await validator(value, formValue, FormType.YAML);
 
           if (!isValid) {
@@ -364,7 +374,6 @@ const useYamlForm = <
           }
         }
       }
-
     }
 
     setRulesErrors(uniq(Object.values(errorMap)));
@@ -376,7 +385,7 @@ const useYamlForm = <
     form: formSF.form,
     formProps: {
       ...formSF.formProps,
-      onFinish: async (values) => {
+      onFinish: async values => {
         // 清空之前的错误
         setBeforeSubmitErrors([]);
         onSubmitStart?.();
@@ -414,13 +423,16 @@ const useYamlForm = <
               let hasErrors = false;
 
               setIsBeforeSubmitLoading(true);
-              const result = await beforeSubmit(finalValues as Unstructured, (errors: string[]) => {
-                if (errors && errors.length > 0) {
-                  setBeforeSubmitErrors(errors);
-                  onBeforeSubmitError?.(errors);
-                  hasErrors = true;
+              const result = await beforeSubmit(
+                finalValues as Unstructured,
+                (errors: string[]) => {
+                  if (errors && errors.length > 0) {
+                    setBeforeSubmitErrors(errors);
+                    onBeforeSubmitError?.(errors);
+                    hasErrors = true;
+                  }
                 }
-              });
+              );
 
               // 如果有错误，则不继续提交
               if (hasErrors) {

@@ -42,9 +42,7 @@ export const Layout: React.FC<PropsWithChildren<Record<string, unknown>>> = ({
 
   return (
     <BaseLayout style={{ height: '100%' }}>
-      <Header className={cx(HeaderStyle, Typo.Heading.h1_bold_title)}>
-        Dovetail 2
-      </Header>
+      <Header className={cx(HeaderStyle, Typo.Heading.h1_bold_title)}>Dovetail 2</Header>
       <BaseLayout className={ContentLayoutStyle}>
         <Sider
           width={256}
