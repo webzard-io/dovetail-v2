@@ -57,6 +57,10 @@ import ValueDisplay from '../ValueDisplay';
 import { WorkloadPodsTable } from '../WorkloadPodsTable';
 import { WorkloadReplicas } from '../WorkloadReplicas';
 
+/**
+ * @property render - 替换整个字段行（包括标签和值的外层布局），用于需要完全自定义布局的场景
+ * @property renderContent - 仅替换字段的值区域，保留标准的标签-值布局结构
+ */
 export type ShowField<Model extends ResourceModel> = {
   key: string;
   title?: React.ReactNode;
