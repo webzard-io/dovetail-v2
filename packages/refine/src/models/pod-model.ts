@@ -20,7 +20,10 @@ export class PodModel extends WorkloadBaseModel {
   public declare spec?: RequiredPod['spec'];
   public declare status?: RequiredPod['status'];
 
-  constructor(public _rawYaml: RequiredPod, _globalStore: GlobalStore) {
+  constructor(
+    public _rawYaml: RequiredPod,
+    _globalStore: GlobalStore
+  ) {
     super(_rawYaml, _globalStore);
 
     let cpuRequestNum = 0;
@@ -96,8 +99,9 @@ export class PodModel extends WorkloadBaseModel {
   }
 
   get readyDisplay() {
-    return `${this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length || 0
-      }/${this._rawYaml.spec?.containers.length || 0}`;
+    return `${
+      this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length || 0
+    }/${this._rawYaml.spec?.containers.length || 0}`;
   }
   get readyContainerCount() {
     return this._rawYaml.status?.containerStatuses?.filter(c => c.ready).length;
@@ -150,12 +154,10 @@ export class PodModel extends WorkloadBaseModel {
 
   get hasDnsConfig() {
     return !!(
-      (
-        this.spec?.dnsConfig &&
+      (this.spec?.dnsConfig &&
         (this.spec.dnsConfig.nameservers?.length ||
           this.spec.dnsConfig.searches?.length ||
-          this.spec.dnsConfig.options?.length)
-      ) ||
+          this.spec.dnsConfig.options?.length)) ||
       this.spec?.dnsPolicy ||
       this.spec?.hostAliases?.length
     );

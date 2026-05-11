@@ -99,7 +99,9 @@ export const DistributeStorageForm = React.forwardRef<
 
   return (
     <Form.Item
-      label={<span style={{ width: '134px' }}>{label || t('dovetail.request_capacity')}</span>}
+      label={
+        <span style={{ width: '134px' }}>{label || t('dovetail.request_capacity')}</span>
+      }
       colon={false}
       help={validateResult.distributeStorage}
       validateStatus={validateResult.distributeStorage ? 'error' : ''}

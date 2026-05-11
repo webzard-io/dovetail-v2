@@ -143,7 +143,7 @@ export function generateStorageClassFormConfig(
           path: ['parameters', 'fstype'],
           key: 'fstype',
           label: i18n.t('dovetail.fstype'),
-          condition: (formValue) => {
+          condition: formValue => {
             return formValue.provisioner === 'provisioner.a';
           },
           render(props) {

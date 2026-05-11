@@ -29,37 +29,46 @@ export function useApiGroupSchema() {
     error: null,
   });
 
-  const fetchSchema = useCallback(async (apiGroups: string[], schemaUrlPrefix: string) => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+  const fetchSchema = useCallback(
+    async (apiGroups: string[], schemaUrlPrefix: string) => {
+      setState(prev => ({ ...prev, loading: true, error: null }));
 
-    try {
-      const results = await Promise.all(
-        apiGroups.map(async (apiGroup) => {
-          if (state.schemasMap[apiGroup]) {
-            return { apiGroup, schemas: state.schemasMap[apiGroup] };
-          }
-          const groupSchemas = await schemaStore.fetchSchemas(apiGroup, schemaUrlPrefix);
-          return { apiGroup, schemas: groupSchemas || [] };
-        })
-      );
+      try {
+        const results = await Promise.all(
+          apiGroups.map(async apiGroup => {
+            if (state.schemasMap[apiGroup]) {
+              return { apiGroup, schemas: state.schemasMap[apiGroup] };
+            }
+            const groupSchemas = await schemaStore.fetchSchemas(
+              apiGroup,
+              schemaUrlPrefix
+            );
+            return { apiGroup, schemas: groupSchemas || [] };
+          })
+        );
 
-      const newSchemasMap = results.reduce((acc, { apiGroup, schemas }) => {
-        acc[apiGroup] = schemas;
-        return acc;
-      }, {} as Record<string, JSONSchema7[]>);
+        const newSchemasMap = results.reduce(
+          (acc, { apiGroup, schemas }) => {
+            acc[apiGroup] = schemas;
+            return acc;
+          },
+          {} as Record<string, JSONSchema7[]>
+        );
 
-      const allSchemas = results.flatMap(({ schemas }) => schemas);
+        const allSchemas = results.flatMap(({ schemas }) => schemas);
 
-      setState({
-        schemas: allSchemas,
-        schemasMap: newSchemasMap,
-        loading: false,
-        error: null,
-      });
-    } catch (e) {
-      setState(prev => ({ ...prev, loading: false, error: e as Error }));
-    }
-  }, [state.schemasMap]);
+        setState({
+          schemas: allSchemas,
+          schemasMap: newSchemasMap,
+          loading: false,
+          error: null,
+        });
+      } catch (e) {
+        setState(prev => ({ ...prev, loading: false, error: e as Error }));
+      }
+    },
+    [state.schemasMap]
+  );
 
   return { ...state, fetchSchema };
 }
@@ -76,7 +85,11 @@ export function useSchema(options?: UseSchemaOptions): UseSchemaResult {
     setLoading(true);
     setError(null);
     try {
-      const schema = await schemaStore.fetchSchema(resource?.meta?.resourceBasePath, schemaUrlPrefix, resource?.meta?.kind);
+      const schema = await schemaStore.fetchSchema(
+        resource?.meta?.resourceBasePath,
+        schemaUrlPrefix,
+        resource?.meta?.kind
+      );
 
       setSchema(schema || null);
       setError(null);

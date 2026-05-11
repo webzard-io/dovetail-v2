@@ -19,9 +19,7 @@ export function readFileAsBase64(file: File) {
         if (isUtf8(arrayBuffer)) {
           resolve(await file.text());
         } else {
-          const base64String = btoa(
-            String.fromCharCode(...new Uint8Array(arrayBuffer))
-          );
+          const base64String = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
           resolve(base64String);
         }
 

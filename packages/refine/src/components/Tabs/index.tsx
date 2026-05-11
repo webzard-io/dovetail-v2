@@ -8,7 +8,7 @@ export type TabsProps = {
     children: React.ReactNode;
   }[];
   className?: string;
-}
+};
 
 export function Tabs(props: TabsProps) {
   const { tabs, className } = props;

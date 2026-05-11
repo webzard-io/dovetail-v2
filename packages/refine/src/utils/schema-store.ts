@@ -4,7 +4,9 @@ class SchemaStore {
   private openapiMap: Record<string, OpenAPI> = {};
 
   async fetchSchemas(resourceBasePath: string, pathPrefix: string) {
-    const openapi = this.openapiMap[`${resourceBasePath}-${pathPrefix}`] || new OpenAPI(resourceBasePath, pathPrefix);
+    const openapi =
+      this.openapiMap[`${resourceBasePath}-${pathPrefix}`] ||
+      new OpenAPI(resourceBasePath, pathPrefix);
     this.openapiMap[`${resourceBasePath}-${pathPrefix}`] = openapi;
 
     const schemas = await openapi.fetch();
@@ -13,7 +15,9 @@ class SchemaStore {
   }
 
   async fetchSchema(resourceBasePath: string, pathPrefix: string, kind: string) {
-    const openapi = this.openapiMap[`${resourceBasePath}-${pathPrefix}`] || new OpenAPI(resourceBasePath, pathPrefix);
+    const openapi =
+      this.openapiMap[`${resourceBasePath}-${pathPrefix}`] ||
+      new OpenAPI(resourceBasePath, pathPrefix);
 
     this.openapiMap[`${resourceBasePath}-${pathPrefix}`] = openapi;
     await openapi.fetch();

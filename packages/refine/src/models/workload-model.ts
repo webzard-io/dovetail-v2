@@ -51,21 +51,21 @@ export class WorkloadModel extends WorkloadBaseModel {
     const myServices = services.items.filter(p =>
       matchSelector(p as ServiceModel, this.spec?.selector, this.metadata.namespace)
     ) as ServiceModel[];
-    
+
     this.services = myServices;
   }
 
   private async getIngresses() {
     // 通过关联的services获取所有ingresses，避免重复
     const allIngresses = new Map<string, IngressModel>();
-    
+
     for (const service of this.services) {
       for (const ingress of service.ingresses) {
         const key = `${ingress.namespace}-${ingress.name}`;
         allIngresses.set(key, ingress);
       }
     }
-    
+
     this.ingresses = Array.from(allIngresses.values());
   }
 

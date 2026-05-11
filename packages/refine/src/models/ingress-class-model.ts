@@ -7,7 +7,10 @@ type RequiredIngressClass = Required<IngressClass> & Unstructured;
 export class IngressClassModel extends ResourceModel<RequiredIngressClass> {
   public declare spec?: RequiredIngressClass['spec'];
 
-  constructor(public _rawYaml: RequiredIngressClass, _globalStore: GlobalStore) {
+  constructor(
+    public _rawYaml: RequiredIngressClass,
+    _globalStore: GlobalStore
+  ) {
     super(_rawYaml, _globalStore);
   }
 

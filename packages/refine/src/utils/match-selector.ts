@@ -20,7 +20,11 @@ function isLabelSelector(selector: unknown): selector is LabelSelector {
   return false;
 }
 
-export function matchSelector(pod: ResourceModel, selector?: LabelSelector | Record<string, string>, namespace = 'default'): boolean {
+export function matchSelector(
+  pod: ResourceModel,
+  selector?: LabelSelector | Record<string, string>,
+  namespace = 'default'
+): boolean {
   if (pod.metadata?.namespace !== namespace) {
     return false;
   }

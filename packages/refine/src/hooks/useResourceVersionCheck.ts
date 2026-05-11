@@ -12,8 +12,8 @@ export const useResourceVersionCheck = ({
   const initialResourceVersionRef = useRef<string>();
   const [isExpired, setIsExpired] = useState(false);
 
-  const currentResourceVersion =
-    (queryResult?.data?.data as BaseRecord)?.metadata?.resourceVersion;
+  const currentResourceVersion = (queryResult?.data?.data as BaseRecord)?.metadata
+    ?.resourceVersion;
 
   useEffect(() => {
     if (!currentResourceVersion) return;

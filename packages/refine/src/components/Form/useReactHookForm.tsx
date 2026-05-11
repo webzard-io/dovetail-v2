@@ -32,7 +32,7 @@ export type UseFormReturnType<
   TContext extends object = object,
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError
+  TResponseError extends HttpError = TError,
 > = UseFormReturn<TVariables, TContext> & {
   transformedInitValues: TVariables | undefined;
   refineCore: UseFormReturnTypeCore<
@@ -57,7 +57,7 @@ export type UseFormProps<
   TContext extends object = object,
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError
+  TResponseError extends HttpError = TError,
 > = {
   /**
    * Configuration object for the core of the [useForm](/docs/api-reference/core/hooks/useForm/)
@@ -100,7 +100,7 @@ export const useForm = <
   TContext extends object = object,
   TData extends BaseRecord = TQueryFnData,
   TResponse extends BaseRecord = TData,
-  TResponseError extends HttpError = TError
+  TResponseError extends HttpError = TError,
 >({
   refineCoreProps,
   warnWhenUnsavedChanges: warnWhenUnsavedChangesProp,

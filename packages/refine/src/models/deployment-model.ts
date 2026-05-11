@@ -10,7 +10,10 @@ export class DeploymentModel extends WorkloadModel {
   public declare spec?: RequiredDeployment['spec'];
   public declare status?: RequiredDeployment['status'];
 
-  constructor(public _rawYaml: RequiredDeployment, _globalStore: GlobalStore) {
+  constructor(
+    public _rawYaml: RequiredDeployment,
+    _globalStore: GlobalStore
+  ) {
     super(_rawYaml, _globalStore);
   }
 

@@ -4,7 +4,7 @@ import { getCommonErrors, ErrorResponseBody } from 'src/utils/error';
 
 interface UseSubmitFormOptions {
   formRef: React.MutableRefObject<{
-    submit: () => (Promise<unknown> | boolean | undefined);
+    submit: () => Promise<unknown> | boolean | undefined;
   } | null>;
   onSubmitSuccess?: () => void;
 }

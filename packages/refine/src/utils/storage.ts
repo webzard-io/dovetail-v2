@@ -8,7 +8,7 @@ export enum StorageUnit {
   Mi = 'Mi',
   MiB = 'MiB',
   Ki = 'Ki',
-  KiB = 'KiB'
+  KiB = 'KiB',
 }
 const UNIT_FACTORS: Record<string, number> = {
   Pi: 1024 ** 5,
@@ -24,9 +24,12 @@ const UNIT_FACTORS: Record<string, number> = {
   B: 1,
 };
 
-export function transformStorageUnit(value: string, toUnit: StorageUnit = StorageUnit.Gi) {
+export function transformStorageUnit(
+  value: string,
+  toUnit: StorageUnit = StorageUnit.Gi
+) {
   const num = parseFloat(value);
   const unit = Object.values(StorageUnit).find(u => value.includes(u)) || StorageUnit.Ki;
 
-  return num / UNIT_FACTORS[unit] * UNIT_FACTORS[toUnit];
+  return (num / UNIT_FACTORS[unit]) * UNIT_FACTORS[toUnit];
 }

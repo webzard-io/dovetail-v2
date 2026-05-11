@@ -46,7 +46,8 @@ export function getCommonErrors(responseBody: ErrorResponseBody, i18n: I18n) {
     return [];
   }
 
-  const causes: Cause[] = responseBody.details?.causes || responseBody.graphQLErrors || [];
+  const causes: Cause[] =
+    responseBody.details?.causes || responseBody.graphQLErrors || [];
 
   if (causes.length) {
     return causes.map(cause => {
@@ -88,7 +89,11 @@ export function getCommonErrors(responseBody: ErrorResponseBody, i18n: I18n) {
 
   return [
     i18n.t(
-      [`error.${responseBody.code}`, `error.${responseBody.reason}`, responseBody.message || ''],
+      [
+        `error.${responseBody.code}`,
+        `error.${responseBody.reason}`,
+        responseBody.message || '',
+      ],
       { fallbackLng: '' }
     ),
   ];

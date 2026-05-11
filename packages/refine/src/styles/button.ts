@@ -12,6 +12,6 @@ export const WarningButtonStyle = css`
 export const CloseButtonStyle = css`
   &.ant-btn {
     border-radius: 6px;
-    border: 1px solid #ACBAD399 !important;
+    border: 1px solid #acbad399 !important;
   }
 `;

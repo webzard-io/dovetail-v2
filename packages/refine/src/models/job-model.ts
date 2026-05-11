@@ -15,7 +15,10 @@ export class JobModel extends WorkloadBaseModel {
   public declare spec?: RequiredJob['spec'];
   public declare status?: RequiredJob['status'];
 
-  constructor(public _rawYaml: RequiredJob, _globalStore: GlobalStore) {
+  constructor(
+    public _rawYaml: RequiredJob,
+    _globalStore: GlobalStore
+  ) {
     super(_rawYaml, _globalStore);
   }
 

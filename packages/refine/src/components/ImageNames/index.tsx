@@ -6,12 +6,21 @@ const ImageWrapperStyle = css`
   white-space: pre-line;
 `;
 
-export const ImageNames: React.FC<{ value: string[]; breakLine?: boolean; }> = ({ value, breakLine = true }) => {
+export const ImageNames: React.FC<{ value: string[]; breakLine?: boolean }> = ({
+  value,
+  breakLine = true,
+}) => {
   return (
     <span className={ImageWrapperStyle}>
-      {breakLine ? value.map((image, index) => (
-        <OverflowTooltip key={`${image}-${index}`} content={image} tooltip={image}></OverflowTooltip>
-      )) : value.join(', ')}
+      {breakLine
+        ? value.map((image, index) => (
+            <OverflowTooltip
+              key={`${image}-${index}`}
+              content={image}
+              tooltip={image}
+            ></OverflowTooltip>
+          ))
+        : value.join(', ')}
     </span>
   );
 };

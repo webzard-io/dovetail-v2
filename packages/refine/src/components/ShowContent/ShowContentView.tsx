@@ -76,7 +76,8 @@ const GroupStyle = css`
   padding-bottom: 4px;
   border-radius: 8px;
   border: 1px solid $gray-a60-3;
-  box-shadow: 0px 0px 2.003px 0px rgba($gray-70, 0.15),
+  box-shadow:
+    0px 0px 2.003px 0px rgba($gray-70, 0.15),
     0px 0px 16px 0px rgba($gray-70, 0.08);
   background-color: $white;
   margin: 0 24px;

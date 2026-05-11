@@ -19,7 +19,7 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
   const datas = Object.keys(podSelectors).map(key => ({
     id: key,
     key,
-    value: podSelectors[key]
+    value: podSelectors[key],
   }));
 
   const columns = [
@@ -45,17 +45,19 @@ export const PodSelectorTable: React.FC<Props> = ({ podSelectors = {} }) => {
     data: finalData,
     currentPage,
     onPageChange,
-    onSorterChange
+    onSorterChange,
   } = useTableData({
     data: datas,
-    columns
+    columns,
   });
 
   if (datas.length === 0) {
-    return <ErrorContent
-      errorText={t('dovetail.no_resource', { kind: ` ${t('dovetail.pod_selector')}` })}
-      type={ErrorContentType.Card}
-    />;
+    return (
+      <ErrorContent
+        errorText={t('dovetail.no_resource', { kind: ` ${t('dovetail.pod_selector')}` })}
+        type={ErrorContentType.Card}
+      />
+    );
   }
 
   return (

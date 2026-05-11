@@ -16,4 +16,3 @@ export function PVVolumeModeDisplay(props: PVVolumeModeDisplayProps) {
 
   return <div>{map[value as keyof typeof map] || value}</div>;
 }
-

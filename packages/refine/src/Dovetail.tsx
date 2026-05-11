@@ -6,7 +6,7 @@ import {
 } from '@cloudtower/eagle';
 import { NotificationProvider, Refine, RefineProps } from '@refinedev/core';
 import { History } from 'history';
-import { GlobalStore, dataProvider, liveProvider} from 'k8s-api-provider';
+import { GlobalStore, dataProvider, liveProvider } from 'k8s-api-provider';
 import { WatchEvent } from 'k8s-api-provider';
 import { keyBy } from 'lodash-es';
 import React, { useEffect, useMemo } from 'react';
@@ -85,7 +85,7 @@ export const Dovetail: React.FC<Props> = props => {
     };
     return provider;
   }, [msg]);
-  
+
   return (
     <Router history={history}>
       <KitStoreProvider>
@@ -99,7 +99,9 @@ export const Dovetail: React.FC<Props> = props => {
                 getPopupContainer: antdGetPopupContainer || (() => document.body),
               }}
             >
-              <GlobalStoreContext.Provider value={globalStoreMap as Record<string, IGlobalStore<WatchEvent>>}> 
+              <GlobalStoreContext.Provider
+                value={globalStoreMap as Record<string, IGlobalStore<WatchEvent>>}
+              >
                 <Refine
                   dataProvider={dataProvider(globalStoreMap.default as GlobalStore)}
                   liveProvider={liveProvider(globalStoreMap.default as GlobalStore)}

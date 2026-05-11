@@ -15,7 +15,9 @@ type Props<Model extends WorkloadModel> = {
   size?: DropdownSize;
 };
 
-export function ReplicasDropdown<Model extends WorkloadModel>(props: React.PropsWithChildren<Props<Model>>) {
+export function ReplicasDropdown<Model extends WorkloadModel>(
+  props: React.PropsWithChildren<Props<Model>>
+) {
   const { record, size, children } = props;
   const { t } = useTranslation();
   const pushModal = usePushModal();
@@ -32,36 +34,34 @@ export function ReplicasDropdown<Model extends WorkloadModel>(props: React.Props
 
   return (
     <WorkloadDropdown record={record} size={size}>
-      {
-        isInShowPage || canEditData?.can === false ? null : (
-          <Menu.Item
-            onClick={() => {
-              const modalProps = {
-                formRef,
-                title: t('dovetail.edit_replicas'),
-                namespace: record.namespace || '',
-                renderContent() {
-                  return (
-                    <WorkloadReplicasForm
-                      ref={formRef}
-                      defaultValue={record.replicas || 0}
-                      record={record}
-                      label={t('dovetail.pod_replicas_num')}
-                    />
-                  );
-                }
-              };
+      {isInShowPage || canEditData?.can === false ? null : (
+        <Menu.Item
+          onClick={() => {
+            const modalProps = {
+              formRef,
+              title: t('dovetail.edit_replicas'),
+              namespace: record.namespace || '',
+              renderContent() {
+                return (
+                  <WorkloadReplicasForm
+                    ref={formRef}
+                    defaultValue={record.replicas || 0}
+                    record={record}
+                    label={t('dovetail.pod_replicas_num')}
+                  />
+                );
+              },
+            };
 
-              pushModal<'EditFieldModal'>({
-                component: EditFieldModal,
-                props: modalProps
-              });
-            }}
-          >
-            <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_replicas')}</Icon>
-          </Menu.Item>
-        )
-      }
+            pushModal<'EditFieldModal'>({
+              component: EditFieldModal,
+              props: modalProps,
+            });
+          }}
+        >
+          <Icon src={EditPen16PrimaryIcon}>{t('dovetail.edit_replicas')}</Icon>
+        </Menu.Item>
+      )}
       {children}
     </WorkloadDropdown>
   );

@@ -56,10 +56,10 @@ export function generateValueFromSchema(
     case Array.isArray(schema.type) &&
       'oneOf' in schema &&
       Boolean(schema.oneOf?.length): {
-        const subSchema = (schema.anyOf || schema.oneOf)?.[0];
+      const subSchema = (schema.anyOf || schema.oneOf)?.[0];
 
-        return generateValueFromSchema(subSchema as JSONSchema7, options);
-      }
+      return generateValueFromSchema(subSchema as JSONSchema7, options);
+    }
     case 'allOf' in schema && Boolean(schema.allOf?.length):
       return generateValueFromSchema(schema.allOf?.[0] as JSONSchema7, options);
     default:

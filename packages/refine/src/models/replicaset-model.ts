@@ -30,14 +30,14 @@ export class ReplicaSetModel extends ResourceModel<RequiredReplicaSet> {
       resourceBasePath: '/api/v1',
       kind: 'Pod',
     })) as PodList;
-    
+
     // 通过selector匹配pods
     const myPods = pods.items.filter(pod =>
       matchSelector(pod as PodModel, this.spec?.selector, this.metadata.namespace)
     ) as PodModel[];
 
     this.pods = myPods;
-    
+
     // 计算重启次数
     this.restarts = sumBy(this.pods, pod => pod.restarts || 0);
   }
@@ -53,4 +53,4 @@ export class ReplicaSetModel extends ResourceModel<RequiredReplicaSet> {
     );
     return ownerRef?.name;
   }
-} 
+}

@@ -18,12 +18,12 @@ export class StorageClassModel extends ResourceModel {
   }
 
   override async init() {
-    const pvs = (await this._globalStore.get<PersistentVolumeList>('persistentvolumes', {
+    const pvs = await this._globalStore.get<PersistentVolumeList>('persistentvolumes', {
       resourceBasePath: '/api/v1',
       kind: 'PersistentVolume',
-    }));
-    this.pvs = pvs.items.filter(
-      pv => this.filterPV(pv, this.metadata?.name)
+    });
+    this.pvs = pvs.items.filter(pv =>
+      this.filterPV(pv, this.metadata?.name)
     ) as PersistentVolumeModel[];
   }
 
@@ -32,7 +32,11 @@ export class StorageClassModel extends ResourceModel {
   }
 
   get isDefaultSC() {
-    return this._rawYaml.metadata?.annotations?.['storageclass.kubernetes.io/is-default-class'] === 'true';
+    return (
+      this._rawYaml.metadata?.annotations?.[
+        'storageclass.kubernetes.io/is-default-class'
+      ] === 'true'
+    );
   }
 
   get reclaimPolicy() {
