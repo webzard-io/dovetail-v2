@@ -1,9 +1,9 @@
 import { GlobalStore, Unstructured } from 'k8s-api-provider';
 import type { DaemonSet, Deployment, StatefulSet } from 'kubernetes-types/apps/v1';
-import { PodList } from 'kubernetes-types/core/v1';
-import { cloneDeep, get, set, sumBy } from 'lodash';
+import { cloneDeep, get, set } from 'lodash';
 import { REDEPLOY_TIMESTAMP_KEY } from '../constants';
 import { matchSelector } from '../utils/match-selector';
+import { ControllerRevisionModel } from './controller-revison-model';
 import { IngressModel } from './ingress-model';
 import { PodModel } from './pod-model';
 import { ServiceModel } from './service-model';
@@ -32,15 +32,10 @@ export class WorkloadModel extends WorkloadBaseModel {
   }
 
   private async getRestarts() {
-    const pods = (await this._globalStore.get('pods', {
-      resourceBasePath: '/api/v1',
-      kind: 'Pod',
-    })) as PodList;
-    const myPods = pods.items.filter(p =>
-      matchSelector(p as PodModel, this.spec?.selector, this.metadata.namespace)
+    this.restarts = await this.fetchRestarts(
+      this.spec?.selector,
+      this.metadata.namespace
     );
-    const result = sumBy(myPods, 'restarts');
-    this.restarts = result;
   }
 
   private async getServices() {
@@ -100,5 +95,21 @@ export class WorkloadModel extends WorkloadBaseModel {
       set(newOne, 'spec.replicas', value);
     }
     return newOne as WorkloadTypes;
+  }
+
+  getControllerRevisions(controllerRevisions: ControllerRevisionModel[]) {
+    return controllerRevisions.filter(cr =>
+      cr.metadata?.ownerReferences?.some(
+        ref => ref.kind === this.kind && ref.uid === this.metadata.uid
+      )
+    );
+  }
+
+  getRevision(controllerRevisions: ControllerRevisionModel[]) {
+    const myRevisions = this.getControllerRevisions(controllerRevisions);
+    return myRevisions.reduce(
+      (result, cr) => Math.max(result, Number(cr.revision || 0)),
+      0
+    );
   }
 }
