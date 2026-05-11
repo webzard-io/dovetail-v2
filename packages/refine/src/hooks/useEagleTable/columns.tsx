@@ -423,8 +423,10 @@ export function ServiceOutClusterAccessTitle() {
   );
 }
 export const ServiceOutClusterAccessColumnRenderer = <Model extends ServiceModel>(
-  clusterVip: string
+  _i18n: I18nType,
+  options: { clusterVip: string }
 ): Column<Model> => {
+  const { clusterVip } = options;
   return {
     key: 'outClusterAccess',
     title: <ServiceOutClusterAccessTitle />,
@@ -469,13 +471,11 @@ export const PodWorkloadColumnRenderer = <Model extends PodModel>(
   };
 };
 
-export const IngressRulesColumnRenderer = <Model extends IngressModel>({
-  i18n,
-  noLink,
-}: {
-  i18n: I18nType;
-  noLink?: boolean;
-}): Column<Model> => {
+export const IngressRulesColumnRenderer = <Model extends IngressModel>(
+  i18n: I18nType,
+  options?: { noLink?: boolean }
+): Column<Model> => {
+  const noLink = options?.noLink;
   const dataIndex = ['spec', 'rules'];
   return {
     key: 'type',

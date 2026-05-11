@@ -9,6 +9,18 @@
   "main": "./dist/refine.cjs",
   "module": "./dist/refine.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/refine.js",
+      "require": "./dist/refine.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./shell": {
+      "import": "./dist/shell.js",
+      "require": "./dist/shell.cjs",
+      "types": "./dist/shell.d.ts"
+    }
+  },
   "dependencies": {
     "@cloudtower/eagle": "^490.0.1",
     "@cloudtower/icons-react": "^490.0.1",
