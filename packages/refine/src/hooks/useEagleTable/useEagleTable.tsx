@@ -32,7 +32,7 @@ export enum ColumnKeys {
 
 export function addDefaultRenderToColumns<
   Data,
-  Col extends RequiredColumnProps<Data> = RequiredColumnProps<Data>
+  Col extends RequiredColumnProps<Data> = RequiredColumnProps<Data>,
 >(columns: Col[]) {
   return columns.map(col => ({
     render(value: unknown) {

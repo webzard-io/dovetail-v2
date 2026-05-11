@@ -29,14 +29,14 @@ export const StatefulSetConfig = (i18n: i18n): ResourceConfig<StatefulSetModel> 
   apiVersion: 'apps/v1',
   parent: RESOURCE_GROUP.WORKLOAD,
   initValue: STATEFULSET_INIT_VALUE,
-  columns: () => ([
+  columns: () => [
     StateDisplayColumnRenderer(i18n),
     NameSpaceColumnRenderer(i18n),
     WorkloadImageColumnRenderer(i18n),
     RestartsColumnRenderer(i18n),
     ReplicasColumnRenderer(i18n),
     AgeColumnRenderer(i18n),
-  ]),
+  ],
   showConfig: () => ({
     tabs: [
       {
@@ -44,19 +44,20 @@ export const StatefulSetConfig = (i18n: i18n): ResourceConfig<StatefulSetModel> 
         key: 'detail',
         groups: [
           BasicGroup(i18n, {
-            upAreas: [{
-              type: AreaType.Inline,
-              fields: [ReplicaField()],
-            }],
-            basicFields: [ImageField(i18n),]
+            upAreas: [
+              {
+                type: AreaType.Inline,
+                fields: [ReplicaField()],
+              },
+            ],
+            basicFields: [ImageField(i18n)],
           }),
           PodsGroup(),
-          ConditionsGroup(i18n)
-        ]
+          ConditionsGroup(i18n),
+        ],
       },
-      EventsTab({ i18n })
-    ]
+      EventsTab({ i18n }),
+    ],
   }),
   Dropdown: ReplicasDropdown,
 });
-

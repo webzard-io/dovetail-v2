@@ -157,7 +157,7 @@ export const StateDisplayColumnRenderer = <
     | ServiceModel
     | DaemonSetModel
     | JobModel
-    | DeploymentModel
+    | DeploymentModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -378,7 +378,7 @@ export function ServiceInClusterAccessTitle() {
   );
 }
 export const ServiceInClusterAccessColumnRenderer = <
-  Model extends ServiceModel
+  Model extends ServiceModel,
 >(): Column<Model> => {
   return {
     key: 'inClusterAccess',
@@ -574,7 +574,7 @@ export const PodContainersNumColumnRenderer = <Model extends PodModel>(
 };
 
 export const DataKeysColumnRenderer = <
-  Model extends ResourceModel<Unstructured & (ConfigMap | Secret)>
+  Model extends ResourceModel<Unstructured & (ConfigMap | Secret)>,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -693,7 +693,7 @@ export const PVRefColumnRenderer = <Model extends PersistentVolumeClaimModel>(
 };
 
 export const PVStorageClassColumnRenderer = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -711,7 +711,7 @@ export const PVStorageClassColumnRenderer = <
 };
 
 export const PVPhaseColumnRenderer = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -765,7 +765,7 @@ export const PVCSIRefColumnRenderer = <Model extends PersistentVolumeModel>(
 };
 
 export const PVVolumeModeColumnRenderer = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
 >(
   i18n: I18nType
 ): Column<Model> => {
@@ -783,7 +783,7 @@ export const PVVolumeModeColumnRenderer = <
 };
 
 export const PVAccessModeColumnRenderer = <
-  Model extends PersistentVolumeModel | PersistentVolumeClaimModel
+  Model extends PersistentVolumeModel | PersistentVolumeClaimModel,
 >(
   i18n: I18nType
 ): Column<Model> => {

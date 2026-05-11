@@ -9,5 +9,7 @@ export function isFirstLetterEnglish(str: string) {
 }
 
 export function transformResourceKindInSentence(str: string, language: string) {
-  return isFirstLetterEnglish(str) ? ` ${language !== 'zh-CN' ? str.toLocaleLowerCase() : str}` : str;
+  return isFirstLetterEnglish(str)
+    ? ` ${language !== 'zh-CN' ? str.toLocaleLowerCase() : str}`
+    : str;
 }

@@ -30,79 +30,89 @@ export const PodContainersTable: React.FC<Props> = ({
   const Table = component.Table || BaseTable;
   const currentSize = 10;
 
-  const columns: RequiredColumnProps<WithId<ContainerStatus> & { startedAt: string }>[] = useMemo(
-    () => [
-      {
-        key: 'name',
-        dataIndex: ['name'],
-        title: i18n.t('dovetail.name'),
-        sortable: true,
-        sorter: CommonSorter(['name']),
-        width: 200,
-      },
-      {
-        key: 'state',
-        dataIndex: ['state'],
-        title: i18n.t('dovetail.state'),
-        sortable: true,
-        sorter: CommonSorter(['state']),
-        width: 120,
-        render: v => <StateTag state={Object.keys(v)[0] as ResourceState} hideBackground />,
-      },
-      {
-        key: 'image',
-        dataIndex: ['image'],
-        title: i18n.t('dovetail.image'),
-        sortable: true,
-        width: 383,
-        sorter: CommonSorter(['image']),
-      },
-      {
-        key: 'init',
-        dataIndex: [],
-        title: i18n.t('dovetail.type'),
-        width: 120,
-        render: (_, record) => {
-          const isInit = initContainerStatuses.some(
-            c => c.containerID === record.containerID
-          );
-
-          return i18n.t(isInit ? 'dovetail.init_container' : 'dovetail.regular_container');
+  const columns: RequiredColumnProps<WithId<ContainerStatus> & { startedAt: string }>[] =
+    useMemo(
+      () => [
+        {
+          key: 'name',
+          dataIndex: ['name'],
+          title: i18n.t('dovetail.name'),
+          sortable: true,
+          sorter: CommonSorter(['name']),
+          width: 200,
         },
-      },
-      {
-        key: 'restarts',
-        dataIndex: ['restarts'],
-        title: i18n.t('dovetail.restarts'),
-        sortable: true,
-        align: 'right',
-        width: 120,
-        sorter: CommonSorter(['restarts']),
-      },
-      {
-        key: 'started',
-        dataIndex: ['startedAt'],
-        title: i18n.t('dovetail.created_time'),
-        sortable: true,
-        sorter: CommonSorter(['startedAt']),
-        width: 120,
-        render: (_: string, record) => {
-          const value = record.startedAt;
-
-          if (value) return <Time date={new Date(value)} />;
-
-          return <ValueDisplay value="" />;
+        {
+          key: 'state',
+          dataIndex: ['state'],
+          title: i18n.t('dovetail.state'),
+          sortable: true,
+          sorter: CommonSorter(['state']),
+          width: 120,
+          render: v => (
+            <StateTag state={Object.keys(v)[0] as ResourceState} hideBackground />
+          ),
         },
-      },
-    ],
-    [i18n, initContainerStatuses]
-  );
+        {
+          key: 'image',
+          dataIndex: ['image'],
+          title: i18n.t('dovetail.image'),
+          sortable: true,
+          width: 383,
+          sorter: CommonSorter(['image']),
+        },
+        {
+          key: 'init',
+          dataIndex: [],
+          title: i18n.t('dovetail.type'),
+          width: 120,
+          render: (_, record) => {
+            const isInit = initContainerStatuses.some(
+              c => c.containerID === record.containerID
+            );
+
+            return i18n.t(
+              isInit ? 'dovetail.init_container' : 'dovetail.regular_container'
+            );
+          },
+        },
+        {
+          key: 'restarts',
+          dataIndex: ['restarts'],
+          title: i18n.t('dovetail.restarts'),
+          sortable: true,
+          align: 'right',
+          width: 120,
+          sorter: CommonSorter(['restarts']),
+        },
+        {
+          key: 'started',
+          dataIndex: ['startedAt'],
+          title: i18n.t('dovetail.created_time'),
+          sortable: true,
+          sorter: CommonSorter(['startedAt']),
+          width: 120,
+          render: (_: string, record) => {
+            const value = record.startedAt;
+
+            if (value) return <Time date={new Date(value)} />;
+
+            return <ValueDisplay value="" />;
+          },
+        },
+      ],
+      [i18n, initContainerStatuses]
+    );
 
   const dataSource = useMemo(
-    () => addId(containerStatuses.concat(initContainerStatuses), 'containerID').map(container => ({
-      ...container,
-      startedAt: get(container, ['state', 'running', 'startedAt']) || get(container, ['state', 'terminated', 'startedAt']),
-    })),
+    () =>
+      addId(containerStatuses.concat(initContainerStatuses), 'containerID').map(
+        container => ({
+          ...container,
+          startedAt:
+            get(container, ['state', 'running', 'startedAt']) ||
+            get(container, ['state', 'terminated', 'startedAt']),
+        })
+      ),
     [containerStatuses, initContainerStatuses]
   );
 
@@ -114,17 +124,21 @@ export const PodContainersTable: React.FC<Props> = ({
   } = useTableData({
     data: dataSource,
     columns,
-    defaultSorters: [{
-      field: 'startedAt',
-      order: 'desc'
-    }]
+    defaultSorters: [
+      {
+        field: 'startedAt',
+        order: 'desc',
+      },
+    ],
   });
 
   if (dataSource.length === 0) {
-    return <ErrorContent
-      errorText={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.container') })}
-      type={ErrorContentType.Card}
-    />;
+    return (
+      <ErrorContent
+        errorText={i18n.t('dovetail.no_resource', { kind: i18n.t('dovetail.container') })}
+        type={ErrorContentType.Card}
+      />
+    );
   }
 
   return (
@@ -133,7 +147,9 @@ export const PodContainersTable: React.FC<Props> = ({
       loading={false}
       data={finalData}
       total={dataSource.length}
-      columns={addDefaultRenderToColumns<WithId<ContainerStatus> & { startedAt: string }>(columns)}
+      columns={addDefaultRenderToColumns<WithId<ContainerStatus> & { startedAt: string }>(
+        columns
+      )}
       rowKey="containerID"
       error={false}
       defaultSize={currentSize}

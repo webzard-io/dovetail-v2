@@ -11,7 +11,10 @@ export class CronJobModel extends WorkloadBaseModel {
   public declare spec?: RequiredCronJob['spec'];
   public declare status?: RequiredCronJob['status'];
 
-  constructor(public _rawYaml: RequiredCronJob, _globalStore: GlobalStore) {
+  constructor(
+    public _rawYaml: RequiredCronJob,
+    _globalStore: GlobalStore
+  ) {
     super(_rawYaml, _globalStore);
   }
 

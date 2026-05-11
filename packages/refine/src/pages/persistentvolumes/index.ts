@@ -11,10 +11,18 @@ import {
   PVCSIRefColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import { RESOURCE_GROUP, ResourceConfig } from 'src/types';
-import { PVAccessModeField, PVCapacityField, PVPhaseField, PVStorageClassField, PVVolumeModeField } from '../../components';
+import {
+  PVAccessModeField,
+  PVCapacityField,
+  PVPhaseField,
+  PVStorageClassField,
+  PVVolumeModeField,
+} from '../../components';
 import { PersistentVolumeModel } from '../../models';
 
-export const PersistentVolumeConfig = (i18n: I18n): ResourceConfig<PersistentVolumeModel> => ({
+export const PersistentVolumeConfig = (
+  i18n: I18n
+): ResourceConfig<PersistentVolumeModel> => ({
   name: 'persistentvolumes',
   basePath: '/api/v1',
   apiVersion: 'v1',
@@ -44,7 +52,7 @@ export const PersistentVolumeConfig = (i18n: I18n): ResourceConfig<PersistentVol
               PVStorageClassField(i18n),
               PVPhaseField(i18n),
               PVVolumeModeField(i18n),
-              PVAccessModeField(i18n)
+              PVAccessModeField(i18n),
             ],
           }),
         ],

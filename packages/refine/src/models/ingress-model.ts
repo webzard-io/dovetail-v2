@@ -43,18 +43,20 @@ export class IngressModel extends ResourceModel<IngressTypes> {
       ?.find(s => s.metadata?.name === 'contour-envoy' && s.spec?.type === 'NodePort')
       ?.spec?.ports?.find(p => p.name === protocal);
 
-    return this._rawYaml.spec.rules?.reduce<RuleItem[]>((res, rule) => {
-      const paths = rule.http?.paths.map(p => {
-        return {
-          resourceName: p.backend.resource?.name || '',
-          serviceName: p.backend.service?.name || '',
-          fullPath: this.getFullPath(rule, p.path, servicePort?.nodePort),
-          pathType: p.pathType,
-          servicePort: p.backend.service?.port?.number || p.backend.service?.port?.name,
-          host: rule.host,
-        };
-      });
-      return [...res, ...(paths || [])];
-    }, []) || [];
+    return (
+      this._rawYaml.spec.rules?.reduce<RuleItem[]>((res, rule) => {
+        const paths = rule.http?.paths.map(p => {
+          return {
+            resourceName: p.backend.resource?.name || '',
+            serviceName: p.backend.service?.name || '',
+            fullPath: this.getFullPath(rule, p.path, servicePort?.nodePort),
+            pathType: p.pathType,
+            servicePort: p.backend.service?.port?.number || p.backend.service?.port?.name,
+            host: rule.host,
+          };
+        });
+        return [...res, ...(paths || [])];
+      }, []) || []
+    );
   }
 }

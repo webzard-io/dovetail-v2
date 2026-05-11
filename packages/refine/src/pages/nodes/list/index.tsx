@@ -22,7 +22,7 @@ export const NodeList: React.FC<IResourceComponentsProps> = () => {
         display: true,
         key: 'role',
         title: 'Role',
-        dataIndex: ['role']
+        dataIndex: ['role'],
       },
       AgeColumnRenderer(i18n),
     ],
@@ -32,10 +32,5 @@ export const NodeList: React.FC<IResourceComponentsProps> = () => {
     Dropdown: K8sDropdown,
   });
 
-  return (
-    <ListPage
-      selectedKeys={selectedKeys}
-      tableProps={tableProps}
-    />
-  );
+  return <ListPage selectedKeys={selectedKeys} tableProps={tableProps} />;
 };

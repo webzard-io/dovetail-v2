@@ -5,7 +5,7 @@ import {
   NameSpaceColumnRenderer,
   ProvisionerColumnRenderer,
   AgeColumnRenderer,
-  SCAllowExpandColumnRenderer
+  SCAllowExpandColumnRenderer,
 } from 'src/hooks/useEagleTable/columns';
 import { StorageClassModel } from 'src/models';
 import { RESOURCE_GROUP, ResourceConfig } from 'src/types';

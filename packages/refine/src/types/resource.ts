@@ -47,7 +47,7 @@ export type RefineFormConfig<Model extends ResourceModel = ResourceModel> = {
   formType: FormType.FORM;
   steps?: {
     title: string;
-  }[]
+  }[];
   /** 在指定步骤展示额外提交按钮，用于跳过后续可选步骤并复用当前表单提交链路。 */
   extraSubmitButton?: {
     /** 按钮生效的表单操作类型；不填则创建和编辑都生效。 */
@@ -58,10 +58,10 @@ export type RefineFormConfig<Model extends ResourceModel = ResourceModel> = {
     text?: string;
   };
   /**
- * 表单字段配置函数
- * @param props 包含记录和动作类型的配置对象
- * @returns 表单字段配置数组
- */
+   * 表单字段配置函数
+   * @param props 包含记录和动作类型的配置对象
+   * @returns 表单字段配置数组
+   */
   fields?: (props: {
     record?: Model;
     records: Model[];
@@ -83,9 +83,9 @@ export type RefineFormConfig<Model extends ResourceModel = ResourceModel> = {
    */
   labelWidth?: string;
   /**
- * 自定义表单渲染函数
- * @returns React节点
- */
+   * 自定义表单渲染函数
+   * @returns React节点
+   */
   renderForm?: () => React.ReactNode;
 };
 
@@ -134,10 +134,13 @@ export type CommonFormConfig<Model extends ResourceModel = ResourceModel> = {
    * @param setErrors 设置错误信息的函数，如果调用此函数并传入错误信息，将阻止提交
    * @returns 可选的处理后的值，如果返回值存在，将使用返回值替代原始值进行提交
    */
-  beforeSubmit?: (values: Record<string, unknown>, setErrors: (errors: string[]) => void) => Promise<Model['_rawYaml']>;
+  beforeSubmit?: (
+    values: Record<string, unknown>,
+    setErrors: (errors: string[]) => void
+  ) => Promise<Model['_rawYaml']>;
   /** 表单容器类型：页面形式或模态框形式
    * PAGE 或者 MODAL
-  */
+   */
   formContainerType?: FormContainerType;
   /**
    * 表单标题，可以是字符串或根据操作类型返回不同标题的函数
@@ -195,7 +198,7 @@ export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
   basePath: string;
   /** Kubernetes API 版本，会影响请求 URL
    * 实际效果为：{apiUrl}{basePath}{apiVersion}{name}
-  */
+   */
   apiVersion: string;
   /** 资源使用的 DataProvider 的名称 */
   dataProviderName?: string;

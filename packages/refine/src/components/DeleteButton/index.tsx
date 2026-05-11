@@ -9,7 +9,9 @@ export const DeleteButton: React.FC = () => {
   const { id } = useParsed();
   const { t } = useTranslation();
 
-  const { openDeleteConfirmModal } = useDeleteModal({resourceName: resource?.name || ''});
+  const { openDeleteConfirmModal } = useDeleteModal({
+    resourceName: resource?.name || '',
+  });
 
   return (
     <>

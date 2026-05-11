@@ -14,8 +14,8 @@ export function NamespaceSelectWidget(props: NamespaceSelectProps) {
       kind: 'Namespace',
     },
     pagination: {
-      mode: 'off'
-    }
+      mode: 'off',
+    },
   });
 
   return (

@@ -19,8 +19,8 @@ export const StateTagStyle = css`
 
 export const NameTagStyle = css`
   &.ant-tag.ant-tag-gray {
-    background-color: rgba(237, 241, 250, .6);
-    border: 1px solid rgba(211, 218, 235, .6);
+    background-color: rgba(237, 241, 250, 0.6);
+    border: 1px solid rgba(211, 218, 235, 0.6);
     color: #00122e;
     word-break: break-all;
     white-space: normal;

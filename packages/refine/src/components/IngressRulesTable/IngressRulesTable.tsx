@@ -134,8 +134,8 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
       title: t('dovetail.cert'),
       width: 160,
       render(host: string) {
-        const secretName = ingress._rawYaml.spec.tls?.find(({ hosts }) =>
-          hosts?.includes(host)
+        const secretName = ingress._rawYaml.spec.tls?.find(
+          ({ hosts }) => hosts?.includes(host)
         )?.secretName;
 
         return secretName ? (

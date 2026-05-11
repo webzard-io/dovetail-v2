@@ -8,7 +8,7 @@ import { ResourceModel } from './resource-model';
 type RequiredPersistentVolume = Required<PersistentVolume> & Unstructured;
 
 export class PersistentVolumeModel extends ResourceModel {
-  declare public spec: PersistentVolume['spec'];
+  public declare spec: PersistentVolume['spec'];
 
   constructor(
     public _rawYaml: RequiredPersistentVolume,

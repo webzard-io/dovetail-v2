@@ -55,7 +55,9 @@ export function KeyValueAnnotation(props: KeyValueDataProps) {
               {isExpand ? t('dovetail.fold') : t('dovetail.expand')}
             </Button>
           </>
-        ) : <ValueDisplay value="" />}
+        ) : (
+          <ValueDisplay value="" />
+        )}
       </div>
       {isExpand ? <KeyValue data={data} /> : null}
     </div>

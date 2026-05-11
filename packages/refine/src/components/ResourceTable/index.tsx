@@ -18,7 +18,9 @@ interface ResourceTableProps<Model extends ResourceModel> {
   useTableParams?: Parameters<typeof useTable<Model>>[0];
 }
 
-export function ResourceTable<Model extends ResourceModel>(props: ResourceTableProps<Model>) {
+export function ResourceTable<Model extends ResourceModel>(
+  props: ResourceTableProps<Model>
+) {
   const { resource, useTableParams } = props;
   const configs = useContext(ConfigsContext);
   const config = configs[resource] as unknown as ResourceConfig<Model>;

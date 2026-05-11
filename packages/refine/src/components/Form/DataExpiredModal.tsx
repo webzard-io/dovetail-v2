@@ -24,14 +24,12 @@ export function DataExpiredModal({ onAbandon }: DataExpiredModalProps) {
       cancelButtonProps={{ style: { display: 'none' } }}
       okText={t('dovetail.abandon_edit')}
       okButtonProps={{ className: WarningButtonStyle }}
-      onOk={(popModal) => {
+      onOk={popModal => {
         popModal();
         onAbandon();
       }}
     >
-      <div className={Typo.Label.l2_regular}>
-        {t('dovetail.data_expired_body')}
-      </div>
+      <div className={Typo.Label.l2_regular}>{t('dovetail.data_expired_body')}</div>
       <div className={`${Typo.Label.l2_regular} ${NoteStyle}`}>
         {t('dovetail.data_expired_note')}
       </div>

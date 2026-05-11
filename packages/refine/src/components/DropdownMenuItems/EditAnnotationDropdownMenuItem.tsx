@@ -24,7 +24,7 @@ export function EditAnnotationDropdownMenuItem<Model extends ResourceModel>(
     <Menu.Item
       {...props}
       className="ant-dropdown-menu-item"
-      onClick={(e) => {
+      onClick={e => {
         const modalProps = {
           formRef,
           title: t('dovetail.edit_annotation'),

@@ -25,8 +25,8 @@ export class WorkloadBaseModel extends ResourceModel<WorkloadBaseTypes> {
         ? this._rawYaml.spec.jobTemplate.spec?.template.spec?.containers
         : // other wokload
         this._rawYaml.spec && 'template' in this._rawYaml.spec
-          ? this._rawYaml.spec?.template.spec?.containers
-          : [];
+        ? this._rawYaml.spec?.template.spec?.containers
+        : [];
 
     return containers?.map(container => shortenedImage(container.image || '')) || [];
   }

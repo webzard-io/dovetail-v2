@@ -26,8 +26,8 @@ export const IngressRulesComponent: React.FC<{
     const arrow = ' → ';
     const divider = ' | ';
 
-    const secretName = ingress.spec.tls?.find(({ hosts }) =>
-      hosts?.includes(r.host || '')
+    const secretName = ingress.spec.tls?.find(
+      ({ hosts }) => hosts?.includes(r.host || '')
     )?.secretName;
 
     let tooltip = r.fullPath;

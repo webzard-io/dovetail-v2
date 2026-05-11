@@ -5,7 +5,10 @@ import { ResourceModel } from './resource-model';
 type RequiredControllerRevision = Required<ControllerRevision> & Unstructured;
 
 export class ControllerRevisionModel extends ResourceModel<RequiredControllerRevision> {
-  constructor(public _rawYaml: RequiredControllerRevision, _globalStore: GlobalStore) {
+  constructor(
+    public _rawYaml: RequiredControllerRevision,
+    _globalStore: GlobalStore
+  ) {
     super(_rawYaml, _globalStore);
   }
 

@@ -39,9 +39,7 @@ export class ServiceModel extends ResourceModel<ServiceType> {
     const myIngresses = ingresses.items.filter(ingress => {
       const rules = (ingress as IngressModel).getFlattenedRules([]);
 
-      return rules.some(rule =>
-        rule.serviceName === this.name
-      );
+      return rules.some(rule => rule.serviceName === this.name);
     }) as IngressModel[];
 
     this.ingresses = myIngresses;

@@ -179,8 +179,10 @@ export const ServiceOutClusterAccessComponent: React.FC<
             className={cx(Typo.Label.l4_regular_title, BreakLineStyle, LinkStyle)}
           >
             <Tooltip title={i18n.t('dovetail.default_http_protocol_tooltip')}>
-              <span className={DashedUnderlineSpanStyle}
-                  style={showDashedUnderline ? undefined : { borderBottom: 'none' }}>
+              <span
+                className={DashedUnderlineSpanStyle}
+                style={showDashedUnderline ? undefined : { borderBottom: 'none' }}
+              >
                 {clusterVip}:{p.nodePort}
               </span>
             </Tooltip>

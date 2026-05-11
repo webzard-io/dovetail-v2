@@ -23,7 +23,9 @@ const MenuStyle = css`
     .ant-menu-item:not(.ant-menu-item-selected):hover {
       background: linear-gradient(90deg, #fff, hsla(0, 0%, 100%, 0.6));
       border-radius: 6px;
-      box-shadow: 0 0 4px rgba(235, 239, 245, 0.6), 0 8px 16px rgba(129, 138, 153, 0.18);
+      box-shadow:
+        0 0 4px rgba(235, 239, 245, 0.6),
+        0 8px 16px rgba(129, 138, 153, 0.18);
     }
   }
 `;
