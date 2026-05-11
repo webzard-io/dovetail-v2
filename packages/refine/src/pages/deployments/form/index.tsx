@@ -1,5 +1,6 @@
 import { Form, Input, TabMenu, Button } from '@cloudtower/eagle';
 import { css } from '@linaria/core';
+import { i18n as I18nType } from 'i18next';
 import { Deployment } from 'kubernetes-types/apps/v1';
 import { merge, cloneDeep } from 'lodash-es';
 import React, { useState, useCallback } from 'react';
@@ -26,13 +27,15 @@ interface Step1Value {
 function Step1({
   value,
   onChange,
+  i18n,
 }: {
   value?: Step1Value;
   onChange: (value: Step1Value) => void;
+  i18n: I18nType;
 }) {
   return (
     <div className={FormWrapper}>
-      <FormItem label="名称">
+      <FormItem label={i18n.t('dovetail.name')}>
         <Input
           value={value?.name}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +45,7 @@ function Step1({
           }}
         />
       </FormItem>
-      <FormItem label="名字空间">
+      <FormItem label={i18n.t('dovetail.namespace')}>
         <Input
           value={value?.namespace}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,9 +67,11 @@ interface ContainerValue {
 function Step2({
   value = [],
   onChange,
+  i18n,
 }: {
   value?: ContainerValue[];
   onChange: (value: ContainerValue[]) => void;
+  i18n: I18nType;
 }) {
   const [selectedKey, setSelectedKey] = useState<string>('0');
 
@@ -88,16 +93,16 @@ function Step2({
         }}
         style={{ marginBottom: 16 }}
       >
-        添加容器
+        {i18n.t('app.add_container')}
       </Button>
       <TabMenu
         tabs={
           value?.map((container, index) => ({
             key: index.toString(),
-            title: `容器 ${index + 1}`,
+            title: i18n.t('app.container_index', { index: index + 1 }),
             children: (
               <div className={FormWrapper}>
-                <FormItem label="容器名称">
+                <FormItem label={i18n.t('app.container_name')}>
                   <Input
                     value={container?.name}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +112,7 @@ function Step2({
                     }}
                   />
                 </FormItem>
-                <FormItem label="容器镜像">
+                <FormItem label={i18n.t('app.container_image')}>
                   <Input
                     value={container?.image}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,15 +137,17 @@ interface DeploymentFormValue {
   step1?: Step1Value;
 }
 
-export function generatedDeploymentsFormConfig(): RefineFormConfig & CommonFormConfig {
+export function generatedDeploymentsFormConfig(
+  i18n: I18nType
+): RefineFormConfig & CommonFormConfig {
   return {
     formType: FormType.FORM,
     steps: [
       {
-        title: '基本信息',
+        title: i18n.t('dovetail.basic_info'),
       },
       {
-        title: '容器配置',
+        title: i18n.t('dovetail.container'),
       },
     ],
     fields({ step }) {
@@ -149,17 +156,19 @@ export function generatedDeploymentsFormConfig(): RefineFormConfig & CommonFormC
           key: 'step1',
           label: '',
           path: ['step1'],
-          render: ({ field }) => <Step1 value={field.value} onChange={field.onChange} />,
+          render: ({ field }) => (
+            <Step1 value={field.value} onChange={field.onChange} i18n={i18n} />
+          ),
         },
         {
           key: 'advancedSettings',
-          title: '高级设置',
+          title: i18n.t('app.advanced_settings'),
           collapsable: true,
           defaultCollapse: true,
           fields: () => [
             {
               key: 'annotations',
-              label: '注解',
+              label: i18n.t('dovetail.annotation'),
               path: ['metadata', 'annotations'],
             },
           ],
@@ -170,7 +179,9 @@ export function generatedDeploymentsFormConfig(): RefineFormConfig & CommonFormC
           key: 'containers',
           label: '',
           path: ['spec', 'template', 'spec', 'containers'],
-          render: ({ field }) => <Step2 value={field.value} onChange={field.onChange} />,
+          render: ({ field }) => (
+            <Step2 value={field.value} onChange={field.onChange} i18n={i18n} />
+          ),
         },
       ];
       const stepsFields: (RefineFormSection | RefineFormField)[][] = [

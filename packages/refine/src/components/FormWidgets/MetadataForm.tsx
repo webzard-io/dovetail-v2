@@ -1,13 +1,13 @@
 import { Form } from '@cloudtower/eagle';
 import React from 'react';
 import { KeyValueListWidget } from './KeyValueListWidget';
-import { NameInputWidget, rfc1123LabelRules } from './NameInputWidget';
+import { NameInputWidget } from './NameInputWidget';
 import { NamespaceSelectWidget, namespaceRules } from './NamespaceSelectWidget';
 
 export function MetadataForm() {
   return (
     <>
-      <Form.Item label="Name" name={['metadata', 'name']} rules={rfc1123LabelRules}>
+      <Form.Item label="Name" name={['metadata', 'name']}>
         <NameInputWidget />
       </Form.Item>
       <Form.Item

@@ -66,7 +66,7 @@ function App() {
         kind: 'Deployment',
         apiVersion: 'apps/v1',
         parent: RESOURCE_GROUP.WORKLOAD,
-        formConfig: generatedDeploymentsFormConfig(),
+        formConfig: generatedDeploymentsFormConfig(i18n),
         initValue: DEPLOYMENT_INIT_VALUE,
         isCustom: true,
       },
