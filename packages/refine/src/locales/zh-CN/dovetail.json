@@ -280,5 +280,11 @@
   "no_labels": "无标签",
   "no_annotations": "无注解",
   "pause_scheduling": "暂停调度",
-  "service_port_name_tip": "端口数量为 1 时，名称为选填项；大于 1 时，名称为必填项。"
+  "service_port_name_tip": "端口数量为 1 时，名称为选填项；大于 1 时，名称为必填项。",
+  "exec_pod": "执行 Shell",
+  "network_error": "网络错误",
+  "retry_when_access_data_failed": "数据加载失败，点击重试。",
+  "service": "服务",
+  "ingress": "Ingress",
+  "fstype": "文件系统类型"
 }
