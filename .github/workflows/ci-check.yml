@@ -30,7 +30,7 @@ jobs:
         timeout-minutes: 15
       - name: Lint
         run: cd packages/refine && pnpm lint
-      - name: Test
+      - name: Unit Test
         run: cd packages/refine && pnpm jest
       - name: Build
         run: cd packages/refine && pnpm build

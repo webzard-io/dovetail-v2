@@ -23,7 +23,7 @@ export default {
   testEnvironment: 'jsdom',
   maxWorkers: '50%',
   collectCoverage: Boolean(process.env.COVERAGE),
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  collectCoverageFrom: ['<rootDir>/src/**/*.{ts,tsx}'],
   coveragePathIgnorePatterns: ['typings', 'generated'],
 
   coverageReporters: ['text-summary', 'lcov'],
