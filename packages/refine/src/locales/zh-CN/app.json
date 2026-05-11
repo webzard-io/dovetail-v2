@@ -1,0 +1,7 @@
+{
+  "add_container": "添加容器",
+  "container_index": "容器 {{index}}",
+  "container_name": "容器名称",
+  "container_image": "容器镜像",
+  "advanced_settings": "高级设置"
+}

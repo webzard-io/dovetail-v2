@@ -1,0 +1,7 @@
+{
+  "add_container": "Add container",
+  "container_index": "Container {{index}}",
+  "container_name": "Container name",
+  "container_image": "Container image",
+  "advanced_settings": "Advanced settings"
+}
