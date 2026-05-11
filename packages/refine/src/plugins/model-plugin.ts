@@ -88,9 +88,11 @@ export class ModelPlugin implements IProviderPlugin<ResourceModel> {
     return item._rawYaml;
   }
 
-  setModelMap(key: string, model: ResourceModel) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.ModelMap.set(key, model as any);
+  setModelMap(
+    key: string,
+    ModelClass: new (...args: never[]) => ResourceModel
+  ) {
+    this.ModelMap.set(key, ModelClass as typeof ResourceModel);
   }
 }
 
