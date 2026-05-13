@@ -48,6 +48,15 @@ export type RefineFormConfig<Model extends ResourceModel = ResourceModel> = {
   steps?: {
     title: string;
   }[]
+  /** 在指定步骤展示额外提交按钮，用于跳过后续可选步骤并复用当前表单提交链路。 */
+  extraSubmitButton?: {
+    /** 按钮生效的表单操作类型；不填则创建和编辑都生效。 */
+    action?: 'create' | 'edit';
+    /** 按钮出现的步骤索引，从 0 开始。 */
+    step: number;
+    /** 按钮文案；不填则使用当前表单默认提交文案。 */
+    text?: string;
+  };
   /**
  * 表单字段配置函数
  * @param props 包含记录和动作类型的配置对象
