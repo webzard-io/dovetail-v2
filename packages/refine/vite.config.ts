@@ -6,7 +6,6 @@ import pkg from './package.json';
 import linaria from './tools/linaria';
 
 const external = [
-  ...Object.keys(pkg.dependencies || {}),
   ...Object.keys(pkg.peerDependencies || {}),
 ];
 
