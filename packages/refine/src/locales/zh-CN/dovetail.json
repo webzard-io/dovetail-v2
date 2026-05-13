@@ -10,6 +10,8 @@
   "copied": "已复制",
   "already_reset": "已重置",
   "cancel": "取消",
+  "prev_step": "上一步",
+  "next_step": "下一步",
   "delete": "删除",
   "create": "创建",
   "delete_resource": "删除{{resource}}",

@@ -17,6 +17,7 @@ import { SmallModalStyle } from 'src/styles/modal';
 import { FormType, FormMode, RefineFormConfig, CommonFormConfig } from 'src/types';
 import { ResourceConfig } from 'src/types';
 import { transformResourceKindInSentence } from 'src/utils/string';
+import { useExtraSubmitFooter } from './ExtraSubmitFooter';
 import FormModeSegmentControl from './FormModeSegmentControl';
 import RefineFormContainer, { RefineFormContainerRef } from './RefineFormContainer';
 import { YamlFormProps } from './YamlForm';
@@ -280,6 +281,28 @@ export function FormModal(props: FormModalProps) {
     },
     [step]
   );
+  const extraSubmitButton =
+    resourceConfig.formConfig?.formType === FormType.FORM
+      ? resourceConfig.formConfig.extraSubmitButton
+      : undefined;
+  const footer = useExtraSubmitFooter({
+    action,
+    cancelText: modalProps?.cancelText || i18n.t('dovetail.cancel'),
+    defaultSubmitText: okText,
+    errorText,
+    extraSubmitButton,
+    fallbackFooter: modalProps?.footer,
+    isYamlMode,
+    nextStepText: modalProps?.nextText || i18n.t('dovetail.next_step'),
+    prevStepText: modalProps?.prevText || i18n.t('dovetail.prev_step'),
+    saveButtonProps,
+    step,
+    stepCount: steps?.length || 0,
+    onCancel: popModal,
+    onNextStep: () => handleStepChange(step + 1),
+    onPrevStep: () => handleStepChange(step - 1),
+    onSubmit: onOk,
+  });
 
   return (
     <Retry409Provider>
@@ -311,6 +334,7 @@ export function FormModal(props: FormModalProps) {
           children: resourceConfig.formConfig?.saveButtonText,
         }}
         okText={resourceConfig.formConfig?.saveButtonText || okText}
+        footer={footer}
         destroyOnClose
         destroyOtherStep
         {...modalProps}
