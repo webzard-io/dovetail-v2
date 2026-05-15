@@ -1,7 +1,9 @@
 // https://github.com/refinedev/refine/blob/master/packages/react-hook-form/src/useForm/index.ts
 import {
   BaseRecord,
+  CreateResponse,
   HttpError,
+  UpdateResponse,
   useForm as useFormCore,
   useWarnAboutChange,
   UseFormProps as UseFormCoreProps,
@@ -90,6 +92,8 @@ export type UseFormProps<
   onBeforeSubmitError?: (errors: string[]) => void;
   onSubmitStart?: () => void;
   onSubmitAbort?: () => void;
+  /** 自定义提交函数，存在时替代 refine core 的 onFinish */
+  onSubmit?: (values: Record<string, unknown>) => Promise<unknown>;
 } & UseHookFormProps<TVariables, TContext>;
 
 export const useForm = <
@@ -110,6 +114,7 @@ export const useForm = <
   onBeforeSubmitError,
   onSubmitStart,
   onSubmitAbort,
+  onSubmit,
   ...rest
 }: UseFormProps<
   TQueryFnData,
@@ -337,6 +342,11 @@ export const useForm = <
               }
             }
 
+            if (onSubmit) {
+              const result = await onSubmit(finalValues as Record<string, unknown>);
+              refineCoreProps?.onMutationSuccess?.({ data: result } as any, {} as any, {} as any);
+              return result as CreateResponse<TResponse> | UpdateResponse<TResponse>;
+            }
             return onFinish(finalValues);
           },
           () => {
@@ -351,6 +361,8 @@ export const useForm = <
     isBeforeSubmitLoading,
     handleSubmit,
     onFinish,
+    onSubmit,
+    refineCoreProps,
     transformApplyValues,
     beforeSubmit,
     onBeforeSubmitError,

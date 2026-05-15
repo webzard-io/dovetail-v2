@@ -43,6 +43,12 @@ export const useRefineForm = (props: {
     refineCoreProps: {
       errorNotification: false,
       successNotification: () => {
+        if (formConfig?.successMessage) {
+          const msg = typeof formConfig.successMessage === 'function'
+            ? formConfig.successMessage(id ? 'edit' : 'create')
+            : formConfig.successMessage;
+          return { message: msg, description: 'Success', type: 'success' as const };
+        }
         const formValue = result.getValues() as Unstructured;
 
         return {
@@ -57,7 +63,7 @@ export const useRefineForm = (props: {
             })
             .trim(),
           description: 'Success',
-          type: 'success',
+          type: 'success' as const,
         };
       },
       resource: resourceConfig.name,
@@ -73,6 +79,7 @@ export const useRefineForm = (props: {
     onBeforeSubmitError: options?.onBeforeSubmitError,
     onSubmitStart: options?.onSubmitStart,
     onSubmitAbort: options?.onSubmitAbort,
+    onSubmit: formConfig?.onSubmit,
     ...formConfig?.useFormProps,
   });
 

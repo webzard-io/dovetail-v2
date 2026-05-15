@@ -70,6 +70,8 @@ export type UseFormProps<
   onBeforeSubmitError?: (errors: string[]) => void;
   onSubmitStart?: () => void;
   onSubmitAbort?: () => void;
+  /** 自定义提交函数，存在时替代 refine core 的 onFinish */
+  onSubmit?: (values: Record<string, unknown>) => Promise<unknown>;
   rules?: YamlFormRule[];
 };
 
@@ -150,6 +152,7 @@ const useYamlForm = <
   onBeforeSubmitError,
   onSubmitStart,
   onSubmitAbort,
+  onSubmit,
   rules,
 }: UseFormProps<
   TQueryFnData,
@@ -425,6 +428,11 @@ const useYamlForm = <
             }
           }
 
+          if (onSubmit) {
+            const result = await onSubmit(finalValues as Record<string, unknown>);
+            onMutationSuccessProp?.({ data: result } as any, {} as any, {} as any);
+            return result as CreateResponse<TResponse> | UpdateResponse<TResponse>;
+          }
           return onFinish(finalValues as TVariables);
         } catch (error: unknown) {
           onSubmitAbort?.();

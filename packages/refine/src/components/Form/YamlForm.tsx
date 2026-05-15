@@ -55,6 +55,8 @@ export interface YamlFormProps<Model extends ResourceModel = ResourceModel> {
     values: Unstructured,
     setErrors: (errors: string[]) => void
   ) => Promise<Unstructured>;
+  /** 自定义提交函数，存在时替代 refine core 的 onFinish */
+  onSubmit?: (values: Record<string, unknown>) => Promise<unknown>;
   onSaveButtonPropsChange?: (saveButtonProps: {
     disabled?: boolean;
     onClick: () => void;
@@ -78,6 +80,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     transformInitValues,
     transformApplyValues,
     beforeSubmit,
+    onSubmit,
     onSaveButtonPropsChange,
     onErrorsChange,
     rules,
@@ -109,6 +112,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     initialValuesForEdit: props.initialValuesForEdit,
     rules,
     beforeSubmit,
+    onSubmit,
     successNotification(data) {
       const displayName = resourceConfig.displayName || resource?.meta?.kind;
       return {
