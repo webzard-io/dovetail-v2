@@ -1,66 +1,7 @@
-import { AntdTable, Button, Popover, Typo } from '@cloudtower/eagle';
-import { css } from '@linaria/core';
+import { Typo } from '@cloudtower/eagle';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-
-export const PodLabelFormatRulePopoverStyle = css`
-  .ant-popover-inner {
-    border-radius: 8px;
-  }
-
-  .ant-popover-innerntent {
-    padding: 12px;
-  }
-
-  .ant-popover-content {
-    & > .ant-popover-arrow {
-      display: none;
-    }
-  }
-
-  td.ant-table-cell {
-    vertical-align: middle;
-  }
-
-  .rule-list {
-    list-style: disc;
-    list-style-position: inside;
-  }
-
-  .ant-table {
-    font-size: 12px;
-    line-height: 18px;
-
-    .ant-table-container {
-      border: none !important;
-    }
-
-    .ant-table-thead {
-      font-weight: 700;
-    }
-
-    .ant-table-thead > tr > th {
-      background: $white;
-    }
-
-    thead > tr > th:last-child,
-    tbody > tr > td:last-child {
-      border-right: none !important;
-    }
-
-    tbody > tr:last-child > td {
-      border-bottom: none;
-    }
-
-    .ant-table-cell {
-      padding: 4px 8px !important;
-    }
-
-    li {
-      text-indent: 8px;
-    }
-  }
-`;
+import { FormatRulePopover } from '../KeyValueTableForm/FormatRulePopover';
 
 export const LabelFormatPopover: React.FC<{
   noValueValidation?: boolean;
@@ -111,60 +52,44 @@ export const LabelFormatPopover: React.FC<{
   }
 
   return (
-    <Popover
-      trigger="click"
-      overlayClassName={PodLabelFormatRulePopoverStyle}
-      placement="bottomRight"
-      content={
-        <AntdTable
-          bordered
-          dataSource={data}
-          columns={[
-            {
-              key: 'object',
-              title: t('dovetail.object'),
-              dataIndex: 'object',
-              render: (cell, record, index) => {
-                return {
-                  children: <span className={Typo.Label.l4_bold}>{cell}</span>,
-                  props: {
-                    rowSpan: index === 0 ? 2 : index === 1 ? 0 : 1,
-                  },
-                };
-              },
+    <FormatRulePopover
+      buttonText={t('dovetail.look_format_requirement')}
+      dataSource={data}
+      columns={[
+        {
+          key: 'object',
+          title: t('dovetail.object'),
+          dataIndex: 'object',
+          render: (cell: string, _record: unknown, index: number) => ({
+            children: <span className={Typo.Label.l4_bold}>{cell}</span>,
+            props: {
+              rowSpan: index === 0 ? 2 : index === 1 ? 0 : 1,
             },
-            {
-              key: 'contains',
-              title: t('dovetail.contains'),
-              dataIndex: 'contains',
-            },
-            {
-              key: 'optional',
-              title: t('dovetail.optional'),
-              dataIndex: 'optional',
-            },
-            {
-              key: 'rule',
-              title: t('dovetail.format_requirements'),
-              dataIndex: 'rule',
-              render: (cell: string[]) => {
-                return (
-                  <ul className="rule-list">
-                    {cell.map((rule, index) => (
-                      <li key={index}>{rule}</li>
-                    ))}
-                  </ul>
-                );
-              },
-            },
-          ]}
-          pagination={false}
-        />
-      }
-    >
-      <Button size="small" type="link">
-        {t('dovetail.look_format_requirement')}
-      </Button>
-    </Popover>
+          }),
+        },
+        {
+          key: 'contains',
+          title: t('dovetail.contains'),
+          dataIndex: 'contains',
+        },
+        {
+          key: 'optional',
+          title: t('dovetail.optional'),
+          dataIndex: 'optional',
+        },
+        {
+          key: 'rule',
+          title: t('dovetail.format_requirements'),
+          dataIndex: 'rule',
+          render: (cell: string[]) => (
+            <ul style={{ listStyle: 'disc', listStylePosition: 'inside' }}>
+              {cell.map((rule, i) => (
+                <li key={i} style={{ textIndent: 8 }}>{rule}</li>
+              ))}
+            </ul>
+          ),
+        },
+      ]}
+    />
   );
 };
