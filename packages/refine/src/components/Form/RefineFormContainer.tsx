@@ -122,6 +122,7 @@ const RefineFormContainer = React.forwardRef<
         isShowLayout: false,
         useFormProps: {
           redirect: false,
+          mutationMeta: formConfig?.refineCoreProps?.mutationMeta,
         },
         rules: fieldsConfig
           ?.filter(
@@ -154,6 +155,7 @@ const RefineFormContainer = React.forwardRef<
     id,
     refineFormResult,
     formConfig?.beforeSubmit,
+    formConfig?.refineCoreProps?.mutationMeta,
     transformApplyValues,
     onSaveButtonPropsChange,
     onSuccess,
@@ -177,10 +179,11 @@ const RefineFormContainer = React.forwardRef<
   );
 
   // 等获取到真实数据后再渲染表单
-  if (
-    action === 'edit' &&
-    !(refineFormResult.formResult.getValues() as Unstructured)?.metadata?.name
-  ) {
+  const currentFormValues = refineFormResult.formResult.getValues();
+  const isReady = formConfig?.isDataReady
+    ? formConfig.isDataReady(currentFormValues as Record<string, unknown>)
+    : !!(currentFormValues as Unstructured)?.metadata?.name;
+  if (action === 'edit' && !isReady) {
     return <Loading />;
   }
 
@@ -190,10 +193,12 @@ const RefineFormContainer = React.forwardRef<
 
   return (
     <>
-      {!formConfig?.isDisabledChangeMode ? (
+      {!formConfig?.isDisabledChangeMode && formConfig?.changeModeAlert !== false ? (
         <Alert
           type="warning"
-          message={i18n.t('dovetail.change_form_mode_alert')}
+          message={
+            formConfig?.changeModeAlert ?? i18n.t('dovetail.change_form_mode_alert')
+          }
           style={{ marginBottom: '16px' }}
         />
       ) : undefined}
