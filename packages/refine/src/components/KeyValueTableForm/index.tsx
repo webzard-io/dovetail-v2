@@ -47,6 +47,7 @@ interface KeyValueTableFormProps<T extends KeyValuePair> {
   validateValue?: (value: string) => { isValid: boolean; errorMessage?: string };
   onSubmit?: (value: T[]) => Promise<unknown> | undefined;
   keyTitle?: string;
+  formatPopover?: React.ReactNode;
 }
 
 export type KeyValueTableFormHandle<T extends KeyValuePair = KeyValuePair> = {
@@ -77,6 +78,7 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
     validateValue,
     onSubmit,
     keyTitle,
+    formatPopover,
   } = props;
   const { t, i18n } = useTranslation();
   const tableFormRef = useRef<TableFormHandle>(null);
@@ -304,10 +306,13 @@ function _KeyValueTableForm<RowType extends KeyValuePair>(
         hideEmptyTable
       />
       {isHideLabelFormatPopover || _value.length === 0 ? null : (
-        <LabelFormatPopover noValueValidation={noValueValidation} />
+        formatPopover ?? <LabelFormatPopover noValueValidation={noValueValidation} />
       )}
     </Space>
   );
 }
 
 export const KeyValueTableForm = React.forwardRef(_KeyValueTableForm);
+
+export { FormatRulePopover } from './FormatRulePopover';
+export type { FormatRulePopoverProps } from './FormatRulePopover';
