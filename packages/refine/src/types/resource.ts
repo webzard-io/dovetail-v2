@@ -163,6 +163,21 @@ export type CommonFormConfig<Model extends ResourceModel = ResourceModel> = {
    * 路径映射，用于在表单中映射路径
    */
   pathMap?: { from: string[]; to: string[] }[];
+  /**
+   * 自定义数据就绪检查（编辑模式下判断初始数据是否加载完成）
+   * 默认检查 metadata.name，非标准 K8s 资源可覆盖
+   */
+  isDataReady?: (formValues: Record<string, unknown>) => boolean;
+  /**
+   * 自定义成功 toast 消息
+   */
+  successMessage?: string | ((action: 'create' | 'edit') => string);
+  /**
+   * 自定义切换 YAML 模式时的提示 Alert 内容
+   * 设为 false 可隐藏 Alert，设为 string/ReactNode 可替换默认文案
+   * 默认显示 dovetail.change_form_mode_alert
+   */
+  changeModeAlert?: React.ReactNode | false;
 };
 
 export type ResourceConfig<Model extends ResourceModel = ResourceModel> = {
