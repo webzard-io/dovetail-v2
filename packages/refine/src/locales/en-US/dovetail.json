@@ -18,6 +18,8 @@
   "name": "Name",
   "pod": "Pod",
   "cancel": "Cancel",
+  "prev_step": "Previous",
+  "next_step": "Next",
   "delete": "Delete",
   "create": "Create",
   "confirm_delete_text": "Are you sure you want to delete the {{kind}} <0>{{target}}</0>?",
