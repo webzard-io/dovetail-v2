@@ -17,17 +17,18 @@ import yaml from 'js-yaml';
 import { JSONSchema7 } from 'json-schema';
 import { Unstructured } from 'k8s-api-provider';
 import { get, uniq } from 'lodash-es';
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RefineFormValidator } from 'src/components/Form/type';
 import { type YamlEditorHandle, type YamlEditorProps } from 'src/components/YamlEditor';
+import { use409Retry } from 'src/hooks/use409Retry';
+import { useGlobalStore } from 'src/hooks/useGlobalStore';
 import useK8sYamlEditor from 'src/hooks/useK8sYamlEditor';
 import { useSchema } from 'src/hooks/useSchema';
 import { FormType } from 'src/types/resource';
 import { pruneBeforeEdit } from 'src/utils/k8s';
 import { generateYamlBySchema } from 'src/utils/yaml';
 import { useForm as useFormSF } from 'sunflower-antd';
-import { useGlobalStore } from '../../hooks/useGlobalStore';
 
 type EditorProps = YamlEditorProps & {
   ref: React.RefObject<YamlEditorHandle>;
@@ -179,7 +180,18 @@ const useYamlForm = <
     unknown
   > | null>(null);
   const useResourceResult = useResource();
-  const globalStore = useGlobalStore();
+  const globalStore = useGlobalStore(dataProviderName);
+  const action = useMemo(
+    () => actionFromProps || useResourceResult.action,
+    [actionFromProps, useResourceResult.action]
+  );
+  const { captureInitialResource, mutationMeta: finalMutationMeta } =
+    use409Retry({
+      action,
+      dataProviderName,
+      id: idFromProps,
+      mutationMeta,
+    });
   const {
     schema,
     loading: isLoadingSchema,
@@ -225,7 +237,7 @@ const useYamlForm = <
     meta: pickNotDeprecated(meta, metaData),
     metaData: pickNotDeprecated(meta, metaData),
     queryMeta,
-    mutationMeta,
+    mutationMeta: finalMutationMeta,
     liveMode,
     liveParams,
     mutationMode,
@@ -242,15 +254,15 @@ const useYamlForm = <
 
   const { formLoading, onFinish, queryResult } = useFormCoreResult;
 
+  useEffect(() => {
+    captureInitialResource(queryResult?.data?.data as Unstructured | undefined);
+  }, [captureInitialResource, queryResult?.data?.data]);
+
   const { warnWhenUnsavedChanges: warnWhenUnsavedChangesRefine, setWarnWhen } =
     useWarnAboutChange();
   const warnWhenUnsavedChanges =
     warnWhenUnsavedChangesProp ?? warnWhenUnsavedChangesRefine;
 
-  const action = useMemo(
-    () => actionFromProps || useResourceResult.action,
-    [actionFromProps, useResourceResult.action]
-  );
   const initialValues = useMemo(() => {
     const initialValues =
       (action === 'edit' && queryResult?.data?.data

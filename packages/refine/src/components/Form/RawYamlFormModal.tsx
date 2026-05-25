@@ -29,6 +29,7 @@ type RawYamlFormModalProps = {
     | 'apiVersion'
     | 'basePath'
     | 'formConfig'
+    | 'dataProviderName'
   >;
   yamlFormProps?: YamlFormProps;
   onSuccess?: (data: UpdateResponse<BaseRecord> | CreateResponse<BaseRecord>) => void;

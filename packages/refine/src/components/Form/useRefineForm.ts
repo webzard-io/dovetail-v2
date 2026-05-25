@@ -24,7 +24,7 @@ export const useRefineForm = (props: {
   id?: string;
   resourceConfig: Pick<
     ResourceConfig,
-    'name' | 'displayName' | 'kind' | 'initValue' | 'formConfig'
+    'name' | 'displayName' | 'kind' | 'initValue' | 'formConfig' | 'dataProviderName'
   >;
   refineProps?: UseFormProps['refineCoreProps'];
   options?: UseRefineFormOptions;
@@ -63,6 +63,7 @@ export const useRefineForm = (props: {
       resource: resourceConfig.name,
       action: id ? 'edit' : 'create',
       id,
+      dataProviderName: resourceConfig.dataProviderName,
       liveMode: id ? 'auto' : 'off',
       ...refineProps,
     },
@@ -79,6 +80,7 @@ export const useRefineForm = (props: {
   // set request error message
   useEffect(() => {
     const response = result.refineCore.mutationResult.error?.response;
+    const message = result.refineCore.mutationResult.error?.message;
     if (response && !response?.bodyUsed) {
       response.json?.().then((body: ErrorBody) => {
         setResponseErrorMsgs(
@@ -87,9 +89,12 @@ export const useRefineForm = (props: {
           )
         );
       });
+    } else if (message && responseErrorMsgs[0] !== message) {
+      setResponseErrorMsgs([message]);
     }
-  }, [formConfig, result, i18n]);
 
+  }, [formConfig, result, i18n, responseErrorMsgs]);
+ 
   return {
     formResult: result,
     responseErrorMsgs,
