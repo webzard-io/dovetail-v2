@@ -27,6 +27,7 @@ interface OpenFormOptions {
     | 'apiVersion'
     | 'basePath'
     | 'formConfig'
+    | 'dataProviderName'
   >;
   resourceName?: string;
   initialValues?: Record<string, unknown>;
