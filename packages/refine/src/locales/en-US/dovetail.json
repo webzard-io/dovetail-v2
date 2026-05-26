@@ -183,6 +183,7 @@
   "data_expired": "Data expired",
   "data_expired_body": "The data in this form is no longer the latest version. To avoid saving errors, please discard this edit and reopen the form to edit again.",
   "data_expired_note": "Your current entries will not be saved.",
+  "resource_version_conflict": "The data in this form is no longer the latest version. Please discard this edit and reopen the form to edit again.",
   "abandon_edit": "Discard edit",
   "exit_yaml_tip": "If you go back to the form, any changes made to the YAML file will be lost.",
   "value_optional": "Value (optional)",

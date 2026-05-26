@@ -10,12 +10,12 @@ import {
   useRefineContext,
   flattenObjectKeys,
 } from '@refinedev/core';
+import { Unstructured } from 'k8s-api-provider';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { DefaultValues } from 'react-hook-form';
-
 import {
+  DefaultValues,
   useForm as useHookForm,
   UseFormProps as UseHookFormProps,
   UseFormReturn,
@@ -23,6 +23,7 @@ import {
   UseFormHandleSubmit,
   Path,
 } from 'react-hook-form';
+import { use409Retry } from 'src/hooks/use409Retry';
 
 export type UseFormReturnType<
   TQueryFnData extends BaseRecord = BaseRecord,
@@ -133,6 +134,13 @@ export const useForm = <
     options?.disableServerSideValidation || disableServerSideValidationProp;
 
   const translate = useTranslate();
+  const { captureInitialResource, mutationMeta } =
+    use409Retry({
+      action: refineCoreProps?.action,
+      dataProviderName: refineCoreProps?.dataProviderName,
+      id: refineCoreProps?.id,
+      mutationMeta: refineCoreProps?.mutationMeta,
+    });
 
   const { warnWhenUnsavedChanges: warnWhenUnsavedChangesRefine, setWarnWhen } =
     useWarnAboutChange();
@@ -170,6 +178,7 @@ export const useForm = <
     TResponseError
   >({
     ...refineCoreProps,
+    mutationMeta,
     onMutationError: (error, _variables, _context) => {
       if (disableServerSideValidation) {
         refineCoreProps?.onMutationError?.(error, _variables, _context);
@@ -218,6 +227,10 @@ export const useForm = <
   });
 
   const { queryResult, onFinish, formLoading, onFinishAutoSave } = useFormCoreResult;
+
+  useEffect(() => {
+    captureInitialResource(queryResult?.data?.data as Unstructured | undefined);
+  }, [captureInitialResource, queryResult?.data?.data]);
 
   useEffect(() => {
     // if form is modified, don't override its value.

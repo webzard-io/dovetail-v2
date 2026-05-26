@@ -90,6 +90,7 @@ export type FormModalProps = {
     | 'apiVersion'
     | 'basePath'
     | 'formConfig'
+    | 'dataProviderName'
   >;
   yamlFormProps?: YamlFormProps;
   options?: {

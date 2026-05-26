@@ -101,6 +101,7 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
     id,
     action: actionFromProps,
     resource: resource?.name,
+    dataProviderName: resourceConfig.dataProviderName,
     editorOptions: {
       isSkipSchema: schemaStrategy === SchemaStrategy.None,
     },
