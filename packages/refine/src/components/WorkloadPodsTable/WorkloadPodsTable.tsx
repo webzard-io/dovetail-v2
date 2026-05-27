@@ -73,8 +73,8 @@ export const WorkloadPodsTable: React.FC<WorkloadPodsTableProps> = ({
             fn(item: PodModel) {
               return filter ? filter(item) : matchSelector(item, selector, namespace);
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ] as any,
       },
     },

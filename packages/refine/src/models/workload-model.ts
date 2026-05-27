@@ -5,7 +5,6 @@ import { REDEPLOY_TIMESTAMP_KEY } from '../constants';
 import { matchSelector } from '../utils/match-selector';
 import { ControllerRevisionModel } from './controller-revison-model';
 import { IngressModel } from './ingress-model';
-import { PodModel } from './pod-model';
 import { ServiceModel } from './service-model';
 import { WorkloadBaseModel } from './workload-base-model';
 
