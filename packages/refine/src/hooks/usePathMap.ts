@@ -46,15 +46,16 @@ function usePathMap(options: UsePathMapOptions): {
       // Apply each path mapping
       for (const { from, to } of pathMap || []) {
         // Copy value from source path to target path
-        result = immutableSet(initValues, to, get(initValues, from));
+        result = immutableSet(result, to, get(result, from));
 
         // Clean up the source path after copying
         const fromPath = [...from];
         const lastKey = fromPath.pop();
         if (lastKey) {
-          const obj = get(result, fromPath);
-          if (obj && typeof obj === 'object') {
-            delete (obj as Record<string, unknown>)[lastKey];
+          const parent = get(result, fromPath);
+          if (parent && typeof parent === 'object') {
+            const { [lastKey]: _, ...rest } = parent as Record<string, unknown>;
+            result = immutableSet(result, fromPath, rest);
           }
         }
       }
@@ -76,15 +77,16 @@ function usePathMap(options: UsePathMapOptions): {
       // Apply each path mapping in reverse
       for (const { from, to } of pathMap || []) {
         // Copy value from target path back to source path
-        result = immutableSet(values, from, get(result, to));
+        result = immutableSet(result, from, get(result, to));
 
         // Clean up the target path after copying back
         const toPath = [...to];
         const lastKey = toPath.pop();
         if (lastKey) {
-          const obj = get(result, toPath);
-          if (obj && typeof obj === 'object') {
-            delete (obj as Record<string, unknown>)[lastKey];
+          const parent = get(result, toPath);
+          if (parent && typeof parent === 'object') {
+            const { [lastKey]: _, ...rest } = parent as Record<string, unknown>;
+            result = immutableSet(result, toPath, rest);
           }
         }
       }

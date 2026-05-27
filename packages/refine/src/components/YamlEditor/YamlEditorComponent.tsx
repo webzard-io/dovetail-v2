@@ -135,13 +135,13 @@ export const YamlEditorComponent = forwardRef(function YamlEditorComponent<
   );
   const onEditorCreate = useCallback(
     (editor: editor.IStandaloneCodeEditor) => {
-      if (editor.getValue() !== _value) {
-        editorInstance.current?.getModel()?.setValue(_valueString);
+      if (editor.getValue() !== _valueString) {
+        editor.getModel()?.setValue(_valueString);
       }
 
       props.onEditorCreate?.(editor);
     },
-    [_value, props.onEditorCreate]
+    [_valueString, props.onEditorCreate]
   );
   const getInstance = useCallback((ins: editor.IStandaloneCodeEditor): void => {
     editorInstance.current = ins;
