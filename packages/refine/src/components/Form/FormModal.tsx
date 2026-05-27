@@ -11,6 +11,7 @@ import { BaseRecord, CreateResponse, UpdateResponse } from '@refinedev/core';
 import { omit } from 'lodash-es';
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Retry409Provider } from 'src/hooks/use409Retry';
 import { WarningButtonStyle } from 'src/styles/button';
 import { SmallModalStyle } from 'src/styles/modal';
 import { FormType, FormMode, RefineFormConfig, CommonFormConfig } from 'src/types';
@@ -304,41 +305,43 @@ export function FormModal(props: FormModalProps) {
   });
 
   return (
-    <WizardDialog
-      style={
-        {
-          '--max-modal-width': isYamlForm || !isDisabledChangeMode ? '1024px' : '648px',
-        } as React.CSSProperties
-      }
-      title={
-        <div className={TitleWrapperStyle}>
-          <span>{title}</span>
-          {resourceConfig.formConfig?.formType === FormType.FORM ? (
-            <FormModeSegmentControl
-              formConfig={resourceConfig.formConfig}
-              mode={mode}
-              onChangeMode={onChangeMode}
-            />
-          ) : null}
-        </div>
-      }
-      error={errorText}
-      steps={steps}
-      step={step}
-      onStepChange={handleStepChange}
-      onOk={onOk}
-      okButtonProps={{
-        ...omit(saveButtonProps, 'onClick'),
-        children: resourceConfig.formConfig?.saveButtonText,
-      }}
-      okText={resourceConfig.formConfig?.saveButtonText || okText}
-      footer={footer}
-      destroyOnClose
-      destroyOtherStep
-      {...modalProps}
-    >
-      {desc ? <div className={FormDescStyle}>{desc}</div> : undefined}
-      {formEle}
-    </WizardDialog>
+    <Retry409Provider>
+      <WizardDialog
+        style={
+          {
+            '--max-modal-width': isYamlForm || !isDisabledChangeMode ? '1024px' : '648px',
+          } as React.CSSProperties
+        }
+        title={
+          <div className={TitleWrapperStyle}>
+            <span>{title}</span>
+            {resourceConfig.formConfig?.formType === FormType.FORM ? (
+              <FormModeSegmentControl
+                formConfig={resourceConfig.formConfig}
+                mode={mode}
+                onChangeMode={onChangeMode}
+              />
+            ) : null}
+          </div>
+        }
+        error={errorText}
+        steps={steps}
+        step={step}
+        onStepChange={handleStepChange}
+        onOk={onOk}
+        okButtonProps={{
+          ...omit(saveButtonProps, 'onClick'),
+          children: resourceConfig.formConfig?.saveButtonText,
+        }}
+        okText={resourceConfig.formConfig?.saveButtonText || okText}
+        footer={footer}
+        destroyOnClose
+        destroyOtherStep
+        {...modalProps}
+      >
+        {desc ? <div className={FormDescStyle}>{desc}</div> : undefined}
+        {formEle}
+      </WizardDialog>
+    </Retry409Provider>
   );
 }
