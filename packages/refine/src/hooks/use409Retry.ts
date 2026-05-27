@@ -1,6 +1,15 @@
 import { Unstructured } from 'k8s-api-provider';
 import { cloneDeep, omit } from 'lodash-es';
-import { useCallback, useMemo, useRef } from 'react';
+import {
+  createContext,
+  createElement,
+  MutableRefObject,
+  ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGlobalStore } from './useGlobalStore';
 
@@ -34,6 +43,42 @@ type Use409RetryResult = {
   mutationMeta: Record<string, unknown>;
 };
 
+type InitialResourceRef = MutableRefObject<Unstructured | undefined>;
+
+type Retry409ProviderProps = {
+  /** 需要共享同一份初始版本的表单内容，例如同一个编辑弹窗内的 FORM 和 YAML 模式。 */
+  children?: ReactNode;
+};
+
+const ResourceVersionConflictRetryContext = createContext<InitialResourceRef | null>(null);
+
+/**
+ * 为同一个编辑弹窗内的多个表单模式共享 409 重试初始版本。
+ *
+ * 背景：FORM 模式保存失败后，如果用户切换到 YAML 模式，YAML 表单会重新挂载。
+ * 如果每个模式都维护自己的初始版本，YAML 可能捕获到已经变化的服务端版本，
+ * 导致 provider 误以为初始版本和服务端版本一致，从而允许覆盖保存。
+ *
+ * 用法：在表单弹窗层包裹一次，内部所有 `use409Retry` 会共用同一个 ref。
+ *
+ * @param props - Provider 属性。
+ * @param props.children - 需要共享初始版本的子节点。
+ * @returns 包裹后的 React 节点。
+ */
+export function Retry409Provider({
+  children,
+}: Retry409ProviderProps) {
+  const initialResourceRef = useRef<Unstructured>();
+
+  return createElement(
+    ResourceVersionConflictRetryContext.Provider,
+    {
+      value: initialResourceRef,
+    },
+    children
+  );
+}
+
 /**
  * 为 D2 编辑表单接入 Kubernetes PUT 409 自动恢复能力。
  *
@@ -61,7 +106,9 @@ export function use409Retry({
 }: Use409RetryOptions): Use409RetryResult {
   const { t } = useTranslation();
   const globalStore = useGlobalStore(dataProviderName);
-  const initialResourceRef = useRef<Unstructured>();
+  const sharedInitialResourceRef = useContext(ResourceVersionConflictRetryContext);
+  const localInitialResourceRef = useRef<Unstructured>();
+  const initialResourceRef = sharedInitialResourceRef || localInitialResourceRef;
   const isEditAction = action === 'edit' || !!id;
 
   const captureInitialResource = useCallback((resource?: Unstructured) => {
@@ -77,7 +124,7 @@ export function use409Retry({
     }
 
     initialResourceRef.current = cloneDeep(rawResource);
-  }, [globalStore, isEditAction]);
+  }, [globalStore, initialResourceRef, isEditAction]);
 
   const retryMutationMeta = useMemo(() => {
     const restMutationMeta = omit(mutationMeta, 'resourceVersionConflictRetry');
@@ -96,7 +143,7 @@ export function use409Retry({
         conflictMessage: t('dovetail.resource_version_conflict'),
       },
     };
-  }, [isEditAction, mutationMeta, t]);
+  }, [initialResourceRef, isEditAction, mutationMeta, t]);
 
   return {
     captureInitialResource,

@@ -2,7 +2,11 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import { Unstructured } from 'k8s-api-provider';
 import { createElement, ReactNode } from 'react';
 import GlobalStoreContext from '../../src/contexts/global-store';
-import { Retry409MetaOptions, use409Retry } from '../../src/hooks/use409Retry';
+import {
+  Retry409Provider,
+  Retry409MetaOptions,
+  use409Retry,
+} from '../../src/hooks/use409Retry';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -35,6 +39,24 @@ function createWrapper(restoreItem?: (resource: Unstructured) => Unstructured) {
         } as any,
       },
       children
+    );
+  };
+}
+
+function createSharedRetryWrapper(
+  restoreItem?: (resource: Unstructured) => Unstructured
+) {
+  return function Wrapper({ children }: { children?: ReactNode }) {
+    return createElement(
+      GlobalStoreContext.Provider,
+      {
+        value: {
+          default: {
+            restoreItem,
+          },
+        } as any,
+      },
+      createElement(Retry409Provider, null, children)
     );
   };
 }
@@ -151,5 +173,51 @@ describe('use409Retry', () => {
     );
     expect(getRetryMeta(result.current.mutationMeta).initialResource).toBeUndefined();
     expect(result.current.mutationMeta.updateType).toBe('put');
+  });
+
+  it('shares the captured initial resource across form modes', () => {
+    const restoreItem = jest.fn((resource: Unstructured) => ({
+      ...resource,
+      metadata: {
+        ...resource.metadata,
+        resourceVersion: `raw-${resource.metadata?.resourceVersion}`,
+      },
+    }));
+    const { result } = renderHook(
+      () => ({
+        formModeRetry: use409Retry({
+          action: 'edit',
+          dataProviderName: 'default',
+          id: 'default/test',
+          mutationMeta: {
+            updateType: 'put',
+          },
+        }),
+        yamlModeRetry: use409Retry({
+          action: 'edit',
+          dataProviderName: 'default',
+          id: 'default/test',
+          mutationMeta: {
+            updateType: 'put',
+          },
+        }),
+      }),
+      {
+        wrapper: createSharedRetryWrapper(restoreItem),
+      }
+    );
+
+    act(() => {
+      result.current.formModeRetry.captureInitialResource(makeResource('1'));
+    });
+    act(() => {
+      result.current.yamlModeRetry.captureInitialResource(makeResource('2'));
+    });
+
+    expect(
+      getRetryMeta(result.current.yamlModeRetry.mutationMeta).initialResource?.metadata
+        ?.resourceVersion
+    ).toBe('raw-1');
+    expect(restoreItem).toHaveBeenCalledTimes(1);
   });
 });
