@@ -13,7 +13,7 @@ import {
 import { Unstructured } from 'k8s-api-provider';
 import get from 'lodash/get';
 import has from 'lodash/has';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
   DefaultValues,
   useForm as useHookForm,
@@ -159,6 +159,7 @@ export const useForm = <
   >(useHookFormResult.getValues());
   const [beforeSubmitErrors, setBeforeSubmitErrors] = useState<string[]>([]);
   const [isBeforeSubmitLoading, setIsBeforeSubmitLoading] = useState(false);
+  const hasAppliedInitialDataRef = useRef(false);
 
   const {
     watch,
@@ -233,8 +234,7 @@ export const useForm = <
   }, [captureInitialResource, queryResult?.data?.data]);
 
   useEffect(() => {
-    // if form is modified, don't override its value.
-    if (formState.isDirty) return;
+    if (hasAppliedInitialDataRef.current || formState.isDirty) return;
 
     const data = queryResult?.data?.data;
     if (!data) return;
@@ -263,6 +263,7 @@ export const useForm = <
         });
       }
     });
+    hasAppliedInitialDataRef.current = true;
     setTransformedInitValues(getValues());
   }, [queryResult?.data, setValue, transformInitValues, formState.isDirty, getValues]);
 
