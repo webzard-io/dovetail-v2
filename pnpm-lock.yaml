@@ -121,7 +121,7 @@ importers:
       jest-environment-jsdom: ^30.0.0
       js-yaml: ^4.1.0
       json-schema: ^0.4.0
-      k8s-api-provider: ^0.0.36
+      k8s-api-provider: ^0.0.37
       kubernetes-types: ^1.26.0
       ky: ^0.33.3
       lodash: ^4.17.21
@@ -163,7 +163,7 @@ importers:
       dayjs: 1.11.10
       i18next: 23.6.0
       js-yaml: 4.1.0
-      k8s-api-provider: 0.0.36_@refinedev+core@4.47.2
+      k8s-api-provider: 0.0.37_@refinedev+core@4.47.2
       ky: 0.33.3
       lodash-es: 4.17.22
       mitt: 3.0.1
@@ -9185,8 +9185,8 @@ packages:
       object.values: 1.1.7
     dev: true
 
-  /k8s-api-provider/0.0.36_@refinedev+core@4.47.2:
-    resolution: {integrity: sha512-aJSIP5zTS1TBvcMPNt/mT3ui7wIF2+O7f11Fspb2k3tEtvE8iAa7fXpQtAeKaGlrl3rtXNsmqsOz08H6eWwZrA==}
+  /k8s-api-provider/0.0.37_@refinedev+core@4.47.2:
+    resolution: {integrity: sha512-m5YV1QBMI02/TwsKNIN8pvDSSJS7lhouBTYE+kgDdu3lu+E7qYK2WJMsHTdSzaS04xByZuz5w95bT78OAcFoCQ==}
     peerDependencies:
       '@refinedev/core': ^4.44.4
     dependencies:
@@ -10466,7 +10466,7 @@ packages:
     dev: true
 
   /path-to-regexp/1.8.0:
-    resolution: {integrity: sha512-n43JRhlUKUAlibEJhPeir1ncUID16QnEjNpwzNdO3Lm4ywrBpBZ5oLD0I6br9evr1Y9JTqwRtAh7JLoOzAQdVA==, tarball: path-to-regexp/-/path-to-regexp-1.8.0.tgz}
+    resolution: {integrity: sha512-n43JRhlUKUAlibEJhPeir1ncUID16QnEjNpwzNdO3Lm4ywrBpBZ5oLD0I6br9evr1Y9JTqwRtAh7JLoOzAQdVA==}
     deprecated: '[WARNING] Use 1.9.0 instead of 1.8.0, reason: https://github.com/pillarjs/path-to-regexp/security/advisories/GHSA-9wv6-86v2-598j'
     dependencies:
       isarray: 0.0.1
