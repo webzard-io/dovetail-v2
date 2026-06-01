@@ -12,7 +12,7 @@ import React from 'react';
 import { RawYamlFormModal } from 'src/components/Form/RawYamlFormModal';
 import ConfigsContext from 'src/contexts/configs';
 import { useEdit } from 'src/hooks/useEdit';
-import { FormContainerType } from 'src/types';
+import { FormContainerType, FormType } from 'src/types';
 import { ResourceConfig } from 'src/types';
 import { FormModal } from '../components';
 
@@ -55,7 +55,12 @@ export function useOpenForm() {
       if (formType === undefined || formType === FormContainerType.MODAL) {
         pushModal({
           component: () => {
-            if (options?.useYamlEditor) {
+            // YAML-only 资源没有结构化表单，默认编辑入口也应复用专门的 YAML 全屏弹窗。
+            const isYamlOnlyForm =
+              resourceConfig.formConfig?.formType !== FormType.FORM &&
+              !resourceConfig.formConfig?.CustomFormModal;
+
+            if (options?.useYamlEditor || isYamlOnlyForm) {
               return (
                 <RawYamlFormModal
                   id={options?.id}
