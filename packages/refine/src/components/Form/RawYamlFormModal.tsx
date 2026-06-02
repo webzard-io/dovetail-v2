@@ -120,6 +120,7 @@ export function RawYamlFormModal(props: RawYamlFormModalProps) {
       }}
       okText={resourceConfig.formConfig?.saveButtonText || okText}
       destroyOnClose
+      isContentFull
     >
       {desc ? <div className={FormDescStyle}>{desc}</div> : undefined}
       {formEle}
