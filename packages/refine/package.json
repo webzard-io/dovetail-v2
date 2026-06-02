@@ -19,7 +19,9 @@
       "import": "./dist/shell.js",
       "require": "./dist/shell.cjs",
       "types": "./dist/shell.d.ts"
-    }
+    },
+    "./dist/*": "./dist/*",
+    "./package.json": "./package.json"
   },
   "dependencies": {
     "@cloudtower/eagle": "^490.0.1",
