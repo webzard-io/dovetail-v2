@@ -1,0 +1,141 @@
+name: Agent Review
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pull_number:
+        description: Pull request number to review
+        required: true
+        type: number
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+
+jobs:
+  agent-review:
+    if: >
+      github.event_name == 'pull_request' ||
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) &&
+        contains(github.event.comment.body, '/agent-review')
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Agent Review
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REVIEW_WEBHOOK_URL: ${{ secrets.REVIEW_WEBHOOK_URL }}
+          EVENT_NAME: ${{ github.event_name }}
+          REPOSITORY: ${{ github.repository }}
+          SERVER_URL: ${{ github.server_url }}
+          RUN_ID: ${{ github.run_id }}
+          COMMENT_ID: ${{ github.event.comment.id || '' }}
+          COMMENT_BODY: ${{ github.event.comment.body || '' }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number || '' }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || '' }}
+          INPUT_PULL_NUMBER: ${{ inputs.pull_number || '' }}
+        run: |
+          node <<'JS'
+          const https = require("https");
+
+          const required = (name) => {
+            const value = process.env[name];
+            if (!value) {
+              throw new Error(`${name} is required`);
+            }
+            return value;
+          };
+
+          const requestJson = (url, options, body, timeout = 30000, parseJson = true) =>
+            new Promise((resolve, reject) => {
+              const payload = body ? JSON.stringify(body) : undefined;
+              const req = https.request(url, {
+                ...options,
+                headers: {
+                  "Accept": "application/vnd.github+json",
+                  "Content-Type": "application/json",
+                  "Content-Length": payload ? Buffer.byteLength(payload) : 0,
+                  "User-Agent": "tos-agent-review",
+                  "X-GitHub-Api-Version": "2022-11-28",
+                  ...options.headers,
+                },
+                timeout,
+              }, (res) => {
+                let data = "";
+                res.setEncoding("utf8");
+                res.on("data", (chunk) => { data += chunk; });
+                res.on("end", () => {
+                  if (res.statusCode < 200 || res.statusCode >= 300) {
+                    reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+                    return;
+                  }
+                  resolve(parseJson && data ? JSON.parse(data) : data);
+                });
+              });
+              req.on("error", reject);
+              req.on("timeout", () => {
+                req.destroy(new Error("request timed out"));
+              });
+              if (payload) {
+                req.write(payload);
+              }
+              req.end();
+            });
+
+          const main = async () => {
+            const [owner, repo] = required("REPOSITORY").split("/");
+            const pullNumber = process.env.INPUT_PULL_NUMBER || process.env.PULL_REQUEST_NUMBER || process.env.ISSUE_NUMBER;
+            if (!pullNumber) {
+              throw new Error("pull request number is required");
+            }
+
+            const token = required("GITHUB_TOKEN");
+            const pr = await requestJson(
+              `https://api.github.com/repos/${owner}/${repo}/pulls/${pullNumber}`,
+              {
+                method: "GET",
+                headers: {
+                  "Authorization": `Bearer ${token}`,
+                },
+              },
+            );
+
+            const payload = {
+              provider: "github",
+              repository: `${owner}/${repo}`,
+              owner,
+              repo,
+              pull_number: Number(pullNumber),
+              source_branch: pr.head.ref,
+              target_branch: pr.base.ref,
+              head_sha: pr.head.sha,
+              base_sha: pr.base.sha,
+              commit_sha: pr.head.sha,
+              pr_title: pr.title,
+              pr_url: pr.html_url,
+              event_name: process.env.EVENT_NAME,
+              comment_id: process.env.COMMENT_ID || undefined,
+              comment_body: process.env.COMMENT_BODY || undefined,
+              workflow_run_id: process.env.RUN_ID,
+              workflow_run_url: `${process.env.SERVER_URL}/${owner}/${repo}/actions/runs/${process.env.RUN_ID}`,
+            };
+
+            const webhookUrl = required("REVIEW_WEBHOOK_URL");
+            await requestJson(new URL(webhookUrl), { method: "POST" }, payload, 600000, false);
+            console.log(`Triggered Agent Review for ${owner}/${repo}#${pullNumber}`);
+          };
+
+          main().catch((error) => {
+            console.error(error.message);
+            process.exit(1);
+          });
+          JS
