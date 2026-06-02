@@ -433,6 +433,7 @@ export const ServiceOutClusterAccessField = <Model extends ServiceModel>(
         breakLine={false}
         clusterVip={clusterVip}
         showDashedUnderline={false}
+        showCopyButton
       />
     );
   },

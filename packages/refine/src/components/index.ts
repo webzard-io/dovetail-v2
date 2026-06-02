@@ -3,6 +3,7 @@ export * from './FormWidgets';
 export * from './PageShow';
 export * from './Time';
 export * from './ConditionsTable';
+export * from './CopyButton';
 export * from './FormLayout';
 export * from './FormErrorAlert';
 export * from './PodContainersTable';
@@ -60,4 +61,3 @@ export * from './EditMetadataForm';
 export * from './LabelsAndAnnotationsShow';
 export * from './FormErrorAlert';
 export * from './EditField';
-
