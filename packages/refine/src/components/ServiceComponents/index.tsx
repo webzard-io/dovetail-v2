@@ -57,6 +57,20 @@ const AccessAddressStyle = css`
   gap: 4px;
   vertical-align: top;
 `;
+const BreakLineListStyle = css`
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+
+  li + li {
+    margin-top: 4px;
+  }
+`;
+const BreakLineItemStyle = css`
+  display: flex;
+  align-items: center;
+  min-width: 0;
+`;
 type ServiceAccessAddressProps = {
   /** 访问地址展示内容。 */
   children: React.ReactNode;
@@ -129,66 +143,62 @@ export const ServiceOutClusterAccessComponent: React.FC<
 
   switch (spec.type) {
     case ServiceTypeEnum.NodePort:
+      content = spec.ports
+        ?.filter(v => !!v && v.nodePort)
+        .map(p => {
+          const address = `${clusterVip}:${p.nodePort}`;
+          const link = (
+            <Link
+              key={p.name || p.nodePort}
+              href={`http://${address}`}
+              target="_blank"
+              className={
+                breakLine
+                  ? cx(Typo.Label.l4_regular_title, BreakLineStyle, LinkStyle)
+                  : cx(ShowLinkStyle, Typo.Label.l4_regular_title)
+              }
+            >
+              <Tooltip title={i18n.t('dovetail.default_http_protocol_tooltip')}>
+                <span
+                  className={DashedUnderlineSpanStyle}
+                  style={showDashedUnderline ? undefined : { borderBottom: 'none' }}
+                >
+                  {address}
+                </span>
+              </Tooltip>
+            </Link>
+          );
+
+          if (!showCopyButton) {
+            return link;
+          }
+
+          return (
+            <ServiceAccessAddress key={p.name || p.nodePort} copyValue={address}>
+              {link}
+            </ServiceAccessAddress>
+          );
+        });
+
       if (!breakLine) {
-        content = spec.ports
-          ?.filter(v => !!v && v.nodePort)
-          .map(p => {
-            const address = `${clusterVip}:${p.nodePort}`;
-            const link = (
-              <Link
-                key={p.name || p.nodePort}
-                href={`http://${address}`}
-                target="_blank"
-                className={cx(ShowLinkStyle, Typo.Label.l4_regular_title)}
-              >
-                <Tooltip title={i18n.t('dovetail.default_http_protocol_tooltip')}>
-                  <span
-                    className={DashedUnderlineSpanStyle}
-                    style={showDashedUnderline ? undefined : { borderBottom: 'none' }}
-                  >
-                    {address}
-                  </span>
-                </Tooltip>
-              </Link>
-            );
-
-            if (!showCopyButton) {
-              return link;
-            }
-
-            return (
-              <ServiceAccessAddress key={p.name || p.nodePort} copyValue={address}>
-                {link}
-              </ServiceAccessAddress>
-            );
-          });
-
         if (content && content instanceof Array) {
           content = renderAccessItems(content, ', ');
         }
         break;
       }
 
-      content = spec.ports
-        ?.filter(v => !!v)
-        .map(p => (
-          <Link
-            key={p.nodePort}
-            href={`http://${clusterVip}:${p.nodePort}`}
-            target="_blank"
-            className={cx(Typo.Label.l4_regular_title, BreakLineStyle, LinkStyle)}
-          >
-            <Tooltip title={i18n.t('dovetail.default_http_protocol_tooltip')}>
-              <span
-                className={DashedUnderlineSpanStyle}
-                style={showDashedUnderline ? undefined : { borderBottom: 'none' }}
-              >
-                {clusterVip}:{p.nodePort}
-              </span>
-            </Tooltip>
-          </Link>
-        ));
-      return <ul>{content}</ul>;
+      if (content && content instanceof Array) {
+        content = (
+          <ul className={BreakLineListStyle}>
+            {content.map((item, index) => (
+              <li key={`nodeport-${index}`} className={BreakLineItemStyle}>
+                {item}
+              </li>
+            ))}
+          </ul>
+        );
+      }
+      break;
     case ServiceTypeEnum.ExternalName:
       if (showCopyButton) {
         content = renderAccessItems(
