@@ -1,9 +1,7 @@
-import { css } from '@linaria/core';
 import { useList } from '@refinedev/core';
 import { Service } from 'kubernetes-types/core/v1';
 import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CopyButton } from 'src/components/CopyButton';
 import { ErrorContent, ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/InternalBaseTable';
 import { LinkFallback } from 'src/components/LinkFallback';
@@ -15,39 +13,12 @@ import { RuleItem } from 'src/models/ingress-model';
 import { IngressModel } from '../../models';
 import { WithId } from '../../types';
 import { addId } from '../../utils/addId';
+import { PathWithCopy } from '../IngressRulesComponent/PathWithCopy';
 import { ResourceLink } from '../ResourceLink';
 
 type Props = {
   ingress: IngressModel;
 };
-
-const PathCellStyle = css`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-width: 0;
-`;
-
-const PathTextStyle = css`
-  flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  & > * {
-    display: block;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-`;
-
-const PathCopyStyle = css`
-  flex: 0 0 16px;
-  margin-left: auto;
-`;
 
 export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
   const { t } = useTranslation();
@@ -91,12 +62,9 @@ export const IngressRulesTable: React.FC<Props> = ({ ingress }) => {
         }
 
         return (
-          <div className={PathCellStyle}>
-            <span className={PathTextStyle}>
-              <LinkFallback fullPath={value} />
-            </span>
-            <CopyButton value={value} className={PathCopyStyle} />
-          </div>
+          <PathWithCopy value={value}>
+            <LinkFallback fullPath={value} />
+          </PathWithCopy>
         );
       },
     },
