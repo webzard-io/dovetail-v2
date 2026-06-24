@@ -39,7 +39,7 @@ export const ErrorWrapper = styled.div`
   }
 `;
 
-export const ErrorContent = styled.div`
+export const ErrorContentBody = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -59,7 +59,7 @@ export enum ErrorContentType {
   Item = 'item',
 }
 
-export type WidgetErrorContentProps = {
+export type ErrorContentProps = {
   className?: string;
   style?: React.CSSProperties;
   errorText?: React.ReactNode;
@@ -67,7 +67,9 @@ export type WidgetErrorContentProps = {
   refetch?: () => void;
 };
 
-const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = props => {
+export type WidgetErrorContentProps = ErrorContentProps;
+
+const ErrorContentComponent: React.FunctionComponent<ErrorContentProps> = props => {
   const { refetch, errorText, type = ErrorContentType.List } = props;
   const kit = useContext(kitContext);
   const { t } = useTranslation();
@@ -84,7 +86,7 @@ const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = pro
 
   return (
     <ErrorWrapper className={cx(props.className, type)} style={props.style}>
-      <ErrorContent className="error-content">
+      <ErrorContentBody className="error-content">
         <p
           className={cx(fontMap[type], 'title', `${type}-title`)}
           style={{
@@ -106,9 +108,10 @@ const WidgetErrorContent: React.FunctionComponent<WidgetErrorContentProps> = pro
             {t('dovetail.retry')}
           </kit.button>
         )}
-      </ErrorContent>
+      </ErrorContentBody>
     </ErrorWrapper>
   );
 };
 
-export default WidgetErrorContent;
+export { ErrorContentComponent as ErrorContent };
+export default ErrorContentComponent;

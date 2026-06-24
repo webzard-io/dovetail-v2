@@ -68,8 +68,10 @@ export function EditFieldModal(props: EditFieldModalProps) {
       okText={i18n.t('dovetail.save')}
       destroyOnClose
     >
-      {renderContent()}
-      <FormErrorAlert style={{ marginTop: 16 }} errorMsgs={errorMsgs} isEdit />
+      <>
+        {renderContent()}
+        <FormErrorAlert style={{ marginTop: 16 }} errorMsgs={errorMsgs} isEdit />
+      </>
     </ModalComponent>
   );
 }
