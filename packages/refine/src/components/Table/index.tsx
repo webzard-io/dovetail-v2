@@ -3,8 +3,7 @@ import { cx } from '@linaria/core';
 import { useParsed } from '@refinedev/core';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { WidgetErrorContentProps } from 'src/components/ErrorContent';
-import ErrorContent from 'src/components/ErrorContent';
+import { ErrorContent, ErrorContentProps } from 'src/components/ErrorContent';
 import { InternalTableProps } from 'src/components/InternalBaseTable';
 import InternalBaseTable from 'src/components/InternalBaseTable';
 import { ComponentContext } from 'src/contexts';
@@ -15,7 +14,7 @@ import { transformResourceKindInSentence } from 'src/utils/string';
 interface TableProps<Model extends ResourceModel> {
   tableProps: InternalTableProps<Model>;
   displayName: string;
-  errorContentProps?: WidgetErrorContentProps;
+  errorContentProps?: ErrorContentProps;
   isSearching?: boolean;
 }
 

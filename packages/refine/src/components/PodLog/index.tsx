@@ -7,7 +7,7 @@ import { css } from '@linaria/core';
 import { LogViewer } from '@patternfly/react-log-viewer';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent from 'src/components/ErrorContent';
+import { ErrorContent } from 'src/components/ErrorContent';
 
 import '@patternfly/react-core/dist/styles/base-no-reset.css';
 import { PodModel } from '../../models';

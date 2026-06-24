@@ -3,7 +3,7 @@ import { ContainerStatus } from 'kubernetes-types/core/v1';
 import { get } from 'lodash-es';
 import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import { ErrorContent, ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/InternalBaseTable';
 import ValueDisplay from 'src/components/ValueDisplay';
 import ComponentContext from 'src/contexts/component';

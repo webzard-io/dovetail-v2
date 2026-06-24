@@ -3,7 +3,7 @@ import { css, cx } from '@linaria/core';
 import { LabelSelector } from 'kubernetes-types/meta/v1';
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import { ErrorContent, ErrorContentType } from 'src/components/ErrorContent';
 import ComponentContext from 'src/contexts/component';
 import { useEagleTable } from 'src/hooks/useEagleTable';
 import { matchSelector } from 'src/utils/match-selector';

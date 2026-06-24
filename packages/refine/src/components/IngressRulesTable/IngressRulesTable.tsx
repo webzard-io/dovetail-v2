@@ -4,7 +4,7 @@ import { Service } from 'kubernetes-types/core/v1';
 import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CopyButton } from 'src/components/CopyButton';
-import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import { ErrorContent, ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/InternalBaseTable';
 import { LinkFallback } from 'src/components/LinkFallback';
 import ValueDisplay from 'src/components/ValueDisplay';

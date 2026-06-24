@@ -7,7 +7,7 @@ import type {
 } from 'kubernetes-types/networking/v1';
 import React, { lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import { ErrorContent, ErrorContentType } from 'src/components/ErrorContent';
 
 const MonacoYamlEditor = lazy(() => import('src/components/YamlEditor/MonacoYamlEditor'));
 

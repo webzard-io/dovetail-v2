@@ -1,7 +1,7 @@
 import { css } from '@linaria/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import { ErrorContent, ErrorContentType } from 'src/components/ErrorContent';
 import { KeyValue } from 'src/components/KeyValue';
 import { Tags } from 'src/components/Tags';
 import { SmallSectionTitleStyle } from 'src/styles/show';

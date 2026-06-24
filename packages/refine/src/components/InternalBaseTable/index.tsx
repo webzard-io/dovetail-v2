@@ -8,7 +8,7 @@ import {
 import { css, cx } from '@linaria/core';
 import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent from 'src/components/ErrorContent';
+import { ErrorContent } from 'src/components/ErrorContent';
 import { FormContainerType } from 'src/types';
 import { AuxiliaryLine } from './TableWidgets';
 
