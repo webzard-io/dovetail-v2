@@ -1,7 +1,7 @@
 import { Condition } from 'kubernetes-types/meta/v1';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import { ErrorContent, ErrorContentType } from 'src/components/ErrorContent';
 import BaseTable from 'src/components/InternalBaseTable';
 import ComponentContext from 'src/contexts/component';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';

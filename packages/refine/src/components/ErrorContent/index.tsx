@@ -67,9 +67,7 @@ export type ErrorContentProps = {
   refetch?: () => void;
 };
 
-export type WidgetErrorContentProps = ErrorContentProps;
-
-const ErrorContentComponent: React.FunctionComponent<ErrorContentProps> = props => {
+export const ErrorContent: React.FunctionComponent<ErrorContentProps> = props => {
   const { refetch, errorText, type = ErrorContentType.List } = props;
   const kit = useContext(kitContext);
   const { t } = useTranslation();
@@ -112,6 +110,3 @@ const ErrorContentComponent: React.FunctionComponent<ErrorContentProps> = props 
     </ErrorWrapper>
   );
 };
-
-export { ErrorContentComponent as ErrorContent };
-export default ErrorContentComponent;

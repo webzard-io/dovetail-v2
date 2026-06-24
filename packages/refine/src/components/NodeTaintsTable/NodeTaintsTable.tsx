@@ -3,7 +3,7 @@ import { css } from '@linaria/core';
 import { Taint } from 'kubernetes-types/core/v1';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import { ErrorContent, ErrorContentType } from 'src/components/ErrorContent';
 import InternalBaseTable from 'src/components/InternalBaseTable';
 import { addDefaultRenderToColumns } from 'src/hooks/useEagleTable';
 import useTableData from 'src/hooks/useTableData';

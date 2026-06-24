@@ -52,7 +52,6 @@ export * from './ResourceSelect';
 export * from './PodShellModal';
 export * from './ResourceTable';
 export * from './ErrorContent';
-export { default as WidgetErrorContent } from './ErrorContent';
 export * from './KeyValueTableForm';
 export * from './MatchLabelSelector';
 export * from './PortsConfigForm';

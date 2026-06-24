@@ -10,7 +10,7 @@ import {
 import { Unstructured } from 'k8s-api-provider';
 import React, { useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent from 'src/components/ErrorContent';
+import { ErrorContent } from 'src/components/ErrorContent';
 import { FormErrorAlert } from 'src/components/FormErrorAlert';
 import FormLayout from 'src/components/FormLayout';
 import { YamlEditorComponent } from 'src/components/YamlEditor/YamlEditorComponent';

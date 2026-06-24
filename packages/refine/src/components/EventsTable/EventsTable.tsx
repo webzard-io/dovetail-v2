@@ -3,7 +3,7 @@ import { cx } from '@linaria/core';
 import { CrudFilters } from '@refinedev/core';
 import React, { useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import { ErrorContent, ErrorContentType } from 'src/components/ErrorContent';
 import ComponentContext from 'src/contexts/component';
 import { useEagleTable } from 'src/hooks/useEagleTable/useEagleTable';
 import { StateTagStyle } from 'src/styles/tag';

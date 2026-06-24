@@ -2,7 +2,7 @@ import { Typo } from '@cloudtower/eagle';
 import { css, cx } from '@linaria/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import ErrorContent, { ErrorContentType } from 'src/components/ErrorContent';
+import { ErrorContent, ErrorContentType } from 'src/components/ErrorContent';
 import ValueDisplay from 'src/components/ValueDisplay';
 
 const ContentBlockStyle = css`
