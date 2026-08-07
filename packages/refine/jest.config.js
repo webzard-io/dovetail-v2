@@ -7,6 +7,13 @@ export default {
           throws: false,
           exclude: ['**'],
         },
+        /**
+         * the bundler handles the cjs interop of default imports like `lodash/has`,
+         * ts-jest needs esModuleInterop to do the same when it emits commonjs
+         */
+        tsconfig: {
+          esModuleInterop: true,
+        },
       },
     ],
   },

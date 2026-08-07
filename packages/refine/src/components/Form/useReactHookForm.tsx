@@ -236,6 +236,14 @@ export const useForm = <
   useEffect(() => {
     if (hasAppliedInitialDataRef.current || formState.isDirty) return;
 
+    /**
+     * a create form must never be filled with an existing record.
+     * refine falls back to the id in the route when the form resource matches the route
+     * resource, so a create form opened from a detail page builds the same query key as
+     * that page and gets its cached record back, even though the query itself is disabled.
+     */
+    if (refineCoreProps?.action === 'create') return;
+
     const data = queryResult?.data?.data;
     if (!data) return;
 
@@ -265,7 +273,14 @@ export const useForm = <
     });
     hasAppliedInitialDataRef.current = true;
     setTransformedInitValues(getValues());
-  }, [queryResult?.data, setValue, transformInitValues, formState.isDirty, getValues]);
+  }, [
+    queryResult?.data,
+    setValue,
+    transformInitValues,
+    formState.isDirty,
+    getValues,
+    refineCoreProps?.action,
+  ]);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
