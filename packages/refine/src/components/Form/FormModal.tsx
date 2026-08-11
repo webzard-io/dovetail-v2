@@ -285,6 +285,14 @@ export function FormModal(props: FormModalProps) {
     resourceConfig.formConfig?.formType === FormType.FORM
       ? resourceConfig.formConfig.extraSubmitButton
       : undefined;
+  const onNextStep = useCallback(
+    () => handleStepChange(step + 1),
+    [handleStepChange, step]
+  );
+  const onPrevStep = useCallback(
+    () => handleStepChange(step - 1),
+    [handleStepChange, step]
+  );
   const footer = useExtraSubmitFooter({
     action,
     cancelText: modalProps?.cancelText || i18n.t('dovetail.cancel'),
@@ -299,8 +307,8 @@ export function FormModal(props: FormModalProps) {
     step,
     stepCount: steps?.length || 0,
     onCancel: popModal,
-    onNextStep: () => handleStepChange(step + 1),
-    onPrevStep: () => handleStepChange(step - 1),
+    onNextStep,
+    onPrevStep,
     onSubmit: onOk,
   });
 
