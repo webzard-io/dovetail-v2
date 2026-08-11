@@ -402,15 +402,16 @@ const useYamlForm = <
           return;
         }
 
-        const rulesErrors = await validateRules(editor.current?.getEditorValue() || '');
-
-        if (Object.keys(rulesErrors).length) {
-          onSubmitAbort?.();
-          setRulesErrors(Object.values(rulesErrors));
-          return;
-        }
-
         try {
+          // validateRules 内部同样会解析 YAML，多文档等解析异常需要落到下方 catch 才能转成用户可读提示
+          const rulesErrors = await validateRules(editor.current?.getEditorValue() || '');
+
+          if (Object.keys(rulesErrors).length) {
+            onSubmitAbort?.();
+            setRulesErrors(Object.values(rulesErrors));
+            return;
+          }
+
           const objectValues = editor.current
             ? (yaml.load(editor.current?.getEditorValue() || '') as Unstructured)
             : values;
@@ -452,6 +453,8 @@ const useYamlForm = <
           return onFinish(finalValues as TVariables);
         } catch (error: unknown) {
           onSubmitAbort?.();
+          // validateRules 抛出时不会写入 rulesErrors，清空避免上一次提交的规则错误残留
+          setRulesErrors([]);
           if (error instanceof Error) {
             if (
               error.message === 'expected a single document in the stream, but found more'
