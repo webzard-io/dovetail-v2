@@ -197,7 +197,10 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
         onFinish={onFinish}
       >
         {(() => {
-          if (isLoadingSchema || (queryResult?.isLoading && action === 'edit')) {
+          // 编辑器内容是非受控的（只在 onEditorCreate 时写入一次），之后 queryResult 变化不会重新填充。
+          // 而 isLoading 在命中 react-query 缓存时为 false，会用还没刷新的旧数据把编辑器初始化掉，
+          // 导致刚保存完立刻重新打开时看到旧内容。改用 isFetching，等刷新完成后再渲染编辑器。
+          if (isLoadingSchema || (queryResult?.isFetching && action === 'edit')) {
             return <Loading />;
           }
 
