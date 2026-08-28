@@ -8,7 +8,7 @@ import {
   useResource,
 } from '@refinedev/core';
 import { Unstructured } from 'k8s-api-provider';
-import React, { useMemo, useCallback, useEffect } from 'react';
+import React, { useMemo, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ErrorContent } from 'src/components/ErrorContent';
 import { FormErrorAlert } from 'src/components/FormErrorAlert';
@@ -87,6 +87,9 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
   });
   const action = actionFromProps || actionFromResource;
   const { t, i18n } = useTranslation();
+  // 编辑器是非受控的，挂载后不能再被卸载，否则会丢掉用户正在编辑的内容，
+  // 因此用它区分「首次加载」与「编辑器已经渲染之后的后台刷新」。
+  const hasRenderedEditor = useRef(false);
   const {
     formProps,
     saveButtonProps,
@@ -197,14 +200,29 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
         onFinish={onFinish}
       >
         {(() => {
-          // 编辑器内容是非受控的（只在 onEditorCreate 时写入一次），之后 queryResult 变化不会重新填充。
-          // 而 isLoading 在命中 react-query 缓存时为 false，会用还没刷新的旧数据把编辑器初始化掉，
-          // 导致刚保存完立刻重新打开时看到旧内容。改用 isFetching，等刷新完成后再渲染编辑器。
-          if (isLoadingSchema || (queryResult?.isFetching && action === 'edit')) {
+          // 编辑器内容只在 onEditorCreate 时写入一次，之后 queryResult 刷新不会重新填充。
+          // 而 isLoading 在命中 react-query 缓存时为 false，会用尚未刷新的旧数据初始化编辑器，
+          // 导致刚保存完立刻重新打开时看到旧内容，所以首次加载要等到本次刷新结束。
+          // 但只能拦首次：编辑器挂载后若再因后台刷新被替换成 Loading，用户已输入的内容会丢失。
+          const isWaitingInitialData =
+            action === 'edit' && !hasRenderedEditor.current && !!queryResult?.isFetching;
+
+          if (isLoadingSchema || isWaitingInitialData) {
             return <Loading />;
           }
 
-          return editorProps.schemas || schemaStrategy !== SchemaStrategy.Required ? (
+          if (!editorProps.schemas && schemaStrategy === SchemaStrategy.Required) {
+            return (
+              <ErrorContent
+                errorText={t('dovetail.fetch_schema_fail')}
+                refetch={fetchSchema}
+              ></ErrorContent>
+            );
+          }
+
+          hasRenderedEditor.current = true;
+
+          return (
             <>
               <Form.Item style={{ flex: 1 }}>
                 <YamlEditorComponent<string>
@@ -223,11 +241,6 @@ export function YamlForm<Model extends ResourceModel = ResourceModel>(
                 )}
               </Form.Item>
             </>
-          ) : (
-            <ErrorContent
-              errorText={t('dovetail.fetch_schema_fail')}
-              refetch={fetchSchema}
-            ></ErrorContent>
           );
         })()}
       </Form>
