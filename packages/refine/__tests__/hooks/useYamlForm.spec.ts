@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import useYamlForm from '../../src/components/Form/useYamlForm';
+import useYamlForm, { YamlFormRule } from '../../src/components/Form/useYamlForm';
 
 const onFinishCore = jest.fn();
 
@@ -60,14 +60,14 @@ metadata:
   name: bar
 `;
 
-function renderYamlForm(editorValue: string) {
+function renderYamlForm(editorValue: string, rules: YamlFormRule[] = []) {
   const onSubmitAbort = jest.fn();
   const { result } = renderHook(() =>
     useYamlForm({
       resource: 'configmaps',
       action: 'create',
       // RefineFormContainer 切换到 YAML 模式时总会传入数组，即使没有任何字段需要校验
-      rules: [],
+      rules,
       onSubmitAbort,
     })
   );
@@ -117,5 +117,45 @@ describe('useYamlForm submit', () => {
       kind: 'ConfigMap',
       metadata: { name: 'foo' },
     });
+  });
+});
+
+describe('useYamlForm rules', () => {
+  beforeEach(() => {
+    onFinishCore.mockClear();
+  });
+
+  const invalidNameRule = (isHidePathInYamlError?: boolean): YamlFormRule => ({
+    path: ['metadata', 'name'],
+    isHidePathInYamlError,
+    validators: [() => ({ isValid: false, errorMsg: 'name already exists' })],
+  });
+
+  // 默认在错误末尾附上字段 path，便于用户在 YAML 里定位出错的字段
+  it('should append the field path to the rule error by default', async () => {
+    const { result, onSubmitAbort } = renderYamlForm(SINGLE_DOCUMENT_YAML, [
+      invalidNameRule(),
+    ]);
+
+    await act(async () => {
+      await result.current.formProps.onFinish?.({});
+    });
+
+    expect(result.current.editorProps.errorMsgs).toEqual([
+      'name already exists(metadata.name)',
+    ]);
+    expect(onSubmitAbort).toHaveBeenCalled();
+    expect(onFinishCore).not.toHaveBeenCalled();
+  });
+
+  it('should hide the field path when isHidePathInYamlError is set', async () => {
+    const { result } = renderYamlForm(SINGLE_DOCUMENT_YAML, [invalidNameRule(true)]);
+
+    await act(async () => {
+      await result.current.formProps.onFinish?.({});
+    });
+
+    expect(result.current.editorProps.errorMsgs).toEqual(['name already exists']);
+    expect(onFinishCore).not.toHaveBeenCalled();
   });
 });

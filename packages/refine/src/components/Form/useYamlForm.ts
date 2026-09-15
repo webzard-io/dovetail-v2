@@ -37,6 +37,7 @@ type EditorProps = YamlEditorProps & {
 export type YamlFormRule = {
   path: string[];
   validators?: RefineFormValidator[];
+  isHidePathInYamlError?: boolean;
 };
 
 export type UseFormProps<
@@ -362,14 +363,16 @@ const useYamlForm = <
       const formValue = yaml.load(yamlValue || '');
 
       for (const rule of rules) {
-        const { path, validators } = rule;
+        const { path, validators, isHidePathInYamlError } = rule;
         const value = get(formValue, path);
 
         for (const validator of validators || []) {
           const { isValid, errorMsg } = await validator(value, formValue, FormType.YAML);
 
           if (!isValid) {
-            errorMap[path.join('.')] = `${errorMsg}(${path.join('.')})`;
+            errorMap[path.join('.')] = isHidePathInYamlError
+              ? errorMsg
+              : `${errorMsg}(${path.join('.')})`;
             break;
           }
         }

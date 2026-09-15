@@ -131,6 +131,8 @@ const RefineFormContainer = React.forwardRef<
           .map(config => ({
             path: 'path' in config ? config.path : [],
             validators: 'validators' in config ? config.validators : undefined,
+            isHidePathInYamlError:
+              'isHidePathInYamlError' in config ? config.isHidePathInYamlError : undefined,
           })),
         onSaveButtonPropsChange,
         beforeSubmit: formConfig?.beforeSubmit,
