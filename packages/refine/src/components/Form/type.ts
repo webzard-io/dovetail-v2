@@ -39,6 +39,11 @@ export type RefineFormField = {
   type?: 'number';
   validators?: RefineFormValidator[];
   isSkipValidationInYaml?: boolean;
+  /**
+   * YAML 模式的校验错误默认会在末尾附上字段 path，便于定位。
+   * 当字段在 YAML 里没有对应 path（如它是文档的顶层 key）时，附上 path 反而误导，可用此项关闭。
+   */
+  isHidePathInYamlError?: boolean;
   disabledWhenEdit?: boolean;
   layout?: FormItemLayout;
   isHideErrorStatus?: boolean;
