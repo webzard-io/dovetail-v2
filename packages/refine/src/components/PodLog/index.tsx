@@ -37,10 +37,17 @@ const ContentStyle = css`
   min-height: 0;
 `;
 
+/**
+ * 展示 Pod 普通容器和初始化容器的实时或历史日志，支持切换容器、暂停滚动和自动换行。
+ * @param props.pod 要查看日志的 Pod 数据。
+ * @param props.apiUrl Kubernetes API 的请求前缀。
+ */
 export const PodLog: React.FC<{ pod: PodModel, apiUrl: string }> = ({ pod, apiUrl }) => {
-  const [selectedContainer, setSelectedContainer] = useState(
-    pod.spec?.containers[0]?.name || ''
-  );
+  const containers = [
+    ...(pod.spec?.containers || []),
+    ...(pod.spec?.initContainers || []),
+  ];
+  const [selectedContainer, setSelectedContainer] = useState(containers[0]?.name || '');
   const [logs, setLogs] = useState<string[]>([]);
   const [logType, setLogType] = useState<'realtime' | 'previous'>('realtime');
   const [currentItemCount, setCurrentItemCount] = useState(0);
@@ -193,6 +200,7 @@ export const PodLog: React.FC<{ pod: PodModel, apiUrl: string }> = ({ pod, apiUr
             }}
           />
           <Select
+            data-test-id="pod-log-container-select"
             input={{
               onChange: newValue => {
                 stopFetchingLogs();
@@ -207,7 +215,7 @@ export const PodLog: React.FC<{ pod: PodModel, apiUrl: string }> = ({ pod, apiUr
             <AntdOption value="" disabled>
               {t('dovetail.select_container')}
             </AntdOption>
-            {(pod.spec?.containers || []).map(container => (
+            {containers.map(container => (
               <AntdOption key={container.name} value={container.name}>
                 {container.name}
               </AntdOption>
