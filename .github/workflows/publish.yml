@@ -39,7 +39,7 @@ jobs:
         with:
           timeout_minutes: 10  # 设置超时时间，单位为分钟
           max_attempts: 3  # 设置最大重试次数
-          command: cd packages/refine && npm publish
+          command: cd packages/refine && npm publish --tag legacy-0.3 --registry=https://registry.npmjs.org
       - name: Clean .npmrc
         if: always()
         run: rm ~/.npmrc

@@ -40,6 +40,8 @@ cd packages/refine && yarn test
 
 PR 合入 main 时运行：Lint → Jest → Vite Build（Node 20，Ubuntu）。发布通过 git tag（`v*`）触发 npm publish。
 
+此 0.3.x 维护分支使用 `legacy-0.3` npm 标签发布补丁版本，保留 `latest` 对新版 D2 的指向。
+
 ## 架构
 
 ### Monorepo 结构
