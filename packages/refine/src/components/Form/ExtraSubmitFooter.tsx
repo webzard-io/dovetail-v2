@@ -15,9 +15,11 @@ const FooterStyle = css`
   justify-content: space-between;
   width: 100%;
 `;
+// 与 eagle ImmersiveDialog 默认 footer 一致：上一步与错误信息间距 16px
 const FooterLeftStyle = css`
   display: flex;
   align-items: center;
+  gap: 16px;
   min-width: 0;
 `;
 const FooterRightStyle = css`
@@ -29,7 +31,7 @@ const ErrorStyle = css`
   display: inline-flex;
   align-items: center;
   min-width: 0;
-  color: var(--color-red-6);
+  color: $red-60;
 `;
 const ErrorIconStyle = css`
   flex: none;
